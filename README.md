@@ -1,4 +1,4 @@
-# Photoshop Prerelease Plugin Exchange
+# Photoshop Prerelease Plugin (& Code) Exchange
 
 Want to share your cool plugin in the prerelease? Here's the place to do it, and here's how.
 
