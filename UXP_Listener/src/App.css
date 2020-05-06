@@ -1,0 +1,67 @@
+.code{
+	color:white;
+	white-space: pre;
+	font-family: 'Courier New', Monaco;
+	font-size: 11px;
+}
+
+.controls{
+	padding-bottom: 1em;
+}
+
+.action{
+	padding:1em 0;
+	border-top: 1px solid gray;
+	line-height: 1.5;
+}
+
+.panel {
+	overflow: auto;
+	max-width: 100vw;
+	max-height: 100vh;
+	margin: 4px;
+}
+
+.component {
+	padding: 4px;
+	min-width: 300px;
+	margin: 1em 0;
+}
+
+.margin-left{
+	margin-left: auto;
+}
+
+.links {
+	color: rgb(13, 102, 208)
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.flex-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.between {
+	justify-content: space-between;
+}
+
+.around {
+	justify-content: space-around;
+}
+
+.start {
+	justify-content: flex-start;
+}
+
+.end {
+	justify-content: flex-end;
+}
+
+.center {
+	justify-content: center;
+}

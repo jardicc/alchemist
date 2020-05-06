@@ -1,0 +1,19 @@
+{
+    "extends": [
+        "tslint:latest",
+        "tslint-react",
+        "tslint-plugin-prettier",
+        "tslint-config-prettier"
+    ],
+    "rules": {
+        "prettier": true,
+        "no-submodule-imports": false,
+        "ordered-imports": false,
+        "interface-name": false,
+        "object-literal-sort-keys": false,
+        "jsx-no-lambda": false,
+        "no-implicit-dependencies": [ true, [ "uxp", "photoshop" ] ],
+        "no-console": false,
+        "no-var-requires": false
+    }
+}
