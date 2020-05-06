@@ -2,8 +2,7 @@
 
 Want to share your cool plugin in the prerelease? Here's the place to do it, and here's how.
 
-* Create a new branch with your github name.
-* You'll probably want to create a folder with your github name and some folders for your projects.
+* Create a new branch with your github name and the name of your project. For example, "kerrishotts/vanillaPlugin". (We need a way to disambiguate since we're all in the same repo here.)
 * Commit your changes and push to your branch.
 
 > **Do not send or merge pull requests to master**
