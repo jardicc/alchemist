@@ -1,4 +1,4 @@
-# UXP Listner
+# UXP Listener
 
 Listens all Photoshop events
 
