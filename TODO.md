@@ -6,3 +6,4 @@
 - make action editable
 - show play result/error
 - add option to limit amount of actions
+- add Batch Play options into code generator
