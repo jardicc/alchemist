@@ -6,8 +6,18 @@ var PhotoshopAction = require('photoshop').action;
 
 interface AppState {
 	listening: boolean
-	descriptors: TDesc[]
-	batchPlayDecorator:boolean
+	currentID: number
+	collapsed:boolean
+	actions: IAction[]
+	batchPlayDecorator: boolean
+	lastHistoryID:number
+}
+
+interface IAction{
+	id:number
+	title:string
+	collapsed:boolean
+	descriptor:IDesc
 }
 
 interface IDesc{
@@ -24,9 +34,12 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 	constructor(props) {
 		super(props)
 		this.state = {
+			currentID: 0,
+			collapsed:true,
 			batchPlayDecorator:false,
 			listening: false,
-			descriptors:[]
+			actions: [],
+			lastHistoryID:-1
 		}
 
 		this.listener = this.listener.bind(this)
@@ -43,20 +56,70 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 		}
 	}
 
+	private toggleExpandAction(index:number) {
+		this.setState((prevState) => {
+			const obj = {
+				...prevState,
+				actions: [
+					...prevState.actions
+				]
+			}
+
+			obj.actions[index].collapsed = !obj.actions[index].collapsed;
+			return obj;
+		})
+	}
+
+	private async getHistoryState() {
+		
+		const test = await PhotoshopAction.batchPlay([
+			{
+				"_obj": "get",
+				"_target": [
+					{
+						"_ref": "historyState",
+						"_enum": "ordinal",
+						"_value": "last"
+					}
+				]
+			}
+		], {});
+		console.log(test[0].name);
+
+		let result = ""
+
+		if (test[0].ID!==this.state.lastHistoryID && this.state.lastHistoryID !== -1) {
+			result =  " | "+test[0].name;
+		}
+
+		this.setState((prevState) => {
+			return {
+				...prevState,
+				lastHistoryID:test[0].ID
+			}
+		})
+
+		return result;
+	}
+
 	private renderActions() {
-		const descriptors = this.state.descriptors;
+		const actions = this.state.actions;
 		const elements: ReactNode[] = [];
 		
-		for (let i = 0; i < descriptors.length; i++) {
-			const desc = descriptors[i];
+		for (let i = 0; i < actions.length; i++) {
+			const action = actions[i];
 			elements.unshift(
 				<div className="action" key={i}>
-					<div className="flex-row">
+					<div className="header">						
+						<sp-action-button onClick={() => this.toggleExpandAction(i)} className="collapse">{action.collapsed ? "⯈" : "⯆"}{" "+action.title}</sp-action-button>						
 						<button onClick={() => this.copy(i)}  className="margin-left">copy</button>
 					</div>
-					<div>
-						{this.decorateCode(desc)}
-					</div>
+					{
+						action.collapsed?null:
+						<div>
+							{this.decorateCode(action.descriptor)}
+						</div>
+					}
 				</div>
 			)
 		}
@@ -68,26 +131,39 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 		this.setState((prevState) => {
 			return {
 				...prevState,
-				descriptors: []
+				actions: []
 			}
 		})
 	}
 
 	public render() {
 		const batchPlay = this.state.batchPlayDecorator;
+		const collapsed = this.state.collapsed;
 
 		return (
 			<div className="component">
 				<div className="flex-row start controls">
 					{this.state.listening ? <button onClick={() => this.removeListener()}>Stop</button> : <button onClick={() => this.attachListener()}>Start</button>}
 					<button onClick={() => this.clearLog()}>Clear</button>
-					{batchPlay ? <button onClick={() => this.onBatchPlay(false)}>Raw code</button>:<button onClick={() => this.onBatchPlay(true)}>Batch play code</button>}
+					{batchPlay ? <button onClick={() => this.onBatchPlay(false)}>Raw code</button> : <button onClick={() => this.onBatchPlay(true)}>Batch play code</button>}
+					<sp-checkbox onClick={this.toggleCollapseOption} checked>Collapsed</sp-checkbox>
 				</div>
 				<div className="code">
 					{this.renderActions()}
 				</div>
 			</div>
 		);
+	}
+
+	private toggleCollapseOption = (e) => {
+		const value = e.target.checked;
+		console.log(value);
+		this.setState((prevState) => {			
+			return {
+				...prevState,
+				collapsed:value
+			}
+		})
 	}
 
 	private onBatchPlay(enabled:boolean) {
@@ -103,6 +179,7 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 	 * Listener to be attached to all Photoshop notifications.
 	 */
 	public async listener(event: string, message: TDesc) {
+		const historyName = await this.getHistoryState();
 		this.setState((prevState) => {
 			message = {
 				_obj: event,
@@ -110,9 +187,15 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 			}
 
 			return {
-				descriptors: [
-					...prevState.descriptors,
-					message
+				actions: [
+					...prevState.actions,
+					{
+						collapsed:prevState.collapsed,
+						descriptor: message,
+						id: prevState.currentID,
+						title:message._obj +historyName
+					}
+					
 				]
 			}
 		})
@@ -127,7 +210,7 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 	}
 
 	private copy(index: number) {
-		const text = this.decorateCode(this.state.descriptors[index]);
+		const text = this.decorateCode(this.state.actions[index].descriptor);
 		this.copyToClipboard(text);
 	}
 
