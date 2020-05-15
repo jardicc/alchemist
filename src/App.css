@@ -1,31 +1,52 @@
+.actionList{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	height: 0;
+	overflow: auto;
+}
+
 .code{
 	color:white;
+	font-size: 11px;
 	white-space: pre;
 	font-family: 'Courier New', Monaco;
-	font-size: 11px;
+	margin: 1em;
 }
 
-.controls{
-	padding-bottom: 1em;
-}
 
 .action{
-	padding:1em 0;
-	border-top: 1px solid gray;
+	padding: 0;
+	border-bottom: 1px solid gray;
 	line-height: 1.5;
+	flex-shrink: 0;
 }
 
 .action .header{
 	display: flex;
 	align-items: center;
-
 }
 
 .action .header .collapse{
-	margin-right:1em
+	margin-right:1em;
+	display: flex;
+	flex-grow: 1;
 }
 .action .header .title{
 	margin:0 1em
+}
+
+.empty{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-grow: 1;
+	
+}
+
+.empty .message{
+	color:white;
+	font-size: 11px;
 }
 
 .panel {
@@ -36,17 +57,16 @@
 }
 
 .component {
-	padding: 4px;
 	min-width: 300px;
-	margin: 1em 0;
+	margin: 1em 4px;
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
 }
 
-.margin-left{
-	margin-left: auto;
-}
-
-.links {
-	color: rgb(13, 102, 208)
+.spread{
+	display: flex;
+	flex-grow: 1;
 }
 
 .flex-row {
@@ -77,4 +97,12 @@
 
 .center {
 	justify-content: center;
+}
+
+body, html, .root, .panel{
+	display: flex;
+	width: 100vw;
+	height: 100vh;
+	padding:0;
+	margin: 0;
 }

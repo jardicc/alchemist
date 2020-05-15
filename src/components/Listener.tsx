@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react'
-
-
-const app = require('photoshop').app
-var PhotoshopAction = require('photoshop').action;
+import { app, action } from "../imports"
+import { ActionDescriptor} from "photoshop/dist/types/photoshop"
+import { Descriptor } from 'photoshop/dist/types/UXP'
 
 interface AppState {
 	listening: boolean
@@ -17,14 +16,15 @@ interface IAction{
 	id:number
 	title:string
 	collapsed:boolean
-	descriptor:IDesc
+	descriptor: ActionDescriptor
+	timeCreated: number
+	playReplies: IPlayReply[]
 }
 
-interface IDesc{
-	_obj:string
+interface IPlayReply{
+	descriptors:Descriptor[]
+	time:number
 }
-
-type TDesc = IDesc & object
 
 /**
  * Usage of the Photoshop event listening APIs.
@@ -45,7 +45,7 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 		this.listener = this.listener.bind(this)
 	}
 
-	private decorateCode(desc: TDesc): string{
+	private decorateCode(desc: ActionDescriptor): string{
 		const codeStr = JSON.stringify(desc, null, 3)
 
 		if (this.state.batchPlayDecorator) {
@@ -72,7 +72,7 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 
 	private async getHistoryState() {
 		
-		const test = await PhotoshopAction.batchPlay([
+		const test = await action.batchPlay([
 			{
 				"_obj": "get",
 				"_target": [
@@ -104,27 +104,37 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 
 	private renderActions() {
 		const actions = this.state.actions;
-		const elements: ReactNode[] = [];
+		if (actions.length) {
+			const elements: ReactNode[] = [];
 		
-		for (let i = 0; i < actions.length; i++) {
-			const action = actions[i];
-			elements.unshift(
-				<div className="action" key={i}>
-					<div className="header">						
-						<sp-action-button onClick={() => this.toggleExpandAction(i)} className="collapse">{action.collapsed ? "⯈" : "⯆"}{" "+action.title}</sp-action-button>						
-						<button onClick={() => this.copy(i)}  className="margin-left">copy</button>
-					</div>
-					{
-						action.collapsed?null:
-						<div>
-							{this.decorateCode(action.descriptor)}
+			for (let i = 0; i < actions.length; i++) {
+				const action = actions[i];
+				elements.unshift(
+					<div className="action" key={i}>
+						<div className="header">
+							<sp-button quiet variant="primary"  onClick={() => this.toggleExpandAction(i)} className="collapse">{action.collapsed ? "⮞" : "⮟"}{" " + action.title}</sp-button>
+							<div className="spread"></div>
+							<sp-button quiet variant="secondary" title="play" onClick={() => this.play(i)}>Play</sp-button>
+							<sp-button quiet variant="secondary" title="copy" onClick={() => this.copy(i)}  >Copy</sp-button>
 						</div>
-					}
+						{
+							action.collapsed ? null :
+								<div className="code">
+									{this.decorateCode(action.descriptor)}
+								</div>
+						}
+					</div>
+				)
+			}
+			
+			return elements;
+		} else {
+			return (
+				<div className="empty">
+					<div className="message">No actions recorded. Please start recording.</div>
 				</div>
 			)
 		}
-			
-		return elements;
 	}
 
 	private clearLog() {
@@ -142,15 +152,16 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 
 		return (
 			<div className="component">
-				<div className="flex-row start controls">
-					{this.state.listening ? <button onClick={() => this.removeListener()}>Stop</button> : <button onClick={() => this.attachListener()}>Start</button>}
-					<button onClick={() => this.clearLog()}>Clear</button>
-					{batchPlay ? <button onClick={() => this.onBatchPlay(false)}>Raw code</button> : <button onClick={() => this.onBatchPlay(true)}>Batch play code</button>}
-					<sp-checkbox onClick={this.toggleCollapseOption} checked>Collapsed</sp-checkbox>
-				</div>
-				<div className="code">
+				<div className="actionList">
 					{this.renderActions()}
 				</div>
+				<div className="flex-row start controls">
+					{this.state.listening ? <sp-button variant="negative" onClick={() => this.removeListener()}>Stop</sp-button> : <sp-button variant="cta" onClick={() => this.attachListener()}>Start</sp-button>}
+					<sp-button quiet variant="secondary" onClick={() => this.clearLog()}>Clear</sp-button>
+					{batchPlay ? <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(false)}>Raw code</sp-button > : <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(true)}>Batch play code</sp-button >}
+					<sp-checkbox onClick={this.toggleCollapseOption} checked>Collapsed</sp-checkbox>
+				</div>
+
 			</div>
 		);
 	}
@@ -178,7 +189,7 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 	/**
 	 * Listener to be attached to all Photoshop notifications.
 	 */
-	public async listener(event: string, message: TDesc) {
+	public async listener(event: string, message: ActionDescriptor) {
 		const historyName = await this.getHistoryState();
 		this.setState((prevState) => {
 			message = {
@@ -193,7 +204,9 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 						collapsed:prevState.collapsed,
 						descriptor: message,
 						id: prevState.currentID,
-						title:message._obj +historyName
+						title: message._obj + historyName,
+						timeCreated: Date.now(),
+						playReplies: []
 					}
 					
 				]
@@ -214,8 +227,30 @@ export default class ListenerComponent extends React.Component<{}, AppState> {
 		this.copyToClipboard(text);
 	}
 
+	private async play(index: number) {
+		const result = await action.batchPlay([this.state.actions[index].descriptor], {});
+
+		this.setState((prevState) => {
+			const obj = {
+				...prevState,
+				actions: [
+					...prevState.actions
+				]
+			}
+
+			obj.actions[index].playReplies = [
+				...obj.actions[index].playReplies,
+				{
+					descriptors: result,
+					time: Date.now(),
+				}
+			]
+			return obj;
+		})
+	}
+
 	private async copyToClipboard(text:string) {
-		await PhotoshopAction.batchPlay([{
+		await action.batchPlay([{
 			_obj: "textToClipboard",
 			textData: text
 		}], {})

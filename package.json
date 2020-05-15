@@ -28,6 +28,7 @@
         "webpack-cli": "^3.3.2"
     },
     "dependencies": {
+        "@types/photoshop": "git+https://github.com/adobe-uxp/types-photoshop.git",
         "react": "^16.8.6",
         "react-dom": "^16.8.6"
     }
