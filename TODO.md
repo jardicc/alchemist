@@ -1,5 +1,5 @@
 # TODO
--  search by event name
+- ~~search by event name~~
 - include/exclude by event name
 - sort by time or by event name
 - ~~play action button~~

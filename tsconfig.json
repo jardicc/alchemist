@@ -2,12 +2,14 @@
     "compilerOptions": {
         "outDir": "./dist/",
         "sourceMap": true,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "target": "esnext",
         "module": "esnext",
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
+	  "allowSyntheticDefaultImports": true,
+	  "strictNullChecks": true,	  
+	  "noImplicitReturns": true,
         "jsx": "react"
     },
     "exclude": [

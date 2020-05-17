@@ -28,8 +28,20 @@
         "webpack-cli": "^3.3.2"
     },
     "dependencies": {
+        "@spectrum-web-components/radio-group": "^0.1.17",
+        "@spectrum-web-components/textfield": "^0.3.8",
+        "@types/lodash": "^4.14.151",
         "@types/photoshop": "git+https://github.com/adobe-uxp/types-photoshop.git",
+        "@types/react-redux": "^7.1.8",
+        "immer": "^6.0.5",
+        "install": "^0.13.0",
+        "lodash": "^4.17.15",
+        "npm": "^6.14.5",
         "react": "^16.8.6",
-        "react-dom": "^16.8.6"
+        "react-dom": "^16.8.6",
+        "react-redux": "^7.2.0",
+        "redux": "^4.0.5",
+        "redux-devtools-extension": "^2.13.8",
+        "reselect": "^4.0.0"
     }
 }
