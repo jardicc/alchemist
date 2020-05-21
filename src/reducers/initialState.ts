@@ -42,8 +42,13 @@ export function getInitialState():IAppState {
 	return {
 		filter: {
 			searchTerm: null,
-			filterEventsType: "none",
-			exclude: [],
+			filterEventsType: "exclude",
+			exclude: [
+				"layersFiltered",
+				"toolModalStateChanged",
+				"invokeCommand",
+				"modalStateChanged"
+			],
 			include:[]
 		},
 		settings: {

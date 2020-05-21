@@ -13,7 +13,15 @@
 	font-family: 'Courier New', Monaco;
 	margin: 1em;
 }
+.replies{
+	margin-left: 2em;
+	background: rgba(0,0,0,0.2);
+}
 
+.replies .header{
+	color:#ddd;
+	font-size: 1.3em;
+}
 
 .action{
 	padding: 0;

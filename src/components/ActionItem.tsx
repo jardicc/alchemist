@@ -55,8 +55,24 @@ export default class ActionItem extends React.Component<TActionItem> {
 		},this.props.action.id);
 	}
 
+	private renderReplies = () => {
+		const action = this.props.action;
+		
+		if (action.playReplies.length) {
+			return (
+				<div className="replies">
+					<div className="header">Replies:</div>
+					<div className="code">{JSON.stringify(action.playReplies.map(reply=>reply.descriptors[0]), null, 3)}</div>
+				</div>
+			)
+		}
+		else {
+			return null;
+		}
+	}
+
 	public render() {
-		const { action} = this.props;
+		const { action } = this.props;
 		return (
 			<React.Fragment>
 				<div className="action" key={action.id}>
@@ -68,9 +84,12 @@ export default class ActionItem extends React.Component<TActionItem> {
 					</div>
 					{
 						action.collapsed ? null :
-							<div className="code">
-								{this.decorateCode(action.descriptor)}
-							</div>
+							<React.Fragment>
+								<div className="code">
+									{this.decorateCode(action.descriptor)}
+								</div>
+								{this.renderReplies()}
+							</React.Fragment>
 					}
 				</div>
 			</React.Fragment>

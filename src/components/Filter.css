@@ -3,3 +3,9 @@
 	color: white;
 	align-items: center;
 }
+
+.ExcludeInclude{
+	display: flex;
+	align-items: center;
+	color:white;
+}

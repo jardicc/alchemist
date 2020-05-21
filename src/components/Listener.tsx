@@ -50,7 +50,7 @@ export default class Listener extends React.Component<TListener> {
 
 		let result = ""
 
-		if (test[0].ID!==this.props.settings.lastHistoryID && this.props.settings.lastHistoryID !== -1) {
+		if (test[0].ID!==this.props.settings.lastHistoryID && this.props.settings.lastHistoryID !== -1 && test[0].name.trim()) {
 			result =  " | "+test[0].name;
 		}
 

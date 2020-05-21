@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+- change: listener by default filter action generally considered as garbage (although you can find some use for them)
+- feature: add include exclude filter
+- feature: shows play replies
+
 ## 0.4.0
 - feature: adds possibility to filter by name (case sensitive)
 - code: implements Redux store

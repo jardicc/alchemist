@@ -1,4 +1,4 @@
-import { IAction, IPlayReply } from "../reducers/initialState"
+import { IAction, IPlayReply, TFilterEvents } from "../reducers/initialState"
 
 export interface IToggleCollapseOptionAction{
 	type: "TOGGLE_COLLAPSE_OPTION",
@@ -60,6 +60,22 @@ export interface ISetSearchTermAction{
 	type: "SET_SEARCH_TERM_ACTION",
 	payload: string|null
 }
+export interface ISetFilterType{	
+	type: "SET_FILTER_TYPE",
+	payload: TFilterEvents
+}
+
+export interface ISetIncludeAction{	
+	type: "SET_INCLUDE_ACTION",
+	payload: string[]
+}
+
+export interface ISetExcludeAction{	
+	type: "SET_EXCLUDE_ACTION",
+	payload: string[]
+}
+
+
 
 export function toggleCollapseOptionAction(enabled: boolean):IToggleCollapseOptionAction {
 	return {
@@ -139,6 +155,26 @@ export function setSearchTermAction(str:string|null):ISetSearchTermAction{
 	}
 }
 
+export function setFilterTypeAction(filterType:TFilterEvents): ISetFilterType{
+	return {
+		type: "SET_FILTER_TYPE",
+		payload:filterType
+	}
+}
+
+export function setIncludeAction(arr:string[]):ISetIncludeAction{
+	return{
+		type: "SET_INCLUDE_ACTION",
+		payload:arr
+	}
+}
+export function setExcludeAction(arr:string[]):ISetExcludeAction{
+	return{
+		type: "SET_EXCLUDE_ACTION",
+		payload:arr
+	}
+}
+
 export type TActions = IToggleCollapseOptionAction |
 	ISetListenerAction |
 	IAddActionAction |
@@ -148,4 +184,7 @@ export type TActions = IToggleCollapseOptionAction |
 	IAddReplyActionAction |
 	IToggleExpandActionAction |
 	IIncrementActionIDAction |
-	ISetSearchTermAction
+	ISetSearchTermAction |
+	ISetFilterType |
+	ISetIncludeAction |
+	ISetExcludeAction;

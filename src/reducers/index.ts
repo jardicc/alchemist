@@ -3,6 +3,7 @@ import { TActions } from "../actions/actions";
 import produce from "immer"
 
 export const appReducer = (state = getInitialState(), action: TActions) => {
+	console.log(JSON.stringify(action,null,"\t"));
 	switch (action.type) {
 		case "TOGGLE_COLLAPSE_OPTION": {
 			state = produce(state, draft => {
@@ -77,6 +78,25 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 			state = produce(state, draft => {
 				draft.filter.searchTerm = action.payload || null;
 			})
+			break;
+		}
+			
+		case "SET_FILTER_TYPE": {
+			state = produce(state, draft => {
+				draft.filter.filterEventsType = action.payload;
+			});
+			break;
+		}
+		case "SET_INCLUDE_ACTION":{
+			state = produce(state, draft => {
+				draft.filter.include = action.payload;
+			});
+			break;
+		}
+		case "SET_EXCLUDE_ACTION":{
+			state = produce(state, draft => {
+				draft.filter.exclude = action.payload;
+			});
 			break;
 		}
 		default: {
