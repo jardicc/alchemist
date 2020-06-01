@@ -73,7 +73,7 @@ export default class Listener extends React.Component<TListener> {
 		}
 	}
 
-	private clearLog() {
+	private clearLog=()=> {
 		this.props.clearLog();
 	}
 
