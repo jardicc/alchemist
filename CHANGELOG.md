@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+- bug fix: fixes "clear" button
+- changes "batch play" button into checkbox
+
 ## 0.5.0
 - change: listener by default filter action generally considered as garbage (although you can find some use for them)
 - feature: add include exclude filter
