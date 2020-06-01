@@ -82,8 +82,9 @@ export default class Listener extends React.Component<TListener> {
 		this.props.setCollapsed(value);
 	}
 
-	private onBatchPlay=(enabled:boolean)=> {		
-		this.props.setBatchPlayDecorator(enabled);
+	private onBatchPlay = (e: any) => {		
+		const value = e.target.checked;
+		this.props.setBatchPlayDecorator(value);
 	}
 
 	/**
@@ -138,7 +139,8 @@ export default class Listener extends React.Component<TListener> {
 				<div className="flex-row start controls">
 					{this.props.settings.listening ? <sp-button variant="primary" onClick={this.removeListener}>Stop</sp-button> : <sp-button variant="cta" onClick={this.attachListener}>Start</sp-button>}
 					<sp-button quiet variant="secondary" onClick={this.clearLog}>Clear</sp-button>
-					{batchPlay ? <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(false)}>Raw code</sp-button > : <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(true)}>Batch play code</sp-button >}
+					{/*batchPlay ? <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(false)}>Raw code</sp-button > : <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(true)}>Batch play code</sp-button >*/}
+					<sp-checkbox onClick={this.onBatchPlay} >Playable code</sp-checkbox>
 					<sp-checkbox onClick={this.toggleCollapseOption} checked>Collapsed</sp-checkbox>
 				</div>
 
