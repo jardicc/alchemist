@@ -1,14 +1,15 @@
 import React, { ReactNode } from 'react'
 import { app, action } from "../imports"
 import { ActionDescriptor, BasicActionDescriptor} from "photoshop/dist/types/photoshop"
-import { IAppState, IAction, ISettings } from '../reducers/initialState'
+import { IAppState, IAction, ISettings, IActionView } from '../reducers/initialState'
 import ActionItemContainer from './ActionItemContainer'
 import Filter from './Filter'
 import FilterContainer from './FilterContainer'
 
 export interface IListenerProps{
 	settings: ISettings
-	actions: IAction[]
+	groupSame:boolean
+	actions: IActionView[]
 }
 
 export interface IListenerDispatch{
@@ -16,6 +17,7 @@ export interface IListenerDispatch{
 	setListener(enabled:boolean):void
 	addAction(action:IAction):void
 	setBatchPlayDecorator(enabled:boolean):void
+	setGroupSame(enabled:boolean):void
 	clearLog():void
 	setLastHistoryID(id: number): void
 	incrementActionID():void
@@ -51,7 +53,7 @@ export default class Listener extends React.Component<TListener> {
 		let result = ""
 
 		if (test[0].ID!==this.props.settings.lastHistoryID && this.props.settings.lastHistoryID !== -1 && test[0].name.trim()) {
-			result =  " | "+test[0].name;
+			result =  test[0].name;
 		}
 
 		this.props.setLastHistoryID(test[0].ID);
@@ -103,7 +105,8 @@ export default class Listener extends React.Component<TListener> {
 			id: NaN, // will be set within reducer
 			playReplies: [],
 			timeCreated: Date.now(),
-			title: event + historyName,
+			historyStepTitle: historyName,
+			eventName: event
 		})
 		this.props.setLastHistoryID
 	}
@@ -114,6 +117,11 @@ export default class Listener extends React.Component<TListener> {
 	private attachListener = async() => {
 		app.eventNotifier = this.listener		
 		this.props.setListener(true);
+	}
+
+	private onGroupSame =(e: any) => {		
+		const value = e.target.checked;
+		this.props.setGroupSame(value);
 	}
 
 
@@ -139,9 +147,13 @@ export default class Listener extends React.Component<TListener> {
 				<div className="flex-row start controls">
 					{this.props.settings.listening ? <sp-button variant="primary" onClick={this.removeListener}>Stop</sp-button> : <sp-button variant="cta" onClick={this.attachListener}>Start</sp-button>}
 					<sp-button quiet variant="secondary" onClick={this.clearLog}>Clear</sp-button>
+					<div className="spread"></div>
 					{/*batchPlay ? <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(false)}>Raw code</sp-button > : <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(true)}>Batch play code</sp-button >*/}
-					<sp-checkbox onClick={this.onBatchPlay} >Playable code</sp-checkbox>
-					<sp-checkbox onClick={this.toggleCollapseOption} checked>Collapsed</sp-checkbox>
+					<div className="flex-row start">
+						<sp-checkbox onClick={this.onGroupSame} >Group same</sp-checkbox>
+						<sp-checkbox onClick={this.onBatchPlay} >Playable code</sp-checkbox>
+						<sp-checkbox onClick={this.toggleCollapseOption} checked>Collapsed</sp-checkbox>
+					</div>
 				</div>
 
 			</div>

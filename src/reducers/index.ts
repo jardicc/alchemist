@@ -99,6 +99,12 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 			});
 			break;
 		}
+		case "GROUP_SAME_ACTION": {
+			state = produce(state, draft => {
+				draft.filter.groupSame = action.payload;
+			});
+			break;
+		}
 		default: {
 			if (!(action as any).type.startsWith("@@")) {
 				console.error((action as any).type)				

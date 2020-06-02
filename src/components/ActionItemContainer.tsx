@@ -1,20 +1,21 @@
 import { connect } from 'react-redux'
-import { IAppState, IAction } from '../reducers/initialState'
-import { getCollapsedDefault, getBatchPlayDecorator } from '../selectors'
+import { IAppState, IAction, IActionView } from '../reducers/initialState'
+import { getCollapsedDefault, getBatchPlayDecorator, getGroupSame } from '../selectors'
 import { toggleCollapseOptionAction, addReplyAction, toggleExpandAction } from '../actions/actions'
 import { IActionItemProps, IActionItemDispatch } from './ActionItem'
 import cloneDeep from "lodash/cloneDeep"
 import ActionItem from './ActionItem'
 
 interface IOwn{
-	action:IAction
+	action:IActionView
 }
 
 const mapStateToProps = (state: IAppState, ownProps: IOwn): IActionItemProps => {
 	
 	return {
 		action: cloneDeep(ownProps.action),
-		batchPlayDecorator: getBatchPlayDecorator(state)
+		batchPlayDecorator: getBatchPlayDecorator(state),
+		groupSame: getGroupSame(state)
 	};
 }
 

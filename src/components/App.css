@@ -35,6 +35,13 @@
 	align-items: center;
 }
 
+.action .header .sameGroupBadge{
+	background-color: royalblue;
+	border-radius: 50%;
+	color:white;
+	padding: 0.2em 0.7em;
+}
+
 .action .header .collapse{
 	margin-right:1em;
 	display: flex;
@@ -105,6 +112,13 @@
 
 .center {
 	justify-content: center;
+}
+
+.controls{
+	flex-wrap: wrap;
+}
+.controls > div > *{
+	margin: 0 0.5em;
 }
 
 body, html, .root, .panel{

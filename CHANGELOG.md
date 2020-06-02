@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+- feature: grouping of same actions. This also merges replies.
+- change: splits event name and history step title. Therefore search works only for event name.
+
 ## 0.6.0
 - bug fix: fixes "clear" button
 - changes "batch play" button into checkbox

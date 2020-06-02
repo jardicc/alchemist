@@ -14,6 +14,7 @@ export interface IFilter{
 	filterEventsType: TFilterEvents
 	exclude: string[]
 	include: string[]
+	groupSame:boolean
 }
 
 export interface ISettings{
@@ -26,11 +27,16 @@ export interface ISettings{
 
 export interface IAction{
 	id:number
-	title:string
+	historyStepTitle: string
+	eventName:string
 	collapsed:boolean
 	descriptor: ActionDescriptor
 	timeCreated: number
 	playReplies: IPlayReply[]
+}
+
+export interface IActionView extends IAction{
+	groupedCounter:number
 }
 
 export interface IPlayReply{
@@ -49,7 +55,8 @@ export function getInitialState():IAppState {
 				"invokeCommand",
 				"modalStateChanged"
 			],
-			include:[]
+			include: [],
+			groupSame: false
 		},
 		settings: {
 			currentID: 0,

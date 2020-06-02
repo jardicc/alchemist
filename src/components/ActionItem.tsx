@@ -1,11 +1,12 @@
 import React from 'react'
-import { IAction, IPlayReply } from '../reducers/initialState'
+import { IAction, IPlayReply, IActionView } from '../reducers/initialState'
 import { ActionDescriptor } from 'photoshop/dist/types/photoshop'
 import { action } from '../imports'
 
 export interface IActionItemProps{
-	action:IAction
-	batchPlayDecorator:boolean
+	action:IActionView
+	batchPlayDecorator: boolean
+	groupSame: boolean
 }
 
 export interface IActionItemDispatch{
@@ -55,6 +56,14 @@ export default class ActionItem extends React.Component<TActionItem> {
 		},this.props.action.id);
 	}
 
+	private renderGroupCounter = () => {
+		const { action, groupSame } = this.props;
+		if (!groupSame || action.groupedCounter === 1) {
+			return null;
+		}
+		return <span className="sameGroupBadge">{action.groupedCounter}</span>
+	}
+
 	private renderReplies = () => {
 		const action = this.props.action;
 		
@@ -71,26 +80,37 @@ export default class ActionItem extends React.Component<TActionItem> {
 		}
 	}
 
+	public renderActionContent = () => {
+		const { action } = this.props;
+		if (action.collapsed) {
+			return null;
+		}
+		
+		const result = <React.Fragment>
+			<div className="code">
+				{this.decorateCode(action.descriptor)}
+			</div>
+			{this.renderReplies()}
+		</React.Fragment>;
+		
+		return result;
+	}
+
 	public render() {
 		const { action } = this.props;
+		const expandIcon = action.collapsed ? "⮞" : "⮟";
+		const title = expandIcon + " " + action.eventName + (action.historyStepTitle ? " | " : "") + action.historyStepTitle;
 		return (
 			<React.Fragment>
 				<div className="action" key={action.id}>
 					<div className="header">
-						<sp-button quiet variant="primary" onClick={this.toggleExpandAction} className="collapse">{action.collapsed ? "⮞" : "⮟"}{" " + action.title}</sp-button>
+						<sp-button quiet variant="primary" onClick={this.toggleExpandAction} className="collapse">{title}</sp-button>
 						<div className="spread"></div>
+						{this.renderGroupCounter()}
 						<sp-button quiet variant="secondary" title="play" onClick={this.play}>Play</sp-button>
-						<sp-button quiet variant="secondary" title="copy" onClick={this.copy}  >Copy</sp-button>
+						<sp-button quiet variant="secondary" title="copy" onClick={this.copy}>Copy</sp-button>
 					</div>
-					{
-						action.collapsed ? null :
-							<React.Fragment>
-								<div className="code">
-									{this.decorateCode(action.descriptor)}
-								</div>
-								{this.renderReplies()}
-							</React.Fragment>
-					}
+					{this.renderActionContent()}
 				</div>
 			</React.Fragment>
 		)

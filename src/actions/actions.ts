@@ -36,7 +36,6 @@ export interface IIncrementActionIDAction{
 }
 
 
-
 // action
 
 export interface IAddReplyActionAction{
@@ -74,6 +73,12 @@ export interface ISetExcludeAction{
 	type: "SET_EXCLUDE_ACTION",
 	payload: string[]
 }
+
+export interface IGroupSameAction{	
+	type: "GROUP_SAME_ACTION",
+	payload: boolean
+}
+
 
 
 
@@ -175,6 +180,13 @@ export function setExcludeAction(arr:string[]):ISetExcludeAction{
 	}
 }
 
+export function groupSameAction(enabled: boolean):IGroupSameAction {
+	return {
+		type: "GROUP_SAME_ACTION",
+		payload: enabled
+	}
+}
+
 export type TActions = IToggleCollapseOptionAction |
 	ISetListenerAction |
 	IAddActionAction |
@@ -187,4 +199,5 @@ export type TActions = IToggleCollapseOptionAction |
 	ISetSearchTermAction |
 	ISetFilterType |
 	ISetIncludeAction |
-	ISetExcludeAction;
+	ISetExcludeAction |
+	IGroupSameAction;
