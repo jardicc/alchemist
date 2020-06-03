@@ -19,11 +19,11 @@ export const getActions = createSelector([all,getGroupSame], (s,groupSame) => {
 	
 	if (s.filter.filterEventsType === "exclude") {
 		actions = actions.filter(action => 
-			!s.filter.exclude.some(str => action.historyStepTitle.includes(str))
+			!s.filter.exclude.some(str => action.eventName.includes(str))
 		)
 	} else if (s.filter.filterEventsType === "include") {
 		actions = actions.filter(action => 
-			s.filter.include.some(str => action.historyStepTitle.includes(str))
+			s.filter.include.some(str => action.eventName.includes(str))
 		)
 	}
 	if (s.filter.searchTerm) {
