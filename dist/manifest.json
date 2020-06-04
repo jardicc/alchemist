@@ -1,7 +1,7 @@
 {
 	"name": "UXP listener",
 	"id": "cz.bereza.uxp_listener",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"main": "index.html",
 	"host": {
 	    "app": "PS",
