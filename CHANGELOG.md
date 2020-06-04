@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.8.0
-- feature: whole state of panel is now saved in real-time and loaded with panel start
+- feature: whole state of panel is now saved in real-time and loaded with panel start. Panel will ignore whether listening was on/off last time and will be always off after panel load.
 
 ## 0.7.0
 - feature: grouping of same actions. This also merges replies.
