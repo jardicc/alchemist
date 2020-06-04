@@ -8,6 +8,8 @@ Move/symlink `dist` folder itself (not its content)
 into: `C:\Program Files\Common Files\Adobe\UXP\extensions` 
 or `/Library/Application Support/Adobe/UXP/extensions/`
 
+Panel settings on Window can be found in: `c:\Users\<yourAccountName>\AppData\Local\UXP\PluginsData\Internal\cz.bereza.uxp_listener\settings.json`
+
 ## Dev Setup
 
 Install the dependencies:
