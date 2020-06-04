@@ -2,8 +2,6 @@ import { createStore, applyMiddleware } from 'redux'
 import { appReducer } from '../reducers'
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import { IAppState, getInitialState } from '../reducers/initialState';
-
 /*
  * We're giving State interface to create store
  * store is type of State defined in our reducers

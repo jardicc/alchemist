@@ -1,6 +1,8 @@
 import { getInitialState } from "./initialState";
 import { TActions } from "../actions/actions";
 import produce from "immer"
+import { Main } from "../classes/Main";
+import { Settings } from "../classes/Settings";
 
 export const appReducer = (state = getInitialState(), action: TActions) => {
 	console.log(JSON.stringify(action,null,"\t"));
@@ -105,11 +107,19 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 			});
 			break;
 		}
+		case "REPLACE_WHOLE_STATE": {
+			if (action.payload) {
+				action.payload.settings.listening = false;
+				state = action.payload;				
+			}
+			break;
+		}
 		default: {
 			if (!(action as any).type.startsWith("@@")) {
 				console.error((action as any).type)				
 			}
 		}
 	}
+	Settings.saveSettings(state);
 	return state;
 };

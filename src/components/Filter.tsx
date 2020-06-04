@@ -6,6 +6,7 @@ export interface IFilterProps{
 	filterType: TFilterEvents
 	include: string
 	exclude: string
+	searchEvent:string|null
 }
 
 export interface IFilterDispatch{
@@ -64,7 +65,7 @@ export default class Filter extends React.Component<TFilter> {
 		return (
 			<React.Fragment>
 				<div className="FilterComponent">
-					<span>Search: </span><input onChange={this.onSearch} type="text" />
+					<span>Search: </span><input onChange={this.onSearch} value={this.props.searchEvent||""} type="text" />
 					<span>Filter:</span>
 					<sp-dropdown>
 						<sp-menu slot="options" onClick={this.onSetFilterEventsType}>

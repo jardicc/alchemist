@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.0
+- feature: whole state of panel is now saved in real-time and loaded with panel start
+
 ## 0.7.0
 - feature: grouping of same actions. This also merges replies.
 - change: splits event name and history step title. Therefore search works only for event name.

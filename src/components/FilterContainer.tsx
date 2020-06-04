@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { IAppState, IAction } from '../reducers/initialState'
-import { getCollapsedDefault, getBatchPlayDecorator, getFilterType, getInclude, getExclude } from '../selectors'
+import { getCollapsedDefault, getBatchPlayDecorator, getFilterType, getInclude, getExclude, getSearchEvent } from '../selectors'
 import { toggleCollapseOptionAction, addReplyAction, toggleExpandAction, setSearchTermAction, setFilterTypeAction, setIncludeAction, setExcludeAction } from '../actions/actions'
 import { IFilterProps, IFilterDispatch } from './Filter'
 import cloneDeep from "lodash/cloneDeep"
@@ -11,7 +11,8 @@ const mapStateToProps = (state: IAppState): IFilterProps => {
 	return {
 		filterType: getFilterType(state),
 		include: getInclude(state),
-		exclude: getExclude(state)
+		exclude: getExclude(state),
+		searchEvent: getSearchEvent(state)
 	}
 }
 

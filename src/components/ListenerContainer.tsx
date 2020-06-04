@@ -8,7 +8,7 @@ import Listener, { IListenerDispatch, IListenerProps } from './Listener'
 const mapStateToProps = (state: IAppState): IListenerProps => ({
 	settings: getSettings(state),
 	actions: getActions(state),
-	groupSame: getGroupSame(state),
+	groupSame: getGroupSame(state)
 });
 
 const mapDispatchToProps = (dispatch: any):IListenerDispatch => {

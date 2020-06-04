@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
 	mode: 'development', // Make this custom
-	entry: './src/index.tsx',
+	entry: './src/classes/Main.ts',
 	devtool: "eval-source-map",
 	output: {
 		filename: 'index.js',

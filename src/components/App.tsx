@@ -5,9 +5,11 @@ import './App.css'
 import ListenerContainer from './ListenerContainer'
 
 export interface IAppProps{
+
 }
 
 export interface IAppDispatch{
+	setWholeState():void
 }
 
 type TApp = IAppProps & IAppDispatch
@@ -23,5 +25,9 @@ export default class App extends React.Component<TApp> {
 				<ListenerContainer />
 			</div>
 		)
+	}
+
+	public componentDidMount () {
+		this.props.setWholeState();
 	}
 }

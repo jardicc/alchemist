@@ -11,6 +11,7 @@ export const getSettings = createSelector([all], s => s.settings);
 export const getFilterType = createSelector([all], s => s.filter.filterEventsType);
 export const getInclude = createSelector([all], s => s.filter.include.join(";"));
 export const getExclude = createSelector([all], s => s.filter.exclude.join(";"));
+export const getSearchEvent = createSelector([all], s => s.filter.searchTerm);
 export const getActions = createSelector([all,getGroupSame], (s,groupSame) => {
 	let actions: IActionView[] = s.actions.map(action => ({
 		...action,

@@ -7,4 +7,6 @@
 - ~~show play result/error~~
 - add option to limit amount of actions
 - add Batch Play options into code generator
+- save/load redux state as a file
 - ~~group action duplicates~~
+- ~~save redux state in real-time~~

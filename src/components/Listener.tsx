@@ -69,7 +69,10 @@ export default class Listener extends React.Component<TListener> {
 		} else {
 			return (
 				<div className="empty">
-					<div className="message">No actions recorded. Please start recording.</div>
+					<div className="message">
+						<p>No actions to show.</p>
+						<p>Please start recording or make sure that filters are set properly.</p>
+					</div>
 				</div>
 			)
 		}
@@ -137,6 +140,8 @@ export default class Listener extends React.Component<TListener> {
 
 	public render() {
 		const batchPlay = this.props.settings.batchPlayDecorator;
+		const { collapsed, batchPlayDecorator } = this.props.settings
+		const { groupSame } = this.props;
 
 		return (
 			<div className="component">
@@ -150,9 +155,9 @@ export default class Listener extends React.Component<TListener> {
 					<div className="spread"></div>
 					{/*batchPlay ? <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(false)}>Raw code</sp-button > : <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(true)}>Batch play code</sp-button >*/}
 					<div className="flex-row start">
-						<sp-checkbox onClick={this.onGroupSame} >Group same</sp-checkbox>
-						<sp-checkbox onClick={this.onBatchPlay} >Playable code</sp-checkbox>
-						<sp-checkbox onClick={this.toggleCollapseOption} checked>Collapsed</sp-checkbox>
+						<sp-checkbox onClick={this.onGroupSame} checked={groupSame ? true : null}>Group same</sp-checkbox>
+						<sp-checkbox onClick={this.onBatchPlay} checked={batchPlayDecorator ? true : null}>Playable code</sp-checkbox>
+						<sp-checkbox onClick={this.toggleCollapseOption} checked={collapsed ? true : null}>Collapsed</sp-checkbox>
 					</div>
 				</div>
 

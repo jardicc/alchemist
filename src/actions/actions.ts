@@ -1,4 +1,11 @@
-import { IAction, IPlayReply, TFilterEvents } from "../reducers/initialState"
+import { IAction, IPlayReply, TFilterEvents, IAppState } from "../reducers/initialState"
+
+
+
+export interface IReplaceWholeState{
+	type: "REPLACE_WHOLE_STATE",
+	payload: IAppState
+}
 
 export interface IToggleCollapseOptionAction{
 	type: "TOGGLE_COLLAPSE_OPTION",
@@ -81,6 +88,13 @@ export interface IGroupSameAction{
 
 
 
+
+export function replaceWholeStateAction(state: IAppState):IReplaceWholeState {
+	return {
+		type: "REPLACE_WHOLE_STATE",
+		payload: state
+	}
+}
 
 export function toggleCollapseOptionAction(enabled: boolean):IToggleCollapseOptionAction {
 	return {
@@ -200,4 +214,5 @@ export type TActions = IToggleCollapseOptionAction |
 	ISetFilterType |
 	ISetIncludeAction |
 	ISetExcludeAction |
-	IGroupSameAction;
+	IGroupSameAction |
+	IReplaceWholeState;
