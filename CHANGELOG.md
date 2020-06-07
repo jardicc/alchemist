@@ -1,8 +1,9 @@
 # Changelog
 
 ## 0.10.0
-- feature: possibility to add/remove action even name into include/exlude list in action menu
+- feature: possibility to add/remove action event name into include/exlude list in action menu
 - feature: export/import plugin state
+- feature: append actions from json file
 
 ## 0.9.0
 - change: playable code adds explicit default options
