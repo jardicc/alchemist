@@ -74,6 +74,36 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 			})
 			break;
 		}
+		case "REMOVE_ACTION_ACTION": {
+			state = produce(state, draft => {
+				let index:number|null = null;
+				state.actions.forEach((a, i) => {
+					if (a.id === action.payload) {
+						index = i;
+					}
+					return;
+				});
+				if (typeof index === "number") {
+					draft.actions.splice(index, 1);
+				}
+			})
+			break;
+		}
+		case "APPEND_ACTIONS": {
+			state = produce(state, draft => {
+				// fix IDs
+				action.payload.actions.forEach(action => {
+					draft.settings.currentID++;
+					action.id = draft.settings.currentID;
+				})
+				// append on the top
+				draft.actions = [
+					...action.payload.actions,
+					...state.actions,
+				]
+			})
+			break;
+		}
 			
 			// Filter
 		case "SET_SEARCH_TERM_ACTION": {
@@ -112,6 +142,45 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 				action.payload.settings.listening = false;
 				state = action.payload;				
 			}
+			break;
+		}
+		case "FILTER_EVENT_NAME_ACTION": {
+			
+			state = produce(state, draft => {
+				const {kind ,eventName,operation}= action.payload;
+
+				if (operation === "add") {
+					if (kind === "include") {
+						if (state.filter.include.includes(eventName)) {
+							return;
+						}
+						// remove empty items
+						draft.filter.include = draft.filter.include.filter(item => item.trim() !== "");
+						draft.filter.include.push(eventName);
+					} else if (kind === "exclude") {
+						if (state.filter.exclude.includes(eventName)) {
+							return;
+						}
+						// remove empty items
+						draft.filter.exclude = draft.filter.exclude.filter(item => item.trim() !== "");
+						draft.filter.exclude.push(eventName);
+					}					
+				} else if (operation === "remove") {
+					if (kind === "include") {
+						const index = state.filter.include.indexOf(eventName);
+						if (index === -1) {
+							return
+						}
+						draft.filter.include.splice(index,1);
+					} else if (kind === "exclude") {
+						const index = state.filter.exclude.indexOf(eventName);
+						if (index === -1) {
+							return
+						}
+						draft.filter.exclude.splice(index,1);
+					}
+				}
+			});
 			break;
 		}
 		default: {

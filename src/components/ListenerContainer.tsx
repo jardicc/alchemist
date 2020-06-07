@@ -2,13 +2,15 @@ import { connect } from 'react-redux'
 import App, { IAppProps, IAppDispatch } from './App'
 import { IAppState, IAction, ISettings } from '../reducers/initialState'
 import { getCollapsedDefault, getSettings, getActions, getGroupSame } from '../selectors'
-import { toggleCollapseOptionAction, setListenerAction, addActionActin, setBatchPlayDecoratorAction, clearLogAction, setHistoryIDAction, incrementActionIDAction, groupSameAction } from '../actions/actions'
+import { toggleCollapseOptionAction, setListenerAction, addActionActin, setBatchPlayDecoratorAction, clearLogAction, setHistoryIDAction, incrementActionIDAction, groupSameAction, replaceWholeStateAction, appendActionsAction } from '../actions/actions'
 import Listener, { IListenerDispatch, IListenerProps } from './Listener'
+import { Settings } from '../classes/Settings'
 
 const mapStateToProps = (state: IAppState): IListenerProps => ({
 	settings: getSettings(state),
 	actions: getActions(state),
-	groupSame: getGroupSame(state)
+	groupSame: getGroupSame(state),
+	wholeState: state
 });
 
 const mapDispatchToProps = (dispatch: any):IListenerDispatch => {
@@ -20,7 +22,14 @@ const mapDispatchToProps = (dispatch: any):IListenerDispatch => {
 		setBatchPlayDecorator: (enabled) => dispatch(setBatchPlayDecoratorAction(enabled)),
 		clearLog: () => dispatch(clearLogAction()),
 		setLastHistoryID: (id) => dispatch(setHistoryIDAction(id)),
-		incrementActionID:()=>dispatch(incrementActionIDAction()),
+		incrementActionID: () => dispatch(incrementActionIDAction()),
+		setWholeState: async (data,append) => {
+			if (append) {
+				dispatch(appendActionsAction(data));
+			} else {
+				dispatch(replaceWholeStateAction(data));				
+			}
+		}
 	}
 }
 

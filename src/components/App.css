@@ -35,6 +35,20 @@
 	align-items: center;
 }
 
+.action .menuHolder{
+	position: relative;
+	color:white;
+}
+
+.action .menu{
+	width: 16em;
+	position: absolute;
+	z-index: 10;
+	right: 0;
+	background: #555;
+	border: 1px solid silver;
+}
+
 .action .header .sameGroupBadge{
 	background-color: royalblue;
 	border-radius: 50%;

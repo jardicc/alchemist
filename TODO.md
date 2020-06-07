@@ -1,12 +1,17 @@
 # TODO
-- ~~search by event name~~
-- ~~include/exclude by event name~~
-- sort by time or by event name
-- ~~play action button~~
-- make action editable
-- ~~show play result/error~~
-- add option to limit amount of actions
-- add Batch Play options into code generator
-- save/load redux state as a file
 - ~~group action duplicates~~
+- ~~include/exclude by event name~~
+- ~~play action button~~
 - ~~save redux state in real-time~~
+- ~~search by event name~~
+- ~~show play result/error~~
+- add Batch Play options into code generator
+- add option to limit amount of actions
+- make action editable
+- ~~save/load redux state as a file~~
+- sort by time or by event name
+- add enum mining
+- add stringID mining
+- add value tolerant grouping
+- add brute force grouping
+- show actions difference

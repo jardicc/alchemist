@@ -10,7 +10,7 @@ const mapStateToProps = (state: IAppState): IAppProps => ({
 const mapDispatchToProps = (dispatch: any):IAppDispatch => {
 	return {
 		setWholeState: async () => {
-			dispatch(replaceWholeStateAction(await Settings.loadSettings()));
+			dispatch(replaceWholeStateAction(await Settings.importState()));
 			Settings.loaded = true;
 		}
 	}

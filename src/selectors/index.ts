@@ -9,8 +9,10 @@ export const getGroupSame = createSelector([all], s => s.filter.groupSame);
 export const getBatchPlayDecorator = createSelector([all], s => s.settings.batchPlayDecorator);
 export const getSettings = createSelector([all], s => s.settings);
 export const getFilterType = createSelector([all], s => s.filter.filterEventsType);
-export const getInclude = createSelector([all], s => s.filter.include.join(";"));
-export const getExclude = createSelector([all], s => s.filter.exclude.join(";"));
+export const getIncludeArr = createSelector([all], s => s.filter.include);
+export const getExcludeArr = createSelector([all], s => s.filter.exclude);
+export const getInclude = createSelector([getIncludeArr], s => s.join(";"));
+export const getExclude = createSelector([getExcludeArr], s => s.join(";"));
 export const getSearchEvent = createSelector([all], s => s.filter.searchTerm);
 export const getActions = createSelector([all,getGroupSame], (s,groupSame) => {
 	let actions: IActionView[] = s.actions.map(action => ({
@@ -18,11 +20,11 @@ export const getActions = createSelector([all,getGroupSame], (s,groupSame) => {
 		groupedCounter:1
 	}));
 	
-	if (s.filter.filterEventsType === "exclude") {
+	if (s.filter.filterEventsType === "exclude" && s.filter.exclude.join(";").trim().length) {
 		actions = actions.filter(action => 
 			!s.filter.exclude.some(str => action.eventName.includes(str))
 		)
-	} else if (s.filter.filterEventsType === "include") {
+	} else if (s.filter.filterEventsType === "include" && s.filter.include.join(";").trim().length) {
 		actions = actions.filter(action => 
 			s.filter.include.some(str => action.eventName.includes(str))
 		)

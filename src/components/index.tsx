@@ -11,6 +11,7 @@ declare global {
 			'sp-action-button': any;
 			'sp-checkbox': any;
 			'sp-menu': any;
+			'sp-menu-group': any;
 			'sp-menu-item': any;
 			'sp-menu-divider': any;
 			'sp-dropdown': any;

@@ -3,7 +3,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-	mode: 'development', // Make this custom
+	mode: 'production', // Make this custom
 	entry: './src/classes/Main.ts',
 	devtool: "eval-source-map",
 	output: {

@@ -5,11 +5,13 @@ import { IAppState, IAction, ISettings, IActionView } from '../reducers/initialS
 import ActionItemContainer from './ActionItemContainer'
 import Filter from './Filter'
 import FilterContainer from './FilterContainer'
+import { Settings } from '../classes/Settings'
 
 export interface IListenerProps{
 	settings: ISettings
 	groupSame:boolean
 	actions: IActionView[]
+	wholeState: IAppState
 }
 
 export interface IListenerDispatch{
@@ -20,7 +22,8 @@ export interface IListenerDispatch{
 	setGroupSame(enabled:boolean):void
 	clearLog():void
 	setLastHistoryID(id: number): void
-	incrementActionID():void
+	incrementActionID(): void
+	setWholeState(data:any,append:boolean):void
 }
 
 type TListener = IListenerProps & IListenerDispatch
@@ -127,6 +130,21 @@ export default class Listener extends React.Component<TListener> {
 		this.props.setGroupSame(value);
 	}
 
+	private exportState = () => {
+		Settings.saveSettingsWithDialog(this.props.wholeState)
+	}
+
+	private importState = async () => {
+		const data = await Settings.importStateWithDialog();
+		if(!data){return}
+		this.props.setWholeState(data,false);
+	}
+	
+	private appendActions = async () => {
+		const data = await Settings.importStateWithDialog();
+		if(!data){return}
+		this.props.setWholeState(data,true);
+	}
 
 	/**
 	 * Attaches a null listener to the app.
@@ -150,8 +168,14 @@ export default class Listener extends React.Component<TListener> {
 					{this.renderActions()}
 				</div>
 				<div className="flex-row start controls">
-					{this.props.settings.listening ? <sp-button variant="primary" onClick={this.removeListener}>Stop</sp-button> : <sp-button variant="cta" onClick={this.attachListener}>Start</sp-button>}
+					{this.props.settings.listening ?
+						<sp-button variant="primary" onClick={this.removeListener}>Stop</sp-button> :
+						<sp-button variant="cta" onClick={this.attachListener}>Start</sp-button>
+					}
 					<sp-button quiet variant="secondary" onClick={this.clearLog}>Clear</sp-button>
+					<sp-button quiet variant="secondary" onClick={this.exportState}>Export...</sp-button>
+					<sp-button quiet variant="secondary" onClick={this.importState}>Import...</sp-button>
+					<sp-button quiet variant="secondary" onClick={this.appendActions}>Import append...</sp-button>
 					<div className="spread"></div>
 					{/*batchPlay ? <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(false)}>Raw code</sp-button > : <sp-button quiet variant="secondary" onClick={() => this.onBatchPlay(true)}>Batch play code</sp-button >*/}
 					<div className="flex-row start">

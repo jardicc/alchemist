@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.0
+- feature: possibility to add/remove action even name into include/exlude list in action menu
+- feature: export/import plugin state
+
+## 0.9.0
+- change: playable code adds explicit default options
+
 ## 0.8.0
 - feature: whole state of panel is now saved in real-time and loaded with panel start. Panel will ignore whether listening was on/off last time and will be always off after panel load.
 

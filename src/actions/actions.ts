@@ -42,6 +42,11 @@ export interface IIncrementActionIDAction{
 	payload: null
 }
 
+export interface IAppendActionsAction{
+	type: "APPEND_ACTIONS",
+	payload: IAppState
+}
+
 
 // action
 
@@ -57,6 +62,19 @@ export interface IToggleExpandActionAction{
 	payload: {
 		expand:boolean
 		id:number
+	}
+}
+export interface IRemoveActionAction{
+	type: "REMOVE_ACTION_ACTION",
+	payload: number
+}
+
+export interface IFilterEventNameAction{
+	type: "FILTER_EVENT_NAME_ACTION",
+	payload: {
+		eventName: string,
+		kind: "include" | "exclude",
+		operation: "add" | "remove"
 	}
 }
 
@@ -92,6 +110,13 @@ export interface IGroupSameAction{
 export function replaceWholeStateAction(state: IAppState):IReplaceWholeState {
 	return {
 		type: "REPLACE_WHOLE_STATE",
+		payload: state
+	}
+}
+
+export function appendActionsAction(state: IAppState): IAppendActionsAction {
+	return {
+		type: "APPEND_ACTIONS",
 		payload: state
 	}
 }
@@ -155,6 +180,13 @@ export function addReplyAction(reply:IPlayReply,id:number):IAddReplyActionAction
 	}
 }
 
+export function removeActionAction(id:number):IRemoveActionAction{
+	return{
+		type: "REMOVE_ACTION_ACTION",
+		payload: id
+	}
+}
+
 export function toggleExpandAction(expand:boolean,id:number):IToggleExpandActionAction{
 	return{
 		type: "TOGGLE_EXPAND_ACTION_ACTION",
@@ -201,6 +233,15 @@ export function groupSameAction(enabled: boolean):IGroupSameAction {
 	}
 }
 
+export function filterEventNameAction(eventName:string, kind:"include"|"exclude", operation: "add"|"remove"):IFilterEventNameAction {
+	return {
+		type: "FILTER_EVENT_NAME_ACTION",
+		payload: {
+			eventName,kind,operation
+		}
+	}
+}
+
 export type TActions = IToggleCollapseOptionAction |
 	ISetListenerAction |
 	IAddActionAction |
@@ -215,4 +256,7 @@ export type TActions = IToggleCollapseOptionAction |
 	ISetIncludeAction |
 	ISetExcludeAction |
 	IGroupSameAction |
-	IReplaceWholeState;
+	IReplaceWholeState |
+	IRemoveActionAction |
+	IFilterEventNameAction |
+	IAppendActionsAction
