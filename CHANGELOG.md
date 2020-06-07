@@ -2,8 +2,9 @@
 
 ## 0.10.0
 - feature: possibility to add/remove action event name into include/exlude filter list using action menu
-- feature: export/import plugin state
-- feature: append actions from json file
+- feature: export/import plugin state (settings+actions)
+- feature: append actions from JSON file
+- feature: remove action from list (not a filter)
 
 ## 0.9.0
 - change: playable code adds explicit default options
