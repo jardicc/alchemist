@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.10.0
-- feature: possibility to add/remove action event name into include/exlude list in action menu
+- feature: possibility to add/remove action event name into include/exlude filter list using action menu
 - feature: export/import plugin state
 - feature: append actions from json file
 
