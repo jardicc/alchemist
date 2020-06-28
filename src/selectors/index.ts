@@ -1,8 +1,8 @@
-import { createSelector } from 'reselect'
-import { IAppState, IActionView } from '../reducers/initialState'
-import _ from 'lodash';
+import { createSelector } from "reselect";
+import { IAppState, IActionView } from "../reducers/initialState";
+import _ from "lodash";
 
-const all = (state:IAppState) => state
+const all = (state:IAppState) => state;
  
 export const getCollapsedDefault = createSelector([all], s => s.settings.collapsed);
 export const getGroupSame = createSelector([all], s => s.filter.groupSame);
@@ -22,15 +22,15 @@ export const getActions = createSelector([all,getGroupSame], (s,groupSame) => {
 	
 	if (s.filter.filterEventsType === "exclude" && s.filter.exclude.join(";").trim().length) {
 		actions = actions.filter(action => 
-			!s.filter.exclude.some(str => action.eventName.includes(str))
-		)
+			!s.filter.exclude.some(str => action.eventName.includes(str.trim()))
+		);
 	} else if (s.filter.filterEventsType === "include" && s.filter.include.join(";").trim().length) {
 		actions = actions.filter(action => 
-			s.filter.include.some(str => action.eventName.includes(str))
-		)
+			s.filter.include.some(str => action.eventName.includes(str.trim()))
+		);
 	}
 	if (s.filter.searchTerm) {
-		actions = actions.filter(action => action.eventName.includes(s.filter.searchTerm as string))
+		actions = actions.filter(action => action.eventName.includes(s.filter.searchTerm as string));
 	} 
 	
 	// reduce
@@ -46,7 +46,7 @@ export const getActions = createSelector([all,getGroupSame], (s,groupSame) => {
 					actions[i].playReplies = [
 						...actions[i].playReplies,
 						...actions[j].playReplies,
-					]
+					];
 					actions.splice(j, 1);
 					j--;
 					actions[i].groupedCounter++;
