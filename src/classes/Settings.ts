@@ -1,12 +1,9 @@
-const storage = require("uxp").storage;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem = require("uxp").storage.localFileSystem;
 
 export class Settings{
-	constructor() {
-		
-	}
 
-	public static loaded: boolean = false;
+	public static loaded = false;
 
 	private static readonly settingsFilename = "settings.json";
 
@@ -17,7 +14,7 @@ export class Settings{
 
 	public static async saveSettings(object: any): Promise<void> {		
 		const folder = await this.settingsFolder();
-		await this._saveSettings(object, folder, this.settingsFilename);
+		await this._saveSettings(object, folder);
 	}
 
 	public static async saveSettingsWithDialog(object: any): Promise<void>{
@@ -26,7 +23,7 @@ export class Settings{
 			//initialLocation: await this.settingsFolder()
 		});
 		if (!file) {
-			return
+			return;
 		}
 		const data = JSON.stringify(object, null, "\t");
 		await file.write(data, {
@@ -34,9 +31,9 @@ export class Settings{
 		});
 	}
 
-	private static async _saveSettings(object: any, folder: any, name:string): Promise<void>{
+	private static async _saveSettings(object: any, folder: any): Promise<void>{
 		if (!this.loaded) {
-			return
+			return;
 		}
 
 		const data = JSON.stringify(object, null, "\t");
@@ -54,7 +51,7 @@ export class Settings{
 		const entries:any[] = await folder.getEntries();
 		const found = entries.find(file => file.name === this.settingsFilename);
 		if (!found) {
-			return null
+			return null;
 		}
 		const data: string = await found.read();
 		try {
@@ -73,7 +70,7 @@ export class Settings{
 			//initialLocation: await this.settingsFolder()
 		});
 		if (!files || !files.length) {
-			return null
+			return null;
 		}
 		const data: string = await files[0].read();
 		try {

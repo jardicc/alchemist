@@ -1,6 +1,6 @@
-import { createStore, applyMiddleware } from 'redux'
-import { appReducer } from '../reducers'
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { createStore, applyMiddleware } from "redux";
+import { appReducer } from "../reducers";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 /*
  * We're giving State interface to create store

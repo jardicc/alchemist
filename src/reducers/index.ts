@@ -1,16 +1,15 @@
-import { getInitialState } from "./initialState";
+import { getInitialState, IAppState } from "./initialState";
 import { TActions } from "../actions/actions";
-import produce from "immer"
-import { Main } from "../classes/Main";
+import produce from "immer";
 import { Settings } from "../classes/Settings";
 
-export const appReducer = (state = getInitialState(), action: TActions) => {
+export const appReducer = (state = getInitialState(), action: TActions):IAppState => {
 	console.log(JSON.stringify(action,null,"\t"));
 	switch (action.type) {
 		case "TOGGLE_COLLAPSE_OPTION": {
 			state = produce(state, draft => {
 				draft.settings.collapsed = action.payload;
-			})
+			});
 			break;
 		}
 		case "ADD_ACTION_ACTION": {
@@ -20,41 +19,41 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 					...action.payload,
 					id: state.settings.currentID + 1
 				});
-			})
+			});
 			break;
 		}
 		case "CLEAR_LOG_ACTION": {
 			state = produce(state,draft=>{
 				draft.actions = [];
-			})
+			});
 			break;
 		}
 		case "SET_BATCH_PLAY_DECORATOR_ACTION": {
 			state = produce(state,draft=>{
 				draft.settings.batchPlayDecorator = action.payload;
-			})
+			});
 			break;
 		}
 		case "SET_HISTORY_ID_ACTION": {
 			state = produce(state,draft=>{
 				draft.settings.lastHistoryID = action.payload;
-			})
-			break
+			});
+			break;
 		}
 		case "SET_LISTENER_ACTION": {
 			state = produce(state,draft=>{
 				draft.settings.listening = action.payload;
-			})
+			});
 			break;
 		}
 			
 		case "INCREMENT_ACTION_ID_ACTION":{
 			state = produce(state, draft => {
 				draft.settings.currentID = state.settings.currentID + 1;	
-			})
+			});
 			break;
 		}
-			// ACTIONS
+		// ACTIONS
 
 		case "ADD_REPLY_ACTION_ACTION": {
 			state = produce(state, draft => {
@@ -62,7 +61,7 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 				if (found) {
 					found.playReplies.push(action.payload.reply);					
 				}
-			})
+			});
 			break;
 		}
 		case "TOGGLE_EXPAND_ACTION_ACTION": {
@@ -71,7 +70,7 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 				if (found) {
 					found.collapsed = action.payload.expand;		
 				}
-			})
+			});
 			break;
 		}
 		case "REMOVE_ACTION_ACTION": {
@@ -86,30 +85,39 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 				if (typeof index === "number") {
 					draft.actions.splice(index, 1);
 				}
-			})
+			});
 			break;
 		}
 		case "APPEND_ACTIONS": {
 			state = produce(state, draft => {
-				// fix IDs
+			// fix IDs
 				action.payload.actions.forEach(action => {
 					draft.settings.currentID++;
 					action.id = draft.settings.currentID;
-				})
+				});
 				// append on the top
 				draft.actions = [
 					...action.payload.actions,
 					...state.actions,
-				]
-			})
+				];
+			});
+			break;
+		}
+		case "SET_MODAL_BEHAVIOR_ACTION": {
+			state = produce(state, draft => {
+				const found = draft.actions.find((a) => a.id === action.payload.id);
+				if (found) {
+					found.modalBehavior = action.payload.modalBehavior;
+				}
+			});
 			break;
 		}
 			
-			// Filter
+		// Filter
 		case "SET_SEARCH_TERM_ACTION": {
 			state = produce(state, draft => {
 				draft.filter.searchTerm = action.payload || null;
-			})
+			});
 			break;
 		}
 			
@@ -169,13 +177,13 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 					if (kind === "include") {
 						const index = state.filter.include.indexOf(eventName);
 						if (index === -1) {
-							return
+							return;
 						}
 						draft.filter.include.splice(index,1);
 					} else if (kind === "exclude") {
 						const index = state.filter.exclude.indexOf(eventName);
 						if (index === -1) {
-							return
+							return;
 						}
 						draft.filter.exclude.splice(index,1);
 					}
@@ -184,8 +192,10 @@ export const appReducer = (state = getInitialState(), action: TActions) => {
 			break;
 		}
 		default: {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			if (!(action as any).type.startsWith("@@")) {
-				console.error((action as any).type)				
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				console.error((action as any).type);				
 			}
 		}
 	}

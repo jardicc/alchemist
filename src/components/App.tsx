@@ -1,33 +1,34 @@
 // App imports
-import React from 'react'
-import './App.css'
+import React from "react";
+import "./App.css";
 
-import ListenerContainer from './ListenerContainer'
+import {ListenerContainer} from "./ListenerContainer";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IAppProps{
-
+	
 }
 
 export interface IAppDispatch{
-	setWholeState():void
+		setWholeState():void
 }
 
 type TApp = IAppProps & IAppDispatch
 
-export default class App extends React.Component<TApp> {
-	constructor(props:TApp) {
-		super(props)
+export class App extends React.Component<TApp> {
+	constructor(props: TApp) {
+		super(props);
 	}
-
-	public render() {
+	
+	public render(): JSX.Element {
 		return (
 			<div className="panel">
 				<ListenerContainer />
 			</div>
-		)
+		);
 	}
-
-	public componentDidMount () {
+	
+	public componentDidMount(): void {
 		this.props.setWholeState();
 	}
 }

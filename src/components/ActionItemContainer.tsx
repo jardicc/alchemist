@@ -1,10 +1,10 @@
-import { connect } from 'react-redux'
-import { IAppState, IAction, IActionView } from '../reducers/initialState'
-import { getCollapsedDefault, getBatchPlayDecorator, getGroupSame, getExclude, getInclude, getIncludeArr, getExcludeArr } from '../selectors'
-import { toggleCollapseOptionAction, addReplyAction, toggleExpandAction, removeActionAction, filterEventNameAction } from '../actions/actions'
-import { IActionItemProps, IActionItemDispatch } from './ActionItem'
-import cloneDeep from "lodash/cloneDeep"
-import ActionItem from './ActionItem'
+import { connect, MapDispatchToPropsFunction } from "react-redux";
+import { IAppState, IActionView } from "../reducers/initialState";
+import { getBatchPlayDecorator, getGroupSame, getIncludeArr, getExcludeArr } from "../selectors";
+import { addReplyAction, toggleExpandAction, removeActionAction, filterEventNameAction, setModalBehaviorAction } from "../actions/actions";
+import { IActionItemProps, IActionItemDispatch } from "./ActionItem";
+import cloneDeep from "lodash/cloneDeep";
+import {ActionItem} from "./ActionItem";
 
 interface IOwn{
 	action:IActionView
@@ -19,15 +19,16 @@ const mapStateToProps = (state: IAppState, ownProps: IOwn): IActionItemProps => 
 		exclude: getExcludeArr(state),
 		include: getIncludeArr(state),
 	};
-}
+};
 
-const mapDispatchToProps = (dispatch: any):IActionItemDispatch => {
+const mapDispatchToProps: MapDispatchToPropsFunction<IActionItemDispatch, IOwn> = (dispatch):IActionItemDispatch => {
 	return {
-		addReply: (reply,id) => dispatch(addReplyAction(reply,id)),
+		addReply: (reply, id) => dispatch(addReplyAction(reply, id)),
 		toggleExpand: (expand, id) => dispatch(toggleExpandAction(expand, id)),
 		removeAction: (id) => dispatch(removeActionAction(id)),
-		filterEventName:(eventName,kind,operation)=>dispatch(filterEventNameAction(eventName,kind,operation))
-	}
-}
+		filterEventName: (eventName, kind, operation) => dispatch(filterEventNameAction(eventName, kind, operation)),
+		setModalBehavior: (id, modalBehavior) => dispatch(setModalBehaviorAction(id, modalBehavior))
+	};
+};
 
-export default connect<IActionItemProps, IActionItemDispatch, IOwn>(mapStateToProps, mapDispatchToProps)(ActionItem)
+export const ActionItemContainer = connect<IActionItemProps, IActionItemDispatch, IOwn>(mapStateToProps, mapDispatchToProps)(ActionItem);

@@ -13,6 +13,16 @@
 	font-family: 'Courier New', Monaco;
 	margin: 1em;
 }
+
+.codeArea{
+	color:white;
+	font-size: 11px;
+	white-space: pre;
+	font-family: 'Courier New', Monaco;
+	display: flex;
+	width: 100%;
+}
+
 .replies{
 	margin-left: 2em;
 	background: rgba(0,0,0,0.2);
@@ -28,6 +38,11 @@
 	border-bottom: 1px solid gray;
 	line-height: 1.5;
 	flex-shrink: 0;
+}
+
+.action .chevron{
+	color:"white";
+	margin-right: 0.5em;
 }
 
 .action .header{
@@ -134,6 +149,10 @@
 }
 .controls > div > *{
 	margin: 0 0.5em;
+}
+
+.version{
+	align-self: center;
 }
 
 body, html, .root, .panel{

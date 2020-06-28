@@ -1,7 +1,8 @@
-import { ActionDescriptor} from "photoshop/dist/types/photoshop"
-import { Descriptor } from 'photoshop/dist/types/UXP'
+import { ActionDescriptor} from "photoshop/dist/types/photoshop";
+import { Descriptor } from "photoshop/dist/types/UXP";
 
 export interface IAppState {
+	version: [number, number, number]
 	settings: ISettings
 	actions: IAction[]
 	filter: IFilter
@@ -25,14 +26,15 @@ export interface ISettings{
 	lastHistoryID:number	
 }
 
-export interface IAction{
-	id:number
+export interface IAction {
+	id: number
 	historyStepTitle: string
-	eventName:string
-	collapsed:boolean
+	eventName: string
+	collapsed: boolean
 	descriptor: ActionDescriptor
 	timeCreated: number
 	playReplies: IPlayReply[]
+	modalBehavior: "wait" | "execute" | "fail"
 }
 
 export interface IActionView extends IAction{
@@ -46,6 +48,7 @@ export interface IPlayReply{
 
 export function getInitialState():IAppState {
 	return {
+		version: [2, 0, 0],
 		filter: {
 			searchTerm: null,
 			filterEventsType: "exclude",
@@ -60,11 +63,11 @@ export function getInitialState():IAppState {
 		},
 		settings: {
 			currentID: 0,
-			collapsed:true,
-			batchPlayDecorator:false,
+			collapsed: true,
+			batchPlayDecorator: false,
 			listening: false,
-			lastHistoryID:-1			
+			lastHistoryID: -1
 		},
 		actions: [],
-	}
+	};
 }

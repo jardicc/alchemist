@@ -1,16 +1,16 @@
 export class ReloaderItem{
 
-	public initialTime:Date
+	public initialTime: Date|null = null;
 
 	constructor(public entry: any) {}
 
-	public async init() {
+	public async init():Promise<void> {
 		this.initialTime = await this.getModifiedTime();
 	}
 
-	public async reloadIfChanged() {
+	public async reloadIfChanged():Promise<void> {
 		if (!this.initialTime) {
-			return
+			return;
 		}
 		const newTime = await this.getModifiedTime();
 		if (newTime.getTime() > this.initialTime.getTime()) {

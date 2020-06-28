@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react'
-import { app, action } from "../imports"
-import { ActionDescriptor, BasicActionDescriptor} from "photoshop/dist/types/photoshop"
-import { IAppState, IAction, ISettings, IActionView } from '../reducers/initialState'
-import ActionItemContainer from './ActionItemContainer'
-import Filter from './Filter'
-import FilterContainer from './FilterContainer'
-import { Settings } from '../classes/Settings'
+import React, { ReactNode } from "react";
+import { app, action } from "../imports";
+import { IAppState, IAction, ISettings, IActionView } from "../reducers/initialState";
+import {ActionItemContainer} from "./ActionItemContainer";
+import {FilterContainer} from "./FilterContainer";
+import { Settings } from "../classes/Settings";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const manifest = require("./../../uxp/manifest.json");
 
 export interface IListenerProps{
 	settings: ISettings
@@ -23,7 +23,7 @@ export interface IListenerDispatch{
 	clearLog():void
 	setLastHistoryID(id: number): void
 	incrementActionID(): void
-	setWholeState(data:any,append:boolean):void
+	setWholeState(data:IAppState,append:boolean):void
 }
 
 type TListener = IListenerProps & IListenerDispatch
@@ -33,9 +33,9 @@ type TListener = IListenerProps & IListenerDispatch
  * Usage of the Photoshop event listening APIs.
  * This section of the APIs are subject to sweeping changes.
  */
-export default class Listener extends React.Component<TListener> {
+export class Listener extends React.Component<TListener> {
 	constructor(props:TListener) {
-		super(props)
+		super(props);
 	}
 
 	private async getHistoryState() {
@@ -53,7 +53,7 @@ export default class Listener extends React.Component<TListener> {
 			}
 		], {});
 
-		let result = ""
+		let result = "";
 
 		if (test[0].ID!==this.props.settings.lastHistoryID && this.props.settings.lastHistoryID !== -1 && test[0].name.trim()) {
 			result =  test[0].name;
@@ -67,7 +67,7 @@ export default class Listener extends React.Component<TListener> {
 	private renderActions=()=> {
 		const actions = this.props.actions;
 		if (actions.length) {
-			const elements: ReactNode[] = actions.map(action => <ActionItemContainer key={action.id} action={action}/>);
+			const elements: ReactNode[] = actions.map(action => <ActionItemContainer key={action.id} action={action}  />);
 			return elements;
 		} else {
 			return (
@@ -77,7 +77,7 @@ export default class Listener extends React.Component<TListener> {
 						<p>Please start recording or make sure that filters are set properly.</p>
 					</div>
 				</div>
-			)
+			);
 		}
 	}
 
@@ -98,7 +98,7 @@ export default class Listener extends React.Component<TListener> {
 	/**
 	 * Listener to be attached to all Photoshop notifications.
 	 */
-	public  listener = async (event: string, message: BasicActionDescriptor) => {
+	public  listener = async (event: string, descriptor: any):Promise<void> => {
 		const {collapsed} = this.props.settings;
 
 		const historyName = await this.getHistoryState();
@@ -106,22 +106,23 @@ export default class Listener extends React.Component<TListener> {
 			collapsed:collapsed,
 			descriptor: {
 				_obj: event,
-				...message
+				...descriptor
 			},
 			id: NaN, // will be set within reducer
 			playReplies: [],
 			timeCreated: Date.now(),
 			historyStepTitle: historyName,
-			eventName: event
-		})
-		this.props.setLastHistoryID
+			eventName: event,
+			modalBehavior: "fail"
+		});
+		this.props.setLastHistoryID;
 	}
 
 	/**
 	 * Attaches the simple listener to the app.
 	 */
 	private attachListener = async() => {
-		app.eventNotifier = this.listener		
+		app.eventNotifier = this.listener;		
 		this.props.setListener(true);
 	}
 
@@ -131,18 +132,18 @@ export default class Listener extends React.Component<TListener> {
 	}
 
 	private exportState = () => {
-		Settings.saveSettingsWithDialog(this.props.wholeState)
+		Settings.saveSettingsWithDialog(this.props.wholeState);
 	}
 
 	private importState = async () => {
 		const data = await Settings.importStateWithDialog();
-		if(!data){return}
+		if(!data){return;}
 		this.props.setWholeState(data,false);
 	}
 	
 	private appendActions = async () => {
 		const data = await Settings.importStateWithDialog();
-		if(!data){return}
+		if(!data){return;}
 		this.props.setWholeState(data,true);
 	}
 
@@ -150,20 +151,20 @@ export default class Listener extends React.Component<TListener> {
 	 * Attaches a null listener to the app.
 	 */
 	private removeListener = async() => {
-		const app = require('photoshop').app
-		app.eventNotifier = undefined
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const app = require("photoshop").app;
+		app.eventNotifier = undefined;
 
 		this.props.setListener(false);
 	}
 
-	public render() {
-		const batchPlay = this.props.settings.batchPlayDecorator;
-		const { collapsed, batchPlayDecorator } = this.props.settings
+	public render():JSX.Element {
+		const { collapsed, batchPlayDecorator } = this.props.settings;
 		const { groupSame } = this.props;
 
 		return (
 			<div className="component">
-				<FilterContainer />
+				<FilterContainer  />
 				<div className="actionList">
 					{this.renderActions()}
 				</div>
@@ -182,9 +183,9 @@ export default class Listener extends React.Component<TListener> {
 						<sp-checkbox onClick={this.onGroupSame} checked={groupSame ? true : null}>Group same</sp-checkbox>
 						<sp-checkbox onClick={this.onBatchPlay} checked={batchPlayDecorator ? true : null}>Playable code</sp-checkbox>
 						<sp-checkbox onClick={this.toggleCollapseOption} checked={collapsed ? true : null}>Collapsed</sp-checkbox>
+						<span className="version">v. {manifest.version}</span>
 					</div>
 				</div>
-
 			</div>
 		);
 	}

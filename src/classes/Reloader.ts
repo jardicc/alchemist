@@ -1,4 +1,5 @@
 import { ReloaderItem } from "./ReloaderItem";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem = require("uxp").storage.localFileSystem;
 
 
@@ -17,7 +18,7 @@ export class Reloader{
 		return this._interval;
 	}
 
-	public async initWatchedFiles() {
+	public async initWatchedFiles():Promise<void> {
 		const pluginFolder = await localFileSystem.getPluginFolder();
 
 		const entries:any[] = await pluginFolder.getEntries();		

@@ -1,6 +1,6 @@
-import React from 'react'
-import './Filter.css'
-import { TFilterEvents } from '../reducers/initialState'
+import React from "react";
+import "./Filter.css";
+import { TFilterEvents } from "../reducers/initialState";
 
 export interface IFilterProps{
 	filterType: TFilterEvents
@@ -18,9 +18,9 @@ export interface IFilterDispatch{
 
 type TFilter = IFilterProps & IFilterDispatch
 
-export default class Filter extends React.Component<TFilter> {
+export class Filter extends React.Component<TFilter> {
 	constructor(props: TFilter) {
-		super(props)
+		super(props);
 	}
 
 	private onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +28,7 @@ export default class Filter extends React.Component<TFilter> {
 	}
 
 	private onSetFilterEventsType = (e: any) => {
-		this.props.setFilterEventsType(e.target.value)
+		this.props.setFilterEventsType(e.target.value);
 	}
 
 	private setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +46,7 @@ export default class Filter extends React.Component<TFilter> {
 					<React.Fragment>
 						<span>Exclude: </span><input onChange={this.setExclude} value={this.props.exclude} type="text" />
 					</React.Fragment>
-				)
+				);
 			}
 			case "include": {
 				return (
@@ -56,22 +56,29 @@ export default class Filter extends React.Component<TFilter> {
 				);
 			}
 			case "none": {
-				return null
+				return null;
 			}
 		}
 	}
 
-	public render() {
+	public render(): JSX.Element {
 		return (
 			<React.Fragment>
 				<div className="FilterComponent">
-					<span>Search: </span><input onChange={this.onSearch} value={this.props.searchEvent||""} type="text" />
+					<span>Search: </span><input onChange={this.onSearch} value={this.props.searchEvent || ""} type="text" />
 					<span>Filter:</span>
 					<sp-dropdown>
 						<sp-menu slot="options" onClick={this.onSetFilterEventsType}>
-							<sp-menu-item value="none">None</sp-menu-item>
-							<sp-menu-item value="include">Include</sp-menu-item>
-							<sp-menu-item value="exclude">Exclude</sp-menu-item>
+							{
+								[{ value: "none", label: "None" }, { value: "include", label: "Include" }, { value: "exclude", label: "Exclude" }]
+									.map(item => (
+										<sp-menu-item
+											key={item.value}
+											value={item.value}
+											selected={this.props.filterType === item.value ? "selected" : null}
+										>{item.label}</sp-menu-item>
+									))
+							}
 						</sp-menu>
 					</sp-dropdown>
 				</div>
