@@ -1,6 +1,10 @@
-# UXP Listener
+# Listener - UXP for Photoshop
 
 Listens all Photoshop events. Something like actions panel in Photoshop but for scripting.
+
+## Disclaimer
+
+This software was not created by Adobe and Adobe is not responsible for it. You are using this software on your own risk and I am also not responsible for anything. I personally don't expect any big issue. But because someone in USA can use this software... and people there love to sue for nonsense... :-D 
 
 ## Quick usage
 
