@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+- fix: initial value in filter dropdown
+- change: event names now can contain space at the begging and end (trim) within semicolor separated exclude/include string
+- change: plugin icon by "rechmbrs"
+- fix: changes utf8 symbols into icon components and fixes icons on MacOS
+
+
 ## 0.10.0
 - feature: possibility to add/remove action event name into include/exlude filter list using action menu
 - feature: export/import plugin state (settings+actions)
