@@ -1,29 +1,44 @@
 {
-	"name": "UXP listener",
+	"name": "Listener - UXP",
 	"id": "cz.bereza.uxp_listener",
-	"version": "0.10.0",
+	"version": "0.11.0",
 	"main": "index.html",
+	"manifestVersion": 4,
 	"host": {
-	    "app": "PS",
-	    "minVersion": "21.0.0"
+		"app": "PS",
+		"minVersion": "21.0.0"
 	},
-	"uiEntrypoints": [
-	  {
+	"entrypoints": [{
 		"type": "panel",
-		"panelId": "panel",
-		"panelInfo":
-		    {
-			  "title": {"default": "UXP listener"},
-			  "minimumSize": {"width": 230, "height": 200},
-			  "maximumSize": {"width": 2000, "height": 2000},
-			  "preferredDockedSize": {"width": 230, "height": 300},
-			  "preferredFloatingSize": {"width": 230, "height": 300},
-			  "icons": [
-				{"path": "icons/icon_N.png", "brightness": "light"},
-				{"path": "icons/icon_D.png", "brightness": "dark"}
-			  ]
-		    }
-	  }
-	],
+		"id": "panel",
+		"label": {
+			"default": "Listener - UXP"
+		},
+		"minimumSize": {
+			"width": 230,
+			"height": 200
+		},
+		"maximumSize": {
+			"width": 2000,
+			"height": 2000
+		},
+		"preferredDockedSize": {
+			"width": 230,
+			"height": 300
+		},
+		"preferredFloatingSize": {
+			"width": 230,
+			"height": 300
+		},
+		"icons": [{
+				"path": "icons/icon_N.png",
+				"brightness": "light"
+			},
+			{
+				"path": "icons/icon_D.png",
+				"brightness": "dark"
+			}
+		]
+	}],
 	"runOnStartup": true
-  }
+}
