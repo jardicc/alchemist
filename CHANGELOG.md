@@ -5,6 +5,8 @@
 - change: event names now can contain space at the begging and end (trim) within semicolor separated exclude/include string
 - change: plugin icon by "rechmbrs"
 - fix: changes utf8 symbols into icon components and fixes icons on MacOS
+- feature: adds modalBehavior when playable code is turned on
+- feature: shows version number in footer
 
 
 ## 0.10.0
