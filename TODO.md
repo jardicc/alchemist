@@ -5,6 +5,7 @@
 - ~~save redux state in real-time~~
 - ~~search by event name~~
 - ~~show play result/error~~
+- play with dialog
 - add Batch Play options into code generator
 - add option to limit amount of actions
 - make action editable
