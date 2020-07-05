@@ -5,7 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 module.exports = {
-	entry: "./src/classes/Main.ts",
+	entry: "./src/listener/classes/Main.ts",
 	output: {
 		filename: "index.js",
 		path: path.resolve(__dirname, "dist"),

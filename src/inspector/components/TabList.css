@@ -1,0 +1,27 @@
+.TabList{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	flex-shrink: 0;
+}
+
+.TabList .tabContent{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.TabList .tabRow{
+	display: flex;
+	border-bottom: 1px solid gray;
+	flex-shrink: 0;
+}
+
+.TabList .tabHeader{
+	margin:0 0.5em;
+	flex-shrink: 0;
+}
+
+.TabList .tabHeader.active{
+	color:lime;
+}

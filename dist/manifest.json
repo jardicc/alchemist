@@ -1,39 +1,76 @@
 {
 	"name": "Listener - UXP",
 	"id": "cz.bereza.uxp_listener",
-	"version": "0.11.0",
 	"main": "index.html",
+	"version": "0.11.0",
 	"manifestVersion": 4,
 	"host": {
 		"app": "PS",
 		"minVersion": "21.0.0"
 	},
-	"icons": [
-		{ "width": 32, "height": 32, "path": "icons/icon_D.png", "scale": [ 1,2 ], "theme": [ "dark", "darkest" ], "species": [ "generic" ] },
-		{ "width": 32, "height": 32, "path": "icons/icon_N.png", "scale": [ 1,2 ], "theme": [ "lightest", "light" ], "species": [ "generic" ] }
+	"icons": [{
+			"width": 32,
+			"height": 32,
+			"path": "icons/icon_D.png",
+			"scale": [1, 2],
+			"theme": ["dark", "darkest"],
+			"species": ["generic"]
+		},
+		{
+			"width": 32,
+			"height": 32,
+			"path": "icons/icon_N.png",
+			"scale": [1, 2],
+			"theme": ["lightest", "light"],
+			"species": ["generic"]
+		}
 	],
 	"entrypoints": [{
-		"type": "panel",
-		"id": "panel",
-		"label": {
-			"default": "Listener - UXP"
+			"type": "panel",
+			"id": "listener",
+			"label": {
+				"default": "Listener - UXP"
+			},
+			"minimumSize": {
+				"width": 230,
+				"height": 200
+			},
+			"maximumSize": {
+				"width": 2000,
+				"height": 2000
+			},
+			"preferredDockedSize": {
+				"width": 230,
+				"height": 300
+			},
+			"preferredFloatingSize": {
+				"width": 230,
+				"height": 300
+			}
 		},
-		"minimumSize": {
-			"width": 230,
-			"height": 200
-		},
-		"maximumSize": {
-			"width": 2000,
-			"height": 2000
-		},
-		"preferredDockedSize": {
-			"width": 230,
-			"height": 300
-		},
-		"preferredFloatingSize": {
-			"width": 230,
-			"height": 300
+		{
+			"type": "panel",
+			"id": "inspector",
+			"label": {
+				"default": "Inspector - UXP"
+			},
+			"minimumSize": {
+				"width": 230,
+				"height": 200
+			},
+			"maximumSize": {
+				"width": 2000,
+				"height": 2000
+			},
+			"preferredDockedSize": {
+				"width": 230,
+				"height": 300
+			},
+			"preferredFloatingSize": {
+				"width": 230,
+				"height": 300
+			}
 		}
-	}],
+	],
 	"runOnStartup": true
 }

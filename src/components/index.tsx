@@ -1,8 +1,8 @@
 import {render} from "react-dom";
 import React from "react";
 import { Provider } from "react-redux";
-import {store} from "../store";
-import {AppContainer} from "./AppContainer";
+import {listenerStore} from "../listener/store/listenerStore";
+import { AppContainer } from "../listener/components/AppContainer";
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
@@ -34,7 +34,7 @@ declare global {
 
 export function renderUI ():void {
 	render(
-		<Provider store={store}>
+		<Provider store={listenerStore}>
 			< AppContainer />
 		</Provider>,
 		document.getElementById("root") as HTMLElement

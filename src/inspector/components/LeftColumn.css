@@ -1,0 +1,21 @@
+.LeftColumn{
+	display: flex;
+	width:200px;
+	flex-direction: column;
+}
+
+.LeftColumn .descriptorsWrapper{
+	flex-grow: 1;
+}
+
+.LeftColumn .filter{
+	display: flex;
+	max-width: 200px;
+}
+
+.LeftColumn .add.disallowed{
+	opacity: 0.5;
+	pointer-events: none;
+	text-decoration:line-through;
+	color:black;
+}
