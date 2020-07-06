@@ -228,7 +228,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Action set:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetActionSet}>
 						{
 							list.map(item => (
@@ -254,7 +254,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Action:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetActionItem}>
 						{
 							list.map(item => (
@@ -282,7 +282,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Command:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetCommand}>
 						{
 							list.map(item => (
@@ -353,7 +353,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Property:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetProperty}>
 						{
 							this.baseItemsProperty.map(item => (
@@ -418,7 +418,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Guide:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetGuide}>
 						{
 							list.map(item => (
@@ -443,7 +443,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Channel:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetChannel}>
 						{
 							list.map(item => (
@@ -468,7 +468,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Path:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetPath}>
 						{
 							list.map(item => (
@@ -503,7 +503,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Document:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetDocument}>
 						{
 							list.map(item => (
@@ -541,7 +541,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Layer:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetLayer}>
 						{
 							list.map(item => (
@@ -567,7 +567,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Category:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={(e:string) => { console.log(e);}}>
 						{
 							list.map(item => (
@@ -588,7 +588,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		return (
 			<div className="filter">
 				<div className="label">Type:</div>
-				<sp-dropdown>
+				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetMainClass}>
 						{
 							this.mainClasses.map(item => (

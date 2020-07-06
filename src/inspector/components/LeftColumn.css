@@ -11,6 +11,14 @@
 .LeftColumn .filter{
 	display: flex;
 	max-width: 200px;
+	align-items: center;
+	margin-left: 0.5em;
+}
+
+.LeftColumn .filter .label{
+
+	width: 0;
+	min-width: 70px;
 }
 
 .LeftColumn .add{
