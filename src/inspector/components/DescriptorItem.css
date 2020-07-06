@@ -1,0 +1,19 @@
+.DescriptorItem{
+	border-top:1px solid gray;
+	padding: 0.3em 1em;
+}
+
+.DescriptorItem:hover{
+	color:aqua;
+	cursor: pointer;
+}
+
+.DescriptorItem.selected{
+	color:lime;
+	cursor: default;
+}
+
+.DescriptorItem .time{
+	color:silver;
+	font-style: italic;
+}

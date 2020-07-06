@@ -1,5 +1,6 @@
 import React from "react";
 import { IDescriptor, TSelectDescriptorOperation } from "../reducers/initialStateInspector";
+import "./DescriptorItem.css";
 
 export interface IDescriptorItemProps{
 	descriptor:IDescriptor
@@ -24,13 +25,25 @@ export class DescriptorItem extends React.Component<TDescriptorItem, IDescriptor
 		this.state = {
 		};
 	}
-	private select = () => {
-		this.props.onSelect(this.props.descriptor.id, "replace");
+	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		let operation: TSelectDescriptorOperation = "replace";
+		
+		if (e.ctrlKey || e.metaKey) {
+			if (this.props.descriptor.selected) {
+				operation = "subtract";				
+			} else {
+				operation = "add";				
+			}
+		}
+		this.props.onSelect(this.props.descriptor.id, operation);
 	}
 
 	public render():React.ReactNode{
 		return (
-			<div onClick={this.select}>{this.props.descriptor.id}</div>
+			<div className={"DescriptorItem" + (this.props.descriptor.selected ? " selected" : "")} onClick={this.select}>
+				<span>{this.props.descriptor.id}</span>
+				<span className="time">{this.props.descriptor.endTime-this.props.descriptor.startTime}ms</span>
+			</div>
 		);
 	}
 }

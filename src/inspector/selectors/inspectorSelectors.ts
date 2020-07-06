@@ -64,6 +64,12 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 	}
 	return true;
 });
+export const getActiveReferenceProperty = createSelector([getActiveTargetReference], (t) => {	
+	if (t && "property" in t) {
+		return t.property as string;
+	}
+	return "undefined";
+});
 export const getActiveReferenceGuide = createSelector([getTargetReference], (t) => {
 	if (t.activeType !== "guide") { return "undefined";}
 	return t.guide.guide;
@@ -89,16 +95,26 @@ export const getActiveReferenceCommand = createSelector([getTargetReference], (t
 	return t.action.command;
 });
 
-export const getActiveDescriptorContent = createSelector([all], s => {
+export const getActiveDescriptors = createSelector([all], s => {
 	const selected = s.descriptors.filter(d => d.selected);
-	if (selected.length === 0) {
-		return "Select 1 descriptor";
-	} else if (selected.length > 1) {
-		return "Select 1 descriptor";
-	} else {
-		return JSON.stringify(selected[0].originalData,null,3);
-	}
+	return selected;
 });
+
+export const getActiveDescriptorContent = createSelector([getActiveDescriptors], selected => {	
+	if (selected.length !== 1) {
+		return "Select 1 descriptor";
+	}
+	return JSON.stringify(selected[0].originalData, null, 3);
+});
+
+export const getActiveDescriptorReference = createSelector([getActiveDescriptors], selected => {	
+	if (selected.length !== 1) {
+		return "Select 1 descriptor";
+	}
+	return JSON.stringify(selected[0].originalReference, null, 3);
+});
+
+
 
 export function findActiveTargetReference(activeType:TTargetReference,t:ITargetReference):TActiveTargetReference{
 	switch (activeType) {

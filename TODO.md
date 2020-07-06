@@ -1,4 +1,5 @@
 # TODO
+## Listener
 - ~~group action duplicates~~
 - ~~include/exclude by event name~~
 - ~~play action button~~
@@ -16,3 +17,9 @@
 - add value tolerant grouping
 - add brute force grouping
 - show actions difference
+
+# Inspector
+- hide descriptor items
+- show usefull names in descriptor items
+- diff
+- tree view

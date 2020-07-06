@@ -8,7 +8,8 @@ import { LeftColumnContainer } from "./LeftColumnContainer";
 export interface IInspectorProps{
 	mainTab: TActiveSection
 	modeTab: TActiveInspectorTab	
-	descriptorContent:string
+	descriptorContent: string
+	originalReference: string
 }
 
 export interface IInspectorDispatch {
@@ -47,7 +48,9 @@ export class Inspector extends React.Component<TInspector, IInspectorState> {
 									Difference
 								</TabPanel>
 								<TabPanel id="reference" title="Info" >
-									Info
+									<div className="info code">
+										{this.props.originalReference}
+									</div>
 								</TabPanel>
 							</TabList>
 						</div>

@@ -13,9 +13,22 @@
 	max-width: 200px;
 }
 
+.LeftColumn .add{
+	display: inline-block;
+	padding:0.3em 1em;
+	margin:0.3em;
+	border:1px solid white;
+	cursor: pointer;
+}
+
+.LeftColumn .add:hover{
+	color:aqua;
+	border:1px solid aqua;
+}
+
 .LeftColumn .add.disallowed{
-	opacity: 0.5;
 	pointer-events: none;
-	text-decoration:line-through;
+	border:1px solid black;
 	color:black;
+	cursor: not-allowed;
 }

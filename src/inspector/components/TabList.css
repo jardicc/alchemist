@@ -22,6 +22,12 @@
 	flex-shrink: 0;
 }
 
+.TabList .tabHeader:hover{
+	color:aqua;
+	cursor: pointer;
+}
+
 .TabList .tabHeader.active{
 	color:lime;
+	cursor: default;
 }

@@ -29,7 +29,8 @@ export interface ILeftColumnProps{
 	activeReferenceChannel: TChannelReference
 	activeReferenceActionSet:string
 	activeReferenceActionItem:string
-	activeReferenceCommand:string
+	activeReferenceCommand: string
+	activeReferenceProperty: string
 }
 
 export interface ILeftColumnDispatch {
@@ -301,7 +302,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 
 	private renderProperty = (): React.ReactNode => {
 		const { activeType } = this.props.targetReference;
-		const { propertySettings } = this.props;
+		const { propertySettings,activeReferenceProperty } = this.props;
 		
 		switch (activeType) {
 			case "undefined": 
@@ -349,7 +350,6 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		const hiddenList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "hidden").map(f => ({ label: f.title, value: f.stringID }));
 		const optionalList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "optional").map(f => ({ label: f.title, value: f.stringID }));
 
-
 		return (
 			<div className="filter">
 				<div className="label">Property:</div>
@@ -360,7 +360,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
-									selected={this.props.targetReference.activeType === item.value ? "selected" : null}
+									selected={activeReferenceProperty === item.value ? "selected" : null}
 								>{item.label}</sp-menu-item>
 							))
 						}
@@ -372,7 +372,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 									<sp-menu-item
 										key={item.value}
 										value={item.value}
-										selected={this.props.targetReference.activeType === item.value ? "selected" : null}
+										selected={activeReferenceProperty === item.value ? "selected" : null}
 									>{item.label}</sp-menu-item>
 								))
 							}
@@ -385,7 +385,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 									<sp-menu-item
 										key={item.value}
 										value={item.value}
-										selected={this.props.targetReference.activeType === item.value ? "selected" : null}
+										selected={activeReferenceProperty === item.value ? "selected" : null}
 									>{item.label}</sp-menu-item>
 								))
 							}
@@ -398,7 +398,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 									<sp-menu-item
 										key={item.value}
 										value={item.value}
-										selected={this.props.targetReference.activeType === item.value ? "selected" : null}
+										selected={activeReferenceProperty === item.value ? "selected" : null}
 									>{item.label}</sp-menu-item>
 								))
 							}
@@ -647,12 +647,16 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 			<div className="LeftColumn">
 				<div>
 					{this.renderFilters()}
-					<span className={"add" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</span>
+				</div>
+				<div className="buttons">
+					<div className={"add" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</div>
 				</div>
 				<div className="descriptorsWrapper">
 					{this.renderDescriptorsList()}
 				</div>
-				<div>toolbar</div>
+				<div>
+					
+				</div>
 			</div>
 		);
 	}
