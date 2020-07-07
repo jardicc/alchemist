@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.12.0
+- adds: Inspector panel. Work in progress. Bugs included.
+
 ## 0.11.0
 - fix: initial value in filter dropdown
 - change: event names now can contain space at the begging and end (trim) within semicolor separated exclude/include string
