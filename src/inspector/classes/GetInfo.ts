@@ -1,4 +1,4 @@
-import { IDescriptor, TActiveTargetReferenceArr } from "../reducers/initialStateInspector";
+import { IDescriptor, TActiveTargetReferenceArr, TChannelReferenceValid } from "../reducers/initialStateInspector";
 import photothop from "photoshop";
 import { cloneDeep } from "lodash";
 
@@ -34,11 +34,39 @@ export class GetInfo {
 	public static async getAM(t: TActiveTargetReferenceArr|undefined): Promise<IDescriptor | null> {
 		if (!t) { return null;}
 		t = cloneDeep(t);
+		
 		const desc: ITargetReferenceAM = {
 			"_obj": "get",
 			"_target": []
 		};
 		const rootT = desc._target;
+
+		if (("document" in t.data) && t.data.document !== "undefined" && (t.data.document === "active" || typeof t.data.document === "number")) {
+			const activeID = await this.getActiveDocumentID();
+			if (activeID === null) { return null;}
+			
+			if (t.type !== "history" && t.type !== "snapshot") {
+				rootT.push({
+					"_ref": "document",
+					"_id": t.data.document === "active" ? activeID : t.data.document
+				});
+			}
+		}
+		if (t.type === "layer" || t.type === "path" || t.type === "channel") {
+			const activeID = await this.getActiveLayerID();
+			if (activeID === null || t.data.layer === "undefined") { return null; }
+			
+			if (
+				(t.type === "layer") ||
+				(t.type === "path" && t.data.path === "vectorMask") ||
+				(t.type == "channel" && (t.data.channel === "filterMask" || t.data.channel === "mask"))
+			) {
+				rootT.push({
+					"_ref": "layer",
+					"_id": t.data.layer === "active" ? activeID : t.data.layer
+				});
+			}
+		}
 
 		switch (t.type) {
 			case "action": {
@@ -72,22 +100,50 @@ export class GetInfo {
 				break;
 			}
 			case "channel": {
-				
-				break;
-			}
-			case "customDescriptor": {
-				
+				const activeID = await this.getActiveChannelID();
+				if (activeID === null) { return null; }
+
+				if (t.data.channel === "active") {
+					if (typeof activeID === "number") {
+						rootT.push({
+							"_ref": "channel",
+							"_id": activeID
+						});						
+					} else {
+						rootT.push({
+							_enum: "channel",
+							_ref: "channel",
+							_value: activeID
+						});
+					}
+				} else if (typeof t.data.channel === "number") {
+					rootT.push({
+						"_ref": "channel",
+						"_id": t.data.channel
+					});	
+				} else if (typeof t.data.channel === "string") {
+					rootT.push({
+						_enum: "channel",
+						_ref: "channel",
+						_value: t.data.channel
+					});
+				}
 				break;
 			}
 			case "path": {
 				const activeID = await this.getActivePathID();
 				if (activeID === null) { return null; }
 
-				if ((activeID === "vectorMask" || activeID === "workPathIndex")) {
+				if (activeID === "vectorMask") {
 					rootT.push({
 						_enum: "path",
 						_ref: "path",
 						_value: activeID
+					});
+				} else if (activeID === "workPathIndex") {
+					rootT.push({
+						"_property": "workPath",
+						"_ref": "path"
 					});
 				} else if (typeof t.data.path === "number" || t.data.path === "active") {
 					rootT.push({
@@ -117,30 +173,6 @@ export class GetInfo {
 			}
 		}
 
-		if (("document" in t.data) && t.data.document !== "undefined" && (t.data.document === "active" || typeof t.data.document === "number")) {
-			const activeID = await this.getActiveDocumentID();
-			if (activeID === null) { return null;}
-			
-			if (t.type !== "history" && t.type !== "snapshot") {
-				rootT.push({
-					"_ref": "document",
-					"_id": t.data.document === "active" ? activeID : t.data.document
-				});
-			}
-		}
-
-		if (("layer" in t.data)  && (t.data.layer === "active" || typeof t.data.layer === "number")) {
-			const activeID = await this.getActiveLayerID();
-			if (activeID === null) { return null;}
-			
-			if (t.type !== "path" || (t.type === "path" && t.data.path === "vectorMask")) {
-				rootT.push({
-					"_ref": "layer",
-					"_id": t.data.layer === "active" ? activeID : t.data.layer
-				});				
-			}
-		}
-
 
 		// add property when demanded by user
 		if (("property" in t.data) && t.data.property !== "undefined" && t.data.property !== "notSpecified" && t.data.property !== "anySpecified" && typeof t.data.property === "string") {
@@ -150,6 +182,7 @@ export class GetInfo {
 		}
 
 		desc._target.reverse();
+		console.log("Get", desc);
 		const startTime = Date.now();
 		const playResult = await photothop.action.batchPlay([desc], {});
 		return {
@@ -173,12 +206,48 @@ export class GetInfo {
 		return null;
 	}
 
-	public static async getActiveChannelID(): Promise<number | null> {
-		const result = await this.getProperty("ID", "channel");
-		if ("ID" in result) {
-			return result.ID as number;
+	public static async getActiveChannelID(): Promise<number | null | TChannelReferenceValid> {
+		
+		const resultID = await this.getProperty("ID", "channel");
+		if ("ID" in resultID) {
+			return resultID.ID as number;
 		}
-		return null;
+
+		const itemIndex = (await this.getProperty("itemIndex", "channel")).itemIndex;
+		const mode = await this.getActiveDocumentColorMode();
+		switch (mode) {
+			case "CMYKColorEnum":
+				switch (itemIndex) {
+					case 1: return "cyan";
+					case 2: return "magenta";
+					case 3: return "yellow";
+					case 4: return "black";
+				}
+				break;
+			case "RGBColor":
+				switch (itemIndex) {
+					case 1: return "red";
+					case 2: return "green";
+					case 3: return "blue";
+				}
+				break;
+			case "labColor":
+				switch (itemIndex) {
+					case 1: return "lightness";
+					case 2: return "a";
+					case 3: return "b";
+				}
+				break;
+			case "grayScale":
+				switch (itemIndex) {
+					case 1: return "gray";
+				}
+				break;
+			default:
+				return "RGB"; // can we return composite channel instead?
+			
+		}
+		return "RGB"; // can we return composite channel instead?
 	}
 
 	public static async getActiveDocumentID(): Promise<number | null> {
@@ -206,7 +275,7 @@ export class GetInfo {
 	}
 
 	public static async getActivePathID(): Promise<"vectorMask" | "workPathIndex" | number | null> {
-		const pathKind = (await GetInfo.getProperty("kind", "path"))._value;
+		const pathKind = (await GetInfo.getProperty("kind", "path")).kind._value;
 		if (pathKind === "workPathIndex" || pathKind === "vectorMask") {
 			return pathKind;
 		}
@@ -235,6 +304,26 @@ export class GetInfo {
 			desc
 		],{});
 		return result[0];
+	}
+
+	private static async getActiveDocumentColorMode():Promise<"grayScale"|"RGBColor"|"HSBColorEnum"|"CMYKColorEnum"|"labColor"|"bitmap"|"indexedColor"|"multichannel"|"duotone"|"useICCProfile"> {
+		const desc = {
+			_obj: "get",
+			_target: [
+				{
+					"_property": "mode"
+				},
+				{
+					"_ref": "document",
+					"_enum": "ordinal",
+					"_value": "targetEnum"
+				}
+			]
+		};
+		const result = await photothop.action.batchPlay([
+			desc
+		],{});
+		return result[0].mode._value;
 	}
 
 	private static uuidv4():string {

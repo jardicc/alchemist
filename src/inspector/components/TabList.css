@@ -18,8 +18,8 @@
 }
 
 .TabList .tabHeader{
-	margin:0 0.5em;
 	flex-shrink: 0;
+	padding:0.5em 0.5em;
 }
 
 .TabList .tabHeader:hover{

@@ -25,13 +25,13 @@ export const getActiveTargetReference = createSelector([getTargetReference, getS
 export const getAddAllowed = createSelector([getActiveTargetReference], s => { 
 	if (s) {
 		for (const key in s.data) {
-			if ((s as any)[key] === "undefined") {
+			if ((s.data as any)[key] === "undefined") {
 				return false;
 			}
 		}
 		return true;
 	}
-	return true;
+	return false;
 });
 export const getActiveReferenceProperty = createSelector([getActiveTargetReference], (t) => {	
 	if (t  && "property" in t.data) {
