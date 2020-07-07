@@ -8,7 +8,7 @@ export type TActiveInspectorTab = "content" | "difference" | "reference";
 export type TViewType = "tree" | "raw";
 export type TActiveSection = "descriptors" | "settings";
 
-export type TActiveTargetReference = null|Record<string, unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
+//export type TActiveTargetReference = null|Record<string, unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
 
 export type TBaseProperty = "undefined" | "notSpecified" | "anySpecified";
 export type THistoryReference = "undefined" | "active" | number;
@@ -23,30 +23,32 @@ export type TActionItem = "undefined"|string;
 export type TActionCommand = "undefined" | string;
 
 export type TSelectDescriptorOperation = "replace" | "add" | "subtract";
+export interface IRefWrapper<T,D>{
+	type: T
+	data:D
+}
 
 export interface IInspectorState {
-	activeSection:TActiveSection
-	targetReference: ITargetReference
+	activeSection: TActiveSection
+	selectedReferenceType:TTargetReference
+	targetReference: TTargetReferenceArr
 	settings:ISettings
 	inspector:IInspector
 	descriptors:IDescriptor[]
 }
 
-export interface ITargetReference{
-	activeType: TTargetReference,
-	application: ITargetReferenceApplication,
-	customDescriptor: ITargetReferenceCustomDescriptor,
-	history: ITargetReferenceHistory,
-	snapshot: ITargetReferenceSnapshot,
-	layer: ITargetReferenceLayer,
-	path: ITargetReferencePath,
-	channel: ITargetReferenceChannel,
-	document: ITargetReferenceDocument,
-	guide: ITargetReferenceGuide,
-	action: ITargetReferenceAction,
-	featureData: Record<string, unknown>,
-	allFromGenerator: Record<string, unknown>,
-}
+export type TTargetReferenceArr = TActiveTargetReferenceArr[]
+
+export type TActiveTargetReferenceArr = IRefWrapper<"application", ITargetReferenceApplication> |
+	IRefWrapper<"customDescriptor", ITargetReferenceCustomDescriptor> |
+	IRefWrapper<"history", ITargetReferenceHistory> |
+	IRefWrapper<"snapshot", ITargetReferenceSnapshot> |
+	IRefWrapper<"layer", ITargetReferenceLayer> |
+	IRefWrapper<"path", ITargetReferencePath> |
+	IRefWrapper<"channel", ITargetReferenceChannel> |
+	IRefWrapper<"document", ITargetReferenceDocument> |
+	IRefWrapper<"guide", ITargetReferenceGuide> |
+	IRefWrapper<"action", ITargetReferenceAction>;
 
 export interface ITargetReferenceApplication{
 	property: string
@@ -158,59 +160,95 @@ export interface IDescriptor{
 export function getInitialState(): IInspectorState {
 	return {
 		activeSection: "descriptors",
-		targetReference: {
-			activeType: "layer",
-			application: {
-				property: "notSpecified"
+		selectedReferenceType: "layer",
+		targetReference: [
+			{
+				type: "application",
+				data:{
+					property: "notSpecified"
+				}
 			},
-			customDescriptor: {
-				category: "notSpecified"
+			{
+				type: "customDescriptor",
+				data:{
+					category: "notSpecified"
+
+				}
 			},
-			history: {
-				document: "active",
-				history: "active",
-				property: "notSpecified"
+			{
+				type: "history",
+				data:{
+					document: "active",
+					history: "active",
+					property: "notSpecified"
+
+				}
 			},
-			snapshot: {
-				document: "active",
-				snapshot: "active",
-				property: "notSpecified"
+			{
+				type: "snapshot",
+				data:{
+					document: "active",
+					snapshot: "active",
+					property: "notSpecified"
+
+				}
 			},
-			layer: {
-				document: "active",
-				layer: "active",
-				property: "notSpecified"
+			{
+				type: "layer",
+				data:{
+					document: "active",
+					layer: "active",
+					property: "notSpecified"
+
+				}
 			},
-			path: {
-				document: "active",
-				path: "active",
-				layer: "active",
-				property: "notSpecified"
+			{
+				type: "path",
+				data:{
+					document: "active",
+					path: "active",
+					layer: "active",
+					property: "notSpecified"
+
+				}
 			},
-			channel: {
-				document: "active",
-				channel: "active",
-				layer: "active",
-				property: "notSpecified"
+			{
+				type: "channel",
+				data:{
+					document: "active",
+					channel: "active",
+					layer: "active",
+					property: "notSpecified"
+
+				}
 			},
-			document: {
-				document: "active",
-				property: "notSpecified"
+			{
+				type: "document",
+				data:{
+					document: "active",
+					property: "notSpecified"
+
+				}
 			},
-			guide: {
-				document: "active",
-				guide: "undefined",
-				property: "notSpecified"
+			{
+				type: "guide",
+				data:{
+					document: "active",
+					guide: "undefined",
+					property: "notSpecified"
+
+				}
 			},
-			action: {
-				actionset: "undefined",
-				action: "undefined",
-				command: "undefined",
-				property: "notSpecified"
-			},
-			featureData: {},
-			allFromGenerator: {},
-		},
+			{
+				type: "action",
+				data:{
+					actionset: "undefined",
+					action: "undefined",
+					command: "undefined",
+					property: "notSpecified"
+				}
+			}
+		],
 		settings: {
 			selectReferenceBeforeGet: true,
 			autoUpdate: false,

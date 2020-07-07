@@ -1,8 +1,7 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import "./LeftColumn.css";
-import { ITargetReference, IPropertySettings, IDescriptor, TDocumentReference, TTargetReference, ITargetReferenceApplication, ITargetReferenceCustomDescriptor, ITargetReferenceHistory, ITargetReferenceSnapshot, ITargetReferenceLayer, ITargetReferencePath, ITargetReferenceChannel, ITargetReferenceDocument, ITargetReferenceGuide, ITargetReferenceAction, TLayerReference, TGuideReference, TPathReference, TChannelReference, TBaseProperty } from "../reducers/initialStateInspector";
+import { TTargetReferenceArr, IPropertySettings, IDescriptor, TDocumentReference, TTargetReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TBaseProperty, TActiveTargetReferenceArr } from "../reducers/initialStateInspector";
 import { cloneDeep } from "lodash";
-import { findActiveTargetReference, getActiveReferenceActionItem, getActiveReferenceActionSet } from "../selectors/inspectorSelectors";
 import { GetInfo } from "../classes/GetInfo";
 import { DescriptorItemContainer } from "./DescriptorItemContainer";
 
@@ -12,7 +11,7 @@ interface IProperty<T>{
 }
 
 export interface ILeftColumnProps{
-	targetReference: ITargetReference
+	targetReference: TTargetReferenceArr
 	autoUpdate: boolean
 	addAllowed:boolean
 	selectedDescriptors: string[]
@@ -21,12 +20,14 @@ export interface ILeftColumnProps{
 	pinnedSelection: boolean
 	removableSelection: boolean
 	allDescriptors: IDescriptor[]
-	activeTargetReference: null | ITargetReferenceApplication | ITargetReferenceCustomDescriptor | ITargetReferenceHistory | ITargetReferenceSnapshot | ITargetReferenceLayer | ITargetReferencePath | ITargetReferenceChannel | ITargetReferenceDocument | ITargetReferenceGuide | ITargetReferenceAction | Record<string, unknown>;
+
+	activeTargetReference: TActiveTargetReferenceArr|undefined;
 	activeTargetReferenceDocument: TDocumentReference
 	activeTargetLayerReference: TLayerReference
 	activeReferenceGuide: TGuideReference
 	activeReferencePath: TPathReference
 	activeReferenceChannel: TChannelReference
+	selectedTargetReference: TTargetReference
 	activeReferenceActionSet:string
 	activeReferenceActionItem:string
 	activeReferenceCommand: string
@@ -34,17 +35,14 @@ export interface ILeftColumnProps{
 }
 
 export interface ILeftColumnDispatch {
-	onSetTargetReference: (arg: ITargetReference) => void
-	onAddDescriptor:(descriptor: IDescriptor)=>void
-}
-
-interface ILeftColumnState{
-	
+	onSetTargetReference: (arg: TActiveTargetReferenceArr) => void
+	onAddDescriptor: (descriptor: IDescriptor) => void
+	onSetSelectedReferenceType: (type:TTargetReference)=>void
 }
 
 export type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
 
-export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> { 
+export class LeftColumn extends React.Component<TLeftColumn> { 
 	constructor(props: TLeftColumn) {
 		super(props);
 
@@ -126,102 +124,99 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 	];	
 
 	private onSetProperty = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("property" in found)) {
-			found.property = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference, } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("property" in found.data)) {
+			found.data.property = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 
 	private onSetActionSet = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("action" in found)) {
-			found.actionset = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("action" in found.data)) {
+			found.data.actionset = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 	private onSetActionItem= (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("action" in found)) {
-			found.action = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("action" in found.data)) {
+			found.data.action = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 	private onSetCommand = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("action" in found)) {
-			found.command = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("action" in found.data)) {
+			found.data.command = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 
 	private onSetGuide = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("guide" in found)) {
-			found.guide = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("guide" in found.data)) {
+			found.data.guide = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 	private onSetChannel = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("channel" in found)) {
-			found.channel = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("channel" in found.data)) {
+			found.data.channel = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 
 	private onSetPath = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("path" in found)) {
-			found.path = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("path" in found.data)) {
+			found.data.path = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 
 	private onSetLayer = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("layer" in found)) {
-			found.layer = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("layer" in found.data)) {
+			found.data.layer = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 
 	private onSetDocument = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		const found = findActiveTargetReference(targetReference.activeType, refCopy);
-		if (found && ("document" in found)) {
-			found.document = value.target.value;
-			onSetTargetReference(refCopy);
+		const { onSetTargetReference, activeTargetReference } = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found && ("document" in found.data)) {
+			found.data.document = value.target.value;
+			onSetTargetReference(found);
 		}
 	}
 
 	private onSetMainClass = (value: any) => {
-		const { onSetTargetReference, targetReference } = this.props;
-		const refCopy = cloneDeep(targetReference);
-		refCopy.activeType = value.target.value;
-		onSetTargetReference(refCopy);
+		this.props.onSetSelectedReferenceType(value.target.value);
 	}
 
 	private renderActionSet = ():React.ReactNode=>{
-		const { activeType } = this.props.targetReference;
-		if (activeType !== "action") { return;}
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "action") { return;}
 		const { activeReferenceActionSet } = this.props;
 		const list = [...this.baseItemsActionCommon];
 
@@ -246,8 +241,8 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 	}
 
 	private renderActionItem = ():React.ReactNode=>{
-		const { activeType } = this.props.targetReference;
-		if (activeType !== "action") { return;}
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "action") { return;}
 		const { activeReferenceActionItem,activeReferenceActionSet } = this.props;
 		if (activeReferenceActionSet === "undefined") { return;}
 		const list = [...this.baseItemsActionCommon];
@@ -272,8 +267,8 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 	}
 
 	private renderCommand = ():React.ReactNode=>{
-		const { activeType } = this.props.targetReference;
-		if (activeType !== "action") { return;}
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "action") { return;}
 		const { activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet } = this.props;
 		if (activeReferenceActionSet === "undefined") { return;}
 		if (activeReferenceActionItem === "undefined") { return;}
@@ -301,10 +296,10 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 
 
 	private renderProperty = (): React.ReactNode => {
-		const { activeType } = this.props.targetReference;
+		const {selectedTargetReference} = this.props;
 		const { propertySettings,activeReferenceProperty } = this.props;
 		
-		switch (activeType) {
+		switch (selectedTargetReference) {
 			case "undefined": 
 			case "customDescriptor":
 			case "featureData":
@@ -312,38 +307,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 				return;
 		}
 
-		let foundSettings: IPropertySettings|undefined;
-
-		switch (activeType) {
-			case "action":
-				foundSettings = propertySettings.find(p => p.type === "action");
-				break;
-			case "application":
-				foundSettings = propertySettings.find(p => p.type === "application");
-				break;
-			case "channel":
-				foundSettings = propertySettings.find(p => p.type === "channel");
-				break;
-			case "document":
-				foundSettings = propertySettings.find(p => p.type === "document");
-				break;
-			case "guide":
-				foundSettings = propertySettings.find(p => p.type === "guide");
-				break;
-			case "history":
-				foundSettings = propertySettings.find(p => p.type === "history");
-				break;
-			case "layer":
-				foundSettings = propertySettings.find(p => p.type === "layer");
-				break;
-			case "path":
-				foundSettings = propertySettings.find(p => p.type === "path");
-				break;
-			case "snapshot":
-				foundSettings = propertySettings.find(p => p.type === "snapshot");
-				break;
-		}
-
+		const foundSettings: IPropertySettings|undefined = propertySettings.find(p => p.type === selectedTargetReference);
 		if (!foundSettings) { throw new Error("Properties not found");}
 
 		const defaultList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "default").map(f => ({ label: f.title, value: f.stringID }));
@@ -410,8 +374,8 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		);
 	}
 	private renderGuide = ():React.ReactNode=>{
-		const { activeType } = this.props.targetReference;
-		if (activeType !== "guide") { return;}
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "guide") { return;}
 		const list = [...this.baseItemsGuide];
 
 		const { activeReferenceGuide } = this.props;
@@ -435,8 +399,8 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		);
 	}
 	private renderChannel = ():React.ReactNode=>{
-		const { activeType } = this.props.targetReference;
-		if (activeType !== "channel") { return;}
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "channel") { return;}
 		const list = [...this.baseItemsChannel];
 
 		const { activeReferenceChannel } = this.props;
@@ -460,8 +424,8 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		);
 	}
 	private renderPath = ():React.ReactNode=>{
-		const { activeType } = this.props.targetReference;
-		if (activeType !== "path") { return;}
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "path") { return;}
 		const list = [...this.baseItemsPath];
 
 		const { activeReferencePath } = this.props;
@@ -485,9 +449,9 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		);
 	}
 	private renderDocument = (): React.ReactNode => {
-		const { activeType } = this.props.targetReference;
+		const {selectedTargetReference} = this.props;
 		
-		switch (activeType) {
+		switch (selectedTargetReference) {
 			case "undefined": 
 			case "customDescriptor":
 			case "featureData":
@@ -521,17 +485,17 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 	}
 	private renderLayer = (): React.ReactNode => {
 		const { activeReferenceChannel, activeReferencePath } = this.props;
-		const { activeType } = this.props.targetReference;
+		const {selectedTargetReference} = this.props;
 		
-		if ((activeType === "layer" || activeType === "channel" || activeType === "path") === false) {
+		if ((selectedTargetReference === "layer" || selectedTargetReference === "channel" || selectedTargetReference === "path") === false) {
 			return;
 		}
 		// only layer masks are layer related
-		if (activeType === "channel" && (activeReferenceChannel !== "mask" && activeReferenceChannel !== "filterMask")) {
+		if (selectedTargetReference === "channel" && (activeReferenceChannel !== "mask" && activeReferenceChannel !== "filterMask")) {
 			return;
 		}
 		// only vector masks are layer related
-		if (activeType === "path" && activeReferencePath !== "vectorMask") {
+		if (selectedTargetReference === "path" && activeReferencePath !== "vectorMask") {
 			return;
 		}
 
@@ -558,7 +522,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		);
 	}
 	private renderCustomDescriptorCategory = ():React.ReactNode => {
-		if (this.props.targetReference.activeType !== "customDescriptor") {
+		if (this.props.selectedTargetReference !== "customDescriptor") {
 			return null;
 		}
 
@@ -574,7 +538,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
-									selected={this.props.targetReference.activeType === item.value ? "selected" : null}
+									selected={this.props.selectedTargetReference === item.value ? "selected" : null}
 								>{item.label}</sp-menu-item>
 							))
 						}
@@ -595,7 +559,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
-									selected={this.props.targetReference.activeType === item.value ? "selected" : null}
+									selected={this.props.selectedTargetReference === item.value ? "selected" : null}
 								>{item.label}</sp-menu-item>
 							))
 						}
@@ -609,7 +573,7 @@ export class LeftColumn extends React.Component<TLeftColumn, ILeftColumnState> {
 		if (!this.props.addAllowed) {
 			return;
 		}
-		const result = await GetInfo.getAM(this.props.targetReference.activeType, this.props.activeTargetReference);
+		const result = await GetInfo.getAM( this.props.activeTargetReference);
 		if (result === null) { return;}
 		this.props.onAddDescriptor(result);
 

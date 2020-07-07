@@ -1,5 +1,6 @@
-import { TTargetReference, TActiveTargetReference, ITargetReferenceAction, ITargetReferenceHistory, ITargetReferenceSnapshot, IDescriptor } from "../reducers/initialStateInspector";
+import { IDescriptor, TActiveTargetReferenceArr } from "../reducers/initialStateInspector";
 import photothop from "photoshop";
+import { cloneDeep } from "lodash";
 
 export interface ITargetReferenceAM{
 	"_obj": "get",
@@ -28,41 +29,38 @@ export interface IEnumReference{
 	"_value": string
 }
 
-export class GetInfo{
+export class GetInfo {
 	
-	public static async getAM(activeType: TTargetReference, t: TActiveTargetReference):Promise<IDescriptor|null> {
+	public static async getAM(t: TActiveTargetReferenceArr|undefined): Promise<IDescriptor | null> {
+		if (!t) { return null;}
+		t = cloneDeep(t);
 		const desc: ITargetReferenceAM = {
 			"_obj": "get",
 			"_target": []
 		};
 		const rootT = desc._target;
 
-		switch (activeType) {
+		switch (t.type) {
 			case "action": {
-				const target = (t as ITargetReferenceAction);
 
-				if (target.command !== "undefined") {
+				if (t.data.command !== "undefined") {
 					rootT.push({
 						"_ref": "command",
-						"_name": target.command
-					});				
-				}
-				if (target.action !== "undefined") {
-					rootT.push({
-						"_ref": "action",
-						"_name": target.action
-					});				
-				}
-				if (target.actionset !== "undefined") {
-					rootT.push({
-						"_ref": "actionset",
-						"_name": target.actionset
+						"_name": t.data.command
 					});
 				}
-				break;				
-			}
-			case "allFromGenerator": {
-				
+				if (t.data.action !== "undefined") {
+					rootT.push({
+						"_ref": "action",
+						"_name": t.data.action
+					});
+				}
+				if (t.data.actionset !== "undefined") {
+					rootT.push({
+						"_ref": "actionset",
+						"_name": t.data.actionset
+					});
+				}
 				break;
 			}
 			case "application": {
@@ -81,59 +79,74 @@ export class GetInfo{
 				
 				break;
 			}
-			case "featureData": {
-				
-				break;
-			}				
 			case "path": {
-				
+				const activeID = await this.getActivePathID();
+				if (activeID === null) { return null; }
+
+				if ((activeID === "vectorMask" || activeID === "workPathIndex")) {
+					rootT.push({
+						_enum: "path",
+						_ref: "path",
+						_value: activeID
+					});
+				} else if (typeof t.data.path === "number" || t.data.path === "active") {
+					rootT.push({
+						"_ref": "path",
+						"_id": t.data.path === "active" ? activeID : t.data.path
+					});
+				}
+				break;
+			}
+			case "history": {
+				const activeID = await this.getActiveHistoryID();
+				if (activeID === null || t.data.history === "undefined") { return null; }
+				rootT.push({
+					"_ref": "historyState",
+					"_id": t.data.history === "active" ? activeID : t.data.history
+				});
+				break;
+			}
+			case "snapshot": {
+				const activeID = await this.getActiveSnapshotID();
+				if (activeID === null || t.data.snapshot === "undefined") { return null; }
+				rootT.push({
+					"_ref": "snapshotClass",
+					"_id": t.data.snapshot === "active" ? activeID : t.data.snapshot
+				});
 				break;
 			}
 		}
 
-		if (t && ("document" in t) && t.document !== "undefined" && (t.document === "active" || typeof t.document === "number")) {
-			const activeID = await this.getActiveDocumentID();			
-			if (activeID === null) { return null; }
-			if (activeType !== "history" && activeType !== "snapshot") {
+		if (("document" in t.data) && t.data.document !== "undefined" && (t.data.document === "active" || typeof t.data.document === "number")) {
+			const activeID = await this.getActiveDocumentID();
+			if (activeID === null) { return null;}
+			
+			if (t.type !== "history" && t.type !== "snapshot") {
 				rootT.push({
 					"_ref": "document",
-					"_id":t.document === "active" ?   activeID: t.document
+					"_id": t.data.document === "active" ? activeID : t.data.document
 				});
 			}
 		}
 
-		if (t && ("layer" in t) && t.layer !== "undefined" && (t.layer === "active" || typeof t.layer === "number")) {
+		if (("layer" in t.data)  && (t.data.layer === "active" || typeof t.data.layer === "number")) {
 			const activeID = await this.getActiveLayerID();
-			if (activeID === null) {return null;}
-			rootT.push({
-				"_ref": "layer",
-				"_id":t.layer === "active" ?   activeID: t.layer
-			});			
+			if (activeID === null) { return null;}
+			
+			if (t.type !== "path" || (t.type === "path" && t.data.path === "vectorMask")) {
+				rootT.push({
+					"_ref": "layer",
+					"_id": t.data.layer === "active" ? activeID : t.data.layer
+				});				
+			}
 		}
 
-		if (t && ("history" in t) && t.history !== "undefined" && (t.history === "active" || typeof t.history === "number")) {
-			const activeID = await this.getActiveHistoryID();
-			if (activeID === null) {return null;}
-			rootT.push({
-				"_ref": "historyState",
-				"_id":t.history === "active" ?   activeID: t.history
-			});			
-		}
-
-		if (t && ("snapshot" in t) && t.snapshot !== "undefined" && (t.snapshot === "active" || typeof t.snapshot === "number")) {
-			const activeID = await this.getActiveSnapshotID();
-			if (activeID === null) {return null;}
-			rootT.push({
-				"_ref": "snapshotClass",
-				"_id":t.snapshot === "active" ?   activeID: t.snapshot
-			});			
-		}
 
 		// add property when demanded by user
-		if (t && ("property" in t) && t.property !== "undefined" && t.property !=="notSpecified"  && t.property !=="anySpecified"  && typeof t.property === "string") {
+		if (("property" in t.data) && t.data.property !== "undefined" && t.data.property !== "notSpecified" && t.data.property !== "anySpecified" && typeof t.data.property === "string") {
 			rootT.push({
-				"_property": t.property
-			});			
+				"_property": t.data.property
+			});
 		}
 
 		desc._target.reverse();
@@ -152,50 +165,59 @@ export class GetInfo{
 		};
 	}
 
-	public static async getActiveLayerID():Promise<number|null> {
-		const result = await this.createSelectedRef("layerID", "layer");
+	public static async getActiveLayerID(): Promise<number | null> {
+		const result = await this.getProperty("layerID", "layer");
 		if ("layerID" in result) {
 			return result.layerID as number;
 		}
 		return null;
 	}
-	public static async getActiveChannelID():Promise<number|null> {
-		const result = await this.createSelectedRef("ID", "channel");
-		if ("ID" in result) {
-			return result.ID as number;
-		}
-		return null;
-	}
-	public static async getActiveDocumentID():Promise<number|null> {
-		const result = await this.createSelectedRef("documentID", "document");
-		if ("documentID" in result) {
-			return result.documentID as number;
-		}
-		return null;
-	}
-	public static async getActivePathID():Promise<number|null> {
-		const result = await this.createSelectedRef("ID", "path");
-		if ("ID" in result) {
-			return result.ID as number;
-		}
-		return null;
-	}
-	public static async getActiveHistoryID():Promise<number|null> {
-		const result = await this.createSelectedRef("ID", "historyState");
-		if ("ID" in result) {
-			return result.ID as number;
-		}
-		return null;
-	}
-	public static async getActiveSnapshotID():Promise<number|null> {
-		const result = await this.createSelectedRef("ID", "snapshotClass");
+
+	public static async getActiveChannelID(): Promise<number | null> {
+		const result = await this.getProperty("ID", "channel");
 		if ("ID" in result) {
 			return result.ID as number;
 		}
 		return null;
 	}
 
-	private static async createSelectedRef(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path") {
+	public static async getActiveDocumentID(): Promise<number | null> {
+		const result = await this.getProperty("documentID", "document");
+		if ("documentID" in result) {
+			return result.documentID as number;
+		}
+		return null;
+	}
+
+	public static async getActiveHistoryID(): Promise<number | null> {
+		const result = await this.getProperty("ID", "historyState");
+		if ("ID" in result) {
+			return result.ID as number;
+		}
+		return null;
+	}
+
+	public static async getActiveSnapshotID(): Promise<number | null> {
+		const result = await this.getProperty("ID", "snapshotClass");
+		if ("ID" in result) {
+			return result.ID as number;
+		}
+		return null;
+	}
+
+	public static async getActivePathID(): Promise<"vectorMask" | "workPathIndex" | number | null> {
+		const pathKind = (await GetInfo.getProperty("kind", "path"))._value;
+		if (pathKind === "workPathIndex" || pathKind === "vectorMask") {
+			return pathKind;
+		}
+		const result = await GetInfo.getProperty("ID", "path");
+		if ("ID" in result) {
+			return result.ID as number;
+		}
+		return null;
+	}
+
+	private static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path") {
 		const desc = {
 			_obj: "get",
 			_target: [

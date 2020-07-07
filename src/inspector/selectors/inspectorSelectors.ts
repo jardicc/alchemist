@@ -1,13 +1,12 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../store";
-import { create } from "lodash";
-import { ITargetReference, ITargetReferenceGuide, TTargetReference, ITargetReferenceApplication, ITargetReferenceCustomDescriptor, ITargetReferenceHistory, ITargetReferenceSnapshot, ITargetReferenceLayer, ITargetReferencePath, ITargetReferenceChannel, ITargetReferenceDocument, ITargetReferenceAction, TActiveTargetReference } from "../reducers/initialStateInspector";
 
 const all = (state:IRootState) => state.inspector;
  
 export const getMainTabID = createSelector([all], s => s.activeSection);
 export const getModeTabID = createSelector([all], s => s.inspector.activeTab);
 
+export const getSelectedTargetReference = createSelector([all], s => s.selectedReferenceType);
 export const getTargetReference = createSelector([all], s => s.targetReference);
 export const getAutoUpdate = createSelector([all],s=>s.settings.autoUpdate);
 export const getAllDescriptors = createSelector([all], s => s.descriptors);
@@ -18,44 +17,14 @@ export const getLockedSelection = createSelector([getSelectedDescriptors], s => 
 export const getPinnedSelection = createSelector([getSelectedDescriptors], s => s.some(d => d.pinned));
 export const getRemovableSelection = createSelector([getLockedSelection], s => !s);
 
-export const getActiveTargetDocument = createSelector([getTargetReference], (t) => {
-	switch (t.activeType) {
-		case "channel":
-			return t.channel.document;
-		case "document":
-			return t.document.document;
-		case "guide":
-			return t.guide.document;
-		case "history":
-			return t.history.document;
-		case "layer":
-			return t.layer.document;
-		case "path":
-			return t.path.document;
-		case "snapshot":
-			return t.snapshot.document;
-		default:
-			return "undefined";
-	}
+export const getActiveTargetReference = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
+	const result = targets.find(item => item.type === selected);
+	return result;
 });
-export const getActiveTargetLayer = createSelector([getTargetReference], (t) => {
-	switch (t.activeType) {
-		case "channel":
-			return t.channel.layer;
-		case "layer":
-			return t.layer.layer;
-		case "path":
-			return t.path.layer;
-		default:
-			return "undefined";
-	}
-});
-export const getActiveTargetReference = createSelector([getTargetReference], (t) => {
-	return findActiveTargetReference(t.activeType,t);
-});
+
 export const getAddAllowed = createSelector([getActiveTargetReference], s => { 
 	if (s) {
-		for (const key in s) {
+		for (const key in s.data) {
 			if ((s as any)[key] === "undefined") {
 				return false;
 			}
@@ -65,34 +34,46 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 	return true;
 });
 export const getActiveReferenceProperty = createSelector([getActiveTargetReference], (t) => {	
-	if (t && "property" in t) {
-		return t.property as string;
+	if (t  && "property" in t.data) {
+		return t.data.property;
 	}
 	return "undefined";
 });
-export const getActiveReferenceGuide = createSelector([getTargetReference], (t) => {
-	if (t.activeType !== "guide") { return "undefined";}
-	return t.guide.guide;
+export const getActiveReferenceGuide = createSelector([getActiveTargetReference], (t) => {
+	if (t && t.type === "guide") {
+		return t.data.guide;
+	}
+	return "undefined";
 });
-export const getActiveReferencePath = createSelector([getTargetReference], (t) => {
-	if (t.activeType !== "path") { return "undefined";}
-	return t.path.path;
+export const getActiveReferencePath = createSelector([getActiveTargetReference], (t) => {
+	if (t && t.type === "path") {
+		return t.data.path;
+	}
+	return "undefined";
 });
-export const getActiveReferenceChannel = createSelector([getTargetReference], (t) => {
-	if (t.activeType !== "channel") { return "undefined";}
-	return t.channel.channel;
+export const getActiveReferenceChannel = createSelector([getActiveTargetReference], (t) => {
+	if (t && t.type === "channel") {
+		return t.data.channel;
+	}
+	return "undefined";
 });
-export const getActiveReferenceActionSet = createSelector([getTargetReference], (t) => {
-	if (t.activeType !== "action") { return "undefined";}
-	return t.action.actionset;
+export const getActiveReferenceActionSet = createSelector([getActiveTargetReference], (t) => {
+	if (t && t.type === "action") {
+		return t.data.actionset;
+	}
+	return "undefined";
 });
-export const getActiveReferenceActionItem = createSelector([getTargetReference], (t) => {
-	if (t.activeType !== "action") { return "undefined";}
-	return t.action.action;
+export const getActiveReferenceActionItem = createSelector([getActiveTargetReference], (t) => {
+	if (t && t.type === "action") {
+		return t.data.action;
+	}
+	return "undefined";
 });
-export const getActiveReferenceCommand = createSelector([getTargetReference], (t) => {
-	if (t.activeType !== "action") { return "undefined";}
-	return t.action.command;
+export const getActiveReferenceCommand = createSelector([getActiveTargetReference], (t) => {
+	if (t && t.type === "action") {
+		return t.data.command;
+	}
+	return "undefined";
 });
 
 export const getActiveDescriptors = createSelector([all], s => {
@@ -114,36 +95,33 @@ export const getActiveDescriptorReference = createSelector([getActiveDescriptors
 	return JSON.stringify(selected[0].originalReference, null, 3);
 });
 
-
-
-export function findActiveTargetReference(activeType:TTargetReference,t:ITargetReference):TActiveTargetReference{
-	switch (activeType) {
-		case "action":
-			return t.action;
-		case "allFromGenerator":
-			return t.allFromGenerator;
-		case "featureData":
-			return t.featureData;
-		case "application":
-			return t.application;
+export const getActiveTargetDocument = createSelector([getActiveTargetReference], (t) => {
+	if (!t) { return "undefined";}
+	switch (t.type) {
 		case "channel":
-			return t.channel;
 		case "document":
-			return t.document;
 		case "guide":
-			return t.guide;
 		case "history":
-			return t.history;
 		case "layer":
-			return t.layer;
 		case "path":
-			return t.path;
 		case "snapshot":
-			return t.snapshot;
+			return t.data.document;
 		default:
-			return null;
+			return "undefined";
 	}
-}
+});
+
+export const getActiveTargetLayer = createSelector([getActiveTargetReference], (t) => {
+	if (!t) { return "undefined";}
+	switch (t.type) {
+		case "channel":
+		case "layer":
+		case "path":
+			return t.data.layer;
+		default:
+			return "undefined";
+	}
+});
 
 // action
 

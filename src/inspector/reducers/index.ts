@@ -3,8 +3,8 @@ import produce from "immer";
 import { getInitialState, IInspectorState } from "./initialStateInspector";
 import { TActions } from "../actions/inspectorActions";
 
-export const inspectorReducer = (state = getInitialState(), action: TActions):IInspectorState => {
-	console.log(JSON.stringify(action,null,"\t"));
+export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
+	console.log(JSON.stringify(action, null, "\t"));
 	switch (action.type) {
 		case "SET_MAIN_TAB": {
 			state = produce(state, draft => {
@@ -20,7 +20,10 @@ export const inspectorReducer = (state = getInitialState(), action: TActions):II
 		}
 		case "SET_TARGET_REFERENCE": {
 			state = produce(state, draft => {
-				draft.targetReference = action.payload;
+				const found = draft.targetReference.find(r => action.payload.type === r.type);
+				if (found) {
+					found.data = action.payload.data;
+				}
 			});
 			break;
 		}
@@ -39,7 +42,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions):II
 				const found = draft.descriptors.find(d => d.id === uuid);
 				if (found) {
 					if (operation === "add" || operation === "replace") {
-						found.selected = true;						
+						found.selected = true;
 					} else if (operation === "subtract") {
 						found.selected = false;
 					}
@@ -47,7 +50,13 @@ export const inspectorReducer = (state = getInitialState(), action: TActions):II
 			});
 			break;
 		}
+		case "SET_SELECTED_REFERENCE_TYPE_ACTION": {
+			state = produce(state, draft => {
+				draft.selectedReferenceType = action.payload;
+			});
+			break;
+		}
+		//Settings.saveSettings(state);
 	}
-	//Settings.saveSettings(state);
 	return state;
 };
