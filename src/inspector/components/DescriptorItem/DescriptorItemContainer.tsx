@@ -2,9 +2,9 @@ import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IDescriptorItemProps, IDescriptorItemDispatch } from "./DescriptorItem";
 import cloneDeep from "lodash/cloneDeep";
 import {DescriptorItem} from "./DescriptorItem";
-import { IRootState } from "../../store";
-import { IDescriptor, TSelectDescriptorOperation } from "../reducers/initialStateInspector";
-import { selectDescriptorAction } from "../actions/inspectorActions";
+import { IRootState } from "../../../store";
+import { selectDescriptorAction } from "../../actions/inspectorActions";
+import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
 
 interface IOwn{
 	descriptor:IDescriptor

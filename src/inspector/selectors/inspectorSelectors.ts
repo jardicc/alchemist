@@ -25,6 +25,7 @@ export const getActiveTargetReference = createSelector([getTargetReference, getS
 export const getAddAllowed = createSelector([getActiveTargetReference], s => { 
 	if (s) {
 		for (const key in s.data) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			if ((s.data as any)[key] === "undefined") {
 				return false;
 			}

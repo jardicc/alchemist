@@ -1,7 +1,7 @@
 import {render} from "react-dom";
 import React from "react";
 import { Provider } from "react-redux";
-import { InspectorContainer } from "./InspectorContainer";
+import { InspectorContainer } from "./Inspector/InspectorContainer";
 import { rootStore } from "../../store";
 
 export function renderInspectorUI(): void {

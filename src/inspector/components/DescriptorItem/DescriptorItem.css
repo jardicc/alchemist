@@ -1,11 +1,16 @@
 .DescriptorItem{
 	border-top:1px solid gray;
 	padding: 0.3em 1em;
+	flex-shrink: 0;
 }
 
 .DescriptorItem:hover{
 	color:aqua;
 	cursor: pointer;
+}
+
+.DescriptorItem .name{
+	overflow-wrap: anywhere;
 }
 
 .DescriptorItem.selected{
@@ -16,4 +21,5 @@
 .DescriptorItem .time{
 	color:silver;
 	font-style: italic;
+	margin-left: 1em;
 }

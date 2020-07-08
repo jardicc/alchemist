@@ -1,4 +1,4 @@
-import { TActiveInspectorTab, TActiveSection, IDescriptor, TSelectDescriptorOperation, TActiveTargetReferenceArr, TTargetReference } from "../reducers/initialStateInspector";
+import { TActiveSection, TActiveInspectorTab, TActiveTargetReferenceArr, IDescriptor, TTargetReference, TSelectDescriptorOperation } from "../model/types";
 
 export interface ISetMainTab {
 	type: "SET_MAIN_TAB"
@@ -31,6 +31,59 @@ export interface ISelectDescriptor {
 		operation:TSelectDescriptorOperation
 		uuid:string
 	}
+}
+
+export interface IClearViewAction{
+	type: "CLEAR_VIEW"
+	payload:null
+}
+export interface IClearAction{
+	type: "CLEAR"
+	payload:null
+}
+export interface IClearNonExistentAction{
+	type: "CLEAR_NON_EXISTENT"
+	payload:null
+}
+export interface ILockDescAction{
+	type: "LOCK_DESC"
+	payload: {
+		lock:boolean,uuids:string[]
+	}
+}
+export interface IPinDescAction{
+	type: "PIN_DESC"
+	payload: {
+		pin:boolean,uuids:string[]
+	}
+}
+export interface IRemoveDescAction{
+	type: "REMOVE_DESC"
+	payload:string[]
+}
+export interface IImportStateAction{
+	type: "IMPORT_STATE"
+	payload:null
+}
+export interface IImportAppendAction{
+	type: "IMPORT_APPEND"
+	payload:null
+}
+export interface IImportReplaceAction{
+	type: "IMPORT_REPLACE"
+	payload:null
+}
+export interface IExportSelectedDescAction{
+	type: "EXPORT_SELECTED_DESC"
+	payload:null
+}
+export interface IExportAllDescAction{
+	type: "EXPORT_ALL_DESC"
+	payload:null
+}
+export interface IExportStateAction{
+	type: "EXPORT_STATE"
+	payload:null
 }
 
 export function setMainTabAction(id:TActiveSection):ISetMainTab{
@@ -70,10 +123,101 @@ export function setSelectedReferenceTypeAction(type: TTargetReference): ISetSele
 	};
 }
 
+export function clearViewAction():IClearViewAction{
+	return{
+		type: "CLEAR_VIEW",
+		payload: null
+	};
+}
+export function clearAction():IClearAction{
+	return{
+		type: "CLEAR",
+		payload: null
+	};
+}
+export function clearNonExistentAction():IClearNonExistentAction{
+	return{
+		type: "CLEAR_NON_EXISTENT",
+		payload: null
+	};
+}
+export function lockDescAction(lock:boolean,uuids:string[]):ILockDescAction{
+	return{
+		type: "LOCK_DESC",
+		payload: {
+			uuids,
+			lock
+		}
+	};
+}
+export function pinDescAction(pin:boolean,uuids:string[]):IPinDescAction{
+	return{
+		type: "PIN_DESC",
+		payload: {
+			uuids,
+			pin
+		}
+	};
+}
+export function removeDescAction(uuids:string[]):IRemoveDescAction{
+	return{
+		type: "REMOVE_DESC",
+		payload: uuids
+	};
+}
+export function importStateAction():IImportStateAction{
+	return{
+		type: "IMPORT_STATE",
+		payload: null
+	};
+}
+export function importAppendAction():IImportAppendAction{
+	return{
+		type: "IMPORT_APPEND",
+		payload: null
+	};
+}
+export function importReplaceAction():IImportReplaceAction{
+	return{
+		type: "IMPORT_REPLACE",
+		payload: null
+	};
+}
+export function exportSelectedDescAction():IExportSelectedDescAction{
+	return{
+		type: "EXPORT_SELECTED_DESC",
+		payload: null
+	};
+}
+export function exportAllDescAction():IExportAllDescAction{
+	return{
+		type: "EXPORT_ALL_DESC",
+		payload: null
+	};
+}
+export function exportStateAction():IExportStateAction{
+	return{
+		type: "EXPORT_STATE",
+		payload: null
+	};
+}
+
 
 export type TActions = ISetMainTab |
 	ISetModeTab |
 	ISetTargetReference |
 	IAddDescriptorAction |
 	ISelectDescriptor |
-	ISetSelectedReferenceTypeAction
+	ISetSelectedReferenceTypeAction |
+	IClearViewAction |
+	IClearAction |
+	IClearNonExistentAction |
+	ILockDescAction |
+	IPinDescAction |
+	IRemoveDescAction |
+	IImportStateAction |
+	IImportAppendAction |
+	IImportReplaceAction |
+	IExportSelectedDescAction |
+	IExportAllDescAction |
+	IExportStateAction

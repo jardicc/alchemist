@@ -11,7 +11,7 @@
 	"icons": [{
 			"width": 32,
 			"height": 32,
-			"path": "icons/icon_D.png",
+			"path": "icons/listener_icon_D.png",
 			"scale": [1, 2],
 			"theme": ["dark", "darkest"],
 			"species": ["generic"]
@@ -19,7 +19,7 @@
 		{
 			"width": 32,
 			"height": 32,
-			"path": "icons/icon_N.png",
+			"path": "icons/listener_icon_N.png",
 			"scale": [1, 2],
 			"theme": ["lightest", "light"],
 			"species": ["generic"]
@@ -46,7 +46,24 @@
 			"preferredFloatingSize": {
 				"width": 230,
 				"height": 300
-			}
+			},
+			"icons": [{
+					"width": 32,
+					"height": 32,
+					"path": "icons/listener_icon_D.png",
+					"scale": [1, 2],
+					"theme": ["dark", "darkest"],
+					"species": ["generic"]
+				},
+				{
+					"width": 32,
+					"height": 32,
+					"path": "icons/listener_icon_N.png",
+					"scale": [1, 2],
+					"theme": ["lightest", "light"],
+					"species": ["generic"]
+				}
+			]
 		},
 		{
 			"type": "panel",
@@ -69,7 +86,24 @@
 			"preferredFloatingSize": {
 				"width": 230,
 				"height": 300
-			}
+			},
+			"icons": [{
+					"width": 32,
+					"height": 32,
+					"path": "icons/inspector_icon_D.png",
+					"scale": [1, 2],
+					"theme": ["dark", "darkest"],
+					"species": ["generic"]
+				},
+				{
+					"width": 32,
+					"height": 32,
+					"path": "icons/inspector_icon_N.png",
+					"scale": [1, 2],
+					"theme": ["lightest", "light"],
+					"species": ["generic"]
+				}
+			]
 		}
 	],
 	"runOnStartup": true

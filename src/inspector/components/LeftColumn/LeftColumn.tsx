@@ -1,11 +1,12 @@
 import React from "react";
 import "./LeftColumn.css";
-import { TTargetReferenceArr, IPropertySettings, IDescriptor, TDocumentReference, TTargetReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TBaseProperty, TActiveTargetReferenceArr } from "../reducers/initialStateInspector";
 import { cloneDeep } from "lodash";
-import { GetInfo } from "../classes/GetInfo";
-import { DescriptorItemContainer } from "./DescriptorItemContainer";
+import { GetInfo } from "../../classes/GetInfo";
+import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
+import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty } from "../../model/properties";
+import { TTargetReferenceArr, IPropertySettings, IDescriptor, TActiveTargetReferenceArr, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference } from "../../model/types";
 
-interface IProperty<T>{
+export interface IProperty<T>{
 	label: string
 	value:T
 }
@@ -37,93 +38,24 @@ export interface ILeftColumnProps{
 export interface ILeftColumnDispatch {
 	onSetTargetReference: (arg: TActiveTargetReferenceArr) => void
 	onAddDescriptor: (descriptor: IDescriptor) => void
-	onSetSelectedReferenceType: (type:TTargetReference)=>void
+	onSetSelectedReferenceType: (type: TTargetReference) => void
+	
+	onClear: () => void
+	onPin: (pin: boolean, uuids: string[]) => void
+	onRemove: (uuids: string[]) => void
+	onLock: (lock: boolean, uuids: string[]) => void
 }
 
 export type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
 
-export class LeftColumn extends React.Component<TLeftColumn> { 
+export class LeftColumn extends React.Component<TLeftColumn> {
 	constructor(props: TLeftColumn) {
 		super(props);
-
 		this.state = {
 		};
 	}
 
-	private mainClasses:IProperty<TTargetReference>[] = [
-		{ label: "(undefined)", value: "undefined" },
-		{ label: "Application", value: "application" },
-		{ label: "Document", value: "document" },
-		{ label: "Layer", value: "layer" },
-		{ label: "Channel", value: "channel" },
-		{ label: "Path", value: "path" },
-		{ label: "Action", value: "action" },
-		{ label: "Guide", value: "guide" },
-		{ label: "History", value: "history" },
-		{ label: "Snapshot", value: "snapshot" },
-		{ label: "Custom descriptor", value: "customDescriptor" },
-		{ label: "Generator", value: "allFromGenerator" },
-		{ label: "Features", value: "featureData" },
-	]
-
-	private baseItemsProperty:IProperty<TBaseProperty>[] = [
-		{ label: "(undefined)", value: "undefined" },
-		{ label: "(not specified)", value: "notSpecified" },
-		{ label: "(any specified)", value: "anySpecified" },
-	];
-	private baseItemsCustomDescriptor:IProperty<string>[] = [
-		{ label: "(undefined)", value: "undefined" },
-	];
-	private baseItemsDocument:IProperty<TDocumentReference>[] = [
-		{ label: "(undefined)", value: "undefined" },
-		{ label: "(active)", value: "active" },
-	];
-	private baseItemsLayer:IProperty<TLayerReference>[] = [
-		{ label: "(undefined)", value: "undefined" },
-		{ label: "(active)", value: "active" },
-	];
-	private baseItemsPath :IProperty<TPathReference>[]= [
-		{ label: "(undefined)", value: "undefined" },
-		{ label: "(active)", value: "active" },
-		{ label: "(vector mask)", value: "vectorMask" },
-		{ label: "(work path)", value: "workPathIndex" },
-	];
-	private baseItemsChannel:IProperty<TChannelReference>[] = [
-		{ label: "(undefined)", value: "undefined" },
-		{ label: "(active)", value: "active" },
-		{ label: "(composite)",value: "composite"},
-		{ label: "(Mask)",value: "mask"},
-		{ label: "(Filter mask)",value: "filterMask"},
-		{ label: "(Transparency)",value: "transparencyEnum"},
-		{ label: "(RGB)",value: "RGB"},
-		{ label: "(Red - RGB)",value: "red"},
-		{ label: "(Green - RGB)",value: "green"},
-		{ label: "(Blue - RGB)",value: "blue"},
-		{ label: "(CMYK)",value: "CMYK"},
-		{ label: "(Black - CMYK)",value: "black"},
-		{ label: "(Cyan - CMYK)",value: "cyan"},
-		{ label: "(Magenta - CMYK)",value: "magenta"},
-		{ label: "(Yellow - CMYK)",value: "yellow"},
-		{ label: "(Lab)",value: "lab"},
-		{ label: "(Lightness - Lab)",value: "lightness"},
-		{ label: "(a - Lab)",value: "a"},
-		{ label: "(b - Lab)",value: "b"},
-		{ label: "(Gray)",value: "gray"},
-		{ label: "(Monotone)",value: "monotone"},
-		{ label: "(Duotone)",value: "duotone"},
-		{ label: "(Tritone)",value: "tritone"},
-		{ label: "(Quadtone)",value: "quadtone"},
-
-	];
-	private baseItemsGuide = [
-		{ label: "(undefined)", value: "undefined" },
-	];	
-	private baseItemsActionCommon = [
-		{ label: "(undefined)", value: "undefined" },
-		{ label: "fake", value: "fake" },
-	];	
-
-	private onSetProperty = (value: any) => {
+	private onSetProperty = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference, } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
@@ -133,7 +65,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		}
 	}
 
-	private onSetActionSet = (value: any) => {
+	private onSetActionSet = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
@@ -142,7 +74,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			onSetTargetReference(found);
 		}
 	}
-	private onSetActionItem= (value: any) => {
+	private onSetActionItem = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
@@ -151,7 +83,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			onSetTargetReference(found);
 		}
 	}
-	private onSetCommand = (value: any) => {
+	private onSetCommand = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
@@ -161,64 +93,64 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		}
 	}
 
-	private onSetGuide = (value: any) => {
+	private onSetGuide = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
 		if (found && ("guide" in found.data)) {
-			found.data.guide = value.target.value;
+			found.data.guide = value.target.value as TDocumentReference;
 			onSetTargetReference(found);
 		}
 	}
-	private onSetChannel = (value: any) => {
+	private onSetChannel = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
 		if (found && ("channel" in found.data)) {
-			found.data.channel = value.target.value;
+			found.data.channel = value.target.value as TChannelReference;
 			onSetTargetReference(found);
 		}
 	}
 
-	private onSetPath = (value: any) => {
+	private onSetPath = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
 		if (found && ("path" in found.data)) {
-			found.data.path = value.target.value;
+			found.data.path = value.target.value as TPathReference;
 			onSetTargetReference(found);
 		}
 	}
 
-	private onSetLayer = (value: any) => {
+	private onSetLayer = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
 		if (found && ("layer" in found.data)) {
-			found.data.layer = value.target.value;
+			found.data.layer = value.target.value as TGuideReference;
 			onSetTargetReference(found);
 		}
 	}
 
-	private onSetDocument = (value: any) => {
+	private onSetDocument = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
 		if (found && ("document" in found.data)) {
-			found.data.document = value.target.value;
+			found.data.document = value.target.value as TGuideReference;
 			onSetTargetReference(found);
 		}
 	}
 
-	private onSetMainClass = (value: any) => {
-		this.props.onSetSelectedReferenceType(value.target.value);
+	private onSetMainClass = (value: React.ChangeEvent<HTMLSelectElement>) => {
+		this.props.onSetSelectedReferenceType(value.target.value as TTargetReference);
 	}
 
-	private renderActionSet = ():React.ReactNode=>{
-		const {selectedTargetReference} = this.props;
-		if (selectedTargetReference !== "action") { return;}
+	private renderActionSet = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionSet } = this.props;
-		const list = [...this.baseItemsActionCommon];
+		const list = [...baseItemsActionCommon];
 
 		return (
 			<div className="filter">
@@ -240,12 +172,12 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		);
 	}
 
-	private renderActionItem = ():React.ReactNode=>{
-		const {selectedTargetReference} = this.props;
-		if (selectedTargetReference !== "action") { return;}
-		const { activeReferenceActionItem,activeReferenceActionSet } = this.props;
-		if (activeReferenceActionSet === "undefined") { return;}
-		const list = [...this.baseItemsActionCommon];
+	private renderActionItem = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "action") { return; }
+		const { activeReferenceActionItem, activeReferenceActionSet } = this.props;
+		if (activeReferenceActionSet === "undefined") { return; }
+		const list = [...baseItemsActionCommon];
 		return (
 			<div className="filter">
 				<div className="label">Action:</div>
@@ -266,13 +198,13 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		);
 	}
 
-	private renderCommand = ():React.ReactNode=>{
-		const {selectedTargetReference} = this.props;
-		if (selectedTargetReference !== "action") { return;}
+	private renderCommand = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet } = this.props;
-		if (activeReferenceActionSet === "undefined") { return;}
-		if (activeReferenceActionItem === "undefined") { return;}
-		const list = [...this.baseItemsActionCommon];
+		if (activeReferenceActionSet === "undefined") { return; }
+		if (activeReferenceActionItem === "undefined") { return; }
+		const list = [...baseItemsActionCommon];
 
 		return (
 			<div className="filter">
@@ -296,23 +228,76 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 
 
 	private renderProperty = (): React.ReactNode => {
-		const {selectedTargetReference} = this.props;
-		const { propertySettings,activeReferenceProperty } = this.props;
+		const { selectedTargetReference } = this.props;
+		const { propertySettings, activeReferenceProperty } = this.props;
 		
 		switch (selectedTargetReference) {
-			case "undefined": 
+			case "undefined":
 			case "customDescriptor":
 			case "featureData":
-			case "allFromGenerator": 
+			case "allFromGenerator":
 				return;
 		}
 
-		const foundSettings: IPropertySettings|undefined = propertySettings.find(p => p.type === selectedTargetReference);
-		if (!foundSettings) { throw new Error("Properties not found");}
+		const foundSettings: IPropertySettings | undefined = propertySettings.find(p => p.type === selectedTargetReference);
+		if (!foundSettings) { throw new Error("Properties not found"); }
 
 		const defaultList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "default").map(f => ({ label: f.title, value: f.stringID }));
 		const hiddenList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "hidden").map(f => ({ label: f.title, value: f.stringID }));
 		const optionalList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "optional").map(f => ({ label: f.title, value: f.stringID }));
+
+		const hidden = hiddenList.length === 0 ? null : (
+			<React.Fragment>
+				<sp-menu-divider></sp-menu-divider>
+				<sp-menu-group>
+					<span slot="header">Hidden</span>
+					{
+						hiddenList.map(item => (
+							<sp-menu-item
+								key={item.value}
+								value={item.value}
+								selected={activeReferenceProperty === item.value ? "selected" : null}
+							>{item.label}</sp-menu-item>
+						))
+					}
+				</sp-menu-group>
+			</React.Fragment>
+		);
+
+		const optional = optionalList.length === 0 ? null : (
+			<React.Fragment>
+				<sp-menu-divider></sp-menu-divider>
+				<sp-menu-group>
+					<span slot="header">Optional</span>
+					{
+						optionalList.map(item => (
+							<sp-menu-item
+								key={item.value}
+								value={item.value}
+								selected={activeReferenceProperty === item.value ? "selected" : null}
+							>{item.label}</sp-menu-item>
+						))
+					}
+				</sp-menu-group>
+			</React.Fragment>
+		);
+		const defaultEl = defaultList.length === 0 ? null : (
+			<React.Fragment>
+				<sp-menu-divider></sp-menu-divider>
+				<sp-menu-group>
+					<span slot="header">Default</span>
+					{
+						defaultList.map(item => (
+							<sp-menu-item
+								key={item.value}
+								value={item.value}
+								selected={activeReferenceProperty === item.value ? "selected" : null}
+							>{item.label}</sp-menu-item>
+						))
+					}
+				</sp-menu-group>
+			</React.Fragment>
+		);
 
 		return (
 			<div className="filter">
@@ -320,7 +305,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetProperty}>
 						{
-							this.baseItemsProperty.map(item => (
+							baseItemsProperty.map(item => (
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
@@ -328,55 +313,18 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 								>{item.label}</sp-menu-item>
 							))
 						}
-						<sp-menu-divider></sp-menu-divider>
-						<sp-menu-group>
-							<span slot="header">Default</span>
-							{
-								defaultList.map(item => (
-									<sp-menu-item
-										key={item.value}
-										value={item.value}
-										selected={activeReferenceProperty === item.value ? "selected" : null}
-									>{item.label}</sp-menu-item>
-								))
-							}
-						</sp-menu-group>
-						<sp-menu-divider></sp-menu-divider>
-						<sp-menu-group>
-							<span slot="header">Optional</span>
-							{
-								optionalList.map(item => (
-									<sp-menu-item
-										key={item.value}
-										value={item.value}
-										selected={activeReferenceProperty === item.value ? "selected" : null}
-									>{item.label}</sp-menu-item>
-								))
-							}
-						</sp-menu-group>
-						<sp-menu-divider></sp-menu-divider>
-						<sp-menu-group>
-							<span slot="header">Hidden</span>
-							{
-								hiddenList.map(item => (
-									<sp-menu-item
-										key={item.value}
-										value={item.value}
-										selected={activeReferenceProperty === item.value ? "selected" : null}
-									>{item.label}</sp-menu-item>
-								))
-							}
-						</sp-menu-group>
-						<sp-menu-divider></sp-menu-divider>
+						{defaultEl}
+						{optional}
+						{hidden}
 					</sp-menu>
 				</sp-dropdown>
 			</div>
 		);
 	}
-	private renderGuide = ():React.ReactNode=>{
-		const {selectedTargetReference} = this.props;
-		if (selectedTargetReference !== "guide") { return;}
-		const list = [...this.baseItemsGuide];
+	private renderGuide = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "guide") { return; }
+		const list = [...baseItemsGuide];
 
 		const { activeReferenceGuide } = this.props;
 		return (
@@ -398,10 +346,10 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			</div>
 		);
 	}
-	private renderChannel = ():React.ReactNode=>{
-		const {selectedTargetReference} = this.props;
-		if (selectedTargetReference !== "channel") { return;}
-		const list = [...this.baseItemsChannel];
+	private renderChannel = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "channel") { return; }
+		const list = [...baseItemsChannel];
 
 		const { activeReferenceChannel } = this.props;
 		return (
@@ -423,10 +371,10 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			</div>
 		);
 	}
-	private renderPath = ():React.ReactNode=>{
-		const {selectedTargetReference} = this.props;
-		if (selectedTargetReference !== "path") { return;}
-		const list = [...this.baseItemsPath];
+	private renderPath = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "path") { return; }
+		const list = [...baseItemsPath];
 
 		const { activeReferencePath } = this.props;
 		return (
@@ -449,19 +397,19 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		);
 	}
 	private renderDocument = (): React.ReactNode => {
-		const {selectedTargetReference} = this.props;
+		const { selectedTargetReference } = this.props;
 		
 		switch (selectedTargetReference) {
-			case "undefined": 
+			case "undefined":
 			case "customDescriptor":
 			case "featureData":
-			case "allFromGenerator": 
+			case "allFromGenerator":
 			case "application":
 			case "action":
 				return;
 		}
 
-		const list = [...this.baseItemsDocument];
+		const list = [...baseItemsDocument];
 
 		const { activeTargetReferenceDocument } = this.props;
 		return (
@@ -485,7 +433,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 	}
 	private renderLayer = (): React.ReactNode => {
 		const { activeReferenceChannel, activeReferencePath } = this.props;
-		const {selectedTargetReference} = this.props;
+		const { selectedTargetReference } = this.props;
 		
 		if ((selectedTargetReference === "layer" || selectedTargetReference === "channel" || selectedTargetReference === "path") === false) {
 			return;
@@ -499,7 +447,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			return;
 		}
 
-		const list = [...this.baseItemsLayer];
+		const list = [...baseItemsLayer];
 		
 		const { activeTargetLayerReference } = this.props;
 		return (
@@ -521,18 +469,18 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			</div>
 		);
 	}
-	private renderCustomDescriptorCategory = ():React.ReactNode => {
+	private renderCustomDescriptorCategory = (): React.ReactNode => {
 		if (this.props.selectedTargetReference !== "customDescriptor") {
 			return null;
 		}
 
-		const list = [...this.baseItemsCustomDescriptor];
+		const list = [...baseItemsCustomDescriptor];
 
 		return (
 			<div className="filter">
 				<div className="label">Category:</div>
 				<sp-dropdown quiet="true">
-					<sp-menu slot="options" onClick={(e:string) => { console.log(e);}}>
+					<sp-menu slot="options" onClick={(e: string) => { console.log(e); }}>
 						{
 							list.map(item => (
 								<sp-menu-item
@@ -548,14 +496,14 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		);
 	}
 
-	private renderMainClass = ():React.ReactNode => {
+	private renderMainClass = (): React.ReactNode => {
 		return (
 			<div className="filter">
 				<div className="label">Type:</div>
 				<sp-dropdown quiet="true">
 					<sp-menu slot="options" onClick={this.onSetMainClass}>
 						{
-							this.mainClasses.map(item => (
+							mainClasses.map(item => (
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
@@ -569,17 +517,17 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		);
 	}
 
-	private getDescriptor = async(): Promise<void> => {
+	private getDescriptor = async (): Promise<void> => {
 		if (!this.props.addAllowed) {
 			return;
 		}
-		const result = await GetInfo.getAM( this.props.activeTargetReference);
-		if (result === null) { return;}
+		const result = await GetInfo.getAM(this.props.activeTargetReference);
+		if (result === null) { return; }
 		this.props.onAddDescriptor(result);
 
 	}
 
-	private renderFilters = ():React.ReactNode => {
+	private renderFilters = (): React.ReactNode => {
 		return (
 			<React.Fragment>
 				{this.renderMainClass()}
@@ -597,7 +545,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		);
 	}
 
-	private renderDescriptorsList = ():React.ReactNode => {
+	private renderDescriptorsList = (): React.ReactNode => {
 		return (
 			this.props.allDescriptors.map(d => (
 				<DescriptorItemContainer descriptor={d} key={d.id} />
@@ -606,20 +554,27 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 	}
 
 	public render(): JSX.Element {
-		const { addAllowed} = this.props;
+		const { addAllowed, onLock, onPin, onRemove, selectedDescriptors, lockedSelection, pinnedSelection } = this.props;
 		return (
 			<div className="LeftColumn">
-				<div>
-					{this.renderFilters()}
-				</div>
-				<div className="buttons">
-					<div className={"add" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</div>
-				</div>
-				<div className="descriptorsWrapper">
-					{this.renderDescriptorsList()}
-				</div>
-				<div>
-					
+				<div className="oneMore">
+
+				
+					<div className="filtersWrapper">
+						{this.renderFilters()}
+					</div>
+					<div className="filterButtons">
+						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</div>
+					</div>
+					<div className="descriptorsWrapper">
+						{this.renderDescriptorsList()}
+					</div>
+					<div className="descriptorButtons">
+						<div className="label">Selected:</div>
+						<div className="lock button" onClick={() => { onLock(!lockedSelection, selectedDescriptors);}}>Lock</div>
+						<div className="pin button" onClick={() => { onPin(!pinnedSelection, selectedDescriptors);}}>Pin</div>
+						<div className="remove button" onClick={() => { onRemove(selectedDescriptors);}}>Remove</div>
+					</div>
 				</div>
 			</div>
 		);

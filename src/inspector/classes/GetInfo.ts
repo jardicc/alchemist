@@ -1,6 +1,7 @@
-import { IDescriptor, TActiveTargetReferenceArr, TChannelReferenceValid } from "../reducers/initialStateInspector";
+
 import photothop from "photoshop";
 import { cloneDeep } from "lodash";
+import { TActiveTargetReferenceArr, IDescriptor, TChannelReferenceValid } from "../model/types";
 
 export interface ITargetReferenceAM{
 	"_obj": "get",

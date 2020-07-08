@@ -1,7 +1,8 @@
 
 import produce from "immer";
-import { getInitialState, IInspectorState } from "./initialStateInspector";
+import { getInitialState } from "../store/initialState";
 import { TActions } from "../actions/inspectorActions";
+import { IInspectorState } from "../model/types";
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
 	console.log(JSON.stringify(action, null, "\t"));
@@ -29,7 +30,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "ADD_DESCRIPTOR": {
 			state = produce(state, draft => {
-				draft.descriptors.push(action.payload);
+				draft.descriptors.unshift(action.payload);
 			});
 			break;
 		}
@@ -53,6 +54,78 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		case "SET_SELECTED_REFERENCE_TYPE_ACTION": {
 			state = produce(state, draft => {
 				draft.selectedReferenceType = action.payload;
+			});
+			break;
+		}
+		case "CLEAR_VIEW":{
+			state=produce(state,draft=>{
+				console.log("empty");
+			});
+			break;
+		}
+		case "CLEAR":{
+			state=produce(state,draft=>{
+				draft.descriptors = draft.descriptors.filter(d => d.locked) || [];
+			});
+			break;
+		}
+		case "CLEAR_NON_EXISTENT":{
+			state=produce(state,draft=>{
+				console.log("empty");
+			});
+			break;
+		}
+		case "LOCK_DESC":{
+			state = produce(state, draft => {
+				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.locked = action.payload.lock);				
+			});
+			break;
+		}
+		case "PIN_DESC":{
+			state=produce(state,draft=>{
+				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.pinned = action.payload.pin);				
+			});
+			break;
+		}
+		case "REMOVE_DESC":{
+			state=produce(state,draft=>{
+				draft.descriptors = draft.descriptors.filter(d => !action.payload.includes(d.id) && !d.locked);
+			});
+			break;
+		}
+		case "IMPORT_STATE":{
+			state=produce(state,draft=>{
+				console.log("empty");
+			});
+			break;
+		}
+		case "IMPORT_APPEND":{
+			state=produce(state,draft=>{
+				console.log("empty");
+			});
+			break;
+		}
+		case "IMPORT_REPLACE":{
+			state=produce(state,draft=>{
+				console.log("empty");
+			});
+			break;
+		}
+		case "EXPORT_SELECTED_DESC":{
+			state=produce(state,draft=>{
+				console.log("empty");
+			});
+			break;
+		}
+		case "EXPORT_ALL_DESC":{
+			state=produce(state,draft=>{
+				console.log("empty");
+			});
+			break;
+		}
+		case "EXPORT_STATE":{
+			state=produce(state,draft=>{
+				console.log("empty");
 			});
 			break;
 		}

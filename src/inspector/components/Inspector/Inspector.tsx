@@ -1,9 +1,9 @@
 import React from "react";
-import { TabList } from "./TabList";
-import { TabPanel } from "./TabPanel";
-import { TActiveSection, TActiveInspectorTab } from "../reducers/initialStateInspector";
+import { TabList } from "../Tabs/TabList";
+import { TabPanel } from "../Tabs/TabPanel";
 import "./Inspector.css";
-import { LeftColumnContainer } from "./LeftColumnContainer";
+import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
+import { TActiveSection, TActiveInspectorTab } from "../../model/types";
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
@@ -17,13 +17,10 @@ export interface IInspectorDispatch {
 	setModeTab(mode:TActiveInspectorTab):void
 }
 
-interface IInspectorState{
-	
-}
 
 type TInspector = IInspectorProps & IInspectorDispatch
 
-export class Inspector extends React.Component<TInspector, IInspectorState> { 
+export class Inspector extends React.Component<TInspector> { 
 	constructor(props: TInspector) {
 		super(props);
 
@@ -60,7 +57,12 @@ export class Inspector extends React.Component<TInspector, IInspectorState> {
 					</TabPanel>
 				</TabList>
 				<div className="footer">
-					footer
+					<div className="button">Clear</div>
+					<div className="button">Clear view</div>
+					<div className="button">Clear non-existent</div>
+					<div className="spread"></div>
+					<div className="button">Import</div>
+					<div className="button">Export</div>
 				</div>
 			</div>
 		);

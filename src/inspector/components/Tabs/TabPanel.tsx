@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import React from "react";
 
 export interface ITabPanelProps{

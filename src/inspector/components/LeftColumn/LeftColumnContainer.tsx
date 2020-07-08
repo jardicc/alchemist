@@ -1,8 +1,8 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn";
-import { IRootState } from "../../store";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getAllDescriptors, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference } from "../selectors/inspectorSelectors";
-import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction } from "../actions/inspectorActions";
+import { IRootState } from "../../../store";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getAllDescriptors, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference } from "../../selectors/inspectorSelectors";
+import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction } from "../../actions/inspectorActions";
 
 
 const mapStateToProps = (state: IRootState): ILeftColumnProps => {
@@ -34,7 +34,12 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record
 	return {
 		onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
 		onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
-		onSetSelectedReferenceType: (type)=>dispatch(setSelectedReferenceTypeAction(type))
+		onSetSelectedReferenceType: (type) => dispatch(setSelectedReferenceTypeAction(type)),
+		
+		onClear: () => dispatch(clearAction()),
+		onPin: (pin, arg) => dispatch(pinDescAction(pin, arg)),
+		onRemove: (arg) => dispatch(removeDescAction(arg)),
+		onLock: (lock, arg) => dispatch(lockDescAction(lock, arg)),
 	};
 };
 

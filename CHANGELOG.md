@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.13.0
+Inspector only
+- improves: layout, styling and also scrolling
+- feature: lock, pin, remove buttons for selected actions
+- improves: names for recorded descriptors
+
 ## 0.12.0
+Inspector only
 - adds: Inspector panel. Work in progress. Bugs included.
 
 ## 0.11.0

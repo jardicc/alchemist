@@ -1,0 +1,84 @@
+[panelid="inspector"]{
+	display:flex;
+	flex-direction: column;
+}
+*{box-sizing: border-box;}
+
+/*
+*:hover {border: 1px dashed red;}
+*/
+
+.Inspector{
+	color:white;
+	font-size: 10px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	width: 100vw;
+	height: 100vh;
+	flex-shrink: 0;
+}
+
+
+.Inspector .descriptorsColumns{
+	display: flex;
+	flex-grow: 1;
+	position: relative;
+}
+
+.Inspector .descriptorsColumns > .TabList{
+	left: 200px;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+}
+
+.Inspector > .TabList{
+	flex-grow: 1;
+}
+
+.Inspector .code{
+	white-space: pre;
+	overflow: scroll;
+	border: 0px solid red;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+
+.Inspector .info{
+	overflow: auto;
+}
+
+.Inspector .footer{
+	border-top:1px solid gray;
+	display: flex;
+}
+
+.Inspector .spread{
+	flex-grow: 1;
+}
+
+
+.Inspector .button{
+	display: inline-block;
+	padding:0.3em 0.5em;
+	margin:0.3em;
+	border:1px solid gray;
+	cursor: pointer;
+	border-radius: 3px;;
+}
+
+.Inspector .button:hover{
+	color:aqua;
+	border:1px solid aqua;
+}
+
+.Inspector .button.disallowed{
+	pointer-events: none;
+	border:1px solid black;
+	color:black;
+	cursor: not-allowed;
+}
