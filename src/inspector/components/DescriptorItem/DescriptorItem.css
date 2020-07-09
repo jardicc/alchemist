@@ -1,11 +1,16 @@
 .DescriptorItem{
-	border-top:1px solid gray;
+	border-top:1px solid var(--divider);
 	padding: 0.3em 1em;
+	background: var(--bg);
 	flex-shrink: 0;
 }
 
+.DescriptorItem:last-child{
+	border-bottom:1px solid var(--divider);
+}
+
 .DescriptorItem:hover{
-	color:aqua;
+	color:var(--hover);
 	cursor: pointer;
 }
 
@@ -14,12 +19,12 @@
 }
 
 .DescriptorItem.selected{
-	color:lime;
+	color:var(--active);
 	cursor: default;
 }
 
 .DescriptorItem .time{
-	color:silver;
+	color:var(--textFade);
 	font-style: italic;
 	margin-left: 1em;
 }

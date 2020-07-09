@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.14.0
+Inspector only
+- improves: support for PS theme switching
+- improves: panel colors
+- feature: clear button now removes all non-locked descriptors
+- feature: lock prevents removal
+- feature: pin keeps items at the top
+
 ## 0.13.0
 Inspector only
 - improves: layout, styling and also scrolling

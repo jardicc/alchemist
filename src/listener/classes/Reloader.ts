@@ -18,7 +18,7 @@ export class Reloader{
 		return this._interval;
 	}
 
-	public async initWatchedFiles():Promise<void> {
+	public async initWatchedFiles(): Promise<void> {
 		const pluginFolder = await localFileSystem.getPluginFolder();
 
 		const entries:any[] = await pluginFolder.getEntries();		

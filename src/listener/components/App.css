@@ -1,4 +1,4 @@
-.actionList{
+.Listener .actionList{
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -6,7 +6,7 @@
 	overflow: auto;
 }
 
-.code{
+.Listener .code{
 	color:white;
 	font-size: 11px;
 	white-space: pre;
@@ -14,7 +14,7 @@
 	padding: 1em;
 }
 
-.codeArea{
+.Listener .codeArea{
 	color:white;
 	font-size: 11px;
 	white-space: pre;
@@ -23,39 +23,39 @@
 	width: 100%;
 }
 
-.replies{
+.Listener .replies{
 	margin-left: 2em;
 	background: rgba(0,0,0,0.2);
 }
 
-.replies .header{
+.Listener .replies .header{
 	color:#ddd;
 	font-size: 1.3em;
 }
 
-.action{
+.Listener .action{
 	padding: 0;
 	border-bottom: 1px solid gray;
 	line-height: 1.5;
 	flex-shrink: 0;
 }
 
-.action .chevron{
+.Listener .action .chevron{
 	color:"white";
 	margin-right: 0.5em;
 }
 
-.action .header{
+.Listener .action .header{
 	display: flex;
 	align-items: center;
 }
 
-.action .menuHolder{
+.Listener .action .menuHolder{
 	position: relative;
 	color:white;
 }
 
-.action .menu{
+.Listener .action .menu{
 	width: 16em;
 	position: absolute;
 	z-index: 10;
@@ -64,23 +64,23 @@
 	border: 1px solid silver;
 }
 
-.action .header .sameGroupBadge{
+.Listener .action .header .sameGroupBadge{
 	background-color: royalblue;
 	border-radius: 50%;
 	color:white;
 	padding: 0.2em 0.7em;
 }
 
-.action .header .collapse{
+.Listener .action .header .collapse{
 	margin-right:1em;
 	display: flex;
 	flex-grow: 1;
 }
-.action .header .title{
+.Listener .action .header .title{
 	margin:0 1em
 }
 
-.empty{
+.Listener .empty{
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -88,20 +88,20 @@
 	
 }
 
-.empty .message{
+.Listener .empty .message{
 	color:white;
 	font-size: 11px;
 	text-align: center;
 }
 
-.panel {
+.Listener .panel {
 	overflow: auto;
 	max-width: 100vw;
 	max-height: 100vh;
 	margin: 4px;
 }
 
-.component {
+.Listener {
 	min-width: 300px;
 	margin: 1em 4px;
 	display: flex;
@@ -109,49 +109,49 @@
 	flex-direction: column;
 }
 
-.spread{
+.Listener .spread{
 	display: flex;
 	flex-grow: 1;
 }
 
-.flex-row {
+.Listener .flex-row {
 	display: flex;
 	flex-direction: row;
 }
 
-.flex-col {
+.Listener .flex-col {
 	display: flex;
 	flex-direction: column;
 }
 
-.between {
+.Listener .between {
 	justify-content: space-between;
 }
 
-.around {
+.Listener .around {
 	justify-content: space-around;
 }
 
-.start {
+.Listener .start {
 	justify-content: space-between;
 }
 
-.end {
+.Listener .end {
 	justify-content: flex-end;
 }
 
-.center {
+.Listener .center {
 	justify-content: center;
 }
 
-.controls{
+.Listener .controls{
 	flex-wrap: wrap;
 }
-.controls > div > *{
+.Listener .controls > div > *{
 	margin: 0 0.5em;
 }
 
-.version{
+.Listener .version{
 	align-self: center;
 }
 

@@ -4,6 +4,7 @@ import { TabPanel } from "../Tabs/TabPanel";
 import "./Inspector.css";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
 import { TActiveSection, TActiveInspectorTab } from "../../model/types";
+import { FooterContainer } from "../Footer/FooterContainer";
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
@@ -56,14 +57,7 @@ export class Inspector extends React.Component<TInspector> {
 						settings
 					</TabPanel>
 				</TabList>
-				<div className="footer">
-					<div className="button">Clear</div>
-					<div className="button">Clear view</div>
-					<div className="button">Clear non-existent</div>
-					<div className="spread"></div>
-					<div className="button">Import</div>
-					<div className="button">Export</div>
-				</div>
+				<FooterContainer  />
 			</div>
 		);
 	}

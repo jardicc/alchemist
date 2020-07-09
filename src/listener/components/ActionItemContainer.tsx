@@ -5,7 +5,7 @@ import { addReplyAction, toggleExpandAction, removeActionAction, filterEventName
 import { IActionItemProps, IActionItemDispatch } from "./ActionItem";
 import cloneDeep from "lodash/cloneDeep";
 import {ActionItem} from "./ActionItem";
-import { IRootState } from "../../store";
+import { IRootState } from "../../shared/store";
 
 interface IOwn{
 	action:IActionView

@@ -1,7 +1,7 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn";
-import { IRootState } from "../../../store";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getAllDescriptors, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference } from "../../selectors/inspectorSelectors";
+import { IRootState } from "../../../shared/store";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getAllDescriptors, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView } from "../../selectors/inspectorSelectors";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction } from "../../actions/inspectorActions";
 
 
@@ -15,7 +15,7 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => {
 		lockedSelection: getLockedSelection(state),
 		pinnedSelection: getPinnedSelection(state),
 		removableSelection: getRemovableSelection(state),
-		allDescriptors: getAllDescriptors(state),
+		allDescriptors: getDescriptorsListView(state),
 		selectedTargetReference: getSelectedTargetReference(state),
 		activeTargetReference: getActiveTargetReference(state),
 		activeTargetReferenceDocument: getActiveTargetDocument(state),

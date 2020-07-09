@@ -7,7 +7,7 @@
 	width:200px;
 	flex-direction: column;
 	min-height: 0;
-	border-right: 1px solid gray;
+	border-right: 1px solid var(--divider);
 }
 
 .LeftColumn .descriptorsWrapper{
@@ -61,7 +61,7 @@
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
-	background: #444;
+	background: var(--bgList);
 	border: 0px solid magenta;
 	flex-grow: 1;
 	flex-shrink: 0;

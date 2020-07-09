@@ -2,7 +2,7 @@ import {render} from "react-dom";
 import React from "react";
 import { Provider } from "react-redux";
 import { InspectorContainer } from "./Inspector/InspectorContainer";
-import { rootStore } from "../../store";
+import { rootStore } from "../../shared/store";
 
 export function renderInspectorUI(): void {
 	setTimeout(() => {

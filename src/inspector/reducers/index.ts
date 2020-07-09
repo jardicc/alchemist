@@ -89,7 +89,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "REMOVE_DESC":{
 			state=produce(state,draft=>{
-				draft.descriptors = draft.descriptors.filter(d => !action.payload.includes(d.id) && !d.locked);
+				draft.descriptors = draft.descriptors.filter(d => (action.payload.includes(d.id) === false || d.locked));
 			});
 			break;
 		}

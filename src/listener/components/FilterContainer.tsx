@@ -3,7 +3,7 @@ import { getFilterType, getInclude, getExclude, getSearchEvent } from "../select
 import { setSearchTermAction, setFilterTypeAction, setIncludeAction, setExcludeAction } from "../actions/actions";
 import { IFilterProps, IFilterDispatch } from "./Filter";
 import {Filter} from "./Filter";
-import { IRootState } from "../../store";
+import { IRootState } from "../../shared/store";
 
 
 const mapStateToProps = (state: IRootState): IFilterProps => {

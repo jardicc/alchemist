@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { IRootState } from "../../store";
+import { IRootState } from "../../shared/store";
 
 const all = (state:IRootState) => state.inspector;
  
@@ -33,6 +33,11 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 		return true;
 	}
 	return false;
+});
+export const getDescriptorsListView = createSelector([getAllDescriptors], (t) => {	
+	const pinned = t.filter(i => i.pinned);
+	const notPinned = t.filter(i => !i.pinned);
+	return [...pinned, ...notPinned];
 });
 export const getActiveReferenceProperty = createSelector([getActiveTargetReference], (t) => {	
 	if (t  && "property" in t.data) {

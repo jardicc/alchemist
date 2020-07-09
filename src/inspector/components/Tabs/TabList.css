@@ -14,7 +14,7 @@
 
 .TabList .tabRow{
 	display: flex;
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid var(--divider);
 	flex-shrink: 0;
 }
 
@@ -24,11 +24,11 @@
 }
 
 .TabList .tabHeader:hover{
-	color:aqua;
+	color:var(--hover);
 	cursor: pointer;
 }
 
 .TabList .tabHeader.active{
-	color:lime;
+	color:var(--active);
 	cursor: default;
 }

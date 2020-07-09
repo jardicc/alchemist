@@ -1,11 +1,9 @@
-import {render} from "react-dom";
-import React from "react";
-import { Provider } from "react-redux";
-import {listenerStore} from "../listener/store/listenerStore";
-import { AppContainer } from "../listener/components/AppContainer";
+/* eslint-disable @typescript-eslint/no-namespace */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type React from "react";
 
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace JSX {
 		interface IntrinsicElements {
 			"sp-icon": any;
@@ -30,13 +28,4 @@ declare global {
 			"sp-tooltip": any;
 		}
 	}
-}
-
-export function renderUI ():void {
-	render(
-		<Provider store={listenerStore}>
-			< AppContainer />
-		</Provider>,
-		document.getElementById("root") as HTMLElement
-	);
 }

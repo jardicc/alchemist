@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { IActionView } from "../reducers/initialStateListener";
 import _ from "lodash";
-import { IRootState } from "../../store";
+import { IRootState } from "../../shared/store";
 
 const all = (rootState: IRootState) => {
 	//console.log(rootState);

@@ -1,6 +1,6 @@
 import React from "react";
 import { IPlayReply, IActionView } from "../reducers/initialStateListener";
-import { action as uxpAction } from "../../imports";
+import { action as uxpAction } from "../../shared/imports";
 import { CommandOptions } from "photoshop/dist/types/UXP";
 import { showCheckmark } from "./Utils";
 

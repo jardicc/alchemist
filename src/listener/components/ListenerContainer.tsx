@@ -2,7 +2,7 @@ import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { getSettings, getActions, getGroupSame } from "../selectors";
 import { toggleCollapseOptionAction, setListenerAction, addActionActin, setBatchPlayDecoratorAction, clearLogAction, setHistoryIDAction, incrementActionIDAction, groupSameAction, replaceWholeStateAction, appendActionsAction } from "../actions/actions";
 import {Listener, IListenerDispatch, IListenerProps } from "./Listener";
-import { IRootState } from "../../store";
+import { IRootState } from "../../shared/store";
 
 const mapStateToProps = (state: IRootState): IListenerProps => ({
 	settings: getSettings(state),

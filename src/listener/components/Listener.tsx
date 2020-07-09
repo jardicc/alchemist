@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { app, action } from "../../imports";
+import { app, action } from "../../shared/imports";
 import { IAppState, IAction, ISettings, IActionView } from "../reducers/initialStateListener";
 import {ActionItemContainer} from "./ActionItemContainer";
 import {FilterContainer} from "./FilterContainer";
@@ -163,7 +163,7 @@ export class Listener extends React.Component<TListener> {
 		const { groupSame } = this.props;
 
 		return (
-			<div className="component">
+			<div className="Listener">
 				<FilterContainer  />
 				<div className="actionList">
 					{this.renderActions()}
