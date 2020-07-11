@@ -3,6 +3,7 @@ import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn"
 import { IRootState } from "../../../shared/store";
 import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getAllDescriptors, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor } from "../../selectors/inspectorSelectors";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction } from "../../actions/inspectorActions";
+import { TDocumentReference, TLayerReference, TChannelReference, TGuideReference, TPathReference, TActionSet, TActionItem, TActionCommand } from "../../model/types";
 
 
 const mapStateToProps = (state: IRootState): ILeftColumnProps => {
@@ -18,15 +19,15 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => {
 		allDescriptors: getDescriptorsListView(state),
 		selectedTargetReference: getSelectedTargetReference(state),
 		activeTargetReference: getActiveTargetReference(state),
-		activeTargetReferenceDocument: getActiveTargetDocument(state),
-		activeTargetLayerReference: getActiveTargetLayer(state),
-		activeReferenceChannel:getActiveReferenceChannel(state) ,
-		activeReferenceGuide: getActiveReferenceGuide(state),
-		activeReferencePath: getActiveReferencePath(state),
-		activeReferenceActionSet:getActiveReferenceActionSet(state),
-		activeReferenceActionItem:getActiveReferenceActionItem(state),
-		activeReferenceCommand: getActiveReferenceCommand(state),
-		activeReferenceProperty: getActiveReferenceProperty(state),
+		activeTargetReferenceDocument: getActiveTargetDocument(state) as TDocumentReference,
+		activeTargetLayerReference: getActiveTargetLayer(state) as TLayerReference,
+		activeReferenceChannel:getActiveReferenceChannel(state)  as TChannelReference,
+		activeReferenceGuide: getActiveReferenceGuide(state) as TGuideReference,
+		activeReferencePath: getActiveReferencePath(state) as TPathReference,
+		activeReferenceActionSet:getActiveReferenceActionSet(state) as TActionSet,
+		activeReferenceActionItem:getActiveReferenceActionItem(state) as TActionItem,
+		activeReferenceCommand: getActiveReferenceCommand(state) as TActionCommand,
+		activeReferenceProperty: getActiveReferenceProperty(state) as string | null,
 		hasAutoActiveDescriptor: getHasAutoActiveDescriptor(state),
 	};
 };

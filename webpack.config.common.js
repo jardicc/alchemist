@@ -24,10 +24,29 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{
+			/*{
 				test: /\.ts(x?)$/,
 				exclude: /node_modules/,
 				use: "ts-loader",
+			},*/
+			{
+				test: /\.(ts|tsx)$/,
+				//include: paths.appSrc,
+				loader: require.resolve("awesome-typescript-loader"),
+				options: {
+					transpileOnly: true,
+					useCache: true,
+					useBabel: true,
+					babelOptions: {
+						babelrc: false,
+					},
+					reportFiles: [
+						"./src/**/*.tsx",
+						"./src/**/*.ts",
+					],
+					plugins: ["@babel/plugin-proposal-optional-chaining"],
+					babelCore: "@babel/core", // needed for Babel v7
+				}
 			},
 			{
 				test: /\.css$/,

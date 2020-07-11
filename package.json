@@ -5,7 +5,8 @@
         "watch": "webpack --watch --config webpack.config.dev.js"
     },
     "devDependencies": {
-        "@babel/core": "^7.10.3",
+        "@babel/core": "^7.10.4",
+        "@babel/plugin-proposal-optional-chaining": "^7.10.4",
         "@babel/preset-env": "^7.10.3",
         "@babel/preset-react": "^7.10.1",
         "@types/react": "^16.9.38",
@@ -23,17 +24,17 @@
         "style-loader": "^1.2.1",
         "terser-webpack-plugin": "^3.0.6",
         "ts-loader": "^7.0.5",
-        "typescript": "^3.9.5",
-        "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.12"
+        "typescript": "^3.9.5"
     },
     "dependencies": {
+        "@babel/preset-typescript": "^7.10.4",
         "@spectrum-web-components/radio-group": "^0.1.18",
         "@spectrum-web-components/textfield": "^0.3.9",
         "@types/lodash": "^4.14.155",
         "@types/photoshop": "git+https://github.com/adobe-uxp/types-photoshop.git",
         "@types/react-redux": "^7.1.9",
         "@types/uuid": "^8.0.0",
+        "awesome-typescript-loader": "^5.2.1",
         "eslint-config-defaults": "^9.0.0",
         "fork-ts-checker-webpack-plugin": "^5.0.4",
         "immer": "^7.0.3",
@@ -46,6 +47,8 @@
         "redux": "^4.0.5",
         "redux-devtools-extension": "^2.13.8",
         "reselect": "^4.0.0",
-        "uuid": "^8.2.0"
+        "uuid": "^8.2.0",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.12"
     }
 }

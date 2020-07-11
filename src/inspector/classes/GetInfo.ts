@@ -1,7 +1,7 @@
 
 import photoshop from "photoshop";
 import { cloneDeep } from "lodash";
-import { TActiveTargetReferenceArr, IDescriptor, TChannelReferenceValid } from "../model/types";
+import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
 import { Descriptor } from "photoshop/dist/types/UXP";
 
 
@@ -45,7 +45,7 @@ export interface IEnumReference{
 
 export class GetInfo {
 	
-	public static async getAM(originalRef: TActiveTargetReferenceArr|undefined): Promise<IDescriptor | null> {
+	public static async getAM(originalRef: ITargetReference|null): Promise<IDescriptor | null> {
 		if (!originalRef) { return null;}
 		const t = cloneDeep(originalRef);
 		if (t.type === "generator") {
@@ -59,14 +59,28 @@ export class GetInfo {
 		};
 		const rootT = desc._target;
 
-		if (("document" in t.data) && (t.data.document.value === "active" || typeof t.data.document === "number")) {
+		const doc = t.data.find(i => i.subType === "document");		
+		const layer = t.data.find(i => i.subType === "layer");		
+		const channel = t.data.find(i => i.subType === "channel");		
+		const path = t.data.find(i => i.subType === "path");		
+
+		const history = t.data.find(i => i.subType === "history");		
+		const snapshot = t.data.find(i => i.subType === "snapshot");		
+		
+		const action = t.data.find(i => i.subType === "action");		
+		const actionset = t.data.find(i => i.subType === "actionset");		
+		const command = t.data.find(i => i.subType === "command");		
+
+		const property = t.data.find(i => i.subType === "property");		
+
+		if (doc) {
 			const activeID = await this.getActiveDocumentID();
 			if (activeID === null) { return null;}
 			
 			if (t.type !== "history" && t.type !== "snapshot") {
 				rootT.push({
 					"_ref": "document",
-					"_id": t.data.document.value === "active" ? activeID : t.data.document.value
+					"_id": doc.content.value === "active" ? activeID : doc.content.value as number
 				});
 			}
 		}
@@ -76,12 +90,12 @@ export class GetInfo {
 			
 			if (
 				(t.type === "layer") ||
-				(t.type === "path" && t.data.path.value === "vectorMask") ||
-				(t.type == "channel" && (t.data.channel.value === "filterMask" || t.data.channel.value === "mask"))
+				(t.type === "path" && path?.content.value === "vectorMask") ||
+				(t.type == "channel" && (channel?.content.value === "filterMask" || channel?.content.value === "mask"))
 			) {
 				rootT.push({
 					"_ref": "layer",
-					"_id": t.data.layer.value === "active" ? activeID : t.data.layer.value
+					"_id": layer?.content.value === "active" ? activeID : layer?.content.value as number
 				});
 			}
 		}
@@ -89,22 +103,22 @@ export class GetInfo {
 		switch (t.type) {
 			case "action": {
 
-				if (t.data.command.value !== "undefined") {
+				if (command?.content.value !== null) {
 					rootT.push({
 						"_ref": "command",
-						"_name": t.data.command.value
+						"_name": command?.content.value as string
 					});
 				}
-				if (t.data.action.value !== "undefined") {
+				if (action?.content.value !== null) {
 					rootT.push({
 						"_ref": "action",
-						"_name": t.data.action.value
+						"_name": action?.content.value as string
 					});
 				}
-				if (t.data.actionset.value !== "undefined") {
+				if (actionset?.content.value !== null) {
 					rootT.push({
 						"_ref": "actionset",
-						"_name": t.data.actionset.value
+						"_name": actionset?.content.value as string
 					});
 				}
 				break;
@@ -121,7 +135,7 @@ export class GetInfo {
 				const activeID = await this.getActiveChannelID();
 				if (activeID === null) { return null; }
 
-				if (t.data.channel.value === "active") {
+				if (channel?.content.value === "active") {
 					if (typeof activeID === "number") {
 						rootT.push({
 							"_ref": "channel",
@@ -134,16 +148,16 @@ export class GetInfo {
 							_value: activeID
 						});
 					}
-				} else if (typeof t.data.channel.value === "number") {
+				} else if (typeof channel?.content.value === "number") {
 					rootT.push({
 						"_ref": "channel",
-						"_id": t.data.channel.value
+						"_id": channel?.content.value
 					});	
-				} else if (typeof t.data.channel.value === "string") {
+				} else if (typeof channel?.content.value === "string") {
 					rootT.push({
 						_enum: "channel",
 						_ref: "channel",
-						_value: t.data.channel.value
+						_value: channel?.content.value
 					});
 				}
 				break;
@@ -163,10 +177,10 @@ export class GetInfo {
 						"_property": "workPath",
 						"_ref": "path"
 					});
-				} else if (typeof t.data.path.value === "number" || t.data.path.value === "active") {
+				} else if (typeof path?.content.value === "number" || path?.content.value === "active") {
 					rootT.push({
 						"_ref": "path",
-						"_id": t.data.path.value === "active" ? activeID : t.data.path.value
+						"_id": path?.content.value === "active" ? activeID : path?.content.value
 					});
 				}
 				break;
@@ -176,7 +190,7 @@ export class GetInfo {
 				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "historyState",
-					"_id": t.data.history.value === "active" ? activeID : t.data.history.value
+					"_id": history?.content.value === "active" ? activeID : history?.content.value as number
 				});
 				break;
 			}
@@ -185,7 +199,7 @@ export class GetInfo {
 				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "snapshotClass",
-					"_id": t.data.snapshot.value === "active" ? activeID : t.data.snapshot.value
+					"_id": snapshot?.content.value === "active" ? activeID : snapshot?.content.value as number
 				});
 				break;
 			}
@@ -193,9 +207,9 @@ export class GetInfo {
 
 
 		// add property when demanded by user
-		if (("property" in t.data) && t.data.property.value !== "notSpecified" && t.data.property.value !== "anySpecified" && typeof t.data.property.value === "string") {
+		if ((property) && property.content.value !== "notSpecified" && property.content.value !== "anySpecified" && typeof property.content.value === "string") {
 			rootT.push({
-				"_property": t.data.property.value
+				"_property": property.content.value
 			});
 		}
 
@@ -206,7 +220,7 @@ export class GetInfo {
 		return this.buildReply(startTime, playResult, desc,originalRef);
 	}
 
-	private static buildReply(startTime:number,playResult:Descriptor[],desc: ITargetReferenceAM, originalRef: TActiveTargetReferenceArr):IDescriptor {
+	private static buildReply(startTime:number,playResult:Descriptor[],desc: ITargetReferenceAM, originalRef: ITargetReference):IDescriptor {
 		return {
 			startTime,
 			endTime: Date.now(),
@@ -220,7 +234,7 @@ export class GetInfo {
 		};
 	}
 
-	private static async getFromGenerator(originalRef: TActiveTargetReferenceArr): Promise<any>{
+	private static async getFromGenerator(originalRef: ITargetReference): Promise<any>{
 		const startTime = Date.now();
 		const desc:ITargetReferenceAM = {
 			"_obj": "get",

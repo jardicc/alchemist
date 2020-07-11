@@ -12,7 +12,7 @@
         "noImplicitAny": true,
         "outDir": "./dist/",
         "sourceMap": true,
-	  "target": "esnext",
+	  "target": "ES2018",
 	  
 	  "noImplicitThis": true,
 	  "strictFunctionTypes": false,

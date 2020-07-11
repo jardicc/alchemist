@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, TActiveTargetReferenceArr, IDescriptor, TTargetReference, TSelectDescriptorOperation } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference } from "../model/types";
 
 export interface ISetMainTab {
 	type: "SET_MAIN_TAB"
@@ -12,7 +12,7 @@ export interface ISetModeTab {
 
 export interface ISetTargetReference {
 	type: "SET_TARGET_REFERENCE"
-	payload: TActiveTargetReferenceArr
+	payload: ITargetReference
 }
 
 export interface IAddDescriptorAction {
@@ -98,7 +98,7 @@ export function setModeTabAction(id:TActiveInspectorTab):ISetModeTab{
 		payload: id
 	};
 }
-export function setTargetReferenceAction(arg:TActiveTargetReferenceArr):ISetTargetReference{
+export function setTargetReferenceAction(arg:ITargetReference):ISetTargetReference{
 	return {
 		type: "SET_TARGET_REFERENCE",
 		payload: arg

@@ -9,95 +9,169 @@ export function getInitialState(): IInspectorState {
 		targetReference: [
 			{
 				type: "application",
-				data:{
-					property:{value: "notSpecified",filterBy:false}
-				}
+				data: [
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "customDescriptor",
-				data:{
-					category: {value:"notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "category",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "history",
-				data:{
-					document: {value:"active",filterBy:false},
-					history: {value:"active",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "document",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "history",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "snapshot",
-				data:{
-					document: {value:"active",filterBy:false},
-					snapshot: {value:"active",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "document",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "snapshot",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "layer",
-				data:{
-					document: {value:"active",filterBy:false},
-					layer: {value:"active",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "document",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "layer",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "path",
-				data:{
-					document: {value:"active",filterBy:false},
-					path: {value:"active",filterBy:false},
-					layer: {value:"active",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "document",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "path",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "layer",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "channel",
-				data:{
-					document: {value:"active",filterBy:false},
-					channel: {value:"active",filterBy:false},
-					layer: {value:"active",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "document",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "channel",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "layer",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "document",
-				data:{
-					document: {value:"active",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "document",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "guide",
-				data:{
-					document: {value:"active",filterBy:false},
-					guide: {value:"undefined",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-
-				}
+				data: [
+					{
+						subType: "document",
+						content: { value: "active", filterBy: "off" }
+					},
+					{
+						subType: "guide",
+						content: { value: null, filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "action",
-				data:{
-					actionset: {value:"undefined",filterBy:false},
-					action: {value:"undefined",filterBy:false},
-					command: {value:"undefined",filterBy:false},
-					property:{value: "notSpecified",filterBy:false}
-				}
+				data: [
+					{
+						subType: "actionset",
+						content: { value: null, filterBy: "off" }
+					},
+					{
+						subType: "action",
+						content: { value: null, filterBy: "off" }
+					},
+					{
+						subType: "command",
+						content: { value: null, filterBy: "off" }
+					},
+					{
+						subType: "property",
+						content: { value: "notSpecified", filterBy: "off" }
+					}
+				]
 			},
 			{
 				type: "generator",
-				data: {
-					kind: {value:"full",filterBy:false}
-				}
+				data: []
 			}
 		],
 		settings: {

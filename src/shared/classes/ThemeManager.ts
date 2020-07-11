@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const os = require("os");
+//const os = require("os");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const host = require("uxp").host;
 

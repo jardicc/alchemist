@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React from "react";
 import "./FilterButton.less";
+import { TSubTypes } from "../../model/types";
 
-export interface IFilterButtonProps{
-	state: "on"|"off"|"semi"
-	onClick:(id:string)=>void
+export interface IFilterButtonProps {
+	state: "on" | "off" | "semi"
+	subtype: TSubTypes | "main"
+	onClick: (id: TSubTypes | "main", state: "on" | "off" | "semi") => void
 }
 
 export interface IFilterButtonDispatch {
@@ -34,10 +36,10 @@ export class FilterButton extends React.Component<TFilterButton, IFilterButtonSt
 	}
 
 	public render(): JSX.Element {
-		const { state,onClick } = this.props;
+		const { state,onClick,subtype } = this.props;
 		
 		return (
-			<div className={"FilterButton"+ state==="off" ? " notPushed": " pushed"} onClick={()=>onClick}>
+			<div className={"FilterButton"+ state==="off" ? " notPushed": " pushed"} onClick={()=>onClick(subtype,state)}>
 				{this.content()}
 			</div>
 		);
