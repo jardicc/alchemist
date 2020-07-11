@@ -1,0 +1,78 @@
+.Inspector{
+	color:var(--text);
+	font-size: 10px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	width: 100vw;
+	height: 100vh;
+	flex-shrink: 0;
+	background: var(--bg);
+
+	.code{
+		color:var(--text);
+		font-size: 11px;
+		white-space: pre;
+		font-family: 'Courier New', Monaco;
+		line-height: 1.4em;
+		padding: 1em;
+	}
+	
+	
+	.descriptorsColumns{
+		display: flex;
+		flex-grow: 1;
+		position: relative;
+	}
+	
+	.descriptorsColumns > .TabList{
+		left: 200px;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		position: absolute;
+	}
+	
+	> .TabList{
+		flex-grow: 1;
+	}
+	
+	.code{
+		white-space: pre;
+		overflow: scroll;
+		border: 0px solid red;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+	}
+	
+	.info{
+		overflow: auto;
+	}
+	
+	.spread{
+		flex-grow: 1;
+	}
+	
+	.button{
+		display: inline-block;
+		padding:0.3em 0.5em;
+		margin:0.3em;
+		border:1px solid gray;
+		cursor: pointer;
+		border-radius: 3px;;
+	}
+	
+	.button:hover{
+		color:var(--hover);
+		border:1px solid var(--hover);
+	}
+	
+	.button.disallowed{
+		pointer-events: none;
+		border:1px solid black;
+		color:black;
+		cursor: not-allowed;
+	}
+}
+

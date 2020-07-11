@@ -2,7 +2,7 @@ import type { ITargetReferenceAM } from "../classes/GetInfo";
 import type { Descriptor } from "photoshop/dist/types/UXP";
 
 
-export type TTargetReference = "undefined" | "customDescriptor" | "featureData" | "allFromGenerator" | TPropertyClass;
+export type TTargetReference = "customDescriptor" | "featureData" | "generator" | TPropertyClass;
 export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" | "action";
 export type TPropertyType = "hidden" | "optional" | "default";
 export type TActiveInspectorTab = "content" | "difference" | "reference";
@@ -11,13 +11,13 @@ export type TActiveSection = "descriptors" | "settings";
 
 //export type TActiveTargetReference = null|Record<string, unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
 
-export type TBaseProperty = "undefined" | "notSpecified" | "anySpecified";
-export type THistoryReference = "undefined" | "active" | number;
-export type TSnapshotReference = "undefined" | "active" | number;
-export type TDocumentReference = "undefined" | "active" | number;
-export type TLayerReference = "undefined" | "active" | number;
-export type TPathReference = "undefined" | "active" | "vectorMask" | "workPathIndex" | number;
-export type TChannelReference = "undefined" | "active" | TChannelReferenceValid;
+export type TBaseProperty = "notSpecified" | "anySpecified";
+export type THistoryReference = "active" | number;
+export type TSnapshotReference = "active" | number;
+export type TDocumentReference = "active" | number;
+export type TLayerReference = "active" | number;
+export type TPathReference = "active" | "vectorMask" | "workPathIndex" | number;
+export type TChannelReference = "active" | TChannelReferenceValid;
 export type TChannelReferenceValid = "composite" | "RGB" | "red" | "green" | "blue" | "CMYK" | "black" | "cyan" | "magenta" | "yellow" | "lab" | "lightness" | "a" | "b" | "gray" | "monotone" | "duotone" | "tritone" | "quadtone" | "mask" | "transparencyEnum" | "filterMask" | number;
 export type TGuideReference = "undefined" | "active" | number;
 export type TActionSet = "undefined"|string;
@@ -50,63 +50,65 @@ export type TActiveTargetReferenceArr = IRefWrapper<"application", ITargetRefere
 	IRefWrapper<"channel", ITargetReferenceChannel> |
 	IRefWrapper<"document", ITargetReferenceDocument> |
 	IRefWrapper<"guide", ITargetReferenceGuide> |
-	IRefWrapper<"action", ITargetReferenceAction>;
+	IRefWrapper<"action", ITargetReferenceAction>|
+	IRefWrapper<"generator", ITargetReferenceGenerator>
+	;
+
+//////
 
 export interface ITargetReferenceApplication{
-	property: string
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferenceCustomDescriptor{
-	category:string
+	category:{value:string,filterBy:boolean}
 }
 export interface ITargetReferenceHistory{
-	document: TDocumentReference,
-	history: THistoryReference,
-	property: string
+	document:{value: TDocumentReference,filterBy:boolean},
+	history:{value: THistoryReference,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferenceSnapshot{
-	document: TDocumentReference,
-	snapshot: TSnapshotReference,
-	property: string
+	document:{value: TDocumentReference,filterBy:boolean},
+	snapshot:{value: TSnapshotReference,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferenceLayer{
-	document: TDocumentReference,
-	layer:TLayerReference,
-	property: string
+	document:{value: TDocumentReference,filterBy:boolean},
+	layer:{value:TLayerReference,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferencePath{
-	document: TDocumentReference,
-	path:TPathReference,
-	layer:TLayerReference,
-	property: string
+	document:{value: TDocumentReference,filterBy:boolean},
+	path:{value:TPathReference,filterBy:boolean},
+	layer:{value:TLayerReference,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferenceChannel{
-	document: TDocumentReference,
-	channel:TChannelReference,
-	layer:TLayerReference,
-	property: string
+	document:{value: TDocumentReference,filterBy:boolean},
+	channel:{value:TChannelReference,filterBy:boolean},
+	layer:{value:TLayerReference,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferenceDocument{
-	document: TDocumentReference,
-	property: string
+	document:{value: TDocumentReference,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferenceGuide{
-	document: TDocumentReference,
-	guide:TGuideReference,
-	property: string
+	document:{value: TDocumentReference,filterBy:boolean},
+	guide:{value:TGuideReference,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
 export interface ITargetReferenceAction{
-	actionset: string,
-	action:string,
-	command:string,
-	property: string
+	actionset:{value: string,filterBy:boolean},
+	action:{value:string,filterBy:boolean},
+	command:{value:string,filterBy:boolean},
+	property:{value: string,filterBy:boolean}
 }
-/*export interface ITargetReferenceFeatureData{
-
+export interface ITargetReferenceGenerator{
+	kind:{value: "full",filterBy:boolean}
 }
-export interface ITargetReferenceAllFromGenerator{
 
-}*/
-
+/////
 
 export interface ISettings{
 	selectReferenceBeforeGet: boolean,
@@ -156,5 +158,6 @@ export interface IDescriptor{
 	pinned: boolean,
 	locked: boolean,
 	originalReference: ITargetReferenceAM,
+	calculatedReference: TActiveTargetReferenceArr,
 	originalData: Descriptor[]
 }

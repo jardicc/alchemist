@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React from "react";
 import { TTabPanelComponent } from "./TabPanel";
-import "./TabList.css";
+import "./TabList.less";
 
 export interface ITabListProps{
 	activeKey: string

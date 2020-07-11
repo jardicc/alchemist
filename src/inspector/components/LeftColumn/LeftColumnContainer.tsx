@@ -1,7 +1,7 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn";
 import { IRootState } from "../../../shared/store";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getAllDescriptors, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView } from "../../selectors/inspectorSelectors";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getAllDescriptors, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor } from "../../selectors/inspectorSelectors";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction } from "../../actions/inspectorActions";
 
 
@@ -27,6 +27,7 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => {
 		activeReferenceActionItem:getActiveReferenceActionItem(state),
 		activeReferenceCommand: getActiveReferenceCommand(state),
 		activeReferenceProperty: getActiveReferenceProperty(state),
+		hasAutoActiveDescriptor: getHasAutoActiveDescriptor(state),
 	};
 };
 

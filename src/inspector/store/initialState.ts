@@ -10,87 +10,93 @@ export function getInitialState(): IInspectorState {
 			{
 				type: "application",
 				data:{
-					property: "notSpecified"
+					property:{value: "notSpecified",filterBy:false}
 				}
 			},
 			{
 				type: "customDescriptor",
 				data:{
-					category: "notSpecified"
+					category: {value:"notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "history",
 				data:{
-					document: "active",
-					history: "active",
-					property: "notSpecified"
+					document: {value:"active",filterBy:false},
+					history: {value:"active",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "snapshot",
 				data:{
-					document: "active",
-					snapshot: "active",
-					property: "notSpecified"
+					document: {value:"active",filterBy:false},
+					snapshot: {value:"active",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "layer",
 				data:{
-					document: "active",
-					layer: "active",
-					property: "notSpecified"
+					document: {value:"active",filterBy:false},
+					layer: {value:"active",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "path",
 				data:{
-					document: "active",
-					path: "active",
-					layer: "active",
-					property: "notSpecified"
+					document: {value:"active",filterBy:false},
+					path: {value:"active",filterBy:false},
+					layer: {value:"active",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "channel",
 				data:{
-					document: "active",
-					channel: "active",
-					layer: "active",
-					property: "notSpecified"
+					document: {value:"active",filterBy:false},
+					channel: {value:"active",filterBy:false},
+					layer: {value:"active",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "document",
 				data:{
-					document: "active",
-					property: "notSpecified"
+					document: {value:"active",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "guide",
 				data:{
-					document: "active",
-					guide: "undefined",
-					property: "notSpecified"
+					document: {value:"active",filterBy:false},
+					guide: {value:"undefined",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
 
 				}
 			},
 			{
 				type: "action",
 				data:{
-					actionset: "undefined",
-					action: "undefined",
-					command: "undefined",
-					property: "notSpecified"
+					actionset: {value:"undefined",filterBy:false},
+					action: {value:"undefined",filterBy:false},
+					command: {value:"undefined",filterBy:false},
+					property:{value: "notSpecified",filterBy:false}
+				}
+			},
+			{
+				type: "generator",
+				data: {
+					kind: {value:"full",filterBy:false}
 				}
 			}
 		],

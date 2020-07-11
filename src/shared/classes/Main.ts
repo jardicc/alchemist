@@ -2,6 +2,7 @@ import { Reloader } from "../../listener/classes/Reloader";
 import { renderListenerUI } from "../../listener/components";
 import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
 import { ThemeManager } from "./ThemeManager";
+import "./../index.less";
 
 export class Main{
 

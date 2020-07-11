@@ -1,7 +1,8 @@
 import React from "react";
-import "./Footer.css";
+import "./Footer.less";
 
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IFooterProps{
 }
 

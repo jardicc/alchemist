@@ -1,0 +1,34 @@
+.DescriptorItem {
+	border-top: 1px solid var(--divider);
+	padding: 0.3em 1em;
+	background: var(--bg);
+	flex-shrink: 0;
+
+	&:last-child {
+		border-bottom: 1px solid var(--divider);
+	}
+
+	&:hover {
+		color: var(--hover);
+		cursor: pointer;
+	}
+	
+	&.selected {
+		color: var(--active);
+		cursor: default;
+	}
+
+	&.autoSelected{
+		color: var(--autoActive);
+	}
+
+	.name {
+		overflow-wrap: anywhere;
+	}
+
+	.time {
+		color: var(--textFade);
+		font-style: italic;
+		margin-left: 1em;
+	}
+}

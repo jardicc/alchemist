@@ -1,8 +1,21 @@
 import { IProperty } from "../components/LeftColumn/LeftColumn";
-import { TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference } from "./types";
+import { TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference, TGuideReference, TActionSet, TActionItem, TActionCommand } from "./types";
+
+export type TBaseItems = (
+	IProperty<TTargetReference> |
+	IProperty<TBaseProperty>|
+	IProperty<TDocumentReference>|
+	IProperty<TLayerReference>|
+	IProperty<TPathReference>|
+	IProperty<TChannelReference> |
+	IProperty<TGuideReference> |
+	IProperty<TActionSet> |
+	IProperty<TActionItem> |
+	IProperty<TActionCommand>
+)[]
+	
 
 export const mainClasses: IProperty<TTargetReference>[] = [
-	{ label: "(undefined)", value: "undefined" },
 	{ label: "Application", value: "application" },
 	{ label: "Document", value: "document" },
 	{ label: "Layer", value: "layer" },
@@ -13,33 +26,27 @@ export const mainClasses: IProperty<TTargetReference>[] = [
 	{ label: "History", value: "history" },
 	{ label: "Snapshot", value: "snapshot" },
 	{ label: "Custom descriptor", value: "customDescriptor" },
-	{ label: "Generator", value: "allFromGenerator" },
+	{ label: "Generator", value: "generator" },
 	{ label: "Features", value: "featureData" },
 ];
 export const baseItemsProperty:IProperty<TBaseProperty>[] = [
-	{ label: "(undefined)", value: "undefined" },
 	{ label: "(not specified)", value: "notSpecified" },
-	{ label: "(any specified)", value: "anySpecified" },
 ];
 export const baseItemsCustomDescriptor:IProperty<string>[] = [
 	{ label: "(undefined)", value: "undefined" },
 ];
 export const baseItemsDocument:IProperty<TDocumentReference>[] = [
-	{ label: "(undefined)", value: "undefined" },
 	{ label: "(active)", value: "active" },
 ];
 export const baseItemsLayer:IProperty<TLayerReference>[] = [
-	{ label: "(undefined)", value: "undefined" },
 	{ label: "(active)", value: "active" },
 ];
 export const baseItemsPath :IProperty<TPathReference>[]= [
-	{ label: "(undefined)", value: "undefined" },
 	{ label: "(active)", value: "active" },
 	{ label: "(vector mask)", value: "vectorMask" },
 	{ label: "(work path)", value: "workPathIndex" },
 ];
 export const baseItemsChannel:IProperty<TChannelReference>[] = [
-	{ label: "(undefined)", value: "undefined" },
 	{ label: "(active)", value: "active" },
 	{ label: "(composite)",value: "composite"},
 	{ label: "(Mask)",value: "mask"},
@@ -65,10 +72,11 @@ export const baseItemsChannel:IProperty<TChannelReference>[] = [
 	{ label: "(Quadtone)",value: "quadtone"},
 
 ];
-export const baseItemsGuide = [
+export const baseItemsGuide:IProperty<TGuideReference>[] = [
 	{ label: "(undefined)", value: "undefined" },
 ];	
-export const baseItemsActionCommon = [
+export const baseItemsActionCommon:(IProperty<TActionSet>|IProperty<TActionItem>|IProperty<TActionCommand>)[] = [
 	{ label: "(undefined)", value: "undefined" },
 	{ label: "fake", value: "fake" },
 ];	
+

@@ -1,7 +1,8 @@
 import React from "react";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
-import "./Inspector.css";
+import "./../../../shared/ThemeVars.css";
+import "./Inspector.less";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
 import { TActiveSection, TActiveInspectorTab } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
@@ -10,6 +11,7 @@ export interface IInspectorProps{
 	mainTab: TActiveSection
 	modeTab: TActiveInspectorTab	
 	descriptorContent: string
+	calculatedReference: string
 	originalReference: string
 }
 
@@ -47,6 +49,10 @@ export class Inspector extends React.Component<TInspector> {
 								</TabPanel>
 								<TabPanel id="reference" title="Info" >
 									<div className="info code">
+										Reference:
+										{this.props.calculatedReference}
+										
+										Filter:
 										{this.props.originalReference}
 									</div>
 								</TabPanel>

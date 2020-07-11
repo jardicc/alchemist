@@ -1,11 +1,24 @@
 
-import photothop from "photoshop";
+import photoshop from "photoshop";
 import { cloneDeep } from "lodash";
 import { TActiveTargetReferenceArr, IDescriptor, TChannelReferenceValid } from "../model/types";
+import { Descriptor } from "photoshop/dist/types/UXP";
 
-export interface ITargetReferenceAM{
+
+export interface ITargetReferenceAM {
 	"_obj": "get",
 	"_target": TReference[]
+	"expandSmartObjects"?: boolean,
+	"getTextStyles"?: boolean,
+	"getFullTextStyles"?: boolean,
+	"getDefaultLayerFX"?: boolean,
+	"layerID"?: number,
+	"getCompLayerSettings"?: boolean,
+	"getPathData"?: boolean,
+	"imageInfo"?: boolean,
+	"compInfo"?: boolean,
+	"layerInfo"?: boolean,
+	"includeAncestors"?: boolean,
 }
 
 export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference
@@ -32,9 +45,13 @@ export interface IEnumReference{
 
 export class GetInfo {
 	
-	public static async getAM(t: TActiveTargetReferenceArr|undefined): Promise<IDescriptor | null> {
-		if (!t) { return null;}
-		t = cloneDeep(t);
+	public static async getAM(originalRef: TActiveTargetReferenceArr|undefined): Promise<IDescriptor | null> {
+		if (!originalRef) { return null;}
+		const t = cloneDeep(originalRef);
+		if (t.type === "generator") {
+			const result = await this.getFromGenerator(originalRef);
+			return result;
+		}
 		
 		const desc: ITargetReferenceAM = {
 			"_obj": "get",
@@ -42,29 +59,29 @@ export class GetInfo {
 		};
 		const rootT = desc._target;
 
-		if (("document" in t.data) && t.data.document !== "undefined" && (t.data.document === "active" || typeof t.data.document === "number")) {
+		if (("document" in t.data) && (t.data.document.value === "active" || typeof t.data.document === "number")) {
 			const activeID = await this.getActiveDocumentID();
 			if (activeID === null) { return null;}
 			
 			if (t.type !== "history" && t.type !== "snapshot") {
 				rootT.push({
 					"_ref": "document",
-					"_id": t.data.document === "active" ? activeID : t.data.document
+					"_id": t.data.document.value === "active" ? activeID : t.data.document.value
 				});
 			}
 		}
 		if (t.type === "layer" || t.type === "path" || t.type === "channel") {
 			const activeID = await this.getActiveLayerID();
-			if (activeID === null || t.data.layer === "undefined") { return null; }
+			if (activeID === null) { return null; }
 			
 			if (
 				(t.type === "layer") ||
-				(t.type === "path" && t.data.path === "vectorMask") ||
-				(t.type == "channel" && (t.data.channel === "filterMask" || t.data.channel === "mask"))
+				(t.type === "path" && t.data.path.value === "vectorMask") ||
+				(t.type == "channel" && (t.data.channel.value === "filterMask" || t.data.channel.value === "mask"))
 			) {
 				rootT.push({
 					"_ref": "layer",
-					"_id": t.data.layer === "active" ? activeID : t.data.layer
+					"_id": t.data.layer.value === "active" ? activeID : t.data.layer.value
 				});
 			}
 		}
@@ -72,22 +89,22 @@ export class GetInfo {
 		switch (t.type) {
 			case "action": {
 
-				if (t.data.command !== "undefined") {
+				if (t.data.command.value !== "undefined") {
 					rootT.push({
 						"_ref": "command",
-						"_name": t.data.command
+						"_name": t.data.command.value
 					});
 				}
-				if (t.data.action !== "undefined") {
+				if (t.data.action.value !== "undefined") {
 					rootT.push({
 						"_ref": "action",
-						"_name": t.data.action
+						"_name": t.data.action.value
 					});
 				}
-				if (t.data.actionset !== "undefined") {
+				if (t.data.actionset.value !== "undefined") {
 					rootT.push({
 						"_ref": "actionset",
-						"_name": t.data.actionset
+						"_name": t.data.actionset.value
 					});
 				}
 				break;
@@ -104,7 +121,7 @@ export class GetInfo {
 				const activeID = await this.getActiveChannelID();
 				if (activeID === null) { return null; }
 
-				if (t.data.channel === "active") {
+				if (t.data.channel.value === "active") {
 					if (typeof activeID === "number") {
 						rootT.push({
 							"_ref": "channel",
@@ -117,16 +134,16 @@ export class GetInfo {
 							_value: activeID
 						});
 					}
-				} else if (typeof t.data.channel === "number") {
+				} else if (typeof t.data.channel.value === "number") {
 					rootT.push({
 						"_ref": "channel",
-						"_id": t.data.channel
+						"_id": t.data.channel.value
 					});	
-				} else if (typeof t.data.channel === "string") {
+				} else if (typeof t.data.channel.value === "string") {
 					rootT.push({
 						_enum: "channel",
 						_ref: "channel",
-						_value: t.data.channel
+						_value: t.data.channel.value
 					});
 				}
 				break;
@@ -146,29 +163,29 @@ export class GetInfo {
 						"_property": "workPath",
 						"_ref": "path"
 					});
-				} else if (typeof t.data.path === "number" || t.data.path === "active") {
+				} else if (typeof t.data.path.value === "number" || t.data.path.value === "active") {
 					rootT.push({
 						"_ref": "path",
-						"_id": t.data.path === "active" ? activeID : t.data.path
+						"_id": t.data.path.value === "active" ? activeID : t.data.path.value
 					});
 				}
 				break;
 			}
 			case "history": {
 				const activeID = await this.getActiveHistoryID();
-				if (activeID === null || t.data.history === "undefined") { return null; }
+				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "historyState",
-					"_id": t.data.history === "active" ? activeID : t.data.history
+					"_id": t.data.history.value === "active" ? activeID : t.data.history.value
 				});
 				break;
 			}
 			case "snapshot": {
 				const activeID = await this.getActiveSnapshotID();
-				if (activeID === null || t.data.snapshot === "undefined") { return null; }
+				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "snapshotClass",
-					"_id": t.data.snapshot === "active" ? activeID : t.data.snapshot
+					"_id": t.data.snapshot.value === "active" ? activeID : t.data.snapshot.value
 				});
 				break;
 			}
@@ -176,16 +193,20 @@ export class GetInfo {
 
 
 		// add property when demanded by user
-		if (("property" in t.data) && t.data.property !== "undefined" && t.data.property !== "notSpecified" && t.data.property !== "anySpecified" && typeof t.data.property === "string") {
+		if (("property" in t.data) && t.data.property.value !== "notSpecified" && t.data.property.value !== "anySpecified" && typeof t.data.property.value === "string") {
 			rootT.push({
-				"_property": t.data.property
+				"_property": t.data.property.value
 			});
 		}
 
 		desc._target.reverse();
 		console.log("Get", desc);
 		const startTime = Date.now();
-		const playResult = await photothop.action.batchPlay([desc], {});
+		const playResult = await photoshop.action.batchPlay([desc], {});
+		return this.buildReply(startTime, playResult, desc,originalRef);
+	}
+
+	private static buildReply(startTime:number,playResult:Descriptor[],desc: ITargetReferenceAM, originalRef: TActiveTargetReferenceArr):IDescriptor {
 		return {
 			startTime,
 			endTime: Date.now(),
@@ -195,8 +216,38 @@ export class GetInfo {
 			originalReference: desc,
 			pinned: false,
 			selected: false,
-
+			calculatedReference: originalRef
 		};
+	}
+
+	private static async getFromGenerator(originalRef: TActiveTargetReferenceArr): Promise<any>{
+		const startTime = Date.now();
+		const desc:ITargetReferenceAM = {
+			"_obj": "get",
+			"_target": [
+				{
+					"_property": "json"
+				}, {
+					"_ref": "document",
+					"_enum": "ordinal",
+					"_value": "targetEnum"
+				}
+			],
+			"expandSmartObjects": true,
+			"getTextStyles": true,
+			"getFullTextStyles": true,
+			"getDefaultLayerFX": true,
+			"layerID": 0,
+			"getCompLayerSettings": true,
+			"getPathData": true,
+			"imageInfo": true,
+			"compInfo": true,
+			"layerInfo": true,
+			"includeAncestors": true,
+		};
+		const playResult = await photoshop.action.batchPlay([desc], {});
+		playResult.forEach(d => d.json = JSON.parse(d.json));
+		return this.buildReply(startTime, playResult, desc,originalRef);
 	}
 
 	public static async getActiveLayerID(): Promise<number | null> {
@@ -301,7 +352,7 @@ export class GetInfo {
 				}
 			]
 		};
-		const result = await photothop.action.batchPlay([
+		const result = await photoshop.action.batchPlay([
 			desc
 		],{});
 		return result[0];
@@ -321,7 +372,7 @@ export class GetInfo {
 				}
 			]
 		};
-		const result = await photothop.action.batchPlay([
+		const result = await photoshop.action.batchPlay([
 			desc
 		],{});
 		return result[0].mode._value;

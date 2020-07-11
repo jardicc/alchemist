@@ -7,13 +7,15 @@ import { selectDescriptorAction } from "../../actions/inspectorActions";
 import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
 
 interface IOwn{
-	descriptor:IDescriptor
+	descriptor: IDescriptor
+	autoSelected:boolean
 }
 
 const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProps => {
 	
 	return {
 		descriptor: cloneDeep(ownProps.descriptor),
+		autoSelected: ownProps.autoSelected,
 	};
 };
 

@@ -1,9 +1,10 @@
 import React from "react";
-import "./DescriptorItem.css";
+import "./DescriptorItem.less";
 import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
 
-export interface IDescriptorItemProps{
-	descriptor:IDescriptor
+export interface IDescriptorItemProps {
+	descriptor: IDescriptor
+	autoSelected: boolean
 }
 
 export interface IDescriptorItemDispatch {
@@ -51,11 +52,12 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 
 	}
 
-	public render():React.ReactNode{
+	public render(): React.ReactNode{
+		const { descriptor,autoSelected} = this.props;
 		return (
-			<div className={"DescriptorItem" + (this.props.descriptor.selected ? " selected" : "")} onClick={this.select}>
+			<div className={"DescriptorItem" + (descriptor.selected ? " selected" : "") + (autoSelected?" autoSelected":"")} onClick={this.select}>
 				<span className="name">{this.generateItemName()}</span>
-				<span className="time">{this.props.descriptor.endTime-this.props.descriptor.startTime} ms</span>
+				<span className="time">{descriptor.endTime-descriptor.startTime} ms</span>
 			</div>
 		);
 	}

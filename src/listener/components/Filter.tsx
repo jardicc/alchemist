@@ -1,5 +1,5 @@
 import React from "react";
-import "./Filter.css";
+import "./Filter.less";
 import { TFilterEvents } from "../reducers/initialStateListener";
 
 export interface IFilterProps{
@@ -67,7 +67,7 @@ export class Filter extends React.Component<TFilter> {
 				<div className="FilterComponent">
 					<span>Search: </span><input onChange={this.onSearch} value={this.props.searchEvent || ""} type="text" />
 					<span>Filter:</span>
-					<sp-dropdown>
+					<sp-dropdown  quiet="true">
 						<sp-menu slot="options" onClick={this.onSetFilterEventsType}>
 							{
 								[{ value: "none", label: "None" }, { value: "include", label: "Include" }, { value: "exclude", label: "Exclude" }]
