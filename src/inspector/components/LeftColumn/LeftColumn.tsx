@@ -4,8 +4,10 @@ import { cloneDeep } from "lodash";
 import { GetInfo } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
-import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes } from "../../model/types";
-import { FilterButton } from "../FilterButton/FilterButton";
+import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, TFilterContent } from "../../model/types";
+import { FilterButton, TState } from "../FilterButton/FilterButton";
+import { iteratorSymbol } from "immer/dist/internal";
+import { IconLockLocked, IconPin, IconTrash } from "../../../shared/components/icons";
 
 export interface IProperty<T>{
 	label: string
@@ -23,17 +25,20 @@ export interface ILeftColumnProps{
 	removableSelection: boolean
 	allDescriptors: IDescriptor[]
 
-	activeTargetReference: ITargetReference|null;
-	activeTargetReferenceDocument: TDocumentReference|null
-	activeTargetLayerReference: TLayerReference|null
-	activeReferenceGuide: TGuideReference|null
-	activeReferencePath: TPathReference|null
-	activeReferenceChannel: TChannelReference|null
-	selectedTargetReference: TTargetReference|null
-	activeReferenceActionSet:string|null
-	activeReferenceActionItem:string|null
-	activeReferenceCommand: string|null
-	activeReferenceProperty: string|null
+	activeTargetReference: ITargetReference | null;
+	selectedTargetReference: TTargetReference
+	filterBySelectedReferenceType: TState
+	
+	activeTargetReferenceDocument: IContentWrapper<TDocumentReference>
+	activeTargetLayerReference: IContentWrapper<TLayerReference>
+	activeReferenceGuide: IContentWrapper<TGuideReference>
+	activeReferencePath: IContentWrapper<TPathReference>
+	activeReferenceChannel: IContentWrapper<TChannelReference>
+	activeReferenceActionSet:IContentWrapper<TActionSet>
+	activeReferenceActionItem:IContentWrapper<TActionItem>
+	activeReferenceCommand: IContentWrapper<TActionCommand>
+	activeReferenceProperty: IContentWrapper<TBaseProperty>
+	
 	hasAutoActiveDescriptor:boolean
 }
 
@@ -46,6 +51,8 @@ export interface ILeftColumnDispatch {
 	onPin: (pin: boolean, uuids: string[]) => void
 	onRemove: (uuids: string[]) => void
 	onLock: (lock: boolean, uuids: string[]) => void
+
+	onSetFilter:(type: TTargetReference,subType: TSubTypes|"main",state: TState)=>void
 }
 
 export type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
@@ -86,7 +93,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const list = [...baseItemsActionCommon];
 
 		
-		return this.buildFilterRow("Action set:","actionset", list, activeReferenceActionSet as string);
+		return this.buildFilterRow("Action set:","actionset", list, activeReferenceActionSet);
 	}
 
 	private renderActionItem = (): React.ReactNode => {
@@ -96,7 +103,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		if (activeReferenceActionSet === null) { return; }
 		const list = [...baseItemsActionCommon];
 
-		return this.buildFilterRow("Action:","action", list, activeReferenceActionItem as string);
+		return this.buildFilterRow("Action:","action", list, activeReferenceActionItem);
 	}
 
 	private renderCommand = (): React.ReactNode => {
@@ -107,7 +114,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		if (activeReferenceActionItem === null) { return; }
 		const list = [...baseItemsActionCommon];
 
-		return this.buildFilterRow("Command:","command", list, activeReferenceCommand as string);
+		return this.buildFilterRow("Command:","command", list, activeReferenceCommand);
 	}
 
 
@@ -133,7 +140,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			<sp-menu-item
 				key={item.value}
 				value={item.value}
-				selected={activeReferenceProperty === item.value ? "selected" : null}
+				selected={activeReferenceProperty.value === item.value ? "selected" : null}
 			>{item.label}</sp-menu-item>
 		);
 
@@ -176,7 +183,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
-									selected={activeReferenceProperty === item.value ? "selected" : null}
+									selected={activeReferenceProperty.value === item.value ? "selected" : null}
 								>{item.label}</sp-menu-item>
 							))
 						}
@@ -185,7 +192,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 						{hidden}
 					</sp-menu>
 				</sp-dropdown>
-				<FilterButton subtype="property" state="off" onClick={(e) => { console.log(e);}} />
+				<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
 			</div>
 		);
 	}
@@ -195,7 +202,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const list = [...baseItemsGuide];
 
 		const { activeReferenceGuide } = this.props;
-		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide as string);
+		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide);
 	}
 	private renderChannel = (): React.ReactNode => {
 		const { selectedTargetReference } = this.props;
@@ -203,7 +210,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const list = [...baseItemsChannel];
 
 		const { activeReferenceChannel } = this.props;
-		return this.buildFilterRow("Channel:","channel", list, activeReferenceChannel as string);
+		return this.buildFilterRow("Channel:","channel", list, activeReferenceChannel);
 	}
 
 	private renderPath = (): React.ReactNode => {
@@ -213,7 +220,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 
 		const { activeReferencePath } = this.props;
 
-		return this.buildFilterRow("Path:","path", list, activeReferencePath as string);
+		return this.buildFilterRow("Path:","path", list, activeReferencePath);
 	}
 
 	private renderDocument = (): React.ReactNode => {
@@ -231,7 +238,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const list = [...baseItemsDocument];
 
 		const { activeTargetReferenceDocument } = this.props;
-		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument as string);
+		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
 	}
 
 	private renderLayer = (): React.ReactNode => {
@@ -242,11 +249,11 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			return;
 		}
 		// only layer masks are layer related
-		if (selectedTargetReference === "channel" && (activeReferenceChannel !== "mask" && activeReferenceChannel !== "filterMask")) {
+		if (selectedTargetReference === "channel" && (activeReferenceChannel.value !== "mask" && activeReferenceChannel.value !== "filterMask")) {
 			return;
 		}
 		// only vector masks are layer related
-		if (selectedTargetReference === "path" && activeReferencePath !== "vectorMask") {
+		if (selectedTargetReference === "path" && activeReferencePath.value !== "vectorMask") {
 			return;
 		}
 
@@ -254,7 +261,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		
 		const { activeTargetLayerReference } = this.props;
 
-		return this.buildFilterRow("Layer:","layer", list, activeTargetLayerReference as string);
+		return this.buildFilterRow("Layer:","layer", list, activeTargetLayerReference);
 	}
 
 	private renderCustomDescriptorCategory = (): React.ReactNode => {
@@ -285,14 +292,18 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 	}
 
 	private renderMainClass = (): React.ReactNode => {
-		return this.buildFilterRow("Type:", "main", mainClasses, this.props.selectedTargetReference);
+		const { selectedTargetReference, filterBySelectedReferenceType} = this.props;
+		return this.buildFilterRow("Type:", "main", mainClasses, {
+			value: selectedTargetReference,
+			filterBy: filterBySelectedReferenceType
+		});
 	}
 
 	private buildFilterRow = (
 		label: string,
 		subType: TSubTypes|"main",
 		items: TBaseItems,
-		selectedValue: string | null
+		content: {value:string|null|number,filterBy:TState}
 	): React.ReactNode => {
 		
 		return (
@@ -305,13 +316,13 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
-									selected={selectedValue === item.value ? "selected" : null}
+									selected={content.value === item.value ? "selected" : null}
 								>{item.label}</sp-menu-item>
 							))
 						}
 					</sp-menu>
 				</sp-dropdown>
-				<FilterButton subtype={subType} state="off" onClick={(e) => { console.log(e);}} />
+				<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
 			</div>
 		);
 	}
@@ -371,10 +382,10 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 						{this.renderDescriptorsList()}
 					</div>
 					<div className="descriptorButtons">
-						<div className="label">Selected:</div>
-						<div className="lock button" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}>Lock</div>
-						<div className="pin button" onClick={() => { onPin(!pinnedSelection, selectedDescriptors); }}>Pin</div>
-						<div className="remove button" onClick={() => { onRemove(selectedDescriptors); }}>Remove</div>
+						<div className="spread"></div>
+						<div className="lock buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconLockLocked/></div>
+						<div className="pin buttonIcon" onClick={() => { onPin(!pinnedSelection, selectedDescriptors); }}><IconPin/></div>
+						<div className="remove buttonIcon" onClick={() => { onRemove(selectedDescriptors); }}><IconTrash /></div>
 					</div>
 				</div>
 			</div>

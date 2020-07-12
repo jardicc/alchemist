@@ -1,4 +1,5 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes } from "../model/types";
+import { TState } from "../components/FilterButton/FilterButton";
 
 export interface ISetMainTab {
 	type: "SET_MAIN_TAB"
@@ -85,7 +86,23 @@ export interface IExportStateAction{
 	type: "EXPORT_STATE"
 	payload:null
 }
+export interface ISetFilterStateAction {
+	type: "SET_FILTER_STATE"
+	payload: {
+		type: TTargetReference,
+		subType: TSubTypes | "main",
+		state: TState
+	}
+}
 
+export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main",state: TState): ISetFilterStateAction {
+	return {
+		type: "SET_FILTER_STATE",
+		payload: {
+			type, subType, state
+		}
+	};
+}
 export function setMainTabAction(id:TActiveSection):ISetMainTab{
 	return {
 		type: "SET_MAIN_TAB",
@@ -220,4 +237,5 @@ export type TActions = ISetMainTab |
 	IImportReplaceAction |
 	IExportSelectedDescAction |
 	IExportAllDescAction |
-	IExportStateAction
+	IExportStateAction |
+	ISetFilterStateAction

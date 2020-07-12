@@ -3,6 +3,8 @@
 	padding: 0.3em 1em;
 	background: var(--bg);
 	flex-shrink: 0;
+	display: flex;
+	align-items: center;
 
 	&:last-child {
 		border-bottom: 1px solid var(--divider);
@@ -22,16 +24,26 @@
 	}
 
 	&.autoSelected{
-		color: var(--autoActive);
+		//color: var(--autoActive);
+		font-style: italic;
 	}
 
 	.name {
 		overflow-wrap: anywhere;
+		display: flex;
+	}
+
+	.icon{
+		margin: 0 0.3em;
 	}
 
 	.time {
 		color: var(--textFade);
 		font-style: italic;
 		margin-left: 1em;
+	}
+
+	.icon{
+		fill:var(--text);
 	}
 }

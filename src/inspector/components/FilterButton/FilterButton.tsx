@@ -2,11 +2,14 @@
 import React from "react";
 import "./FilterButton.less";
 import { TSubTypes } from "../../model/types";
+import { IconEye } from "../../../shared/components/icons";
+
+export type TState = "on" | "off" | "semi";
 
 export interface IFilterButtonProps {
-	state: "on" | "off" | "semi"
+	state:TState
 	subtype: TSubTypes | "main"
-	onClick: (id: TSubTypes | "main", state: "on" | "off" | "semi") => void
+	onClick: (id: TSubTypes | "main", state: TState) => void
 }
 
 export interface IFilterButtonDispatch {
@@ -27,20 +30,12 @@ export class FilterButton extends React.Component<TFilterButton, IFilterButtonSt
 		};
 	}
 
-	private content = () => {
-		switch (this.props.state) {
-			case "off": return "Off";
-			case "semi": return "On";
-			case "on": return "On";
-		}
-	}
-
 	public render(): JSX.Element {
 		const { state,onClick,subtype } = this.props;
 		
 		return (
-			<div className={"FilterButton"+ state==="off" ? " notPushed": " pushed"} onClick={()=>onClick(subtype,state)}>
-				{this.content()}
+			<div className={"FilterButton" + " " + state} onClick={() => onClick(subtype, state)} title="Filter">
+				<div className="icon"><IconEye /></div>
 			</div>
 		);
 	}

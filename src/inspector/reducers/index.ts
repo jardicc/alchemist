@@ -129,6 +129,40 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
+		case "SET_FILTER_STATE": {
+			state = produce(state, draft => {
+				const { payload: { state, subType, type } } = action;
+				const found = draft.targetReference.find(r => r.type === type);
+
+				if (subType === "main") {
+					if (state === "on" || state === "semi") {
+						draft.filterBySelectedReferenceType = "off";
+					} else {
+						draft.filterBySelectedReferenceType = "on";
+					}
+					found?.data.forEach(d => d.content.filterBy = "off");
+				} else {
+					if (state === "on" || state === "semi") {
+						found?.data.forEach(d => d.content.filterBy = "off");
+						draft.filterBySelectedReferenceType = "off";
+					} else {
+						let foundIndex: number | null = null;
+						found?.data.forEach((d, i) => {
+							if (d.subType === subType) {
+								foundIndex = i;
+								d.content.filterBy = "on";
+								draft.filterBySelectedReferenceType = "semi";
+							} else if (foundIndex === null) {
+								d.content.filterBy = "semi";
+							} else {
+								d.content.filterBy = "off";
+							}
+						});
+					}
+				}
+			});
+			break;
+		}
 		//Settings.saveSettings(state);
 	}
 	return state;

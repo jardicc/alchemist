@@ -7,6 +7,7 @@ export const getMainTabID = createSelector([all], s => s.activeSection);
 export const getModeTabID = createSelector([all], s => s.inspector.activeTab);
 
 export const getSelectedTargetReference = createSelector([all], s => s.selectedReferenceType);
+export const getFilterBySelectedReferenceType = createSelector([all], s => s.filterBySelectedReferenceType);
 export const getTargetReference = createSelector([all], s => s.targetReference);
 export const getAutoUpdate = createSelector([all],s=>s.settings.autoUpdate);
 export const getAllDescriptors = createSelector([all], s => s.descriptors);
@@ -43,25 +44,25 @@ export const getDescriptorsListView = createSelector([getAllDescriptors], (t) =>
 	return [...pinned, ...notPinned];
 });
 export const getActiveReferenceProperty = createSelector([getActiveTargetReference], (t) => {	
-	return t?.data.find(i => i.subType === "property")?.content.value;	
+	return t?.data.find(i => i.subType === "property")?.content;	
 });
 export const getActiveReferenceGuide = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "guide")?.content.value;
+	return t?.data.find(i => i.subType === "guide")?.content;
 });
 export const getActiveReferencePath = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "path")?.content.value;
+	return t?.data.find(i => i.subType === "path")?.content;
 });
 export const getActiveReferenceChannel = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "channel")?.content.value;
+	return t?.data.find(i => i.subType === "channel")?.content;
 });
 export const getActiveReferenceActionSet = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "actionset")?.content.value;
+	return t?.data.find(i => i.subType === "actionset")?.content;
 });
 export const getActiveReferenceActionItem = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "action")?.content.value;
+	return t?.data.find(i => i.subType === "action")?.content;
 });
 export const getActiveReferenceCommand = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "command")?.content.value;
+	return t?.data.find(i => i.subType === "command")?.content;
 });
 
 export const getActiveDescriptors = createSelector([all], s => {
@@ -119,14 +120,14 @@ export const getActiveDescriptorOriginalReference =createSelector([getActiveDesc
 
 export const getActiveTargetDocument = createSelector([getActiveTargetReference], (t) => {
 	if (!t) { return null;}
-	const result = t.data.find(i => i.subType === "document")?.content.value;
+	const result = t.data.find(i => i.subType === "document")?.content;
 
 	return (result===undefined) ? null : result;
 });
 
 export const getActiveTargetLayer = createSelector([getActiveTargetReference], (t) => {
 	if (!t) { return null;}
-	const result = t.data.find(i => i.subType === "layer")?.content.value;
+	const result = t.data.find(i => i.subType === "layer")?.content;
 
 	return (result===undefined) ? null : result;
 });

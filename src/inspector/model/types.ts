@@ -1,5 +1,6 @@
 import type { ITargetReferenceAM } from "../classes/GetInfo";
 import type { Descriptor } from "photoshop/dist/types/UXP";
+import { TState } from "../components/FilterButton/FilterButton";
 
 export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" | "layer" | "path" | "property" | "snapshot";
 export type TTargetReference = "customDescriptor" | "featureData" | "generator" | TPropertyClass;
@@ -32,7 +33,8 @@ export type TSelectDescriptorOperation = "replace" | "add" | "subtract";
 
 export interface IInspectorState {
 	activeSection: TActiveSection
-	selectedReferenceType:TTargetReference
+	selectedReferenceType: TTargetReference
+	filterBySelectedReferenceType: TState
 	targetReference: ITargetReference[]
 	settings:ISettings
 	inspector:IInspector
@@ -47,9 +49,9 @@ export interface ITargetReference {
 
 //////
 
-interface IContentWrapper<T>{
+export interface IContentWrapper<T>{
 	value: T,
-	filterBy: "on" | "off" | "semi"
+	filterBy: TState
 }
 
 export interface ICategory{
@@ -108,6 +110,8 @@ export interface IGenerator{
 	subType:"generator",
 	content: IContentWrapper<TGeneratorReference>
 }
+
+export type TFilterContent = IContentWrapper<TCategoryReference> | IContentWrapper<TBaseProperty> | IContentWrapper<TCustomDescriptorReference> | IContentWrapper<THistoryReference> | IContentWrapper<TSnapshotReference> | IContentWrapper<TLayerReference> | IContentWrapper<TPathReference> | IContentWrapper<TChannelReference> | IContentWrapper<TDocumentReference> | IContentWrapper<TGuideReference> | IContentWrapper<TActionSet> | IContentWrapper<TActionItem> | IContentWrapper<TActionCommand> | IContentWrapper<TGeneratorReference>;
 
 export type TAllReferenceSubtypes = ICategory|IProperty | ICustomDescriptor | IHistory | ISnapshot | ILayer | IPath | IChannel | IDocument | IGuide | IActionSet | IActionItem | IActionCommand|IGenerator;
 

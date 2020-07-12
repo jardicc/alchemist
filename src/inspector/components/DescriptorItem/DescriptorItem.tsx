@@ -1,6 +1,7 @@
 import React from "react";
 import "./DescriptorItem.less";
 import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
+import { IconLockLocked, IconPin } from "../../../shared/components/icons";
 
 export interface IDescriptorItemProps {
 	descriptor: IDescriptor
@@ -36,7 +37,7 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 	}
 
 	private generateItemName = () => {
-		const {descriptor:{originalReference,locked,pinned} } = this.props;
+		const {descriptor:{originalReference} } = this.props;
 		const slug = originalReference._target.map(r => {
 			if ("_ref" in r) {
 				return r._ref;				
@@ -46,18 +47,21 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 			}
 			return "n/a";
 		});
-		const lockedStr = locked ? " [L] " : "";
-		const pinnedStr = pinned ? " [P] " : "";
-		return slug.reverse().join(" / ") + lockedStr + pinnedStr;
+		return <div>{slug.reverse().join(" / ")}</div>;
 
 	}
 
 	public render(): React.ReactNode{
-		const { descriptor,autoSelected} = this.props;
+		const { descriptor, autoSelected } = this.props;
+		
+		const {descriptor:{locked,pinned} } = this.props;
 		return (
 			<div className={"DescriptorItem" + (descriptor.selected ? " selected" : "") + (autoSelected?" autoSelected":"")} onClick={this.select}>
-				<span className="name">{this.generateItemName()}</span>
-				<span className="time">{descriptor.endTime-descriptor.startTime} ms</span>
+				<div className="name">{this.generateItemName()}</div>
+				<div className="spread"></div>
+				{locked ? <div className="icon"><IconLockLocked/></div> : ""}
+				{pinned ? <div className="icon"><IconPin/></div>: ""}
+				<div className="time">{descriptor.endTime-descriptor.startTime} ms</div>
 			</div>
 		);
 	}

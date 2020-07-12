@@ -5,9 +5,21 @@
 	border: 1px solid var(--divider);
 	cursor: pointer;
 	border-radius: 3px;
+	margin-left: 0.5em;
+	
+	fill: var(--text);
 
-	&.pushed{
+	&.on{
 		background: var(--divider);
+	}
+
+	&.semi{
+		background: var(--divider);
+		fill: var(--textFade);
+	}
+
+	&.off{
+		border: 1px solid transparent;
 	}
 
 	&:hover {

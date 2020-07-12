@@ -6,6 +6,7 @@ export function getInitialState(): IInspectorState {
 	return {
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
+		filterBySelectedReferenceType: "off",
 		targetReference: [
 			{
 				type: "application",
