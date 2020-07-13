@@ -135,14 +135,14 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				const found = draft.targetReference.find(r => r.type === type);
 
 				if (subType === "main") {
-					if (state === "on" || state === "semi") {
+					if (state === "on") {
 						draft.filterBySelectedReferenceType = "off";
 					} else {
 						draft.filterBySelectedReferenceType = "on";
 					}
 					found?.data.forEach(d => d.content.filterBy = "off");
 				} else {
-					if (state === "on" || state === "semi") {
+					if (state === "on") {
 						found?.data.forEach(d => d.content.filterBy = "off");
 						draft.filterBySelectedReferenceType = "off";
 					} else {

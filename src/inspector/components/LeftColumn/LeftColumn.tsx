@@ -6,7 +6,6 @@ import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContain
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
 import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, TFilterContent } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
-import { iteratorSymbol } from "immer/dist/internal";
 import { IconLockLocked, IconPin, IconTrash } from "../../../shared/components/icons";
 
 export interface IProperty<T>{

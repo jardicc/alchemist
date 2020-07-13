@@ -227,10 +227,10 @@ export class GetInfo {
 			id: this.uuidv4(),
 			locked: false,
 			originalData: playResult,
-			originalReference: desc,
+			originalReference: originalRef,
 			pinned: false,
 			selected: false,
-			calculatedReference: originalRef
+			calculatedReference: desc
 		};
 	}
 

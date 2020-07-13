@@ -34,7 +34,7 @@ module.exports = {
 				//include: paths.appSrc,
 				loader: require.resolve("awesome-typescript-loader"),
 				options: {
-					transpileOnly: true,
+					transpileOnly: false,
 					useCache: true,
 					useBabel: true,
 					babelOptions: {

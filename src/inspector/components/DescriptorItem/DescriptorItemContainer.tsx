@@ -5,6 +5,7 @@ import {DescriptorItem} from "./DescriptorItem";
 import { IRootState } from "../../../shared/store";
 import { selectDescriptorAction } from "../../actions/inspectorActions";
 import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
+import { getActiveTargetReference, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
 
 interface IOwn{
 	descriptor: IDescriptor
@@ -16,6 +17,8 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProp
 	return {
 		descriptor: cloneDeep(ownProps.descriptor),
 		autoSelected: ownProps.autoSelected,
+		activeTargetReference: getActiveTargetReference(state),
+		filterBySelectedReferenceType:getFilterBySelectedReferenceType(state),
 	};
 };
 

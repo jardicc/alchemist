@@ -164,7 +164,7 @@ export interface IDescriptor{
 	endTime: number
 	pinned: boolean,
 	locked: boolean,
-	originalReference: ITargetReferenceAM,
-	calculatedReference: ITargetReference,
+	originalReference: ITargetReference,
+	calculatedReference: ITargetReferenceAM,
 	originalData: Descriptor[]
 }

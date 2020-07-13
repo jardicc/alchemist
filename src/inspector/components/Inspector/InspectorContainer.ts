@@ -1,7 +1,7 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IInspectorDispatch, IInspectorProps, Inspector } from "./Inspector";
 import { setMainTabAction, setModeTabAction } from "../../actions/inspectorActions";
-import { getMainTabID, getModeTabID, getActiveDescriptorContent, getActiveDescriptorCalculatedReference, getActiveDescriptorOriginalReference, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
+import { getMainTabID, getModeTabID, getActiveDescriptorContent, getActiveDescriptorCalculatedReference, getActiveDescriptorOriginalReference, getSelectedDescriptors } from "../../selectors/inspectorSelectors";
 import { IRootState } from "../../../shared/store";
 
 
@@ -12,6 +12,7 @@ const mapStateToProps = (state: IRootState): IInspectorProps => {
 		descriptorContent:getActiveDescriptorContent(state),
 		originalReference: getActiveDescriptorCalculatedReference(state),
 		calculatedReference: getActiveDescriptorOriginalReference(state),
+		selectedDescriptors: getSelectedDescriptors(state),
 	};
 };
 

@@ -1,11 +1,14 @@
 import React from "react";
 import "./DescriptorItem.less";
-import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
+import { IDescriptor, TSelectDescriptorOperation, ITargetReference, TAllReferenceSubtypes } from "../../model/types";
 import { IconLockLocked, IconPin } from "../../../shared/components/icons";
+import { TState } from "../FilterButton/FilterButton";
 
 export interface IDescriptorItemProps {
 	descriptor: IDescriptor
 	autoSelected: boolean
+	activeTargetReference: ITargetReference | null;
+	filterBySelectedReferenceType:TState
 }
 
 export interface IDescriptorItemDispatch {
@@ -37,18 +40,36 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 	}
 
 	private generateItemName = () => {
-		const {descriptor:{originalReference} } = this.props;
-		const slug = originalReference._target.map(r => {
-			if ("_ref" in r) {
-				return r._ref;				
-			}
-			if ("_property" in r) {
-				return r._property;				
-			}
-			return "n/a";
-		});
-		return <div>{slug.reverse().join(" / ")}</div>;
+		if (this.props.activeTargetReference === null) { return "null - Error";}
+		// eslint-disable-next-line prefer-const
+		let { descriptor: { originalReference }, activeTargetReference,filterBySelectedReferenceType } = this.props;
 
+		const titles: string[] = [originalReference.type];
+		let subs:TAllReferenceSubtypes[] = [];
+		
+		if (originalReference.type === activeTargetReference.type && filterBySelectedReferenceType !== "off") {
+			titles.unshift();
+
+			subs = originalReference.data.filter((d,index) => {
+				const last = index === activeTargetReference.data.length - 1;
+				if (last) {
+					return true;
+				}
+				const found = activeTargetReference.data.find((a) => a.subType === d.subType);
+
+				if (!found) {
+					return true;
+				}
+
+				return (/*(found.content.value === d.content.value) &&*/ (found.content.filterBy === "off"));
+			});
+
+		} else {
+			subs = originalReference.data;
+		}
+			
+		titles.push(...subs.map(d => d.subType + ": " + d.content.value));
+		return titles.join(" / ");		
 	}
 
 	public render(): React.ReactNode{

@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
+import { IDescriptor } from "../model/types";
 
 const all = (state:IRootState) => state.inspector;
  
@@ -38,10 +39,32 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 	}
 	return false;
 });
-export const getDescriptorsListView = createSelector([getAllDescriptors], (t) => {	
-	const pinned = t.filter(i => i.pinned);
-	const notPinned = t.filter(i => !i.pinned);
-	return [...pinned, ...notPinned];
+export const getDescriptorsListView = createSelector([getAllDescriptors,getActiveTargetReference,getFilterBySelectedReferenceType], (allDesc,activeRefFilter,rootFilter) => {	
+	const pinned = allDesc.filter(i => i.pinned);
+	const notPinned = allDesc.filter(i => !i.pinned);
+	const reordered = [...pinned, ...notPinned];
+
+	if (rootFilter === "off") {
+		return reordered;
+	}
+
+	const filtered = reordered.filter((desc:IDescriptor) => {
+		const origRefFilter = desc.originalReference;
+		if (activeRefFilter?.type !== origRefFilter.type) {
+			return false;
+		}
+		for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
+			if (activeRefFilter.data[i].content.filterBy === "off") {
+				return true;
+			}
+			if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
+				return false;
+			}
+		}
+		return true;
+	});
+
+	return filtered;
 });
 export const getActiveReferenceProperty = createSelector([getActiveTargetReference], (t) => {	
 	return t?.data.find(i => i.subType === "property")?.content;	

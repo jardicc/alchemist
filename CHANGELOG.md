@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.0
+Inspector only
+- feature: adds possibility to filter list of descriptors
+- feature: adds difference view
+- improves: descriptor item title in list
+- improves: icons instead of text
+
 ## 0.14.0
 Inspector only
 - improves: support for PS theme switching
