@@ -1,6 +1,8 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
 import { IDescriptor } from "../model/types";
+import { selectDescriptorAction } from "../actions/inspectorActions";
+import { cloneDeep } from "lodash";
 
 const all = (state:IRootState) => state.inspector;
  
@@ -155,5 +157,36 @@ export const getActiveTargetLayer = createSelector([getActiveTargetReference], (
 	return (result===undefined) ? null : result;
 });
 
-// action
+// inspector
 
+export const getInspectorContentTab = createSelector([all], t => {
+	return t.inspector.content;
+});
+
+export const getInspectorDifferenceTab = createSelector([all],t=>{
+	return t.inspector.difference;
+});
+
+export const getDiffPath = createSelector([getInspectorDifferenceTab],t=>{
+	return t.treePath;
+});
+
+export const getLeftTreeDiff = createSelector([getSelectedDescriptors, getInspectorDifferenceTab], (t, d) => {
+	const path = cloneDeep(d.treePath);
+	//path.shift();
+	let data:any = cloneDeep(t?.[0]?.originalData);
+	for (const part of path) {
+		data = (data)?.[part];
+	}
+	return data;
+});
+
+export const getRightTreeDiff  = createSelector([getSelectedDescriptors,getInspectorDifferenceTab],(t,d)=>{
+	const path = cloneDeep(d.treePath);
+	//path.shift();
+	let data:any = cloneDeep(t?.[1]?.originalData);
+	for (const part of path) {
+		data = (data)?.[part];
+	}
+	return data;
+});

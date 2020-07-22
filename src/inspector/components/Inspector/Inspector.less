@@ -37,11 +37,31 @@
 		flex-grow: 1;
 	}
 
-	.diff{
-		overflow: scroll;
-		display: flex;
-		flex-direction: column;
-		flex-grow: 1;
+	.tabsDescriptor{
+		position: absolute;
+		top:0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+
+		> .tabContent{
+			position: relative;
+
+			.tabsView{
+				position: absolute;
+				top:0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+
+				> .tabContent{
+					display: flex;
+					flex-direction: column;
+					flex-grow: 1;
+					overflow: scroll;
+				}
+			}
+		}
 	}
 	
 	.code{
@@ -54,7 +74,9 @@
 	}
 	
 	.info{
-		overflow: auto;
+		.noShrink{
+			flex-shrink: 0;
+		}
 	}
 	
 	.spread{

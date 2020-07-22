@@ -38,7 +38,7 @@ export class VisualDiffTab extends Component<TVisualDiff, IVisualDiffState> {
 		if (left && right) {
 			const delta = diff(left, right);
 			if (!delta) {
-				return "n/a";
+				return "Content is same";
 			}
 			__html = formatters.html.format(delta, left);
 		

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.16.0
+Inspector only
+- feature: tree difference mode
+- feature: tree difference mode breadcrumb
+
 ## 0.15.0
 Inspector only
 - feature: adds possibility to filter list of descriptors

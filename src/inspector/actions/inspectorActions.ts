@@ -95,6 +95,23 @@ export interface ISetFilterStateAction {
 	}
 }
 
+export interface ISetInspectorPathDiffAction{
+	type: "SET_INSPECTOR_PATH_DIFF"
+	payload: {
+		path: string[]
+		mode: "replace"|"add"
+	}
+}
+
+export function setInspectorPathDiffAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDiffAction{
+	return {
+		type: "SET_INSPECTOR_PATH_DIFF",
+		payload: {
+			path,
+			mode
+		}
+	};
+}
 export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main",state: TState): ISetFilterStateAction {
 	return {
 		type: "SET_FILTER_STATE",
@@ -238,4 +255,5 @@ export type TActions = ISetMainTab |
 	IExportSelectedDescAction |
 	IExportAllDescAction |
 	IExportStateAction |
-	ISetFilterStateAction
+	ISetFilterStateAction |
+	ISetInspectorPathDiffAction

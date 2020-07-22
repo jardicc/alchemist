@@ -140,7 +140,7 @@ export interface IInspector{
 	activeTab:TActiveInspectorTab,
 	content: IContent
 	difference: IDifference
-	reference: IReference
+	info: IReference
 }
 
 export interface IContent{

@@ -57,74 +57,84 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
-		case "CLEAR_VIEW":{
-			state=produce(state,draft=>{
+		case "CLEAR_VIEW": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
-		case "CLEAR":{
-			state=produce(state,draft=>{
+		case "CLEAR": {
+			state = produce(state, draft => {
 				draft.descriptors = draft.descriptors.filter(d => d.locked) || [];
 			});
 			break;
 		}
-		case "CLEAR_NON_EXISTENT":{
-			state=produce(state,draft=>{
+		case "CLEAR_NON_EXISTENT": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
-		case "LOCK_DESC":{
+		case "LOCK_DESC": {
 			state = produce(state, draft => {
-				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.locked = action.payload.lock);				
+				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.locked = action.payload.lock);
 			});
 			break;
 		}
-		case "PIN_DESC":{
-			state=produce(state,draft=>{
-				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.pinned = action.payload.pin);				
+		case "PIN_DESC": {
+			state = produce(state, draft => {
+				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.pinned = action.payload.pin);
 			});
 			break;
 		}
-		case "REMOVE_DESC":{
-			state=produce(state,draft=>{
+		case "REMOVE_DESC": {
+			state = produce(state, draft => {
 				draft.descriptors = draft.descriptors.filter(d => (action.payload.includes(d.id) === false || d.locked));
 			});
 			break;
 		}
-		case "IMPORT_STATE":{
-			state=produce(state,draft=>{
+		case "SET_INSPECTOR_PATH_DIFF": {
+			state = produce(state, draft => {
+				if (action.payload.mode === "add") {
+					draft.inspector.difference.treePath = [...state.inspector.difference.treePath, ...action.payload.path];					
+				} else if (action.payload.mode === "replace") {
+					draft.inspector.difference.treePath = action.payload.path;
+				}
+			});
+			break;
+		}
+		case "IMPORT_STATE": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
-		case "IMPORT_APPEND":{
-			state=produce(state,draft=>{
+		case "IMPORT_APPEND": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
-		case "IMPORT_REPLACE":{
-			state=produce(state,draft=>{
+		case "IMPORT_REPLACE": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
-		case "EXPORT_SELECTED_DESC":{
-			state=produce(state,draft=>{
+		case "EXPORT_SELECTED_DESC": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
-		case "EXPORT_ALL_DESC":{
-			state=produce(state,draft=>{
+		case "EXPORT_ALL_DESC": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
-		case "EXPORT_STATE":{
-			state=produce(state,draft=>{
+		case "EXPORT_STATE": {
+			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;

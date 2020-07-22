@@ -7,6 +7,8 @@ import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
 import { TActiveSection, TActiveInspectorTab, IDescriptor } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
+import { TreeDiff } from "../TreeDiff/TreeDiff";
+import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
@@ -25,39 +27,66 @@ export interface IInspectorDispatch {
 
 type TInspector = IInspectorProps & IInspectorDispatch
 
-export class Inspector extends React.Component<TInspector> { 
+interface IState{
+	diffSubtab: "Tree"|"Raw"
+}
+
+export class Inspector extends React.Component<TInspector, IState> { 
 	constructor(props: TInspector) {
 		super(props);
 
 		this.state = {
+			diffSubtab: "Tree"
 		};
 	}
 
-	public render():JSX.Element {
+	private setDiffSubtab = (key:"Tree"|"Raw") => {
+		this.setState({
+			...this.state,
+			diffSubtab: key
+		});
+	}
+
+	public render(): JSX.Element {
+
 		return (
 			<div className="Inspector">
-				<TabList activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
+				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
 					<TabPanel id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<LeftColumnContainer />
-							<TabList activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
+							<TabList  className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
 								<TabPanel id="content" title="Content" >
 									<div className="code">
 										{this.props.descriptorContent}
 									</div>
 								</TabPanel>
 								<TabPanel id="difference" title="Difference" >
-									<div className="diff">
-										<VisualDiffTab left={this.props.selectedDescriptors[0]?.originalData} right={this.props.selectedDescriptors[1]?.originalData} />
-									</div>
+									<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
+										<TabPanel id="Tree" title="Tree" >
+											<div className="diff">
+												<TreeDiffContainer/>
+											</div>
+										</TabPanel>
+										<TabPanel id="Raw" title="Raw" >
+											<div className="diff">
+												<VisualDiffTab
+													left={this.props.selectedDescriptors[0]?.originalData}
+													right={this.props.selectedDescriptors[1]?.originalData}
+												/>
+											</div>
+										</TabPanel>
+									</TabList>
 								</TabPanel>
 								<TabPanel id="reference" title="Info" >
 									<div className="info code">
-										Filter:
-										{this.props.calculatedReference}
-										<br/>
-										Reference:
-										{this.props.originalReference}
+										<div className="noShrink">
+											Filter:
+											{this.props.calculatedReference}
+											<br />
+											Reference:
+											{this.props.originalReference}
+										</div>
 									</div>
 								</TabPanel>
 							</TabList>
@@ -67,7 +96,7 @@ export class Inspector extends React.Component<TInspector> {
 						settings
 					</TabPanel>
 				</TabList>
-				<FooterContainer  />
+				<FooterContainer />
 			</div>
 		);
 	}

@@ -28,3 +28,5 @@ export const rootStore = createStore(rootReducer, /* preloadedState, */ composeE
 	// other store enhancers if any
 ));
 console.log(rootStore.getState());
+
+(window as any)._rootStore = rootStore;

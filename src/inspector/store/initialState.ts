@@ -530,13 +530,13 @@ export function getInitialState(): IInspectorState {
 			activeTab: "content",
 			content: {
 				viewType: "tree",
-				treePath: ["a", "b", "c"],
+				treePath: [],
 			},
 			difference: {
 				viewType: "tree",
-				treePath: ["a", "b", "c"],
+				treePath: [],
 			},
-			reference: {
+			info: {
 				showOptionalDocumentReference: true,
 			}
 		},

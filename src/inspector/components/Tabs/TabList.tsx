@@ -2,9 +2,11 @@
 import React from "react";
 import { TTabPanelComponent } from "./TabPanel";
 import "./TabList.less";
+import { iteratorSymbol } from "immer/dist/internal";
 
 export interface ITabListProps{
 	activeKey: string
+	className:string
 	children: React.ReactNode
 	onChange:(id:string)=>void
 }
@@ -49,10 +51,10 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 		if (Array.isArray(children)) {
 			const found = children.find((item: TTabPanelComponent) => item.props.id === activeKey);
 			if (!found) {
-				return <div className="tabContent">n/a</div>;
+				return <div className="tabContent">No content</div>;
 			}
-			else {
-				return <div className="tabContent">{found}</div>;
+			else if(typeof found === "object" && "props" in found) {
+				return <div className={"tabContent"+" "+found.props.id}>{found}</div>;
 			}
 		}
 		return <div className="tabContent">not array</div>;
@@ -61,7 +63,7 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 	public render(): JSX.Element {
 		
 		return (
-			<div className="TabList">
+			<div className={"TabList"+" "+(this.props.className||"")}>
 				{this.renderTabs()}
 				{this.renderTabContent()}
 			</div>
