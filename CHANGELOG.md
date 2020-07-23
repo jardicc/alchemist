@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.0
+Inspector only
+- improves: data in info tab are now in textareas
+- improves: tree view with breadcrumb for descriptor content
+
 ## 0.16.0
 Inspector only
 - feature: tree difference mode
