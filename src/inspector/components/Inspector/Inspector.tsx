@@ -7,8 +7,9 @@ import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
 import { TActiveSection, TActiveInspectorTab, IDescriptor } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
-import { TreeDiff } from "../TreeDiff/TreeDiff";
+import { UnControlled as CodeMirror } from "react-codemirror2";
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
+import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
@@ -55,17 +56,30 @@ export class Inspector extends React.Component<TInspector, IState> {
 					<TabPanel id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<LeftColumnContainer />
-							<TabList  className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
+							<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
 								<TabPanel id="content" title="Content" >
-									<div className="code">
-										{this.props.descriptorContent}
-									</div>
+									<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
+										<TabPanel id="Tree" title="Tree" >
+											<div className="diff">
+												<TreeContentContainer />
+											</div>
+										</TabPanel>
+										<TabPanel id="Raw" title="Raw" >
+											{/*<div className="code">
+												{this.props.descriptorContent}
+											</div>*/}
+											<textarea
+												className="rawCode"
+												defaultValue={this.props.descriptorContent}
+											/>
+										</TabPanel>
+									</TabList>
 								</TabPanel>
 								<TabPanel id="difference" title="Difference" >
 									<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
 										<TabPanel id="Tree" title="Tree" >
 											<div className="diff">
-												<TreeDiffContainer/>
+												<TreeDiffContainer />
 											</div>
 										</TabPanel>
 										<TabPanel id="Raw" title="Raw" >
@@ -81,11 +95,20 @@ export class Inspector extends React.Component<TInspector, IState> {
 								<TabPanel id="reference" title="Info" >
 									<div className="info code">
 										<div className="noShrink">
-											Filter:
-											{this.props.calculatedReference}
-											<br />
 											Reference:
-											{this.props.originalReference}
+											<textarea
+												className="infoBlock"
+												defaultValue={													
+													this.props.originalReference
+												}
+											/>
+											Filter:
+											<textarea
+												className="infoBlock"
+												defaultValue={													
+													this.props.calculatedReference
+												}
+											/>
 										</div>
 									</div>
 								</TabPanel>

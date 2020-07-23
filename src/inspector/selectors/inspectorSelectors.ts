@@ -171,6 +171,10 @@ export const getDiffPath = createSelector([getInspectorDifferenceTab],t=>{
 	return t.treePath;
 });
 
+export const getContentPath = createSelector([getInspectorContentTab], t => {
+	return t.treePath;
+});
+
 export const getLeftTreeDiff = createSelector([getSelectedDescriptors, getInspectorDifferenceTab], (t, d) => {
 	const path = cloneDeep(d.treePath);
 	//path.shift();
@@ -185,6 +189,16 @@ export const getRightTreeDiff  = createSelector([getSelectedDescriptors,getInspe
 	const path = cloneDeep(d.treePath);
 	//path.shift();
 	let data:any = cloneDeep(t?.[1]?.originalData);
+	for (const part of path) {
+		data = (data)?.[part];
+	}
+	return data;
+});
+
+export const getTreeContent = createSelector([getSelectedDescriptors, getInspectorContentTab], (t, d) => {
+	const path = cloneDeep(d.treePath);
+	//path.shift();
+	let data:any = cloneDeep(t?.[0]?.originalData);
 	for (const part of path) {
 		data = (data)?.[part];
 	}

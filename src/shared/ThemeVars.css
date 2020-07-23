@@ -40,7 +40,7 @@ body.lightest-theme .Inspector, body.lightest-theme .Listener{
 }
 
 
-.JSONDiff {
+.JSONDiff, .TreeContent{
 	--TEXT_COLOR: #e8e8e8;
 	--TEXT_PLACEHOLDER_COLOR: #e8e8e8;
 	--BACKGROUND_COLOR: #181818;

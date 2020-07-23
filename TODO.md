@@ -23,3 +23,4 @@
 - show usefull names in descriptor items
 - diff
 - tree view
+- add Raw data type support

@@ -103,9 +103,26 @@ export interface ISetInspectorPathDiffAction{
 	}
 }
 
+export interface ISetInspectorPathContentAction{
+	type: "SET_INSPECTOR_PATH_CONTENT"
+	payload: {
+		path: string[]
+		mode: "replace"|"add"
+	}
+}
+
 export function setInspectorPathDiffAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDiffAction{
 	return {
 		type: "SET_INSPECTOR_PATH_DIFF",
+		payload: {
+			path,
+			mode
+		}
+	};
+}
+export function setInspectorPathContentAction(path:string[],mode:"replace"|"add"):ISetInspectorPathContentAction{
+	return {
+		type: "SET_INSPECTOR_PATH_CONTENT",
 		payload: {
 			path,
 			mode
@@ -256,4 +273,5 @@ export type TActions = ISetMainTab |
 	IExportAllDescAction |
 	IExportStateAction |
 	ISetFilterStateAction |
-	ISetInspectorPathDiffAction
+	ISetInspectorPathDiffAction |
+	ISetInspectorPathContentAction

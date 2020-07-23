@@ -63,11 +63,13 @@
 			}
 		}
 	}
+
+
 	
-	.code{
+	.code, .rawCode{
 		white-space: pre;
-		overflow: scroll;
-		border: 0px solid red;
+		//overflow: scroll;
+		//border: 0px solid red;
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
@@ -76,6 +78,17 @@
 	.info{
 		.noShrink{
 			flex-shrink: 0;
+			display: flex;
+			flex-grow: 1;
+			flex-direction: column;
+
+
+			.infoBlock{
+				white-space: pre;
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+			}
 		}
 	}
 	
