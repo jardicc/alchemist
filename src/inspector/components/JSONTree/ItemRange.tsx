@@ -21,9 +21,7 @@ export default class ItemRange extends React.Component<any,any> {
 		const { from, to, renderChildNodes, nodeType }:any = this.props;
 
 		return this.state.expanded ? (
-			<div className="itemRange">
-				{renderChildNodes(this.props, from, to)}
-			</div>
+			renderChildNodes(this.props, from, to)
 		) : (
 			<div
 				className="itemRange"

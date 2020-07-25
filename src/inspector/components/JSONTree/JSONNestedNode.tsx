@@ -108,11 +108,12 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		this.state = getStateFromProps(props);
 	}
 
-	componentWillReceiveProps(nextProps:any) {
+	getDerivedStateFromProps(nextProps:any, prevState:any) {
 		const nextState = getStateFromProps(nextProps);
 		if (getStateFromProps(this.props).expanded !== nextState.expanded) {
-			this.setState(nextState);
+			return nextState;
 		}
+		return null;
 	}
 
 	shouldComponentUpdate(nextProps:any, nextState:any) {
@@ -178,7 +179,8 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 					{labelRenderer(...stylingArgs)}
 				</label>
 				<span className={"nestedNodeItemString" + ((expanded) ? " expanded":"")} onClick={this.handleClick}>
-					{renderedItemString}
+					
+					{expanded ? null : renderedItemString}
 				</span>
 				<ul className={"nestedNodeChildren" + ((expanded) ? " expanded":"")} >
 					{renderedChildren}

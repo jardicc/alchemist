@@ -59,8 +59,7 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 
 	
 	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
-		console.log(key, rest);
-
+		
 		let noPin = false;
 		if (typeof key === "string") {			
 			noPin = key.startsWith("$$$noPin_");

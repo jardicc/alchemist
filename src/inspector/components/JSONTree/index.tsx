@@ -18,11 +18,12 @@ const defaultItemString = (type:any, data:any, itemType:any, itemString:any) => 
 const defaultLabelRenderer = ([label]:any) => <span>{label}:</span>;
 const noCustomNode = () => false;
 
+type TNonNullish = Record<string, unknown>;
 
 export interface IJSONTreeProps{
-	data: [any] | {};
+	data: [any] |TNonNullish;
 	hideRoot?: boolean;
-	theme?: {} | string;
+	theme?: TNonNullish | string;
 	invertTheme?: boolean;
 	keyPath?: [string | number];
 }
@@ -30,8 +31,8 @@ export interface IJSONTreeProps{
 export interface IJSONTreeDispatch {
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	sortObjectKeys?: Function | boolean;
-	shouldExpandNode?: (keyPath: (string | number)[], data: [any] | {}, level: number) => boolean;
-	getItemString?: (type: string, data: [any] | {}, itemType: string, itemString: string) => JSX.Element;
+	shouldExpandNode?: (keyPath: (string | number)[], data: [any] | TNonNullish, level: number) => boolean;
+	getItemString?: (type: string, data: [any] | TNonNullish, itemType: string, itemString: string) => JSX.Element;
 	labelRenderer?: (keyPath: string[], nodeType?: string, expanded?: boolean, expandable?: boolean) => JSX.Element;
 	valueRenderer?: (displayValue: string|number, rawValue?: string|number|boolean|null, ...keyPath: (string|number)[]) => JSX.Element;
 	postprocessValue?: (raw: string) => JSX.Element;
