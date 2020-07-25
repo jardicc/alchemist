@@ -19,7 +19,9 @@ const JSONValueNode = ({
 			{labelRenderer(keyPath, nodeType, false, false)}
 		</label>
 		<span className={"valueText "+nodeType}>
-			{valueRenderer(valueGetter(value), value, ...keyPath)}
+			{
+				valueRenderer(valueGetter(value), value, nodeType, ...keyPath)
+			}
 		</span>
 	</li>
 );

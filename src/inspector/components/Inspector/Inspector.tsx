@@ -9,11 +9,9 @@ import { FooterContainer } from "../Footer/FooterContainer";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
-import Editor from "react-simple-code-editor";
-//import { highlight, languages } from "prismjs";
-//import "prismjs/components/prism-clike";
-//import "prismjs/components/prism-javascript";
-//import "prismjs/themes/prism-funky.css";
+import { TreeContent } from "../TreeContent/TreeContent";
+import photoshop from "photoshop";
+
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
@@ -91,6 +89,14 @@ export class Inspector extends React.Component<TInspector, IState> {
 											</div>
 										</TabPanel>
 									</TabList>
+								</TabPanel>
+								<TabPanel id="dom" title="DOM" >
+									<TreeContent
+										content={photoshop.app}
+										path={[]}
+										protoMode={"uxp"}
+										onInspectPath={(e) => { console.log(e);}}
+									/>
 								</TabPanel>
 								<TabPanel id="reference" title="Info" >
 									<div className="info code">

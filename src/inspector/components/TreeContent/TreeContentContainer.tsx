@@ -7,8 +7,9 @@ import { setInspectorPathContentAction } from "../../actions/inspectorActions";
 
 const mapStateToProps = (state: IRootState): ITreeContentProps => {
 	return {
-		content: getTreeContent(state),
+		content: getTreeContent(state),		
 		path: getContentPath(state),
+		protoMode: "none"
 	};
 };
 
@@ -19,3 +20,4 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Recor
 };
 
 export const TreeContentContainer = connect<ITreeContentProps, ITreeContentDispatch>(mapStateToProps, mapDispatchToProps)(TreeContent);
+

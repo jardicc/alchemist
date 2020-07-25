@@ -38,7 +38,7 @@ function getShortTypeString(val:any, diff:boolean) {
 	}
 }
 
-function getText(type:any, data:any, isWideLayout:boolean, isDiff:boolean) {
+function getText(type: any, data: any, isWideLayout: boolean, isDiff: boolean) {
 	if (type === "Object") {
 		const keys = Object.keys(data);
 		if (!isWideLayout) return keys.length ? "{…}" : "{}";

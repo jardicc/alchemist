@@ -30,6 +30,8 @@ export type TActionCommand = null | string;
 
 export type TSelectDescriptorOperation = "replace" | "add" | "subtract";
 
+export type TProtoMode = "none" | "uxp" | "advanced" | "all";
+
 
 export interface IInspectorState {
 	activeSection: TActiveSection

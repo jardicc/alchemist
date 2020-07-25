@@ -10,16 +10,17 @@ function createItemString(data:any) {
 }
 
 // Configures <JSONNestedNode> to render an Object
-const JSONObjectNode = ({ data, ...props }:any) => (
-	<JSONNestedNode
-		{...props}
-		data={data}
-		nodeType="Object"
-		nodeTypeIndicator={props.nodeType === "Error" ? "Error()" : "{}"}
-		createItemString={createItemString}
-		expandable={Object.getOwnPropertyNames(data).length > 0}
-	/>
-);
+const JSONObjectNode = ({ data, ...props }: any) => {
+	return (
+		<JSONNestedNode
+			{...props}
+			data={data}
+			nodeType="Object"
+			nodeTypeIndicator={props.nodeType === "Error" ? "Error()" : "{}"}
+			createItemString={createItemString}
+			expandable={Object.getOwnPropertyNames(data).length > 0}
+		/>);
+};
 
 JSONObjectNode.propTypes = {
 	data: PropTypes.object,

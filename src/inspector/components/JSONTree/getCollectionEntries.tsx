@@ -1,3 +1,5 @@
+import { TProtoMode } from "../../model/types";
+
 function getLength(type:any, collection:any) {
 	if (type === "Object") {
 		return Object.keys(collection).length;
@@ -12,11 +14,33 @@ function isIterableMap(collection:any) {
 	return typeof collection.set === "function";
 }
 
-function getEntries(type:any, collection:any, sortObjectKeys:any, from = 0, to = Infinity) {
+function addMoreKeys(protoMode: TProtoMode, collection: any): string[] {
+	if (protoMode === "none") {
+		return [];
+	}
+	let keys = Object.getOwnPropertyNames(collection.__proto__);
+	if (protoMode === "advanced") {
+		keys = keys.filter(k => !(k.startsWith("__") && k.endsWith("__")));
+	} else if (protoMode === "uxp") {
+		const obj = new Object();
+		const defaultKeys = Object.getOwnPropertyNames((obj as any).__proto__);
+		keys = keys.filter(k => !defaultKeys.includes(k));
+	}
+
+	return keys;
+}
+
+function getEntries(protoMode: TProtoMode = "none", type: any, collection: any, sortObjectKeys: any, from = 0, to = Infinity) {
 	let res;
 
 	if (type === "Object") {
-		let keys = Object.getOwnPropertyNames(collection);
+		let keys:string[] = Object.getOwnPropertyNames(collection);
+
+		// experimental
+		if (collection.__proto__) {
+			keys = [...keys, ...addMoreKeys(protoMode, collection)];
+		}
+		// experimental end
 
 		if (sortObjectKeys) {
 			keys.sort(sortObjectKeys === true ? undefined : sortObjectKeys);
@@ -87,15 +111,17 @@ function getRanges(from:any, to:any, limit:any) {
 }
 
 export default function getCollectionEntries(
+	protoMode:TProtoMode,
 	type:any,
 	collection:any,
-	sortObjectKeys:any,
+	sortObjectKeys: any,
 	limit:any,
 	from = 0,
-	to = Infinity
+	to = Infinity,
 ) {
 	const getEntriesBound = getEntries.bind(
 		null,
+		protoMode,
 		type,
 		collection,
 		sortObjectKeys

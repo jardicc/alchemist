@@ -4,12 +4,13 @@ import {JSONArrow} from "./JSONArrow";
 import getCollectionEntries from "./getCollectionEntries";
 import JSONNode from "./JSONNode";
 import ItemRange from "./ItemRange";
+import { TProtoMode } from "../../model/types";
 
 /**
  * Renders nested values (eg. objects, arrays, lists, etc.)
  */
 
-function renderChildNodes(props:any, from?:any, to?:any) {
+function renderChildNodes(props:any,protoMode:TProtoMode, from?:any, to?:any) {
 	const {
 		nodeType,
 		data,
@@ -22,12 +23,13 @@ function renderChildNodes(props:any, from?:any, to?:any) {
 	const childNodes:any = [];
 
 	getCollectionEntries(
+		protoMode,
 		nodeType,
 		data,
 		sortObjectKeys,
 		collectionLimit,
 		from,
-		to
+		to,
 	).forEach((entry:any) => {
 		if (entry.to) {
 			childNodes.push(
@@ -93,14 +95,16 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		level: PropTypes.number.isRequired,
 		sortObjectKeys: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 		isCircular: PropTypes.bool,
-		expandable: PropTypes.bool
+		expandable: PropTypes.bool,
+		protoMode: PropTypes.string
 	};
 
 	static defaultProps = {
 		data: [],
 		circularCache: [],
 		level: 0,
-		expandable: true
+		expandable: true,
+		protoMode: "none"
 	};
 
 	constructor(props:any) {
@@ -108,9 +112,9 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		this.state = getStateFromProps(props);
 	}
 
-	getDerivedStateFromProps(nextProps:any, prevState:any) {
+	static getDerivedStateFromProps(nextProps:any, prevState:any) {
 		const nextState = getStateFromProps(nextProps);
-		if (getStateFromProps(this.props).expanded !== nextState.expanded) {
+		if (getStateFromProps(nextProps).expanded !== nextState.expanded) {
 			return nextState;
 		}
 		return null;
@@ -139,12 +143,13 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 			collectionLimit,
 			keyPath,
 			labelRenderer,
-			expandable
-		}:any = this.props;
+			expandable,
+			protoMode,
+		}: any = this.props;
 		const { expanded } = this.state;
 		const renderedChildren =
 			expanded || (hideRoot && this.props.level === 0)
-				? renderChildNodes({ ...this.props, level: this.props.level + 1 })
+				? renderChildNodes({ ...this.props, level: this.props.level + 1 },protoMode)
 				: null;
 
 		const itemType = (

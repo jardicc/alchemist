@@ -8,8 +8,11 @@ import PropTypes from "prop-types";
 import JSONNode from "./JSONNode";
 import "./JSONTree.less";
 
-const identity = (value:any) => value;
-const expandRootNode = (keyName:any, data:any, level:any) => level === 0;
+const identity = (displayValue: string | number, rawValue: string | number | boolean | null, nodeType:string, ...keyPath: (string | number)[]): React.ReactNode => {
+	if (nodeType === "Function") { return "fn()"; }
+	return displayValue;
+};
+const expandRootNode = (keyName:any, data:any, level:any) => (level <= 0);
 const defaultItemString = (type:any, data:any, itemType:any, itemString:any) => (
 	<span>
 		{itemType} {itemString}
@@ -34,7 +37,7 @@ export interface IJSONTreeDispatch {
 	shouldExpandNode?: (keyPath: (string | number)[], data: [any] | TNonNullish, level: number) => boolean;
 	getItemString?: (type: string, data: [any] | TNonNullish, itemType: string, itemString: string) => JSX.Element;
 	labelRenderer?: (keyPath: string[], nodeType?: string, expanded?: boolean, expandable?: boolean) => JSX.Element;
-	valueRenderer?: (displayValue: string|number, rawValue?: string|number|boolean|null, ...keyPath: (string|number)[]) => JSX.Element;
+	valueRenderer?: (displayValue: string|number, rawValue: string|number|boolean|null, nodeType:string, ...keyPath: (string|number)[]) => JSX.Element;
 	postprocessValue?: (raw: string) => JSX.Element;
 	isCustomNode?: () => boolean;
 }
@@ -56,7 +59,8 @@ export default class JSONTree extends React.Component<TJSONTree,ITreeContentStat
 			PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 		),
 		postprocessValue: PropTypes.func,
-		sortObjectKeys: PropTypes.oneOfType([PropTypes.func, PropTypes.bool])
+		sortObjectKeys: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+		protoMode: PropTypes.string
 	};
 
 	static defaultProps = {
@@ -69,7 +73,8 @@ export default class JSONTree extends React.Component<TJSONTree,ITreeContentStat
 		postprocessValue: identity,
 		isCustomNode: noCustomNode,
 		collectionLimit: 50,
-		invertTheme: true
+		invertTheme: true,
+		protoMode: "none"
 	};
 
 	constructor(props:any) {
@@ -89,14 +94,15 @@ export default class JSONTree extends React.Component<TJSONTree,ITreeContentStat
 			hideRoot,
 			invertTheme: _, // eslint-disable-line no-unused-vars
 			...rest
-		}:any = this.props;
+		}: any = this.props;
+		
 
 		return (
 			<ul className="JSONTree">
 				<JSONNode
 					{...{ postprocessValue, hideRoot, ...rest }}
 					keyPath={hideRoot ? [] : keyPath}
-					value={postprocessValue(value)}
+					value={postprocessValue(value)}					
 				/>
 			</ul>
 		);
