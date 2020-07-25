@@ -40,7 +40,7 @@ body.lightest-theme .Inspector, body.lightest-theme .Listener{
 }
 
 
-.JSONDiff, .TreeContent{
+.JSONDiff, .TreeContent, .JSONTree{
 	--TEXT_COLOR: #e8e8e8;
 	--TEXT_PLACEHOLDER_COLOR: #e8e8e8;
 	--BACKGROUND_COLOR: #181818;
@@ -52,8 +52,9 @@ body.lightest-theme .Inspector, body.lightest-theme .Listener{
 	--LIST_BORDER_COLOR: #585858;
 	--ACTION_TIME_BACK_COLOR: #585858;
 	--ACTION_TIME_COLOR: #b8b8b8;
-	--PIN_COLOR: #b8b8b8;
-	--ITEM_HINT_COLOR: #a16946;
+	--PIN_COLOR: #3b8af1;
+	--PIN_COLOR_HOVER: aqua;
+	--ITEM_HINT_COLOR: gray;
 	--TAB_BACK_SELECTED_COLOR: #585858;
 	--TAB_BACK_COLOR: #181818;
 	--TAB_BACK_HOVER_COLOR: #585858;
@@ -64,4 +65,19 @@ body.lightest-theme .Inspector, body.lightest-theme .Listener{
 	--LINK_COLOR: #EC31C0;
 	--LINK_HOVER_COLOR: #EC31C0;
 	--ERROR_COLOR: #65AD00;
+/* CONTENT TREE VIEW */
+	--STRING_COLOR: #cfcc1b;
+	--DATE_COLOR: #b256dc;
+	--NUMBER_COLOR: #b256dc;
+	--BOOLEAN_COLOR: #56dc6c;
+	--NULL_COLOR: #28e3e9;
+	--UNDEFINED_COLOR: #28e3e9;
+	--FUNCTION_COLOR: #E92F28;
+	--SYMBOL_COLOR: #E92F28;
+	--LABEL_COLOR: #3b8af1;
+	--LABEL_COLOR_HOVER: aqua;
+	--ARROW_COLOR: #3b8af1;
+	--ARROW_COLOR_HOVER: aqua;
+	--ITEM_STRING_COLOR: #65AD00;
+	--ITEM_STRING_EXPANDED_COLOR: #585858;
 }

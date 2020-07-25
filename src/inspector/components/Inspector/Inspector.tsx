@@ -7,9 +7,13 @@ import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
 import { TActiveSection, TActiveInspectorTab, IDescriptor } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
-import { UnControlled as CodeMirror } from "react-codemirror2";
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
+import Editor from "react-simple-code-editor";
+//import { highlight, languages } from "prismjs";
+//import "prismjs/components/prism-clike";
+//import "prismjs/components/prism-javascript";
+//import "prismjs/themes/prism-funky.css";
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
@@ -49,7 +53,6 @@ export class Inspector extends React.Component<TInspector, IState> {
 	}
 
 	public render(): JSX.Element {
-
 		return (
 			<div className="Inspector">
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
@@ -65,9 +68,6 @@ export class Inspector extends React.Component<TInspector, IState> {
 											</div>
 										</TabPanel>
 										<TabPanel id="Raw" title="Raw" >
-											{/*<div className="code">
-												{this.props.descriptorContent}
-											</div>*/}
 											<textarea
 												className="rawCode"
 												defaultValue={this.props.descriptorContent}
@@ -98,14 +98,14 @@ export class Inspector extends React.Component<TInspector, IState> {
 											Reference:
 											<textarea
 												className="infoBlock"
-												defaultValue={													
+												defaultValue={
 													this.props.originalReference
 												}
 											/>
 											Filter:
 											<textarea
 												className="infoBlock"
-												defaultValue={													
+												defaultValue={
 													this.props.calculatedReference
 												}
 											/>

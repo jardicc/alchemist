@@ -233,22 +233,32 @@
 
 		&:hover {
 			text-decoration: underline;
-			color: var(--LINK_HOVER_COLOR);
+			color: var(--LABEL_COLOR_HOVER);
 		}
 
 		color: var(--LINK_COLOR);
 	}
 
+	.treeItemKey{
+		&.expandable:hover {
+			text-decoration: underline;
+			color: var(--LABEL_COLOR_HOVER);
+		}
+	}
+
 	.treeItemPin {
-		font-size: 0.7em;
-		padding-left: 5px;
+		display: inline-block;
+		padding-left: 0.2em;
+		padding-top: 0.2em;
 		cursor: pointer;
 
 		&:hover {
-			text-decoration: underline;
+			color: var(--PIN_COLOR_HOVER);
+			fill: var(--PIN_COLOR_HOVER);
 		}
 
 		color: var(--PIN_COLOR);
+		fill: var(--PIN_COLOR);
 	}
 
 	.treeItemHint {

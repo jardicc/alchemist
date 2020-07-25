@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.18.0
+Inspector only
+- improves: shows names in descriptor titles
+- improves: content tree view can pin primite values
+
+
 ## 0.17.0
 Inspector only
 - improves: data in info tab are now in textareas

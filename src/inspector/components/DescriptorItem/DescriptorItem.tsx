@@ -3,6 +3,7 @@ import "./DescriptorItem.less";
 import { IDescriptor, TSelectDescriptorOperation, ITargetReference, TAllReferenceSubtypes } from "../../model/types";
 import { IconLockLocked, IconPin } from "../../../shared/components/icons";
 import { TState } from "../FilterButton/FilterButton";
+import { getName } from "../../classes/GetName";
 
 export interface IDescriptorItemProps {
 	descriptor: IDescriptor
@@ -37,6 +38,13 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 			}
 		}
 		this.props.onSelect(this.props.descriptor.id, operation);
+	}
+
+	private generateItemNameNew =  ():string => {
+		const parts = getName(this.props.descriptor.calculatedReference._target);
+		//parts.push(...subs.map(d => d.subType + ": " + d.content.value));
+		const names = parts.map(p => /*p.typeTitle +*/ ((p.value) ? (/*": "*/ p.value) : p.typeTitle));
+		return names.join(" / ");
 	}
 
 	private generateItemName = () => {
@@ -78,7 +86,7 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 		const {descriptor:{locked,pinned} } = this.props;
 		return (
 			<div className={"DescriptorItem" + (descriptor.selected ? " selected" : "") + (autoSelected?" autoSelected":"")} onClick={this.select}>
-				<div className="name">{this.generateItemName()}</div>
+				<div className="name">{this.generateItemNameNew()}</div>
 				<div className="spread"></div>
 				{locked ? <div className="icon"><IconLockLocked/></div> : ""}
 				{pinned ? <div className="icon"><IconPin/></div>: ""}

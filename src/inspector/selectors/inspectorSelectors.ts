@@ -198,9 +198,16 @@ export const getRightTreeDiff  = createSelector([getSelectedDescriptors,getInspe
 export const getTreeContent = createSelector([getSelectedDescriptors, getInspectorContentTab], (t, d) => {
 	const path = cloneDeep(d.treePath);
 	//path.shift();
-	let data:any = cloneDeep(t?.[0]?.originalData);
+	let data: any = cloneDeep(t?.[0]?.originalData);
+
 	for (const part of path) {
 		data = (data)?.[part];
+	}
+
+	// make primitive types pin-able
+	if (typeof data !== "object" && data !== undefined && data !== null) {
+		const lastPart = path[path.length - 1];
+		data = { ["$$$noPin_"+lastPart]:data };
 	}
 	return data;
 });

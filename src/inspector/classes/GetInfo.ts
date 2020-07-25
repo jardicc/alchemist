@@ -352,7 +352,7 @@ export class GetInfo {
 		return null;
 	}
 
-	private static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path") {
+	public static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path") {
 		const desc = {
 			_obj: "get",
 			_target: [

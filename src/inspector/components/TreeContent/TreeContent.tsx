@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import "./TreeContent.less";
 import { getItemString } from "../JSONDiff/getItemString";
-import JSONTree from "react-json-tree";
+import JSONTree from "./../JSONTree";
+import { IconPin } from "../../../shared/components/icons";
 
 export interface ITreeContentProps{
 	content: any
@@ -58,17 +59,23 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 
 	
 	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
-		console.log(key,nodeType, expandable);
+		console.log(key, rest);
+
+		let noPin = false;
+		if (typeof key === "string") {			
+			noPin = key.startsWith("$$$noPin_");
+			key = key.replace("$$$noPin_", "");
+		}
 		return (
 			<span>
-				<span className="treeItemKey">
+				<span className={"treeItemKey" + (expandable?" expandable":"")}>
 					{key}
 				</span>
-				{!expandable ? null : <span
+				{(noPin) ? null : <span
 					className="treeItemPin"
 					onClick={() => this.inspectPath([key, ...rest])}
 				>
-					{"(pin)"}
+					<IconPin />
 				</span>}
 				{!expanded && ": "}
 			</span>
@@ -92,30 +99,32 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 		return parts;
 	}
 
-	public getItemString = (type: any, data: any): JSX.Element => (
-		getItemString(type, data, true, true)
-	)
+	public getItemString = (type: any, data: any): JSX.Element => {
+		return getItemString(type, data, true, false);
+	}
 	
 	public render(): React.ReactNode {
 		const { content } = this.props;
-		if (!content) {
-			return "Content is missing. Please make sure that you selected descriptor and your pinned property exists";
-		}
-
+		//console.log(content);
 		return (
 			<div className="TreeContent">
 				<div className="path">
 					{this.renderPath()}
 				</div>
-
-				<JSONTree
-					labelRenderer={this.labelRenderer}
-					theme={theme}
-					data={content}
-					getItemString={this.getItemString}
-					invertTheme={false}
-					hideRoot={true}
-				/>
+				
+				{(content === undefined || content === null) ?
+					"Content is missing. Please make sure that you selected descriptor and your pinned property exists"
+					:
+					<JSONTree
+						labelRenderer={this.labelRenderer}
+						theme={theme}
+						data={content}
+						getItemString={this.getItemString} // shows object content shortcut
+						invertTheme={false}
+						hideRoot={true}
+						sortObjectKeys={true}
+					/>					
+				}
 			</div>
 		);
 	}

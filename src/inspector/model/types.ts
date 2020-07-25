@@ -168,3 +168,9 @@ export interface IDescriptor{
 	calculatedReference: ITargetReferenceAM,
 	originalData: Descriptor[]
 }
+
+export interface IGetNameOutput{
+	typeRef: string
+	typeTitle: string
+	value: string|null
+}
