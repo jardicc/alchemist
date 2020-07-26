@@ -7,10 +7,11 @@ import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
 import { TActiveSection, TActiveInspectorTab, IDescriptor } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
-import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
 import { TreeContent } from "../TreeContent/TreeContent";
 import photoshop from "photoshop";
+import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
+import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
 
 
 export interface IInspectorProps{
@@ -90,13 +91,8 @@ export class Inspector extends React.Component<TInspector, IState> {
 										</TabPanel>
 									</TabList>
 								</TabPanel>
-								<TabPanel id="dom" title="DOM" >
-									<TreeContent
-										content={photoshop.app}
-										path={[]}
-										protoMode={"uxp"}
-										onInspectPath={(e) => { console.log(e);}}
-									/>
+								<TabPanel id="dom" title="DOM (live)" >
+									<TreeDomContainer />
 								</TabPanel>
 								<TabPanel id="reference" title="Info" >
 									<div className="info code">

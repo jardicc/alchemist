@@ -1,0 +1,44 @@
+import React from "react";
+import { IconPin } from "../../../shared/components/icons";
+
+
+export const labelRenderer = ([key, ...rest]: string[], onInspectPath: (path: string[], mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+	
+	let noPin = false;
+	if (typeof key === "string") {
+		noPin = key.startsWith("$$$noPin_");
+		key = key.replace("$$$noPin_", "");
+	}
+	return (
+		<span>
+			<span className={"treeItemKey" + (expandable ? " expandable" : "")}>
+				{key}
+			</span>
+			{(noPin) ? null : <span
+				className="treeItemPin"
+				onClick={
+					() => onInspectPath([...[key, ...rest].reverse()], "add")
+				}
+			>
+				<IconPin />
+			</span>}
+			{!expanded && ": "}
+		</span>
+	);
+};
+
+export const renderPath = (path: string[], onInspectPath: (path: string[], mode: "replace" | "add") => void): React.ReactNode[] => {
+	const parts: React.ReactNode[] = [
+		<span className="pathItem" key="root" onClick={() => { onInspectPath([], "replace"); }}>
+			<span className="link">root</span>
+		</span>
+	];
+	for (let i = 0, len = path.length; i < len; i++) {
+		parts.push(
+			<span className="pathItem" key={i} onClick={() => { onInspectPath(path.slice(0, i + 1), "replace"); }}>
+				<span className="link">{path[i]}</span>
+			</span>
+		);
+	}
+	return parts;
+};

@@ -3,6 +3,7 @@ import { IRootState } from "../../shared/store";
 import { IDescriptor } from "../model/types";
 import { selectDescriptorAction } from "../actions/inspectorActions";
 import { cloneDeep } from "lodash";
+import { GetInfo } from "../classes/GetInfo";
 
 const all = (state:IRootState) => state.inspector;
  
@@ -163,6 +164,10 @@ export const getInspectorContentTab = createSelector([all], t => {
 	return t.inspector.content;
 });
 
+export const getInspectorDomTab = createSelector([all], t => {
+	return t.inspector.dom;
+});
+
 export const getInspectorDifferenceTab = createSelector([all],t=>{
 	return t.inspector.difference;
 });
@@ -210,4 +215,18 @@ export const getTreeContent = createSelector([getSelectedDescriptors, getInspect
 		data = { ["$$$noPin_"+lastPart]:data };
 	}
 	return data;
+});
+
+export const getTreeDom = createSelector([getSelectedDescriptors, getInspectorDomTab], (t, d) => {
+	if (!t.length) {
+		return {
+			ref: null,
+			path: []
+		};
+	}
+	const ref = {
+		ref: t?.[0]?.calculatedReference?._target,
+		path: d.treePath
+	};
+	return ref;
 });

@@ -1,31 +1,35 @@
 import React, { Component } from "react";
-import "./TreeContent.less";
+import "./TreeDom.less";
 import { getItemString } from "../TreeDiff/getItemString";
 import JSONTree from "./../JSONTree";
 import { TProtoMode } from "../../model/types";
 import { renderPath, labelRenderer } from "../shared/sharedTreeView";
+import { TReference, GetInfo } from "../../classes/GetInfo";
+import { cloneDeep } from "lodash";
 
-export interface ITreeContentProps{
-	content: any
-	path: string[]
+export interface ITreeDomProps{
+	content: {
+		ref: TReference[]|null
+		path: string[]
+	}
 	protoMode:TProtoMode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ITreeContentDispatch {
+export interface ITreeDomDispatch {
 	onInspectPath: (path: string[],mode:"replace"|"add") => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ITreeContentState{
+interface ITreeDomState{
 	
 }
 
-export type TTreeContent = ITreeContentProps & ITreeContentDispatch
+export type TTreeDom = ITreeDomProps & ITreeDomDispatch
 
-export class TreeContent extends Component<TTreeContent, ITreeContentState> {
+export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 
-	constructor(props: TTreeContent) {
+	constructor(props: TTreeDom) {
 		super(props);
 
 		this.state = {
@@ -37,7 +41,7 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 	}
 
 	private renderPath = () => {
-		const { path, onInspectPath } = this.props;
+		const { content:{path}, onInspectPath } = this.props;
 		return renderPath(path, onInspectPath);
 	}
 
@@ -46,10 +50,27 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 	}
 	
 	public render(): React.ReactNode {
-		const { content,protoMode } = this.props;
+		const { content, protoMode, onInspectPath } = this.props;
+		if (!content?.ref) {
+			return "Nothing to see there";
+		}
+		
+		let data:any = GetInfo.getDom(content.ref);
+		
+		const path = cloneDeep(content.path);
+		
+		for (const part of path) {
+			data = (data)?.[part];
+		}
+
+		// make primitive types pin-able
+		if (typeof data !== "object" && data !== undefined && data !== null) {
+			const lastPart = path[path.length - 1];
+			data = { ["$$$noPin_"+lastPart]:data };
+		}
 		//console.log(content);
 		return (
-			<div className="TreeContent">
+			<div className="TreeDom">
 				<div className="path">
 					{this.renderPath()}
 				</div>
@@ -58,15 +79,17 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 					"Content is missing. Please make sure that you selected descriptor and your pinned property exists"
 					:
 					<JSONTree
+						data={data}
+						keyPath={path}
+						protoMode={protoMode}
 						labelRenderer={this.labelRenderer}
-						data={content}
 						getItemString={this.getItemString} // shows object content shortcut
 						hideRoot={true}
 						sortObjectKeys={true}
-						protoMode={protoMode}
-					/>					
+					/>
 				}
 			</div>
 		);
 	}
 }
+

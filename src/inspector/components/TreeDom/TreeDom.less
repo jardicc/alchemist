@@ -1,5 +1,22 @@
-.JSONDiff {
+.TreeDom{
+	.pathItem{
 
+		.link{
+			margin: 0 0.5em;
+			text-decoration: underline;
+			cursor: pointer;
+
+			&:hover{
+				color:var(--hover);
+			}
+		}
+
+	}
+	.pathItem:not(:first-child)::before{
+		content: ">";
+	}
+
+	
 	.inspector {
 		display: flex;
 		flex-direction: column;

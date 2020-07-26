@@ -111,6 +111,23 @@ export interface ISetInspectorPathContentAction{
 	}
 }
 
+export interface ISetInspectorPathDOMAction{
+	type: "SET_INSPECTOR_PATH_DOM"
+	payload: {
+		path: string[]
+		mode: "replace"|"add"
+	}
+}
+
+export function setInspectorPathDomAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDOMAction{
+	return {
+		type: "SET_INSPECTOR_PATH_DOM",
+		payload: {
+			path,
+			mode
+		}
+	};
+}
 export function setInspectorPathDiffAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDiffAction{
 	return {
 		type: "SET_INSPECTOR_PATH_DIFF",
@@ -255,6 +272,7 @@ export function exportStateAction():IExportStateAction{
 
 
 export type TActions = ISetMainTab |
+ISetInspectorPathDOMAction|
 	ISetModeTab |
 	ISetTargetReference |
 	IAddDescriptorAction |

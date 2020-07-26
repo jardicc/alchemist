@@ -398,5 +398,41 @@ export class GetInfo {
 			return v.toString(16);
 		});
 	}
+
+	public static getDom(ref: TReference[]) {
+
+		const res: IDReference[] = ref?.filter(v => ("_ref" in v)) as IDReference[];
+		if (!res) {
+			return null;
+		}
+
+		if (res[0]._ref === "application") {
+			return GetInfo.getAppDom();
+		}
+
+		if (res[0]._ref === "layer") {
+			return GetInfo.getLayerDom(res[1]._id, res[0]._id);
+		}
+
+		if (res[0]._ref === "document") {
+			return GetInfo.getDocumentDom(res[0]._id);
+		}
+		return null;
+	}
+
+	public static getAppDom() {
+		const appDom = new photoshop.app.Photoshop();
+		return appDom;
+	}
+
+	public static getLayerDom(doc:number,num:number) {
+		const layerDom = new photoshop.app.Layer(num, doc);
+		return layerDom;
+	}
+
+	public static getDocumentDom(doc: number) {
+		const docDom = new photoshop.app.Document(doc);
+		return docDom;
+	}
 }
 

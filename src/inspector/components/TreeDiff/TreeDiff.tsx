@@ -1,13 +1,51 @@
 import React, { Component } from "react";
+import {stringify} from "javascript-stringify";
+import {getItemString} from "./getItemString";
 import "./TreeDiff.less";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-import JSONDiff from "../JSONDiff/JSONDiff";
+import JSONTree from "../JSONTree";
+import { IconPin } from "../../../shared/components/icons";
 import { diff } from "jsondiffpatch";
+import { renderPath, labelRenderer } from "../shared/sharedTreeView";
+
+function stringifyAndShrink(val:any, isWideLayout=false) {
+	if (val === null) { return "null"; }
+
+	const str = stringify(val);
+	if (typeof str === "undefined") { return "undefined"; }
+
+	if (isWideLayout) return str.length > 42 ? str.substr(0, 30) + "…" + str.substr(-10) : str;
+	return str.length > 22 ? `${str.substr(0, 15)}…${str.substr(-5)}` : str;
+}
+
+const expandFirstLevel = (keyName:(string | number)[], data:any, level:number):boolean => (level <= 1);
+
+function prepareDelta(value:any) {
+	if (value && value._t === "a") {
+		const res:any = {};
+		for (const key in value) {
+			if (key !== "_t") {
+				if (key[0] === "_" && !value[key.substr(1)]) {
+					res[key.substr(1)] = value[key];
+				} else if (value["_" + key]) {
+					res[key] = [value["_" + key][0], value[key][0]];
+				} else if (!value["_" + key] && key[0] !== "_") {
+					res[key] = value[key];
+				}
+			}
+		}
+		return res;
+	}
+
+	return value;
+}
 
 export interface ITreeDiffProps{
 	left: any
 	right: any
 	path:string[]
+	//styling:any,
+	invertTheme:boolean,
+	isWideLayout: boolean,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -17,42 +55,65 @@ export interface ITreeDiffDispatch {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ITreeDiffState{
-	
+	data:any
 }
 
 export type TTreeDiff = ITreeDiffProps & ITreeDiffDispatch
 
-export class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
-
+export default class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
+	
 	constructor(props: TTreeDiff) {
 		super(props);
 
 		this.state = {
+			data: {}
 		};
+	}
+
+	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
 	}
 
 	private renderPath = () => {
 		const { path, onInspectPath } = this.props;
-		const parts: React.ReactNode[] = [
-			<span className="pathItem" key="root" onClick={() => { onInspectPath([],"replace"); }}>
-				<span className="link">root</span>
-			</span>
-		];
-		for (let i = 0, len = path.length; i < len; i++) {
-			parts.push(
-				<span className="pathItem" key={i} onClick={() => { onInspectPath(path.slice(0, i + 1),"replace"); }}>
-					<span className="link">{path[i]}</span>
-				</span>
-			);
-		}
-		return parts;
+		return renderPath(path, onInspectPath);
 	}
-	
-	public render(): React.ReactNode {
-		const { left, right, onInspectPath } = this.props;
-		const delta = diff(left, right);
+
+	public componentDidMount():void {
+		this.updateData();
+	}
+
+	public componentDidUpdate(prevProps:TTreeDiff):void {
+		if (prevProps.left !== this.props.left && prevProps.right !== this.props.right) {
+			this.updateData();
+		}
+	}
+
+	public updateData():void {
+		// this magically fixes weird React error, where it can't find a node in tree
+		// if we set `delta` as JSONTree data right away
+		// https://github.com/alexkuz/redux-devtools-inspector/issues/17
+
+		const { left,right} = this.props;
+
+		this.setState({ data: diff(left, right) });
+	}
+
+	public render():React.ReactNode {
+		const { ...props } = this.props;
+
+		const { left, right } = this.props;
+		const delta = this.state.data;
 		if (!delta && left && right) {
 			return "Content is same";
+		}
+
+		if (!this.state.data) {
+			return (
+				<div className="stateDiffEmpty">
+					(states are equal)
+				</div>
+			);
 		}
 
 		return (
@@ -61,13 +122,59 @@ export class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 					{this.renderPath()}
 				</div>
 
-				{left && right ? <JSONDiff
-					delta={delta}
-					invertTheme={false}
-					isWideLayout={false}
-					onInspectPath={onInspectPath}
-				/> : "Select 2 descriptors"}
+				{left && right ? <JSONTree {...props} // node module
+					labelRenderer={this.labelRenderer}
+					data={this.state.data}
+					getItemString={this.getItemString}
+					valueRenderer={this.valueRenderer}
+					postprocessValue={prepareDelta}
+					isCustomNode={Array.isArray as any}
+					shouldExpandNode={expandFirstLevel}
+					hideRoot={true}
+					sortObjectKeys={true}
+				/> : "Select 2 descriptors. (Hold Ctrl + click on descriptor item)"}
 			</div>
 		);
+	}
+
+	public getItemString = (type: any, data: any): JSX.Element => (
+		getItemString(type, data, this.props.isWideLayout, true)
+	)
+
+	public valueRenderer = (raw:any, value:any) => {
+		const { /*styling,*/ isWideLayout } = this.props;
+
+		function renderSpan(name:string, body:React.ReactNode) {
+			return (
+				<span key={name} /*{...styling(["diff", name])}*/ className={"diffHighlight" +" "+ name}>{body}</span>
+			);
+		}
+
+		if (Array.isArray(value)) {
+			switch (value.length) {
+				case 1:
+					return (
+						<span /*{...styling("diffWrap")}*/ className="diffWrap">
+							{renderSpan("diffAdd", stringifyAndShrink(value[0], isWideLayout))}
+						</span>
+					);
+				case 2:
+					return (
+						<span /*{...styling("diffWrap")}*/ className="diffWrap">
+							{renderSpan("diffUpdateFrom", stringifyAndShrink(value[0], isWideLayout))}
+							{renderSpan("diffUpdateArrow", " => ")}
+							{renderSpan("diffUpdateTo", stringifyAndShrink(value[1], isWideLayout))}
+						</span>
+					);
+				case 3:
+					return (
+						<span /*{...styling("diffWrap")}*/ className="diffWrap">
+							{renderSpan("diffRemove", stringifyAndShrink(value[0]))}
+						</span>
+					);
+			}
+		}
+
+		return raw;
 	}
 }

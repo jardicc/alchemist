@@ -113,6 +113,16 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
+		case "SET_INSPECTOR_PATH_DOM": {
+			state = produce(state, draft => {
+				if (action.payload.mode === "add") {
+					draft.inspector.dom.treePath = [...state.inspector.dom.treePath, ...action.payload.path];					
+				} else if (action.payload.mode === "replace") {
+					draft.inspector.dom.treePath = action.payload.path;
+				}
+			});
+			break;
+		}
 		case "IMPORT_STATE": {
 			state = produce(state, draft => {
 				console.log("empty");

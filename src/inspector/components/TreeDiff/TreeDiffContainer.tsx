@@ -1,8 +1,8 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
-import { ITreeDiffDispatch, ITreeDiffProps, TreeDiff } from "./TreeDiff";
 import { getLeftTreeDiff, getRightTreeDiff, getDiffPath } from "../../selectors/inspectorSelectors";
 import { IRootState } from "../../../shared/store";
 import { setInspectorPathDiffAction } from "../../actions/inspectorActions";
+import TreeDiff, { ITreeDiffDispatch, ITreeDiffProps } from "./TreeDiff";
 
 
 const mapStateToProps = (state: IRootState): ITreeDiffProps => {
@@ -10,6 +10,8 @@ const mapStateToProps = (state: IRootState): ITreeDiffProps => {
 		left: getLeftTreeDiff(state),
 		right: getRightTreeDiff(state),
 		path: getDiffPath(state),
+		invertTheme: false,
+		isWideLayout: true
 	};
 };
 
