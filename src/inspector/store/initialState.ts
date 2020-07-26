@@ -536,6 +536,9 @@ export function getInitialState(): IInspectorState {
 				viewType: "tree",
 				treePath: [],
 			},
+			dom: {
+				treePath: []
+			},
 			info: {
 				showOptionalDocumentReference: true,
 			}

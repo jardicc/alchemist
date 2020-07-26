@@ -4,13 +4,12 @@ import {JSONArrow} from "./JSONArrow";
 import getCollectionEntries from "./getCollectionEntries";
 import JSONNode from "./JSONNode";
 import ItemRange from "./ItemRange";
-import { TProtoMode } from "../../model/types";
 
 /**
  * Renders nested values (eg. objects, arrays, lists, etc.)
  */
 
-function renderChildNodes(props:any,protoMode:TProtoMode, from?:any, to?:any) {
+function renderChildNodes(props:any, from?:number, to?:number) {
 	const {
 		nodeType,
 		data,
@@ -18,7 +17,8 @@ function renderChildNodes(props:any,protoMode:TProtoMode, from?:any, to?:any) {
 		circularCache,
 		keyPath,
 		postprocessValue,
-		sortObjectKeys
+		sortObjectKeys,
+		protoMode
 	} = props;
 	const childNodes:any = [];
 
@@ -149,7 +149,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		const { expanded } = this.state;
 		const renderedChildren =
 			expanded || (hideRoot && this.props.level === 0)
-				? renderChildNodes({ ...this.props, level: this.props.level + 1 },protoMode)
+				? renderChildNodes({ ...this.props, level: this.props.level + 1 })
 				: null;
 
 		const itemType = (

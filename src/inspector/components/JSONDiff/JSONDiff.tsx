@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import JSONTree from "react-json-tree";
 import {stringify} from "javascript-stringify";
 import {getItemString} from "./getItemString";
-import getJsonTreeTheme from "./getJsonTreeTheme";
 import "./JSONDiff.less";
+import JSONTree from "../JSONTree";
+import { IconPin } from "../../../shared/components/icons";
 
 function stringifyAndShrink(val:any, isWideLayout=false) {
 	if (val === null) { return "null"; }
@@ -40,7 +40,6 @@ function prepareDelta(value:any) {
 export interface IJSONDiffProps{
 	delta:any,
 	//styling:any,
-	base16Theme:any,
 	invertTheme:boolean,
 	isWideLayout: boolean,
 }
@@ -75,17 +74,22 @@ export default class JSONDiff extends Component<TJSONDiff, IJSONDiffState> {
 
 	
 	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
-		console.log(key,nodeType, expandable);
+		
+		let noPin = false;
+		if (typeof key === "string") {			
+			noPin = key.startsWith("$$$noPin_");
+			key = key.replace("$$$noPin_", "");
+		}
 		return (
 			<span>
-				<span className="treeItemKey">
+				<span className={"treeItemKey" + (expandable?" expandable":"")}>
 					{key}
 				</span>
-				{!expandable ? null : <span
+				{(noPin) ? null : <span
 					className="treeItemPin"
 					onClick={() => this.inspectPath([key, ...rest])}
 				>
-					{"(pin)"}
+					<IconPin />
 				</span>}
 				{!expanded && ": "}
 			</span>
@@ -111,7 +115,7 @@ export default class JSONDiff extends Component<TJSONDiff, IJSONDiffState> {
 	}
 
 	public render():React.ReactNode {
-		const {/* styling, */base16Theme, ...props } = this.props;
+		const { ...props } = this.props;
 
 		if (!this.state.data) {
 			return (
@@ -125,7 +129,6 @@ export default class JSONDiff extends Component<TJSONDiff, IJSONDiffState> {
 			<div className="JSONDiff">				
 				<JSONTree {...props} // node module
 					labelRenderer={this.labelRenderer}
-					theme={getJsonTreeTheme(base16Theme)}
 					data={this.state.data}
 					getItemString={this.getItemString}
 					valueRenderer={this.valueRenderer}
@@ -133,6 +136,7 @@ export default class JSONDiff extends Component<TJSONDiff, IJSONDiffState> {
 					isCustomNode={Array.isArray as any}
 					shouldExpandNode={expandFirstLevel}
 					hideRoot={true}
+					sortObjectKeys={true}
 				/>
 			</div>
 		);

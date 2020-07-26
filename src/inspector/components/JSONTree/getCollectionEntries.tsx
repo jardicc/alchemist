@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TProtoMode } from "../../model/types";
+import { TNodeType, TSortObjectKeys } from "./types";
 
-function getLength(type:any, collection:any) {
+function getLength(type:TNodeType, collection:any) {
 	if (type === "Object") {
 		return Object.keys(collection).length;
 	} else if (type === "Array") {
@@ -22,17 +24,17 @@ function addMoreKeys(protoMode: TProtoMode, collection: any): string[] {
 	if (protoMode === "advanced") {
 		keys = keys.filter(k => !(k.startsWith("__") && k.endsWith("__")));
 	} else if (protoMode === "uxp") {
-		const obj = new Object();
-		const defaultKeys = Object.getOwnPropertyNames((obj as any).__proto__);
-		keys = keys.filter(k => !defaultKeys.includes(k));
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const obj:any = new Object();
+		const defaultKeys = Object.getOwnPropertyNames(obj.__proto__);
+		keys = keys.filter(k => !defaultKeys.includes(k));	
 	}
 
 	return keys;
 }
 
-function getEntries(protoMode: TProtoMode = "none", type: any, collection: any, sortObjectKeys: any, from = 0, to = Infinity) {
+function getEntries(protoMode: TProtoMode = "none", type: TNodeType, collection: any, sortObjectKeys: TSortObjectKeys, from = 0, to = Infinity) {
 	let res;
-
 	if (type === "Object") {
 		let keys:string[] = Object.getOwnPropertyNames(collection);
 
@@ -98,7 +100,7 @@ function getEntries(protoMode: TProtoMode = "none", type: any, collection: any, 
 	return res;
 }
 
-function getRanges(from:any, to:any, limit:any) {
+function getRanges(from:number, to:number, limit:number) {
 	const ranges = [];
 	while (to - from > limit * limit) {
 		limit = limit * limit;
@@ -112,20 +114,17 @@ function getRanges(from:any, to:any, limit:any) {
 
 export default function getCollectionEntries(
 	protoMode:TProtoMode,
-	type:any,
+	type:TNodeType,
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 	collection:any,
-	sortObjectKeys: any,
-	limit:any,
+	sortObjectKeys: TSortObjectKeys,
+	limit:number,
 	from = 0,
 	to = Infinity,
-) {
-	const getEntriesBound = getEntries.bind(
-		null,
-		protoMode,
-		type,
-		collection,
-		sortObjectKeys
-	);
+):JSX.Element[] {
+	const getEntriesBound = (from?:number,to?:number) => {
+		return getEntries(protoMode, type, collection, sortObjectKeys, from, to);
+	};
 
 	if (!limit) {
 		return getEntriesBound().entries;

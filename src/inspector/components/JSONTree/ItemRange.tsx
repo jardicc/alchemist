@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {JSONArrow} from "./JSONArrow";
+import { IItemRange, IItemState } from "./types";
 
-export default class ItemRange extends React.Component<any,any> {
+export default class ItemRange extends React.Component<IItemRange,IItemState> {
 	static propTypes = {
 		from: PropTypes.number.isRequired,
 		to: PropTypes.number.isRequired,
@@ -10,15 +11,15 @@ export default class ItemRange extends React.Component<any,any> {
 		nodeType: PropTypes.string.isRequired
 	};
 
-	constructor(props:any) {
+	constructor(props:IItemRange) {
 		super(props);
-		this.state = { expanded: false } as any;
+		this.state = { expanded: false };
 
 		this.handleClick = this.handleClick.bind(this);
 	}
 
-	render() {
-		const { from, to, renderChildNodes, nodeType }:any = this.props;
+	render():JSX.Element {
+		const { from, to, renderChildNodes, nodeType } = this.props;		
 
 		return this.state.expanded ? (
 			renderChildNodes(this.props, from, to)
@@ -38,7 +39,7 @@ export default class ItemRange extends React.Component<any,any> {
 		);
 	}
 
-	handleClick() {
+	handleClick=():void => {
 		this.setState({ expanded: !this.state.expanded });
 	}
 }

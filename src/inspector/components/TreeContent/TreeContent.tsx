@@ -99,7 +99,6 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 						labelRenderer={this.labelRenderer}
 						data={content}
 						getItemString={this.getItemString} // shows object content shortcut
-						invertTheme={false}
 						hideRoot={true}
 						sortObjectKeys={true}
 						protoMode={protoMode}

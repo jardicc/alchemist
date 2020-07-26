@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // ES6 + inline style port of JSONViewer https://bitbucket.org/davevedder/react-json-viewer/
 // all credits and original code to the author
 // Dave Vedder <veddermatic@gmail.com> http://www.eskimospy.com/
@@ -7,54 +9,31 @@ import React from "react";
 import PropTypes from "prop-types";
 import JSONNode from "./JSONNode";
 import "./JSONTree.less";
+import { IDefSettings, TShouldExpandNode, TGetItemString, TValueRenderer, TLabelRenderer, TIsCustomNode } from "./types";
 
-const identity = (displayValue: string | number, rawValue: string | number | boolean | null, nodeType:string, ...keyPath: (string | number)[]): React.ReactNode => {
+const identity:TValueRenderer = (displayValue, rawValue, nodeType, ...keyPath) => {
 	if (nodeType === "Function") { return "fn()"; }
 	return displayValue;
 };
-const expandRootNode = (keyName:any, data:any, level:any) => (level <= 0);
-const defaultItemString = (type:any, data:any, itemType:any, itemString:any) => (
+const expandRootNode:TShouldExpandNode = (keyName, data, level) => (level <= 0);
+const defaultItemString:TGetItemString = (type, data, itemType, itemString) => (
 	<span>
 		{itemType} {itemString}
 	</span>
 );
-const defaultLabelRenderer = ([label]:any) => <span>{label}:</span>;
-const noCustomNode = () => false;
-
-type TNonNullish = Record<string, unknown>;
-
-export interface IJSONTreeProps{
-	data: [any] |TNonNullish;
-	hideRoot?: boolean;
-	theme?: TNonNullish | string;
-	invertTheme?: boolean;
-	keyPath?: [string | number];
-}
-
-export interface IJSONTreeDispatch {
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	sortObjectKeys?: Function | boolean;
-	shouldExpandNode?: (keyPath: (string | number)[], data: [any] | TNonNullish, level: number) => boolean;
-	getItemString?: (type: string, data: [any] | TNonNullish, itemType: string, itemString: string) => JSX.Element;
-	labelRenderer?: (keyPath: string[], nodeType?: string, expanded?: boolean, expandable?: boolean) => JSX.Element;
-	valueRenderer?: (displayValue: string|number, rawValue: string|number|boolean|null, nodeType:string, ...keyPath: (string|number)[]) => JSX.Element;
-	postprocessValue?: (raw: string) => JSX.Element;
-	isCustomNode?: () => boolean;
-}
+const defaultLabelRenderer:TLabelRenderer = ([label]) => <span>{label}:</span>;
+const noCustomNode:TIsCustomNode = () => false;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ITreeContentState{
 	
 }
 
-export type TJSONTree = IJSONTreeProps & IJSONTreeDispatch
-
-export default class JSONTree extends React.Component<TJSONTree,ITreeContentState> {
+export default class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
 	static propTypes = {
 		data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 		hideRoot: PropTypes.bool,
 		theme: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-		invertTheme: PropTypes.bool,
 		keyPath: PropTypes.arrayOf(
 			PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 		),
@@ -73,28 +52,26 @@ export default class JSONTree extends React.Component<TJSONTree,ITreeContentStat
 		postprocessValue: identity,
 		isCustomNode: noCustomNode,
 		collectionLimit: 50,
-		invertTheme: true,
 		protoMode: "none"
 	};
 
-	constructor(props:any) {
+	constructor(props:IDefSettings) {
 		super(props);
 	}
 
-	shouldComponentUpdate(nextProps: any) {
+	public shouldComponentUpdate(nextProps: IDefSettings):boolean {
 		// consider to optimize
 		return true;
 	}
 
-	render() {
+	public render():JSX.Element {
 		const {
 			data: value,
 			keyPath,
 			postprocessValue,
 			hideRoot,
-			invertTheme: _, // eslint-disable-line no-unused-vars
 			...rest
-		}: any = this.props;
+		} = this.props;
 		
 
 		return (
@@ -102,7 +79,8 @@ export default class JSONTree extends React.Component<TJSONTree,ITreeContentStat
 				<JSONNode
 					{...{ postprocessValue, hideRoot, ...rest }}
 					keyPath={hideRoot ? [] : keyPath}
-					value={postprocessValue(value)}					
+					value={postprocessValue(value)}
+					data={value}
 				/>
 			</ul>
 		);

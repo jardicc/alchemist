@@ -4,6 +4,9 @@
 Inspector only
 - improves: shows names in descriptor titles
 - improves: content tree view can pin primite values
+- improves: tree view was forked and customized
+- improves: tree view has now mode allowing to show prototyped properties
+- feature: adds DOM tab to inspect PS DOM
 
 
 ## 0.17.0

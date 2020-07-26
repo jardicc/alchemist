@@ -5,6 +5,7 @@ import JSONObjectNode from "./JSONObjectNode";
 import JSONArrayNode from "./JSONArrayNode";
 import JSONIterableNode from "./JSONIterableNode";
 import JSONValueNode from "./JSONValueNode";
+import { IDefSettings, ISimpleNodeProps, INestedNodeProps, TCircularCache } from "./types";
 
 const JSONNode = ({
 	getItemString,
@@ -15,10 +16,11 @@ const JSONNode = ({
 	isCustomNode,
 	protoMode,
 	...rest
-}: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}: IDefSettings&{value:any}&{circularCache?:TCircularCache}&{isCircular?:boolean}):JSX.Element => {
 	const nodeType = isCustomNode(value) ? "Custom" : objType(value);
 
-	const simpleNodeProps = {
+	const simpleNodeProps:ISimpleNodeProps = {
 		getItemString,
 		key: keyPath[0],
 		keyPath,
@@ -28,7 +30,7 @@ const JSONNode = ({
 		valueRenderer
 	};
 
-	const nestedNodeProps = {
+	const nestedNodeProps:INestedNodeProps = {
 		...rest,
 		...simpleNodeProps,
 		data: value,
@@ -86,7 +88,7 @@ const JSONNode = ({
 			return <JSONValueNode {...simpleNodeProps} />;
 		default:
 			return (
-				<JSONValueNode {...simpleNodeProps} valueGetter={raw => `<${nodeType}>`} />
+				<JSONValueNode {...simpleNodeProps} valueGetter={() => `<${nodeType}>`} />
 			);
 	}
 };

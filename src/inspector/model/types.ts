@@ -139,10 +139,15 @@ export interface IPropertyItem {
 }
 
 export interface IInspector{
-	activeTab:TActiveInspectorTab,
+	activeTab: TActiveInspectorTab,
+	dom: IDOM
 	content: IContent
 	difference: IDifference
 	info: IReference
+}
+
+export interface IDOM{
+	treePath:string[]
 }
 
 export interface IContent{
