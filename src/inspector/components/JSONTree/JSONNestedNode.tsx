@@ -133,6 +133,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 	}
 
 	render() {
+		console.log("STATE",this.state);
 		const {
 			getItemString,
 			nodeTypeIndicator,
@@ -147,6 +148,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 			protoMode,
 		}: any = this.props;
 		const { expanded } = this.state;
+		console.log("STATE",this.state);
 		const renderedChildren =
 			expanded || (hideRoot && this.props.level === 0)
 				? renderChildNodes({ ...this.props, level: this.props.level + 1 })

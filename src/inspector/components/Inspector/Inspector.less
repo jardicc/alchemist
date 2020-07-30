@@ -9,6 +9,30 @@
 	flex-shrink: 0;
 	background: var(--bg);
 
+	.Raw{
+		position: relative;
+	}
+
+	.Tree{
+		position: relative;
+		overflow: visible;
+
+		.TreeContent{
+			overflow: scroll !important;
+		}
+	}
+
+	.gutter{
+		background: var(--divider);
+		border: 1px solid var(--divider);
+		cursor: ew-resize;
+
+		&:hover{
+			border: 1px solid var(--divider);
+			background: var(--hover);
+		}
+	}
+
 	.code{
 		color:var(--text);
 		font-size: 11px;
@@ -23,14 +47,23 @@
 		display: flex;
 		flex-grow: 1;
 		position: relative;
+
+		>div{
+			display: flex;
+			position: absolute;
+			top:0;
+			bottom: 0;
+			right: 0;
+			left: 0;
+		}
 	}
 	
 	.descriptorsColumns > .TabList{
-		left: 200px;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		position: absolute;
+		//left: 200px;
+		//top: 0;
+		//right: 0;
+		//bottom: 0;
+		//position: absolute;
 	}
 	
 	> .TabList{
@@ -38,11 +71,13 @@
 	}
 
 	.tabsDescriptor{
+		/*
 		position: absolute;
 		top:0;
 		bottom: 0;
 		right: 0;
 		left: 0;
+		*/
 
 		> .tabContent{
 			position: relative;
@@ -58,7 +93,7 @@
 					display: flex;
 					flex-direction: column;
 					flex-grow: 1;
-					overflow: scroll;
+					//overflow: scroll;
 				}
 			}
 		}

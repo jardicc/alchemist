@@ -8,8 +8,9 @@ import { TActiveSection, TActiveInspectorTab, IDescriptor } from "../../model/ty
 import { FooterContainer } from "../Footer/FooterContainer";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
-import { TreeContent } from "../TreeContent/TreeContent";
-import photoshop from "photoshop";
+//import Split from 'react-split'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Split = require("react-split").default;
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
 
@@ -57,64 +58,63 @@ export class Inspector extends React.Component<TInspector, IState> {
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
 					<TabPanel id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
-							<LeftColumnContainer />
-							<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
-								<TabPanel id="content" title="Content" >
-									<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
-										<TabPanel id="Tree" title="Tree" >
-											<div className="diff">
+							<Split
+								sizes={[25, 75]}
+								gutterSize={3}
+							>
+								<LeftColumnContainer />
+								<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
+									<TabPanel id="content" title="Content" >
+										<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
+											<TabPanel id="Tree" title="Tree" >
 												<TreeContentContainer />
-											</div>
-										</TabPanel>
-										<TabPanel id="Raw" title="Raw" >
-											<textarea
-												className="rawCode"
-												defaultValue={this.props.descriptorContent}
-											/>
-										</TabPanel>
-									</TabList>
-								</TabPanel>
-								<TabPanel id="difference" title="Difference" >
-									<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
-										<TabPanel id="Tree" title="Tree" >
-											<div className="diff">
+											</TabPanel>
+											<TabPanel id="Raw" title="Raw" >
+												<textarea
+													className="rawCode"
+													defaultValue={this.props.descriptorContent}
+												/>
+											</TabPanel>
+										</TabList>
+									</TabPanel>
+									<TabPanel id="difference" title="Difference" >
+										<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
+											<TabPanel id="Tree" title="Tree" >
 												<TreeDiffContainer />
-											</div>
-										</TabPanel>
-										<TabPanel id="Raw" title="Raw" >
-											<div className="diff">
+											</TabPanel>
+											<TabPanel id="Raw" title="Raw" >
 												<VisualDiffTab
 													left={this.props.selectedDescriptors[0]?.originalData}
 													right={this.props.selectedDescriptors[1]?.originalData}
 												/>
-											</div>
-										</TabPanel>
-									</TabList>
-								</TabPanel>
-								<TabPanel id="dom" title="DOM (live)" >
-									<TreeDomContainer />
-								</TabPanel>
-								<TabPanel id="reference" title="Info" >
-									<div className="info code">
-										<div className="noShrink">
-											Reference:
-											<textarea
-												className="infoBlock"
-												defaultValue={
-													this.props.originalReference
-												}
-											/>
+											</TabPanel>
+										</TabList>
+									</TabPanel>
+									<TabPanel id="dom" title="DOM (live)" >
+										<TreeDomContainer />
+									</TabPanel>
+									<TabPanel id="reference" title="Info" >
+										<div className="info code">
+											<div className="noShrink">
+												Reference:
+												<textarea
+													className="infoBlock"
+													defaultValue={
+														this.props.originalReference
+													}
+												/>
 											Filter:
-											<textarea
-												className="infoBlock"
-												defaultValue={
-													this.props.calculatedReference
-												}
-											/>
+												<textarea
+													className="infoBlock"
+													defaultValue={
+														this.props.calculatedReference
+													}
+												/>
+											</div>
 										</div>
-									</div>
-								</TabPanel>
-							</TabList>
+									</TabPanel>
+								</TabList>
+							</Split>
 						</div>
 					</TabPanel>
 					<TabPanel id="settings" title="Settings">

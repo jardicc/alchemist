@@ -1,4 +1,23 @@
 .TreeDom{
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	
+	.path{
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
+	.JSONTree{
+		flex-grow: 1;
+		flex-shrink: 0;
+	}
+
 	.pathItem{
 
 		.link{

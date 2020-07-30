@@ -73,6 +73,7 @@ export default class JSONTree extends React.Component<IDefSettings,ITreeContentS
 			...rest
 		} = this.props;
 		
+		console.log("STATE",this.state);
 
 		return (
 			<ul className="JSONTree">
