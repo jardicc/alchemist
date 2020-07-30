@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.19.0
+Inspector only
+- improves: divider between left and right column is now resizable
+- fix: all data views are now stretched at the height and scrollable
+- known issue: dropdown has fixed width. I am waiting for Adobe to fix UXP
+- known issue: DOM view can sometimes cause plugin crash
+- known issue: textarea has no scrollbar. I am waiting for Adobe to fix UXP
+
 ## 0.18.0
 Inspector only
 - improves: shows names in descriptor titles
