@@ -18,8 +18,13 @@
 	  "strictFunctionTypes": false,
 	  "alwaysStrict": true,
 	  "disableSizeLimit": false,
-	  "strictPropertyInitialization": true
+	  "strictPropertyInitialization": true,
+	  "typeRoots": [
+		"./src/inspector/model",
+		"./node_modules/@types"
+	  ]
     },
+
     "exclude": [
         "node_modules"
     ]
