@@ -223,13 +223,28 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					return sub;
 				}
 
+				function isCyclical(tPath: (string | number)[], toTest: any): boolean{
+					let sub = data;
+					tPath = [...tPath, ...path];
+					tPath = tPath.reverse();
+					tPath.splice(tPath.length-1, 1);
+					console.log(tPath);
+					for (const part of tPath) {
+						sub = (sub)?.[part];
+						if (sub === toTest) {
+							return true;
+						}
+					}
+					return false;
+				}
+
 				function generatePaths(d: any): (string | number)[][]{
 					const paths: (string | number)[][] = [];
 					traverse(d);
 					return paths;
 					
 					function traverse(d: any, tPath: (string | number)[] = []): void{
-						if (d && typeof d === "object") {
+						if (d && typeof d === "object" && !isCyclical(tPath,d)) {
 							paths.push(tPath);
 							const keys = Object.keys(d);
 							if (type === "dom") {
