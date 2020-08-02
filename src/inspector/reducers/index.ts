@@ -74,6 +74,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		case "CLEAR": {
 			state = produce(state, draft => {
 				draft.descriptors = draft.descriptors.filter(d => d.locked) || [];
+				draft.inspector = getInitialState().inspector;
 			});
 			break;
 		}
