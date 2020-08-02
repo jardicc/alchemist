@@ -211,6 +211,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				const { expand, path, recursive, type } = action.payload;
 				let { data } = action.payload;
 
+				// gets port of the tree data where you clicked
 				function getDataPart(d: any, tPath:TPath|undefined): any {
 					if (!tPath) {
 						return d;
@@ -222,10 +223,11 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					return sub;
 				}
 
+				// prevents callstack exceeded error
 				function isCyclical(tPath: TPath, toTest: any): boolean{
 					let sub = data;
-					tPath = [...tPath, ...path];
-					tPath.splice(tPath.length-1, 1);
+					tPath = [...path,...tPath];
+					tPath.splice(tPath.length - 1, 1);
 					for (const part of tPath) {
 						sub = (sub)?.[part];
 						if (sub === toTest) {
@@ -235,14 +237,16 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					return false;
 				}
 
+				// generates paths for all expandable item in passed object
 				function generatePaths(d: any): TPath[]{
 					const paths: TPath[] = [];
 					traverse(d);
 					return paths;
 					
+					// recursion
 					function traverse(d: any, tPath: TPath = []): void{
 						if (d && typeof d === "object" && !isCyclical(tPath,d)) {
-							paths.push(tPath);
+							paths.push([...path, ...tPath]);
 							const keys = Object.keys(d);
 							if (type === "dom") {
 								keys.push(...addMoreKeys("uxp", d));
@@ -276,7 +280,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					});
 					if (expand && !found) {
 						if (recursive) {
-							const parts = generatePaths(getDataPart(data,path)).map(p=>([...path,...p]));
+							const parts = generatePaths(getDataPart(data, path));//.map(p=>([...path,...p]));
 							draftPart.expandedTree.push(...parts);
 						} else {
 							draftPart.expandedTree.push(path);									
@@ -284,7 +288,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 						
 					} else if ((found || recursive) && index !== null) {
 						if (recursive) {
-							const parts = generatePaths(getDataPart(data,path)).map(p => ([...path,...p,]));
+							const parts = generatePaths(getDataPart(data, path));//.map(p => ([...path,...p,]));
 							for (const part of parts) {
 								let index: number | null = null;
 								const partStr = part.join("-");

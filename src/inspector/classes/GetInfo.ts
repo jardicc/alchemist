@@ -1,8 +1,10 @@
-
 import photoshop from "photoshop";
 import { cloneDeep } from "lodash";
 import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
 import { Descriptor } from "photoshop/dist/types/UXP";
+import { DocumentExtra } from "./DocumentExtra";
+import type Document from "photoshop/dist/dom/Document";
+const PS = photoshop.app;
 
 
 export interface ITargetReferenceAM {
@@ -21,11 +23,16 @@ export interface ITargetReferenceAM {
 	"includeAncestors"?: boolean,
 }
 
-export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference
+export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference|IndexReference
 
 export interface IDReference{
 	"_ref": string,
 	"_id": number
+}
+
+export interface IndexReference{
+	"_ref": string,
+	"_index": number
 }
 
 export interface INameReference{
@@ -45,7 +52,7 @@ export interface IEnumReference{
 
 export class GetInfo {
 	
-	public static async getAM(originalRef: ITargetReference|null): Promise<IDescriptor | null> {
+	public static async getAM(originalRef: ITargetReference | null): Promise<IDescriptor | null> {
 		if (!originalRef) { return null;}
 		const t = cloneDeep(originalRef);
 		if (t.type === "generator") {
@@ -80,7 +87,7 @@ export class GetInfo {
 			if (t.type !== "history" && t.type !== "snapshot") {
 				rootT.push({
 					"_ref": "document",
-					"_id": doc.content.value === "active" ? activeID : doc.content.value as number
+					"_id": doc.content.value === "active" ? activeID : parseInt(doc.content.value as string)
 				});
 			}
 		}
@@ -95,7 +102,7 @@ export class GetInfo {
 			) {
 				rootT.push({
 					"_ref": "layer",
-					"_id": layer?.content.value === "active" ? activeID : layer?.content.value as number
+					"_id": layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string)
 				});
 			}
 		}
@@ -103,24 +110,25 @@ export class GetInfo {
 		switch (t.type) {
 			case "action": {
 
-				if (command?.content.value !== null) {
+				if (actionset?.content?.value) {
 					rootT.push({
-						"_ref": "command",
-						"_name": command?.content.value as string
+						"_ref": "actionSet",
+						"_index": parseInt(actionset.content.value) // TODO get index based on ID
 					});
 				}
-				if (action?.content.value !== null) {
+				if (action?.content?.value) {
 					rootT.push({
 						"_ref": "action",
-						"_name": action?.content.value as string
+						"_id": parseInt(action.content.value)
 					});
 				}
-				if (actionset?.content.value !== null) {
+				if (command?.content?.value) {
 					rootT.push({
-						"_ref": "actionset",
-						"_name": actionset?.content.value as string
+						"_ref": "command",
+						"_id": parseInt(command.content.value)
 					});
 				}
+
 				break;
 			}
 			case "application": {
@@ -134,12 +142,13 @@ export class GetInfo {
 			case "channel": {
 				const activeID = await this.getActiveChannelID();
 				if (activeID === null) { return null; }
+				if (!channel?.content?.value) { return null;}
 
-				if (channel?.content.value === "active") {
+				if (channel.content.value === "active") {
 					if (typeof activeID === "number") {
 						rootT.push({
 							"_ref": "channel",
-							"_id": activeID
+							"_index": activeID
 						});						
 					} else {
 						rootT.push({
@@ -148,16 +157,25 @@ export class GetInfo {
 							_value: activeID
 						});
 					}
-				} else if (typeof channel?.content.value === "number") {
+				} else if (Number.isInteger(parseInt(channel.content.value))) {
+					let docInstance: DocumentExtra;
+					if (!doc?.content) { return null;}
+					if (doc.content.value === "active") {
+						docInstance = new DocumentExtra(PS.activeDocument);
+					} else {
+						docInstance = new DocumentExtra(new PS.Document(parseInt(doc.content.value as string)));
+					}
+					const found = docInstance.userChannelIDsAndNames.find(item => item.value.toString() === channel.content.value);
+					if (!found) { return null;}
 					rootT.push({
 						"_ref": "channel",
-						"_id": channel?.content.value
+						"_index": found.index
 					});	
-				} else if (typeof channel?.content.value === "string") {
+				} else if (typeof channel.content.value === "string") {
 					rootT.push({
 						_enum: "channel",
 						_ref: "channel",
-						_value: channel?.content.value
+						_value: channel.content.value
 					});
 				}
 				break;
@@ -177,10 +195,10 @@ export class GetInfo {
 						"_property": "workPath",
 						"_ref": "path"
 					});
-				} else if (typeof path?.content.value === "number" || path?.content.value === "active") {
+				} else if (typeof path?.content.value === "string") {
 					rootT.push({
 						"_ref": "path",
-						"_id": path?.content.value === "active" ? activeID : path?.content.value
+						"_id": path?.content.value === "active" ? activeID : parseInt(path?.content.value as string)
 					});
 				}
 				break;
@@ -190,7 +208,7 @@ export class GetInfo {
 				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "historyState",
-					"_id": history?.content.value === "active" ? activeID : history?.content.value as number
+					"_id": history?.content.value === "active" ? activeID : parseInt(history?.content.value as string)
 				});
 				break;
 			}
@@ -199,7 +217,7 @@ export class GetInfo {
 				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "snapshotClass",
-					"_id": snapshot?.content.value === "active" ? activeID : snapshot?.content.value as number
+					"_id": snapshot?.content.value === "active" ? activeID : parseInt(snapshot?.content.value as string)
 				});
 				break;
 			}
@@ -277,9 +295,9 @@ export class GetInfo {
 
 	public static async getActiveChannelID(): Promise<number | null | TChannelReferenceValid> {
 		
-		const resultID = await this.getProperty("ID", "channel");
-		if ("ID" in resultID) {
-			return resultID.ID as number;
+		const resultItemIndex = await this.getProperty("itemIndex", "channel");
+		if ("itemIndex" in resultItemIndex) {
+			return resultItemIndex.itemIndex as number;
 		}
 
 		const itemIndex = (await this.getProperty("itemIndex", "channel")).itemIndex;

@@ -7,6 +7,7 @@ import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath,
 import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, TFilterContent } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { IconLockLocked, IconPin, IconTrash } from "../../../shared/components/icons";
+import { GetList } from "../../classes/GetList";
 
 export interface IProperty<T>{
 	label: string
@@ -89,7 +90,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionSet } = this.props;
-		const list = [...baseItemsActionCommon];
+		const list = [...baseItemsActionCommon, ...GetList.getActionSets()];
 
 		
 		return this.buildFilterRow("Action set:","actionset", list, activeReferenceActionSet);
@@ -99,8 +100,8 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionItem, activeReferenceActionSet } = this.props;
-		if (activeReferenceActionSet === null) { return; }
-		const list = [...baseItemsActionCommon];
+		if (activeReferenceActionSet === null || activeReferenceActionSet?.value===null) { return; }
+		const list = [...baseItemsActionCommon, ...GetList.getActionItem(parseInt(activeReferenceActionSet.value))];
 
 		return this.buildFilterRow("Action:","action", list, activeReferenceActionItem);
 	}
@@ -109,9 +110,10 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet } = this.props;
+		if (!activeReferenceActionItem?.value) { return; }
 		if (activeReferenceActionSet === null) { return; }
 		if (activeReferenceActionItem === null) { return; }
-		const list = [...baseItemsActionCommon];
+		const list = [...baseItemsActionCommon,...GetList.getActionCommand(parseInt(activeReferenceActionItem.value))];
 
 		return this.buildFilterRow("Command:","command", list, activeReferenceCommand);
 	}
@@ -204,18 +206,18 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide);
 	}
 	private renderChannel = (): React.ReactNode => {
-		const { selectedTargetReference } = this.props;
+		const { selectedTargetReference,activeTargetReferenceDocument } = this.props;
 		if (selectedTargetReference !== "channel") { return; }
-		const list = [...baseItemsChannel];
+		const list = [...baseItemsChannel,...GetList.getChannels(activeTargetReferenceDocument)];
 
 		const { activeReferenceChannel } = this.props;
 		return this.buildFilterRow("Channel:","channel", list, activeReferenceChannel);
 	}
 
 	private renderPath = (): React.ReactNode => {
-		const { selectedTargetReference } = this.props;
+		const { selectedTargetReference,activeTargetReferenceDocument } = this.props;
 		if (selectedTargetReference !== "path") { return; }
-		const list = [...baseItemsPath];
+		const list = [...baseItemsPath,...GetList.getPaths(activeTargetReferenceDocument)];
 
 		const { activeReferencePath } = this.props;
 
@@ -234,14 +236,14 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 				return;
 		}
 
-		const list = [...baseItemsDocument];
+		const list = [...baseItemsDocument,...GetList.getDocuments()];
 
 		const { activeTargetReferenceDocument } = this.props;
 		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
 	}
 
 	private renderLayer = (): React.ReactNode => {
-		const { activeReferenceChannel, activeReferencePath } = this.props;
+		const { activeReferenceChannel, activeReferencePath, activeTargetReferenceDocument } = this.props;
 		const { selectedTargetReference } = this.props;
 		
 		if ((selectedTargetReference === "layer" || selectedTargetReference === "channel" || selectedTargetReference === "path") === false) {
@@ -256,7 +258,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			return;
 		}
 
-		const list = [...baseItemsLayer];
+		const list = [...baseItemsLayer,...GetList.getLayers(activeTargetReferenceDocument)];
 		
 		const { activeTargetLayerReference } = this.props;
 

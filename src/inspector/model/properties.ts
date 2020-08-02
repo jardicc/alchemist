@@ -77,6 +77,5 @@ export const baseItemsGuide:IProperty<TGuideReference>[] = [
 ];	
 export const baseItemsActionCommon:(IProperty<TActionSet>|IProperty<TActionItem>|IProperty<TActionCommand>)[] = [
 	{ label: "(undefined)", value: null },
-	{ label: "fake", value: "fake" },
 ];	
 
