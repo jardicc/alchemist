@@ -212,7 +212,9 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 
 	handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>):void => {
 		if (this.props.expandable) {
-			this.props.expandClicked(this.props.keyPath,!this.expanded, e.altKey);
+			let path = [...this.props.keyPath];
+			path = path.reverse();
+			this.props.expandClicked(path,!this.expanded, e.altKey);
 		}
 	};
 }

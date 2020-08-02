@@ -13,6 +13,7 @@ export type TActiveSection = "descriptors" | "settings";
 
 //export type TActiveTargetReference = null|Record<string, unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
 
+export type TPath = (number | string)[];
 export type TCustomDescriptorReference = "notSpecified" | "anySpecified";
 export type TBaseProperty = "notSpecified" | "anySpecified";
 export type TCategoryReference = "notSpecified" | "anySpecified";
@@ -149,19 +150,19 @@ export interface IInspector{
 
 export interface IDOM{
 	treePath: string[]
-	expandedTree:(string|number)[][]
+	expandedTree:TPath[]
 }
 
 export interface IContent{
 	viewType: TViewType
 	treePath: string[]
-	expandedTree:(string|number)[][]
+	expandedTree:TPath[]
 }
 
 export interface IDifference{
 	viewType: TViewType
 	treePath: string[]
-	expandedTree:(string|number)[][]
+	expandedTree:TPath[]
 }
 
 export interface IReference {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./TreeDom.less";
 import { getItemString } from "../TreeDiff/getItemString";
 import JSONTree from "./../JSONTree";
-import { TProtoMode } from "../../model/types";
+import { TProtoMode, TPath } from "../../model/types";
 import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { TReference, GetInfo } from "../../classes/GetInfo";
 import { cloneDeep } from "lodash";
@@ -12,16 +12,16 @@ export interface ITreeDomProps{
 		ref: TReference[]|null
 		path: string[]
 	}*/
-	path:(string|number)[]
+	path:TPath
 	content: any
-	expandedKeys: (string|number)[][]
+	expandedKeys: TPath[]
 	protoMode:TProtoMode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreeDomDispatch {
 	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: (string | number)[], expand: boolean, recursive: boolean, data:any)=>void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data:any)=>void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -53,7 +53,7 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 		return getItemString(type, data, true, false);
 	}
 
-	private expandClicked = (keyPath: (string | number)[], expanded: boolean, recursive:boolean) => {
+	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
 	}
 	

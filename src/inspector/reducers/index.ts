@@ -2,13 +2,13 @@
 import produce from "immer";
 import { getInitialState } from "../store/initialState";
 import { TActions } from "../actions/inspectorActions";
-import { IInspectorState, IContent, IDifference, IReference, IDOM } from "../model/types";
+import { IInspectorState, IContent, IDifference, IReference, IDOM, TPath } from "../model/types";
 import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
 import { getTreeDomInstance } from "../selectors/inspectorSelectors";
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
-	console.log(JSON.stringify(action, null, "\t"));
+	//console.log(JSON.stringify(action, null, "\t"));
 	switch (action.type) {
 		case "SET_MAIN_TAB": {
 			state = produce(state, draft => {
@@ -211,24 +211,21 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				const { expand, path, recursive, type } = action.payload;
 				let { data } = action.payload;
 
-				function getDataPart(d: any, tPath:(string | number)[]|undefined): any {
+				function getDataPart(d: any, tPath:TPath|undefined): any {
 					if (!tPath) {
 						return d;
 					}
 					let sub = d;
-					const pPath = [...tPath].reverse();
-					for (const part of pPath) {
+					for (const part of tPath) {
 						sub = (sub)?.[part];
 					}
 					return sub;
 				}
 
-				function isCyclical(tPath: (string | number)[], toTest: any): boolean{
+				function isCyclical(tPath: TPath, toTest: any): boolean{
 					let sub = data;
 					tPath = [...tPath, ...path];
-					tPath = tPath.reverse();
 					tPath.splice(tPath.length-1, 1);
-					console.log(tPath);
 					for (const part of tPath) {
 						sub = (sub)?.[part];
 						if (sub === toTest) {
@@ -238,12 +235,12 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					return false;
 				}
 
-				function generatePaths(d: any): (string | number)[][]{
-					const paths: (string | number)[][] = [];
+				function generatePaths(d: any): TPath[]{
+					const paths: TPath[] = [];
 					traverse(d);
 					return paths;
 					
-					function traverse(d: any, tPath: (string | number)[] = []): void{
+					function traverse(d: any, tPath: TPath = []): void{
 						if (d && typeof d === "object" && !isCyclical(tPath,d)) {
 							paths.push(tPath);
 							const keys = Object.keys(d);
@@ -252,7 +249,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 								keys.sort();
 							}
 							for (const key of keys) {
-								traverse(d[key],[key,...tPath]);
+								traverse(d[key],[...tPath,key]);
 							}
 						}
 					}					
@@ -279,7 +276,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					});
 					if (expand && !found) {
 						if (recursive) {
-							const parts = generatePaths(getDataPart(data,path)).map(p=>([...p,...path]));
+							const parts = generatePaths(getDataPart(data,path)).map(p=>([...path,...p]));
 							draftPart.expandedTree.push(...parts);
 						} else {
 							draftPart.expandedTree.push(path);									
@@ -287,7 +284,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 						
 					} else if ((found || recursive) && index !== null) {
 						if (recursive) {
-							const parts = generatePaths(getDataPart(data,path)).map(p => ([...p, ...path]));
+							const parts = generatePaths(getDataPart(data,path)).map(p => ([...path,...p,]));
 							for (const part of parts) {
 								let index: number | null = null;
 								const partStr = part.join("-");

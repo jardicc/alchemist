@@ -2,21 +2,21 @@ import React, { Component } from "react";
 import "./TreeContent.less";
 import { getItemString } from "../TreeDiff/getItemString";
 import JSONTree from "./../JSONTree";
-import { TProtoMode } from "../../model/types";
+import { TProtoMode, TPath } from "../../model/types";
 import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { TLabelRenderer } from "../JSONTree/types";
 
 export interface ITreeContentProps{
 	content: any
 	path: string[]
-	expandedKeys: (string | number)[][]
+	expandedKeys: TPath[]
 	protoMode:TProtoMode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreeContentDispatch {
 	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: (string | number)[], expand: boolean, recursive: boolean, data:any)=>void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data:any)=>void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -30,9 +30,6 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 
 	constructor(props: TTreeContent) {
 		super(props);
-
-		this.state = {
-		};
 	}
 	
 	private labelRenderer:TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable): JSX.Element => {
@@ -48,11 +45,9 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 		return getItemString(type, data, true, false);
 	}
 
-	private expandClicked = (keyPath: (string | number)[], expanded: boolean, recursive:boolean) => {
+	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
 	}
-
-
 	
 	public render(): React.ReactNode {
 		const { content,protoMode } = this.props;

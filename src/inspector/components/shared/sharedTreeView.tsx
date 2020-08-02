@@ -1,9 +1,10 @@
 import React from "react";
 import { IconPin } from "../../../shared/components/icons";
 import { TShouldExpandNode } from "../JSONTree/types";
+import { TPath } from "../../model/types";
 
 
-export const labelRenderer = ([key, ...rest]: (string|number)[], onInspectPath: (path: (string|number)[], mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+export const labelRenderer = ([key, ...rest]: TPath, onInspectPath: (path: TPath, mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
 	
 	let noPin = false;
 	if (typeof key === "string") {
@@ -28,7 +29,7 @@ export const labelRenderer = ([key, ...rest]: (string|number)[], onInspectPath: 
 	);
 };
 
-export const renderPath = (path: (string|number)[], onInspectPath: (path: (string|number)[], mode: "replace" | "add") => void): React.ReactNode[] => {
+export const renderPath = (path: TPath, onInspectPath: (path: TPath, mode: "replace" | "add") => void): React.ReactNode[] => {
 	const parts: React.ReactNode[] = [
 		<span className="pathItem" key="root" onClick={() => { onInspectPath([], "replace"); }}>
 			<span className="link">root</span>
@@ -44,9 +45,9 @@ export const renderPath = (path: (string|number)[], onInspectPath: (path: (strin
 	return parts;
 };
 
-export const shouldExpandNode = (expandedKeys: (string | number)[][]): TShouldExpandNode => {
+export const shouldExpandNode = (expandedKeys: TPath[]): TShouldExpandNode => {
 	return (keyPath, data, level) => {
-		const keyPathString = keyPath.join("-");
+		const keyPathString = [...keyPath].reverse().join("-");
 		for (const path of expandedKeys) {
 			if (path.length === level) { // cheap check				
 				if (path.join("-") === keyPathString) { // more expensive check

@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 
 export interface ISetMainTab {
@@ -123,14 +123,14 @@ export interface ISetExpandedPathAction{
 	type: "SET_EXPANDED_PATH",
 	payload: {
 		type: ITreeDataTabs
-		path: (string | number)[],
+		path: TPath,
 		expand: boolean
 		recursive: boolean
 		data:any
 	}
 }
 
-export function setExpandedPathAction(type: ITreeDataTabs,path: (string | number)[], expand: boolean, recursive: boolean,data:any): ISetExpandedPathAction{
+export function setExpandedPathAction(type: ITreeDataTabs,path: TPath, expand: boolean, recursive: boolean,data:any): ISetExpandedPathAction{
 	return {
 		type: "SET_EXPANDED_PATH",
 		payload: {

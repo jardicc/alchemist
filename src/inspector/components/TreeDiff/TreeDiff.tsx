@@ -5,6 +5,7 @@ import "./TreeDiff.less";
 import JSONTree from "../JSONTree";
 import { diff } from "jsondiffpatch";
 import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
+import { TPath } from "../../model/types";
 
 function stringifyAndShrink(val:any, isWideLayout=false) {
 	if (val === null) { return "null"; }
@@ -16,7 +17,7 @@ function stringifyAndShrink(val:any, isWideLayout=false) {
 	return str.length > 22 ? `${str.substr(0, 15)}…${str.substr(-5)}` : str;
 }
 
-//const expandFirstLevel = (keyName:(string | number)[], data:any, level:number):boolean => (level <= 1);
+//const expandFirstLevel = (keyName:TPath, data:any, level:number):boolean => (level <= 1);
 
 function prepareDelta(value:any) {
 	if (value && value._t === "a") {
@@ -42,7 +43,7 @@ export interface ITreeDiffProps{
 	left: any
 	right: any
 	path: string[]
-	expandedKeys: (string|number)[][]
+	expandedKeys: TPath[]
 	invertTheme:boolean,
 	isWideLayout: boolean,
 }
@@ -50,7 +51,7 @@ export interface ITreeDiffProps{
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreeDiffDispatch {
 	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: (string | number)[], expand: boolean, recursive: boolean, data:any)=>void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data:any)=>void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -99,7 +100,7 @@ export default class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		this.setState({ data: diff(left, right) });
 	}
 
-	private expandClicked = (keyPath: (string | number)[], expanded: boolean, recursive:boolean) => {
+	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.state.data);
 	}
 

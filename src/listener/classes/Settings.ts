@@ -37,7 +37,7 @@ export class Settings{
 		}
 
 		const data = JSON.stringify(object, null, "\t");
-		console.log(folder);
+		//console.log(folder);
 		const created = await folder.createFile(this.settingsFilename, {
 			overwrite: true
 		});

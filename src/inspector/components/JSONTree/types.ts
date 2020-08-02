@@ -1,5 +1,5 @@
 
-import {TProtoMode} from "../../model/types";
+import {TProtoMode, TPath} from "../../model/types";
 
 
 export type TNonNullish = Record<string, unknown>;
@@ -19,12 +19,12 @@ export type TCollectionLimit=number
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type TSortObjectKeys =  (((a: string, b: string) => number) | undefined) | boolean;
-export type TShouldExpandNode = (keyPath: (string | number)[], data: TNonNullish, level: number) => boolean;
+export type TShouldExpandNode = (keyPath: TPath, data: TNonNullish, level: number) => boolean;
 export type TGetItemString = (type: string, data: TNonNullish, itemType: JSX.Element, itemString: string) => JSX.Element;
-export type TLabelRenderer = (keyPath: (string | number)[], nodeType: TNodeType, expanded: boolean, expandable: boolean) => JSX.Element;
-export type TExpandClicked = (keyPath: (string | number)[], expanded: boolean, recursive:boolean)=>void;
-export type TValueRenderer = (displayValue: string | number, rawValue?: string | number | boolean | null, nodeType?: TNodeType|undefined, ...keyPath: (string | number)[]) => React.ReactNode;
-export type TPostprocessValue = (displayValue: string | number, rawValue?: string | number | boolean | null, nodeType?: TNodeType|undefined, ...keyPath: (string | number)[]) => React.ReactNode;
+export type TLabelRenderer = (keyPath: TPath, nodeType: TNodeType, expanded: boolean, expandable: boolean) => JSX.Element;
+export type TExpandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean)=>void;
+export type TValueRenderer = (displayValue: string | number, rawValue?: string | number | boolean | null, nodeType?: TNodeType|undefined, ...keyPath: TPath) => React.ReactNode;
+export type TPostprocessValue = (displayValue: string | number, rawValue?: string | number | boolean | null, nodeType?: TNodeType|undefined, ...keyPath: TPath) => React.ReactNode;
 export type TIsCustomNode = (arg?: any) => boolean;
 export type TValueGetter = (value: any) => any;
 
