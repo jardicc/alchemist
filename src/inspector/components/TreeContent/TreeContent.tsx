@@ -3,17 +3,20 @@ import "./TreeContent.less";
 import { getItemString } from "../TreeDiff/getItemString";
 import JSONTree from "./../JSONTree";
 import { TProtoMode } from "../../model/types";
-import { renderPath, labelRenderer } from "../shared/sharedTreeView";
+import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
+import { TLabelRenderer } from "../JSONTree/types";
 
 export interface ITreeContentProps{
 	content: any
 	path: string[]
+	expandedKeys: (string | number)[][]
 	protoMode:TProtoMode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreeContentDispatch {
-	onInspectPath: (path: string[],mode:"replace"|"add") => void;
+	onInspectPath: (path: string[], mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: (string | number)[], expand: boolean, recursive: boolean, data:any)=>void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -32,7 +35,7 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 		};
 	}
 	
-	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+	private labelRenderer:TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable): JSX.Element => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
 	}
 
@@ -44,6 +47,12 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 	public getItemString = (type: any, data: any): JSX.Element => {
 		return getItemString(type, data, true, false);
 	}
+
+	private expandClicked = (keyPath: (string | number)[], expanded: boolean, recursive:boolean) => {
+		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
+	}
+
+
 	
 	public render(): React.ReactNode {
 		const { content,protoMode } = this.props;
@@ -58,7 +67,9 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 					"Content is missing. Please make sure that you selected descriptor and your pinned property exists"
 					:
 					<JSONTree
+						expandClicked={this.expandClicked}
 						labelRenderer={this.labelRenderer}
+						shouldExpandNode={shouldExpandNode(this.props.expandedKeys)}
 						data={content}
 						getItemString={this.getItemString} // shows object content shortcut
 						hideRoot={true}

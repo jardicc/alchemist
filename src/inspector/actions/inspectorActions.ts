@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 
 export interface ISetMainTab {
@@ -117,6 +117,26 @@ export interface ISetInspectorPathDOMAction{
 		path: string[]
 		mode: "replace"|"add"
 	}
+}
+
+export interface ISetExpandedPathAction{
+	type: "SET_EXPANDED_PATH",
+	payload: {
+		type: ITreeDataTabs
+		path: (string | number)[],
+		expand: boolean
+		recursive: boolean
+		data:any
+	}
+}
+
+export function setExpandedPathAction(type: ITreeDataTabs,path: (string | number)[], expand: boolean, recursive: boolean,data:any): ISetExpandedPathAction{
+	return {
+		type: "SET_EXPANDED_PATH",
+		payload: {
+			type,path, expand, recursive,data
+		}
+	};
 }
 
 export function setInspectorPathDomAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDOMAction{
@@ -292,4 +312,5 @@ ISetInspectorPathDOMAction|
 	IExportStateAction |
 	ISetFilterStateAction |
 	ISetInspectorPathDiffAction |
-	ISetInspectorPathContentAction
+	ISetInspectorPathContentAction |
+	ISetExpandedPathAction

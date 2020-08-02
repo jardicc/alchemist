@@ -3,21 +3,25 @@ import "./TreeDom.less";
 import { getItemString } from "../TreeDiff/getItemString";
 import JSONTree from "./../JSONTree";
 import { TProtoMode } from "../../model/types";
-import { renderPath, labelRenderer } from "../shared/sharedTreeView";
+import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { TReference, GetInfo } from "../../classes/GetInfo";
 import { cloneDeep } from "lodash";
 
 export interface ITreeDomProps{
-	content: {
+	/*content: {
 		ref: TReference[]|null
 		path: string[]
-	}
+	}*/
+	path:(string|number)[]
+	content: any
+	expandedKeys: (string|number)[][]
 	protoMode:TProtoMode
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreeDomDispatch {
-	onInspectPath: (path: string[],mode:"replace"|"add") => void;
+	onInspectPath: (path: string[], mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: (string | number)[], expand: boolean, recursive: boolean, data:any)=>void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -41,27 +45,32 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 	}
 
 	private renderPath = () => {
-		const { content:{path}, onInspectPath } = this.props;
+		const { path, onInspectPath } = this.props;
 		return renderPath(path, onInspectPath);
 	}
 
 	public getItemString = (type: any, data: any): JSX.Element => {
 		return getItemString(type, data, true, false);
 	}
+
+	private expandClicked = (keyPath: (string | number)[], expanded: boolean, recursive:boolean) => {
+		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
+	}
 	
 	public render(): React.ReactNode {
 		const { content, protoMode, onInspectPath } = this.props;
-		if (!content?.ref) {
+		if (!content) {
 			return "Nothing to see there";
 		}
 		
-		let data:any = GetInfo.getDom(content.ref);
+		//let data:any = GetInfo.getDom(content.ref);
+		let data: any = this.props.content;
 		
-		const path = cloneDeep(content.path);
+		const path = cloneDeep(this.props.path);
 		
-		for (const part of path) {
+		/*for (const part of path) {
 			data = (data)?.[part];
-		}
+		}*/
 
 		// make primitive types pin-able
 		if (typeof data !== "object" && data !== undefined && data !== null) {
@@ -79,6 +88,8 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 					"Content is missing. Please make sure that you selected descriptor and your pinned property exists"
 					:
 					<JSONTree
+						shouldExpandNode={shouldExpandNode(this.props.expandedKeys)}
+						expandClicked={this.expandClicked}
 						data={data}
 						keyPath={path}
 						protoMode={protoMode}

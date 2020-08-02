@@ -66,7 +66,7 @@ function renderChildNodes(props:any, from?:number, to?:number) {
 
 	return childNodes;
 }
-
+/*
 function getStateFromProps(props:any) {
 	// calculate individual node expansion if necessary
 	const expanded =
@@ -76,7 +76,7 @@ function getStateFromProps(props:any) {
 	return {
 		expanded
 	};
-}
+}*/
 
 export class JSONNestedNode extends React.Component<any,any,any> {
 	static propTypes = {
@@ -109,18 +109,18 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 
 	constructor(props:any) {
 		super(props);
-		this.state = getStateFromProps(props);
+		//this.state = getStateFromProps(props);
 	}
 
-	static getDerivedStateFromProps(nextProps:any, prevState:any) {
+	/*static getDerivedStateFromProps(nextProps:any, prevState:any) {
 		const nextState = getStateFromProps(nextProps);
 		if (getStateFromProps(nextProps).expanded !== nextState.expanded) {
 			return nextState;
 		}
 		return null;
 	}
-
-	shouldComponentUpdate(nextProps:any, nextState:any) {
+*/
+	/*shouldComponentUpdate(nextProps:any, nextState:any) {
 		return (
 			!!Object.keys(nextProps).find(
 				(key:any) =>
@@ -130,10 +130,21 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 						: nextProps[key] !== this.props[key])
 			) || nextState.expanded !== this.state.expanded
 		);
+		return true;
+	}*/
+
+	private get expanded() {
+		const {
+			data,
+			keyPath,
+			level,
+		}: any = this.props;
+		const expanded: boolean = this.props.shouldExpandNode(keyPath, data, level);
+		return expanded;
 	}
 
 	render() {
-		console.log("STATE",this.state);
+		//console.log("STATE",this.state);
 		const {
 			getItemString,
 			nodeTypeIndicator,
@@ -145,10 +156,13 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 			keyPath,
 			labelRenderer,
 			expandable,
+			level,
 			protoMode,
 		}: any = this.props;
-		const { expanded } = this.state;
-		console.log("STATE",this.state);
+
+		const expanded: boolean = this.expanded;
+		//const { expanded } = this.state;
+		//console.log("STATE",this.state);
 		const renderedChildren =
 			expanded || (hideRoot && this.props.level === 0)
 				? renderChildNodes({ ...this.props, level: this.props.level + 1 })
@@ -182,7 +196,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 						onClick={this.handleClick}
 					/>
 				)}
-				<label className={"label nestedNodeLabel" + ((expandable) ? " expandable":"")} onClick={this.handleClick}>
+				<label className={"label nestedNodeLabel" + ((expandable) ? " expandable":"")} onClick={this.handleClick as any}>
 					{labelRenderer(...stylingArgs)}
 				</label>
 				<span className={"nestedNodeItemString" + ((expanded) ? " expanded":"")} onClick={this.handleClick}>
@@ -196,9 +210,9 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		);
 	}
 
-	handleClick = () => {
+	handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>):void => {
 		if (this.props.expandable) {
-			this.setState({ expanded: !this.state.expanded });
+			this.props.expandClicked(this.props.keyPath,!this.expanded, e.altKey);
 		}
 	};
 }

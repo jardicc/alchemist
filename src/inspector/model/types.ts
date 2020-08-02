@@ -6,7 +6,8 @@ export type TSubTypes = "action" | "actionset" | "category" | "channel" | "comma
 export type TTargetReference = "customDescriptor" | "featureData" | "generator" | TPropertyClass;
 export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" | "action";
 export type TPropertyType = "hidden" | "optional" | "default";
-export type TActiveInspectorTab = "content" | "difference" | "reference";
+export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"
+export type TActiveInspectorTab = ITreeDataTabs;
 export type TViewType = "tree" | "raw";
 export type TActiveSection = "descriptors" | "settings";
 
@@ -147,17 +148,20 @@ export interface IInspector{
 }
 
 export interface IDOM{
-	treePath:string[]
+	treePath: string[]
+	expandedTree:(string|number)[][]
 }
 
 export interface IContent{
 	viewType: TViewType
-	treePath:string[]
+	treePath: string[]
+	expandedTree:(string|number)[][]
 }
 
 export interface IDifference{
 	viewType: TViewType
-	treePath:string[]
+	treePath: string[]
+	expandedTree:(string|number)[][]
 }
 
 export interface IReference {

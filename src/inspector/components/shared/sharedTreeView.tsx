@@ -1,8 +1,9 @@
 import React from "react";
 import { IconPin } from "../../../shared/components/icons";
+import { TShouldExpandNode } from "../JSONTree/types";
 
 
-export const labelRenderer = ([key, ...rest]: string[], onInspectPath: (path: string[], mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+export const labelRenderer = ([key, ...rest]: (string|number)[], onInspectPath: (path: (string|number)[], mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
 	
 	let noPin = false;
 	if (typeof key === "string") {
@@ -27,7 +28,7 @@ export const labelRenderer = ([key, ...rest]: string[], onInspectPath: (path: st
 	);
 };
 
-export const renderPath = (path: string[], onInspectPath: (path: string[], mode: "replace" | "add") => void): React.ReactNode[] => {
+export const renderPath = (path: (string|number)[], onInspectPath: (path: (string|number)[], mode: "replace" | "add") => void): React.ReactNode[] => {
 	const parts: React.ReactNode[] = [
 		<span className="pathItem" key="root" onClick={() => { onInspectPath([], "replace"); }}>
 			<span className="link">root</span>
@@ -41,4 +42,18 @@ export const renderPath = (path: string[], onInspectPath: (path: string[], mode:
 		);
 	}
 	return parts;
+};
+
+export const shouldExpandNode = (expandedKeys: (string | number)[][]): TShouldExpandNode => {
+	return (keyPath, data, level) => {
+		const keyPathString = keyPath.join("-");
+		for (const path of expandedKeys) {
+			if (path.length === level) { // cheap check				
+				if (path.join("-") === keyPathString) { // more expensive check
+					return true;
+				}
+			}
+		}
+		return false;
+	};
 };

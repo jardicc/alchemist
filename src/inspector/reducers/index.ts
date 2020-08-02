@@ -2,7 +2,10 @@
 import produce from "immer";
 import { getInitialState } from "../store/initialState";
 import { TActions } from "../actions/inspectorActions";
-import { IInspectorState } from "../model/types";
+import { IInspectorState, IContent, IDifference, IReference, IDOM } from "../model/types";
+import { GetInfo } from "../classes/GetInfo";
+import { addMoreKeys } from "../../shared/helpers";
+import { getTreeDomInstance } from "../selectors/inspectorSelectors";
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
 	console.log(JSON.stringify(action, null, "\t"));
@@ -48,6 +51,11 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 						found.selected = false;
 					}
 				}
+
+				//
+				draft.inspector.content.expandedTree = [];
+				draft.inspector.dom.expandedTree = [];
+				draft.inspector.difference.expandedTree = [];
 			});
 			break;
 		}
@@ -110,6 +118,10 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				} else if (action.payload.mode === "replace") {
 					draft.inspector.content.treePath = action.payload.path;
 				}
+				//
+				draft.inspector.content.expandedTree = [];
+				draft.inspector.dom.expandedTree = [];
+				draft.inspector.difference.expandedTree = [];
 			});
 			break;
 		}
@@ -191,6 +203,93 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					}
 				}
 			});
+			break;
+		}
+		case "SET_EXPANDED_PATH": {
+			state = produce(state, draft => {
+				const { expand, path, recursive, type } = action.payload;
+				let { data } = action.payload;
+
+				function getDataPart(d: any, tPath:(string | number)[]|undefined): any {
+					if (!tPath) {
+						return d;
+					}
+					let sub = d;
+					const pPath = [...tPath].reverse();
+					for (const part of pPath) {
+						sub = (sub)?.[part];
+					}
+					return sub;
+				}
+
+				function generatePaths(d: any): (string | number)[][]{
+					const paths: (string | number)[][] = [];
+					traverse(d);
+					return paths;
+					
+					function traverse(d: any, tPath: (string | number)[] = []): void{
+						if (d && typeof d === "object") {
+							paths.push(tPath);
+							const keys = Object.keys(d);
+							if (type === "dom") {
+								keys.push(...addMoreKeys("uxp", d));
+								keys.sort();
+							}
+							for (const key of keys) {
+								traverse(d[key],[key,...tPath]);
+							}
+						}
+					}					
+				}
+				
+				let draftPart: IContent | IDifference | IDOM | null = null;
+
+				switch (type) {
+					case "content": draftPart = draft.inspector.content; break;
+					case "difference": draftPart = draft.inspector.difference; break;
+					case "dom": draftPart = draft.inspector.dom; break;
+					default: console.warn("You shouldn't see this line logged in console");
+				}
+
+				if (type === "dom") {		
+					data = getTreeDomInstance({ inspector: state, listener: {} as any });
+				}
+
+				if (draftPart) { 
+					let index:number|null = null;
+					const found = draftPart.expandedTree.find((item, i) => {
+						index = i;
+						return item.join("-") === path.join("-");
+					});
+					if (expand && !found) {
+						if (recursive) {
+							const parts = generatePaths(getDataPart(data,path)).map(p=>([...p,...path]));
+							draftPart.expandedTree.push(...parts);
+						} else {
+							draftPart.expandedTree.push(path);									
+						}
+						
+					} else if ((found || recursive) && index !== null) {
+						if (recursive) {
+							const parts = generatePaths(getDataPart(data,path)).map(p => ([...p, ...path]));
+							for (const part of parts) {
+								let index: number | null = null;
+								const partStr = part.join("-");
+								const found = draftPart.expandedTree.find((item, i) => {
+									index = i;
+									return item.join("-") === partStr;
+								});
+								if (found && index !== null) {
+									draftPart.expandedTree.splice(index, 1);
+								}
+							}
+						} else {
+							draftPart.expandedTree.splice(index, 1);								
+						}
+					}
+				}
+			});
+			console.log(state.inspector);
 			break;
 		}
 		//Settings.saveSettings(state);

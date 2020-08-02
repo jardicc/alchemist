@@ -180,6 +180,10 @@ export const getContentPath = createSelector([getInspectorContentTab], t => {
 	return t.treePath;
 });
 
+export const getDomPath = createSelector([getInspectorDomTab], t => {
+	return t.treePath;
+});
+
 export const getLeftTreeDiff = createSelector([getSelectedDescriptors, getInspectorDifferenceTab], (t, d) => {
 	const path = cloneDeep(d.treePath);
 	//path.shift();
@@ -229,4 +233,26 @@ export const getTreeDom = createSelector([getSelectedDescriptors, getInspectorDo
 		path: d.treePath
 	};
 	return ref;
+});
+
+export const getTreeDomInstance = createSelector([getTreeDom], (t) => {
+	if (t.ref) {
+		let sub:any = GetInfo.getDom(t.ref);
+		
+		const paths = t.path;
+		for (const part of paths) {
+			sub = (sub)?.[part];
+		}
+		return sub;	
+	}
+});
+
+export const getContentExpandedNodes = createSelector([getInspectorContentTab], (t) => {	
+	return t.expandedTree;
+});
+export const getDomExpandedNodes = createSelector([getInspectorDomTab], (t) => {	
+	return t.expandedTree;
+});
+export const getDiffExpandedNodes = createSelector([getInspectorDifferenceTab], (t) => {	
+	return t.expandedTree;
 });

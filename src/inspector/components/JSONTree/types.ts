@@ -22,6 +22,7 @@ export type TSortObjectKeys =  (((a: string, b: string) => number) | undefined) 
 export type TShouldExpandNode = (keyPath: (string | number)[], data: TNonNullish, level: number) => boolean;
 export type TGetItemString = (type: string, data: TNonNullish, itemType: JSX.Element, itemString: string) => JSX.Element;
 export type TLabelRenderer = (keyPath: (string | number)[], nodeType: TNodeType, expanded: boolean, expandable: boolean) => JSX.Element;
+export type TExpandClicked = (keyPath: (string | number)[], expanded: boolean, recursive:boolean)=>void;
 export type TValueRenderer = (displayValue: string | number, rawValue?: string | number | boolean | null, nodeType?: TNodeType|undefined, ...keyPath: (string | number)[]) => React.ReactNode;
 export type TPostprocessValue = (displayValue: string | number, rawValue?: string | number | boolean | null, nodeType?: TNodeType|undefined, ...keyPath: (string | number)[]) => React.ReactNode;
 export type TIsCustomNode = (arg?: any) => boolean;
@@ -69,6 +70,7 @@ export interface IDefSettings{
 	shouldExpandNode: TShouldExpandNode
 	sortObjectKeys:boolean
 	valueRenderer: TValueRenderer
+	expandClicked: TExpandClicked
 }
 
 export interface IJSONNestedNode{

@@ -531,13 +531,16 @@ export function getInitialState(): IInspectorState {
 			content: {
 				viewType: "tree",
 				treePath: [],
+				expandedTree:[]
 			},
 			difference: {
 				viewType: "tree",
 				treePath: [],
+				expandedTree:[]
 			},
 			dom: {
-				treePath: []
+				treePath: [],
+				expandedTree:[]
 			},
 			info: {
 				showOptionalDocumentReference: true,
