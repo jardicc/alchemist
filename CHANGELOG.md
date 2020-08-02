@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.20.0
+Inspector only
+- improves: tree expansion is not stored in redux state so it remembers expansions when you switch the tree
+- feature: recursive expand/collapse when you hold key and click item (you have to hold Alt key all the time until it is expanded)
+- improves: default sizes for panels
+
 ## 0.19.0
 Inspector only
 - improves: divider between left and right column is now resizable
