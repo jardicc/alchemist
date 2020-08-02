@@ -8,9 +8,7 @@ import { TActiveSection, TActiveInspectorTab, IDescriptor } from "../../model/ty
 import { FooterContainer } from "../Footer/FooterContainer";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
-//import Split from 'react-split'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Split = require("react-split").default;
+import Split from "react-split";
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
 
@@ -59,7 +57,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 					<TabPanel id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<Split
-								sizes={[25, 75]}
+								sizes={[40, 60]}
 								gutterSize={3}
 							>
 								<LeftColumnContainer />
