@@ -236,6 +236,10 @@ export class GetInfo {
 
 	private static async getFromGenerator(originalRef: ITargetReference): Promise<any>{
 		const startTime = Date.now();
+		const id = await this.getActiveDocumentID();
+		if (id === null) {
+			return null;
+		}
 		const desc:ITargetReferenceAM = {
 			"_obj": "get",
 			"_target": [
@@ -243,8 +247,7 @@ export class GetInfo {
 					"_property": "json"
 				}, {
 					"_ref": "document",
-					"_enum": "ordinal",
-					"_value": "targetEnum"
+					"_id": id
 				}
 			],
 			"expandSmartObjects": true,
