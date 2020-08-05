@@ -1,7 +1,7 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn";
 import { IRootState } from "../../../shared/store";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor, getFilterBySelectedReferenceType, getActiveTargetReferenceForAM } from "../../selectors/inspectorSelectors";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction } from "../../actions/inspectorActions";
 import { TDocumentReference, TLayerReference, TChannelReference, TGuideReference, TPathReference, TActionSet, TActionItem, TActionCommand, IContentWrapper, TBaseProperty } from "../../model/types";
 
@@ -29,6 +29,7 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => {
 		activeReferenceCommand: getActiveReferenceCommand(state) as IContentWrapper<TActionCommand>,
 		activeReferenceProperty: getActiveReferenceProperty(state) as IContentWrapper<TBaseProperty>,
 		hasAutoActiveDescriptor: getHasAutoActiveDescriptor(state),
+		activeTargetReferenceForAM: getActiveTargetReferenceForAM(state),
 		
 		filterBySelectedReferenceType:getFilterBySelectedReferenceType(state),
 	};

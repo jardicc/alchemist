@@ -25,6 +25,7 @@ export interface ILeftColumnProps{
 	removableSelection: boolean
 	allDescriptors: IDescriptor[]
 
+	activeTargetReferenceForAM: ITargetReference | null;
 	activeTargetReference: ITargetReference | null;
 	selectedTargetReference: TTargetReference
 	filterBySelectedReferenceType: TState
@@ -97,10 +98,11 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 	}
 
 	private renderActionItem = (): React.ReactNode => {
+		console.log("actionItem");
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionItem, activeReferenceActionSet } = this.props;
-		if (activeReferenceActionSet === null || activeReferenceActionSet?.value===null) { return; }
+		if (!activeReferenceActionSet?.value) { return; }
 		const list = [...baseItemsActionCommon, ...GetList.getActionItem(parseInt(activeReferenceActionSet.value))];
 
 		return this.buildFilterRow("Action:","action", list, activeReferenceActionItem);
@@ -110,9 +112,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet } = this.props;
-		if (!activeReferenceActionItem?.value) { return; }
-		if (activeReferenceActionSet === null) { return; }
-		if (activeReferenceActionItem === null) { return; }
+		if (!activeReferenceActionItem?.value || !activeReferenceActionSet?.value) { return; }
 		const list = [...baseItemsActionCommon,...GetList.getActionCommand(parseInt(activeReferenceActionItem.value))];
 
 		return this.buildFilterRow("Command:","command", list, activeReferenceCommand);
@@ -306,7 +306,7 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		items: TBaseItems,
 		content: {value:string|null|number,filterBy:TState}
 	): React.ReactNode => {
-		
+		console.log("Filter:", label, subType, items, content);
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
@@ -329,11 +329,11 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 	}
 
 	private getDescriptor = async (): Promise<void> => {
-		const { activeTargetReference } = this.props;
+		const { activeTargetReferenceForAM } = this.props;
 		if (!this.props.addAllowed) {
 			return;
 		}
-		const result = await GetInfo.getAM(activeTargetReference);
+		const result = await GetInfo.getAM(activeTargetReferenceForAM);
 		if (result === null) { return; }
 		this.props.onAddDescriptor(result);
 

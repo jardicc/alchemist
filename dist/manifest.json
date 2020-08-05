@@ -40,12 +40,12 @@
 				"height": 2000
 			},
 			"preferredDockedSize": {
-				"width": 230,
-				"height": 300
+				"width": 380,
+				"height": 700
 			},
 			"preferredFloatingSize": {
-				"width": 230,
-				"height": 300
+				"width": 380,
+				"height": 700
 			},
 			"icons": [{
 					"width": 32,
@@ -80,12 +80,12 @@
 				"height": 2000
 			},
 			"preferredDockedSize": {
-				"width": 230,
-				"height": 300
+				"width": 600,
+				"height": 540
 			},
 			"preferredFloatingSize": {
-				"width": 230,
-				"height": 300
+				"width": 600,
+				"height": 540
 			},
 			"icons": [{
 					"width": 32,

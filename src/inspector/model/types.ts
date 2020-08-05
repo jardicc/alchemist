@@ -25,10 +25,10 @@ export type TPathReference = "active" | "vectorMask" | "workPathIndex" | string;
 export type TGeneratorReference = "full"
 export type TChannelReference = "active" | TChannelReferenceValid;
 export type TChannelReferenceValid = "composite" | "RGB" | "red" | "green" | "blue" | "CMYK" | "black" | "cyan" | "magenta" | "yellow" | "lab" | "lightness" | "a" | "b" | "gray" | "monotone" | "duotone" | "tritone" | "quadtone" | "mask" | "transparencyEnum" | "filterMask" | string;
-export type TGuideReference = null | "active" | string;
-export type TActionSet = null|string;
-export type TActionItem = null|string;
-export type TActionCommand = null | string;
+export type TGuideReference = "" | string;
+export type TActionSet = "" | string;
+export type TActionItem = "" | string;
+export type TActionCommand = "" | string;
 
 export type TSelectDescriptorOperation = "replace" | "add" | "subtract";
 

@@ -5,6 +5,8 @@ import Document from "photoshop/dist/dom/Document";
 import { DocumentExtra } from "./DocumentExtra";
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
+import { GetInfo } from "./GetInfo";
+import { action } from "../../shared/imports";
 
 const PS = photoshop.app;
 
@@ -69,54 +71,7 @@ export class GetList{
 	}
 
 	public static getActionCommand(actionItemID: number): IProperty<TActionCommand>[] {
-		debugger;
-		const action = new PS.Action(actionItemID);
-
-		const desc = {
-			_obj: "get",
-			_target: [
-				{
-					"_ref": "action",
-					"_id": action._id
-				},
-				{
-					"_ref": "actionSet",
-					"_id": action.parent._id
-				}
-			]
-		};
-		const result = photoshop.action.batchPlay([
-			desc
-		], {
-			synchronousExecution:true
-		}) as Descriptor[];
-
-		
-		const childCount = result[0].numberOfChildren;
-		const desc2: ActionDescriptor[] = [];
-		for (let i = 1; i <= childCount; i++){
-			desc2.push({
-				_obj: "get",
-				_target: [
-					{
-						"_ref": "command",
-						"_index": i // get index based on ID
-					},
-					{
-						"_ref": "action",
-						"_id": action._id
-					},
-					{
-						"_ref": "actionSet",
-						"_id": action.parent._id
-					}
-				]
-			});
-		}
-		const result2 = photoshop.action.batchPlay(desc2, {
-			synchronousExecution:true
-		}) as Descriptor[];			
-
+		const result2 = GetInfo.getAllCommandsOfAction(actionItemID);
 
 		const final:IProperty<TActionCommand>[] = result2.map(item => ({ value: item.ID.toString(), label: item.name }));
 		return final;

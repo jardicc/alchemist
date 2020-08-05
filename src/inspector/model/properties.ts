@@ -73,9 +73,9 @@ export const baseItemsChannel:IProperty<TChannelReference>[] = [
 
 ];
 export const baseItemsGuide:IProperty<TGuideReference>[] = [
-	{ label: "(undefined)", value: null },
+	{ label: "(undefined)", value: "" },
 ];	
 export const baseItemsActionCommon:(IProperty<TActionSet>|IProperty<TActionItem>|IProperty<TActionCommand>)[] = [
-	{ label: "(undefined)", value: null },
+	{ label: "(undefined)", value: "" },
 ];	
 

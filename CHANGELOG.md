@@ -3,7 +3,7 @@
 ## 0.20.0
 Inspector only
 - improves: tree expansion is not stored in redux state so it remembers expansions when you switch the tree
-- feature: recursive expand/collapse when you hold key and click item (you have to hold Alt key all the time until it is expanded)
+- feature: recursive expand/collapse when you hold key and click item (you have to hold Alt key all the time until it is expanded). Has protection against circular dependencies
 - improves: default sizes for panels
 
 ## 0.19.0

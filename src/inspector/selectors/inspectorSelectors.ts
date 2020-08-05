@@ -27,6 +27,17 @@ export const getActiveTargetReference = createSelector([getTargetReference, getS
 	return (result || null);
 });
 
+// will exclude undefined objects in array
+export const getActiveTargetReferenceForAM = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
+	const result = targets?.find(item => item.type === selected);
+	if (!result) { return null; }
+	const newRes = {
+		...result,
+		data: result.data.filter(ref => ref.content.value !== "")
+	};
+	return (newRes || null);
+});
+
 export const getAddAllowed = createSelector([getActiveTargetReference], s => { 
 	if (s) {
 		if (s.type === "generator") {

@@ -4,6 +4,8 @@ import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { DocumentExtra } from "./DocumentExtra";
 import type Document from "photoshop/dist/dom/Document";
+import { GetList } from "./GetList";
+import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 const PS = photoshop.app;
 
 
@@ -110,22 +112,22 @@ export class GetInfo {
 		switch (t.type) {
 			case "action": {
 
-				if (actionset?.content?.value) {
+				if (typeof actionset?.content?.value === "string") {
 					rootT.push({
 						"_ref": "actionSet",
-						"_index": parseInt(actionset.content.value) // TODO get index based on ID
+						"_id": parseInt(actionset.content.value) // TODO get index based on ID
 					});
 				}
-				if (action?.content?.value) {
+				if (typeof action?.content?.value === "string") {
 					rootT.push({
 						"_ref": "action",
 						"_id": parseInt(action.content.value)
 					});
 				}
-				if (command?.content?.value) {
+				if (typeof command?.content?.value === "string" && typeof action?.content?.value === "string") {
 					rootT.push({
 						"_ref": "command",
-						"_id": parseInt(command.content.value)
+						"_index": this.getActionCommandIndexByID(parseInt(command.content.value),parseInt(action.content.value))
 					});
 				}
 
@@ -248,7 +250,7 @@ export class GetInfo {
 			originalReference: originalRef,
 			pinned: false,
 			selected: false,
-			calculatedReference: desc
+			calculatedReference: desc 
 		};
 	}
 
@@ -291,6 +293,66 @@ export class GetInfo {
 			return result.layerID as number;
 		}
 		return null;
+	}
+
+	public static getActionCommandIndexByID(commandID:number,actionItemID: number):number {
+		const all = this.getAllCommandsOfAction(actionItemID);
+		const found = all.find(desc => desc.ID === commandID);
+		if (!found) {
+			return NaN;
+		}
+		return found.itemIndex;
+	}
+
+	public static getAllCommandsOfAction(actionItemID: number) {
+		console.log("action command");
+		const action = new PS.Action(actionItemID);
+
+		const desc = {
+			_obj: "get",
+			_target: [
+				{
+					"_ref": "action",
+					"_id": action._id
+				},
+				{
+					"_ref": "actionSet",
+					"_id": action.parent._id
+				}
+			]
+		};
+		const result = photoshop.action.batchPlay([
+			desc
+		], {
+			synchronousExecution:true
+		}) as Descriptor[];
+
+		
+		const childCount = result[0].numberOfChildren;
+		const desc2: ActionDescriptor[] = [];
+		for (let i = 1; i <= childCount; i++){
+			desc2.push({
+				_obj: "get",
+				_target: [
+					{
+						"_ref": "command",
+						"_index": i // get index based on ID
+					},
+					{
+						"_ref": "action",
+						"_id": action._id
+					},
+					{
+						"_ref": "actionSet",
+						"_id": action.parent._id
+					}
+				]
+			});
+		}
+		const result2 = photoshop.action.batchPlay(desc2, {
+			synchronousExecution:true
+		}) as Descriptor[];
+		return result2;
 	}
 
 	public static async getActiveChannelID(): Promise<number | null | TChannelReferenceValid> {
@@ -438,6 +500,13 @@ export class GetInfo {
 		if (res[0]._ref === "document") {
 			return GetInfo.getDocumentDom(res[0]._id);
 		}
+
+		if (res[0]._ref === "actionSet") {
+			return GetInfo.actionSetDom(res[0]._id);
+		}
+		if (res[0]._ref === "action") {
+			return GetInfo.actionItemDom(res[0]._id);
+		}
 		return null;
 	}
 
@@ -455,5 +524,16 @@ export class GetInfo {
 		const docDom = new photoshop.app.Document(doc);
 		return docDom;
 	}
+
+	public static actionSetDom(actionSetID: number) {
+		const docDom = new photoshop.app.ActionSet(actionSetID);
+		return docDom;
+	}
+	public static actionItemDom(actionItemID: number) {
+		const docDom = new photoshop.app.Action(actionItemID);
+		return docDom;
+	}
+
+
 }
 

@@ -8,7 +8,7 @@ import { addMoreKeys } from "../../shared/helpers";
 import { getTreeDomInstance } from "../selectors/inspectorSelectors";
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
-	//console.log(JSON.stringify(action, null, "\t"));
+	console.log(JSON.stringify(action, null, "\t"));
 	switch (action.type) {
 		case "SET_MAIN_TAB": {
 			state = produce(state, draft => {

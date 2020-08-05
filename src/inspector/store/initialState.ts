@@ -141,7 +141,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "guide",
-						content: { value: null, filterBy: "off" }
+						content: { value: "", filterBy: "off" }
 					},
 					{
 						subType: "property",
@@ -154,15 +154,15 @@ export function getInitialState(): IInspectorState {
 				data: [
 					{
 						subType: "actionset",
-						content: { value: null, filterBy: "off" }
+						content: { value: "", filterBy: "off" }
 					},
 					{
 						subType: "action",
-						content: { value: null, filterBy: "off" }
+						content: { value: "", filterBy: "off" }
 					},
 					{
 						subType: "command",
-						content: { value: null, filterBy: "off" }
+						content: { value: "", filterBy: "off" }
 					},
 					{
 						subType: "property",
