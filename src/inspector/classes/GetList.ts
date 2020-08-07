@@ -1,12 +1,9 @@
 import photoshop from "photoshop";
-import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand } from "../model/types";
+import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference, THistoryReference } from "../model/types";
 import { IProperty } from "../components/LeftColumn/LeftColumn";
 import Document from "photoshop/dist/dom/Document";
 import { DocumentExtra } from "./DocumentExtra";
-import { Descriptor } from "photoshop/dist/types/UXP";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { GetInfo } from "./GetInfo";
-import { action } from "../../shared/imports";
 
 const PS = photoshop.app;
 
@@ -36,10 +33,8 @@ export class GetList{
 			docID = parseInt(arg.value);
 		}
 
-		const docE = new DocumentExtra(new PS.Document(docID));
-		
+		const docE = new DocumentExtra(new PS.Document(docID));		
 		const pairs: IProperty<TChannelReference>[] = docE.userChannelIDsAndNames.map(p=>({value:p.value.toString(),label:p.label})); // remove index
-
 		return pairs;
 	}
 
@@ -52,11 +47,34 @@ export class GetList{
 			docID = parseInt(arg.value);
 		}
 
-		const docE = new DocumentExtra(new PS.Document(docID));
-		
+		const docE = new DocumentExtra(new PS.Document(docID));		
 		const pairs: IProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p=>({value:p.value.toString(),label:p.label})); // remove index
-
 		return pairs;
+	}
+
+	public static getGuides(arg: IContentWrapper<TDocumentReference>): IProperty<TGuideReference>[] { 
+		let docID: number;
+		console.log("Get paths");
+		if (arg.value === "active") {
+			docID = PS.activeDocument._id;
+		} else {
+			docID = parseInt(arg.value);
+		}
+
+		const docE = new DocumentExtra(new PS.Document(docID));		
+		const pairs: IProperty<TPathReference>[] = docE.guidesIDs.map(p=>({value:p.value.toString(),label:p.label})); // remove index
+		return pairs;
+	}
+	public static getHistory(): IProperty<THistoryReference>[] { 
+		const pairs = GetInfo.getHistory();
+		const result: IProperty<THistoryReference>[]  = pairs.filter(p=>p.snapshot===false).map(p=>({value:p.value.toString(),label:p.label})); // remove index
+		return result;
+	}
+
+	public static getSnapshots(): IProperty<THistoryReference>[] { 
+		const pairs = GetInfo.getHistory();
+		const result: IProperty<THistoryReference>[]  = pairs.filter(p=>p.snapshot===true).map(p=>({value:p.value.toString(),label:p.label})); // remove index
+		return result;
 	}
 
 	public static getActionSets():IProperty<TActionSet>[] {
@@ -76,6 +94,4 @@ export class GetList{
 		const final:IProperty<TActionCommand>[] = result2.map(item => ({ value: item.ID.toString(), label: item.name }));
 		return final;
 	}
-
-
 }

@@ -101,6 +101,12 @@ export const getActiveReferenceActionItem = createSelector([getActiveTargetRefer
 export const getActiveReferenceCommand = createSelector([getActiveTargetReference], (t) => {
 	return t?.data.find(i => i.subType === "command")?.content;
 });
+export const getActiveReferenceHistory = createSelector([getActiveTargetReference], (t) => {
+	return t?.data.find(i => i.subType === "history")?.content;
+});
+export const getActiveReferenceSnapshot = createSelector([getActiveTargetReference], (t) => {
+	return t?.data.find(i => i.subType === "snapshot")?.content;
+});
 
 export const getActiveDescriptors = createSelector([all], s => {
 	const selected = s.descriptors.filter(d => d.selected);

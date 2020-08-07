@@ -41,6 +41,38 @@ export class DocumentExtra extends DocumentNative{
 		return this.getPropertySync("numberOfChannels");
 	}
 
+	public get numberOfGuides(): number{
+		return this.getPropertySync("numberOfGuides");
+	}
+
+	public get guidesIDs(): { value: number; label: string }[]{
+		const len = this.numberOfGuides;
+		const desc: ActionDescriptor[] = [];
+		for (let i = 1; i <= len; i++){
+			desc.push({
+				_obj: "get",
+				_target: [
+					{
+						"_ref": "guide",
+						"_index": i
+					},
+					this.amReference
+				]
+			});
+		}
+
+		const desResult = this.action.batchPlay(desc, {
+			synchronousExecution: true
+		}) as Descriptor[];
+
+		const pairs = desResult.map((d, index) => ({
+			value: d.ID,
+			label: d.ID,
+		}));
+	
+		return pairs;
+	}
+
 	public get userChannelIDsAndNames(): {value: number;label: string;index:number}[] {
 		const len = this.numberOfChannels;
 		const descID: ActionDescriptor[] = [];

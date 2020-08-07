@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 import { GetInfo } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
-import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, TFilterContent } from "../../model/types";
+import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, TFilterContent, THistoryReference, TSnapshotReference } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { IconLockLocked, IconPin, IconTrash } from "../../../shared/components/icons";
 import { GetList } from "../../classes/GetList";
@@ -35,6 +35,8 @@ export interface ILeftColumnProps{
 	activeReferenceGuide: IContentWrapper<TGuideReference>
 	activeReferencePath: IContentWrapper<TPathReference>
 	activeReferenceChannel: IContentWrapper<TChannelReference>
+	activeReferenceHistory: IContentWrapper<THistoryReference>
+	activeReferenceSnapshot: IContentWrapper<TSnapshotReference>
 	activeReferenceActionSet:IContentWrapper<TActionSet>
 	activeReferenceActionItem:IContentWrapper<TActionItem>
 	activeReferenceCommand: IContentWrapper<TActionCommand>
@@ -198,9 +200,9 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		);
 	}
 	private renderGuide = (): React.ReactNode => {
-		const { selectedTargetReference } = this.props;
+		const { selectedTargetReference,activeTargetReferenceDocument } = this.props;
 		if (selectedTargetReference !== "guide") { return; }
-		const list = [...baseItemsGuide];
+		const list = [...baseItemsGuide,...GetList.getGuides(activeTargetReferenceDocument)];
 
 		const { activeReferenceGuide } = this.props;
 		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide);
@@ -232,6 +234,8 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			case "featureData":
 			case "generator":
 			case "application":
+			case "history":
+			case "snapshot":
 			case "action":
 				return;
 		}
@@ -240,6 +244,24 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 
 		const { activeTargetReferenceDocument } = this.props;
 		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
+	}
+
+	private renderHistory = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "history") { return; }
+		const list = [...baseItemsDocument,...GetList.getHistory()];
+
+		const { activeReferenceHistory } = this.props;
+		return this.buildFilterRow("History:","history", list, activeReferenceHistory);
+	}
+
+	private renderSnapshots = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "snapshot") { return; }
+		const list = [...baseItemsDocument,...GetList.getSnapshots()];
+
+		const { activeReferenceSnapshot } = this.props;
+		return this.buildFilterRow("Snapshots:","snapshot", list, activeReferenceSnapshot);
 	}
 
 	private renderLayer = (): React.ReactNode => {
@@ -344,6 +366,8 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			<React.Fragment>
 				{this.renderMainClass()}
 				{this.renderDocument()}
+				{this.renderHistory()}
+				{this.renderSnapshots()}
 				{this.renderGuide()}
 				{this.renderChannel()}
 				{this.renderPath()}

@@ -73,6 +73,7 @@ export class GetInfo {
 		const channel = t.data.find(i => i.subType === "channel");		
 		const path = t.data.find(i => i.subType === "path");		
 
+		const guide = t.data.find(i => i.subType === "guide");		
 		const history = t.data.find(i => i.subType === "history");		
 		const snapshot = t.data.find(i => i.subType === "snapshot");		
 		
@@ -223,6 +224,13 @@ export class GetInfo {
 				});
 				break;
 			}
+			case "guide": {
+				rootT.push({
+					"_ref": "guide",
+					"_id": parseInt(guide?.content.value as string)
+				});
+				break;
+			}
 		}
 
 
@@ -285,6 +293,53 @@ export class GetInfo {
 		const playResult = await photoshop.action.batchPlay([desc], {});
 		playResult.forEach(d => d.json = JSON.parse(d.json));
 		return this.buildReply(startTime, playResult, desc,originalRef);
+	}
+
+	public static get historyCount(): number{
+		//return this.getPropertySync("numberOfGuides"); TODO
+		const desc = {
+			_obj: "get",
+			_target: [
+				{
+					"_ref": "historyState",
+					"_property": "currentHistoryState"
+				}
+			]
+		};
+		const result = photoshop.action.batchPlay([
+			desc
+		], {
+			synchronousExecution: true
+		}) as Descriptor[];
+		return result[0].count;
+	}
+
+	public static getHistory():{value:number,label:string,snapshot:boolean}[] {
+		const len = this.historyCount;
+		const desc: ActionDescriptor[] = [];
+		for (let i = 1; i <= len; i++){
+			desc.push({
+				_obj: "get",
+				_target: [
+					{
+						"_ref": "historyState",
+						"_index": i
+					}
+				]
+			});
+		}
+
+		const desResult = photoshop.action.batchPlay(desc, {
+			synchronousExecution: true
+		}) as Descriptor[];
+
+		const pairs = desResult.map((d, index) => ({
+			value: d.ID,
+			label: d.name,
+			snapshot: !d.auto
+		}));
+	
+		return pairs;
 	}
 
 	public static async getActiveLayerID(): Promise<number | null> {
