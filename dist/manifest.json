@@ -2,7 +2,7 @@
 	"name": "Listener - UXP",
 	"id": "cz.bereza.uxp_listener",
 	"main": "index.html",
-	"version": "0.19.0",
+	"version": "0.20.0",
 	"manifestVersion": 4,
 	"host": {
 		"app": "PS",
