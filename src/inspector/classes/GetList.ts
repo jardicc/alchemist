@@ -1,79 +1,68 @@
 import photoshop from "photoshop";
 import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference, THistoryReference } from "../model/types";
 import { IProperty } from "../components/LeftColumn/LeftColumn";
-import Document from "photoshop/dist/dom/Document";
 import { DocumentExtra } from "./DocumentExtra";
 import { GetInfo } from "./GetInfo";
 
 const PS = photoshop.app;
 
 export class GetList{
-	public static getDocuments():IProperty<TDocumentReference>[] {
-		const docs: IProperty<TDocumentReference>[] = PS.documents.map(d => ({ value: d._id.toString(), label: d.title }));
-		return docs;
+	public static async getDocuments(): Promise<IProperty<TDocumentReference>[]> {
+		console.log("get docs");
+		const documents = PS.documents.map(d=> new DocumentExtra(d));
+		const docs = documents.map(async d => ({ value: d._id.toString(), label: await d.$title() }));
+		const result = await Promise.all(docs);
+		return result;
+	}
+
+	private static getDocumentExtra(arg:IContentWrapper<TDocumentReference>):DocumentExtra|null {
+		let docID: number;
+		if (arg.value === "active") {
+			docID = PS?.activeDocument?._id;
+		} else {
+			docID = parseInt(arg.value);
+		}
+		if (!docID) { return null;}
+		const docE = new DocumentExtra(new PS.Document(docID));
+		return docE;
 	}
 
 	public static getLayers(arg: IContentWrapper<TDocumentReference>): IProperty<TLayerReference>[] { 
-		let doc: Document;
-		if (arg.value === "active") {
-			doc = PS.activeDocument;
-		} else {
-			doc = new PS.Document(parseInt(arg.value));
-		}
-		const layers = doc.layers.map(d => ({ value: d._id.toString(), label: d.name }));
+		const docE = this.getDocumentExtra(arg);
+		if (!docE) { return [];}
+		const layers = docE.layers.map(d => ({ value: d._id.toString(), label: d.name }));
 		return layers;
 	}
 
 	public static getChannels(arg: IContentWrapper<TDocumentReference>): IProperty<TChannelReference>[] {
-		let docID: number;
-		console.log("Get channels");
-		if (arg.value === "active") {
-			docID = PS.activeDocument._id;
-		} else {
-			docID = parseInt(arg.value);
-		}
-
-		const docE = new DocumentExtra(new PS.Document(docID));		
+		const docE = this.getDocumentExtra(arg);
+		if (!docE) { return [];}	
 		const pairs: IProperty<TChannelReference>[] = docE.userChannelIDsAndNames.map(p=>({value:p.value.toString(),label:p.label})); // remove index
 		return pairs;
 	}
 
 	public static getPaths(arg: IContentWrapper<TDocumentReference>): IProperty<TPathReference>[] {
-		let docID: number;
-		console.log("Get paths");
-		if (arg.value === "active") {
-			docID = PS.activeDocument._id;
-		} else {
-			docID = parseInt(arg.value);
-		}
-
-		const docE = new DocumentExtra(new PS.Document(docID));		
-		const pairs: IProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p=>({value:p.value.toString(),label:p.label})); // remove index
+		const docE = this.getDocumentExtra(arg);
+		if (!docE) { return [];}	
+		const pairs: IProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p=>({value:p.value.toString(),label:p.label}));
 		return pairs;
 	}
 
 	public static getGuides(arg: IContentWrapper<TDocumentReference>): IProperty<TGuideReference>[] { 
-		let docID: number;
-		console.log("Get paths");
-		if (arg.value === "active") {
-			docID = PS.activeDocument._id;
-		} else {
-			docID = parseInt(arg.value);
-		}
-
-		const docE = new DocumentExtra(new PS.Document(docID));		
-		const pairs: IProperty<TPathReference>[] = docE.guidesIDs.map(p=>({value:p.value.toString(),label:p.label})); // remove index
+		const docE = this.getDocumentExtra(arg);
+		if (!docE) { return [];}	
+		const pairs: IProperty<TPathReference>[] = docE.guidesIDs.map(p=>({value:p.value.toString(),label:p.label}));
 		return pairs;
 	}
 	public static getHistory(): IProperty<THistoryReference>[] { 
 		const pairs = GetInfo.getHistory();
-		const result: IProperty<THistoryReference>[]  = pairs.filter(p=>p.snapshot===false).map(p=>({value:p.value.toString(),label:p.label})); // remove index
+		const result: IProperty<THistoryReference>[]  = pairs.filter(p=>p.snapshot===false).map(p=>({value:p.value.toString(),label:p.label})); // remove snapshot
 		return result;
 	}
 
 	public static getSnapshots(): IProperty<THistoryReference>[] { 
 		const pairs = GetInfo.getHistory();
-		const result: IProperty<THistoryReference>[]  = pairs.filter(p=>p.snapshot===true).map(p=>({value:p.value.toString(),label:p.label})); // remove index
+		const result: IProperty<THistoryReference>[]  = pairs.filter(p=>p.snapshot===true).map(p=>({value:p.value.toString(),label:p.label})); // remove snapshot
 		return result;
 	}
 
