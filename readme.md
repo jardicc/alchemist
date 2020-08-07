@@ -1,6 +1,6 @@
 # Listener - UXP for Photoshop
 
-Listens all Photoshop events. Something like actions panel in Photoshop but for scripting.
+Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Another panel is Inspector and this is for inspecting PS DOM and PS AM descriptors.
 
 ## Disclaimer
 
@@ -43,25 +43,14 @@ C:\Program Files\Common Files\Adobe\UXP\extensions
 
 ## (PreRelease) Prerequisites
 
-While we're still developing UXP, we want to make sure these features are behind flags so they don't affect end users. To enable UXP development and see your panels in Photoshop, you will need to add a line to your PSUserConfig.txt file.
-
-Windows:
-> C:\Users\{user}\AppData\Roaming\Adobe\Adobe Photoshop 2020 Settings\PSUserConfig.txt
-
-Mac:
-> /Users/{user}/Library/Preferences/Adobe Photoshop 2020 Settings/PSUserConfig.txt
-
-Open (or create) this text file, and add the following line:
-
-> `ScriptDeveloper 1`
-
-This will enable Photoshop to start loading UXP extensions, and support your custom panels. 
+While we're still developing UXP, we want to make sure these features are behind flags so they don't affect end users. To enable UXP development and see your panels in Photoshop, you will need to enable that in Photoshop preferences.
+`PS > Edit > Preferences > Plugins > Enable Developer Mode`
 
 ## Panel Entrypoints
 
 The ui entrypoint of a UXP extension as a panel is defined in it's `manifest.json` file. This is subject to change, so please refer to latest copy of the starter repository as above.
 
-The extension will be available in Window > Extensions menu with the extension's name. This will open up a PS panel with your extension loaded in it.
+The extension will be available in `Plugins > Listener UXP` menu with the extension's name. This will open up a PS panel with your extension loaded in it.
 
 
 ## Debugging
