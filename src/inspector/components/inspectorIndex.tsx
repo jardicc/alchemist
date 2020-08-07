@@ -5,17 +5,15 @@ import { InspectorContainer } from "./Inspector/InspectorContainer";
 import { rootStore } from "../../shared/store";
 
 export function renderInspectorUI(): void {
-	setTimeout(() => {
-		const el = document.querySelector("[panelid=inspector]");
-		if (!el) {
-			console.error(el);
-		}
+	const el = document.querySelector("[panelid=inspector]");
+	if (!el) {
+		console.error(el);
+	}
 
-		render(
-			<Provider store={rootStore}>
-				<InspectorContainer  />
-			</Provider>, el as HTMLElement
-		);
-	}, 1000);
+	render(
+		<Provider store={rootStore}>
+			<InspectorContainer  />
+		</Provider>, el as HTMLElement
+	);
 }
 
