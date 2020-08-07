@@ -1,9 +1,8 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
 import { IDescriptor } from "../model/types";
-import { selectDescriptorAction } from "../actions/inspectorActions";
 import { cloneDeep } from "lodash";
-import { GetInfo } from "../classes/GetInfo";
+import { GetDOM } from "../classes/GetDOM";
 
 const all = (state:IRootState) => state.inspector;
  
@@ -254,7 +253,7 @@ export const getTreeDom = createSelector([getSelectedDescriptors, getInspectorDo
 
 export const getTreeDomInstance = createSelector([getTreeDom], (t) => {
 	if (t.ref) {
-		let sub:any = GetInfo.getDom(t.ref);
+		let sub:any = GetDOM.getDom(t.ref);
 		
 		const paths = t.path;
 		for (const part of paths) {
