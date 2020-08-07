@@ -45,6 +45,10 @@ export class DocumentExtra extends DocumentNative{
 		return this.getPropertySync("numberOfGuides");
 	}
 
+	public async $title(): Promise<string>{
+		return await this.getPropertyAsync("title");
+	}
+
 	public get guidesIDs(): { value: number; label: string }[]{
 		const len = this.numberOfGuides;
 		const desc: ActionDescriptor[] = [];
@@ -65,7 +69,7 @@ export class DocumentExtra extends DocumentNative{
 			synchronousExecution: true
 		}) as Descriptor[];
 
-		const pairs = desResult.map((d, index) => ({
+		const pairs = desResult.map((d) => ({
 			value: d.ID,
 			label: d.ID,
 		}));
@@ -143,17 +147,18 @@ export class DocumentExtra extends DocumentNative{
 			synchronousExecution: true
 		}) as Descriptor[];
 
-		let pairs = desResult.map((d, index) => ({
+		let pairs = desResult.map((d) => ({
 			value: d.ID,
 			label: d.pathName,
 			type: d.kind._value
 		}));
 		pairs = pairs.filter(pair => (pair.type === "clippingPathEPS" || pair.type === "normalPath"));
-		const result = pairs.map(pair => ({value:pair.value,label:pair.label}));
+		//const result = pairs.map(pair => ({value:pair.value,label:pair.label}));
 	
 		return pairs;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public getPropertySync(property: string):any {
 		const desc = this.action.batchPlay([
 			{
@@ -168,6 +173,23 @@ export class DocumentExtra extends DocumentNative{
 		], {
 			synchronousExecution: true
 		}) as Descriptor[];
+		return desc?.[0]?.[property];
+	}
+
+	public async getPropertyAsync(property: string): Promise<any> {
+		const desc = await this.action.batchPlay([
+			{
+				_obj: "get",
+				_target: [
+					{
+						"_property": property
+					},
+					this.amReference
+				]
+			}
+		], {
+			synchronousExecution: false
+		});
 		return desc?.[0]?.[property];
 	}
 }
