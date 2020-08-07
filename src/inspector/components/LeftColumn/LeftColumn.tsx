@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 import { GetInfo } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
-import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, TFilterContent, THistoryReference, TSnapshotReference } from "../../model/types";
+import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { IconLockLocked, IconPin, IconTrash } from "../../../shared/components/icons";
 import { GetList } from "../../classes/GetList";
@@ -58,12 +58,35 @@ export interface ILeftColumnDispatch {
 	onSetFilter:(type: TTargetReference,subType: TSubTypes|"main",state: TState)=>void
 }
 
+export interface IState{
+	layersList: IProperty<TLayerReference>[]
+	documentsList: IProperty<TDocumentReference>[]
+	channelsList: IProperty<TChannelReference>[]
+	pathsList: IProperty<TPathReference>[]
+	guidesList: IProperty<TGuideReference>[]
+	actionSetsList: IProperty<TActionSet>[]
+	actionItemsList: IProperty<TActionItem>[]
+	actionCommandsList: IProperty<TActionCommand>[]
+	historyList: IProperty<THistoryReference>[]
+	snapshotsList: IProperty<TSnapshotReference>[]
+}
+
 export type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
 
-export class LeftColumn extends React.Component<TLeftColumn> {
+export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
 		super(props);
 		this.state = {
+			layersList: [],
+			documentsList: [],
+			channelsList: [],
+			pathsList: [],
+			guidesList: [],
+			actionSetsList: [],
+			actionItemsList: [],
+			actionCommandsList: [],
+			historyList: [],
+			snapshotsList:[],
 		};
 	}
 
@@ -89,23 +112,92 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		this.props.onSetSelectedReferenceType(value.target.value as TTargetReference);
 	}
 
+	private renderMainClass = (): React.ReactNode => {
+		const { selectedTargetReference, filterBySelectedReferenceType} = this.props;
+		return this.buildFilterRow("Type:", "main", mainClasses, {
+			value: selectedTargetReference,
+			filterBy: filterBySelectedReferenceType
+		});
+	}
+	
+	private renderDocument = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		
+		switch (selectedTargetReference) {
+			case "customDescriptor":
+			case "featureData":
+			case "generator":
+			case "application":
+			case "history":
+			case "snapshot":
+			case "action":
+				return;
+		}
+
+		const list = [...baseItemsDocument,...this.state.documentsList];
+
+		const { activeTargetReferenceDocument } = this.props;
+		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
+	}
+	
+	private renderLayer = (): React.ReactNode => {
+		const { activeReferenceChannel, activeReferencePath } = this.props;
+		const { selectedTargetReference } = this.props;
+		
+		if ((selectedTargetReference === "layer" || selectedTargetReference === "channel" || selectedTargetReference === "path") === false) {
+			return;
+		}
+		// only layer masks are layer related
+		if (selectedTargetReference === "channel" && (activeReferenceChannel.value !== "mask" && activeReferenceChannel.value !== "filterMask")) {
+			return;
+		}
+		// only vector masks are layer related
+		if (selectedTargetReference === "path" && activeReferencePath.value !== "vectorMask") {
+			return;
+		}
+
+		const list = [...baseItemsLayer,...this.state.layersList];
+		
+		const { activeTargetLayerReference } = this.props;
+
+		return this.buildFilterRow("Layer:","layer", list, activeTargetLayerReference);
+	}
+
+	private renderChannel = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "channel") { return; }
+		const list = [...baseItemsChannel,...this.state.channelsList];
+
+		const { activeReferenceChannel } = this.props;
+		return this.buildFilterRow("Channel:","channel", list, activeReferenceChannel);
+	}
+	
+	private renderPath = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "path") { return; }
+		const list = [...baseItemsPath,...this.state.pathsList];
+
+		const { activeReferencePath } = this.props;
+
+		return this.buildFilterRow("Path:","path", list, activeReferencePath);
+	}
+
 	private renderActionSet = (): React.ReactNode => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionSet } = this.props;
-		const list = [...baseItemsActionCommon, ...GetList.getActionSets()];
+		const list = [...baseItemsActionCommon, ...this.state.actionSetsList];
 
 		
 		return this.buildFilterRow("Action set:","actionset", list, activeReferenceActionSet);
 	}
 
 	private renderActionItem = (): React.ReactNode => {
-		console.log("actionItem");
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionItem, activeReferenceActionSet } = this.props;
 		if (!activeReferenceActionSet?.value) { return; }
-		const list = [...baseItemsActionCommon, ...GetList.getActionItem(parseInt(activeReferenceActionSet.value))];
+		const list = [...baseItemsActionCommon, ...this.state.actionItemsList];
 
 		return this.buildFilterRow("Action:","action", list, activeReferenceActionItem);
 	}
@@ -115,12 +207,65 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet } = this.props;
 		if (!activeReferenceActionItem?.value || !activeReferenceActionSet?.value) { return; }
-		const list = [...baseItemsActionCommon,...GetList.getActionCommand(parseInt(activeReferenceActionItem.value))];
+		const list = [...baseItemsActionCommon,...this.state.actionCommandsList];
 
 		return this.buildFilterRow("Command:","command", list, activeReferenceCommand);
 	}
 
+	private renderGuide = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "guide") { return; }
+		const list = [...baseItemsGuide,...this.state.guidesList];
 
+		const { activeReferenceGuide } = this.props;
+		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide);
+	}
+
+	private renderHistory = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "history") { return; }
+		const list = [...baseItemsDocument,...this.state.historyList];
+
+		const { activeReferenceHistory } = this.props;
+		return this.buildFilterRow("History:","history", list, activeReferenceHistory);
+	}
+
+	private renderSnapshots = (): React.ReactNode => {
+		const { selectedTargetReference } = this.props;
+		if (selectedTargetReference !== "snapshot") { return; }
+		const list = [...baseItemsDocument,...this.state.snapshotsList];
+
+		const { activeReferenceSnapshot } = this.props;
+		return this.buildFilterRow("Snapshots:","snapshot", list, activeReferenceSnapshot);
+	}
+
+	private renderCustomDescriptorCategory = (): React.ReactNode => {
+		if (this.props.selectedTargetReference !== "customDescriptor") {
+			return null;
+		}
+
+		const list = [...baseItemsCustomDescriptor];
+
+		return (
+			<div className="filter">
+				<div className="label">Category:</div>
+				<sp-dropdown quiet="true">
+					<sp-menu slot="options" onClick={(e: string) => { console.log(e); }}>
+						{
+							list.map(item => (
+								<sp-menu-item
+									key={item.value}
+									value={item.value}
+									selected={this.props.selectedTargetReference === item.value ? "selected" : null}
+								>{item.label}</sp-menu-item>
+							))
+						}
+					</sp-menu>
+				</sp-dropdown>
+			</div>
+		);
+	}
+	
 	private renderProperty = (): React.ReactNode => {
 		const { selectedTargetReference } = this.props;
 		const { propertySettings, activeReferenceProperty } = this.props;
@@ -199,127 +344,53 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 			</div>
 		);
 	}
-	private renderGuide = (): React.ReactNode => {
-		const { selectedTargetReference,activeTargetReferenceDocument } = this.props;
-		if (selectedTargetReference !== "guide") { return; }
-		const list = [...baseItemsGuide,...GetList.getGuides(activeTargetReferenceDocument)];
 
-		const { activeReferenceGuide } = this.props;
-		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide);
-	}
-	private renderChannel = (): React.ReactNode => {
-		const { selectedTargetReference,activeTargetReferenceDocument } = this.props;
-		if (selectedTargetReference !== "channel") { return; }
-		const list = [...baseItemsChannel,...GetList.getChannels(activeTargetReferenceDocument)];
+	private dropdownClick = async (type: TSubTypes | "main") => {
+		console.log("click");
+		const {activeReferenceActionSet,activeReferenceActionItem,activeTargetReferenceDocument } = this.props;
 
-		const { activeReferenceChannel } = this.props;
-		return this.buildFilterRow("Channel:","channel", list, activeReferenceChannel);
-	}
-
-	private renderPath = (): React.ReactNode => {
-		const { selectedTargetReference,activeTargetReferenceDocument } = this.props;
-		if (selectedTargetReference !== "path") { return; }
-		const list = [...baseItemsPath,...GetList.getPaths(activeTargetReferenceDocument)];
-
-		const { activeReferencePath } = this.props;
-
-		return this.buildFilterRow("Path:","path", list, activeReferencePath);
-	}
-
-	private renderDocument = (): React.ReactNode => {
-		const { selectedTargetReference } = this.props;
-		
-		switch (selectedTargetReference) {
-			case "customDescriptor":
-			case "featureData":
-			case "generator":
-			case "application":
-			case "history":
-			case "snapshot":
+		switch (type) {
+			case "layer": 
+				return this.setState({...this.state,
+					layersList: GetList.getLayers(activeTargetReferenceDocument)
+				});
+			case "document":
+				return this.setState({...this.state,
+					documentsList: await GetList.getDocuments()
+				});
 			case "action":
-				return;
+				return this.setState({...this.state,
+					actionItemsList: GetList.getActionItem(parseInt(activeReferenceActionSet.value))
+				});
+			case "actionset":
+				return this.setState({...this.state,
+					actionSetsList: GetList.getActionSets()
+				});
+			case "command":
+				return this.setState({...this.state,
+					actionCommandsList: GetList.getActionCommand(parseInt(activeReferenceActionItem.value))
+				});
+			case "channel":
+				return this.setState({...this.state,
+					channelsList: GetList.getChannels(activeTargetReferenceDocument)
+				});
+			case "path":
+				return this.setState({...this.state,
+					pathsList: GetList.getPaths(activeTargetReferenceDocument)
+				});
+			case "guide":
+				return this.setState({...this.state,
+					guidesList: GetList.getGuides(activeTargetReferenceDocument)
+				});
+			case "history":
+				return this.setState({...this.state,
+					historyList: GetList.getHistory()
+				});
+			case "snapshot":
+				return this.setState({...this.state,
+					snapshotsList: GetList.getSnapshots()
+				});
 		}
-
-		const list = [...baseItemsDocument,...GetList.getDocuments()];
-
-		const { activeTargetReferenceDocument } = this.props;
-		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
-	}
-
-	private renderHistory = (): React.ReactNode => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "history") { return; }
-		const list = [...baseItemsDocument,...GetList.getHistory()];
-
-		const { activeReferenceHistory } = this.props;
-		return this.buildFilterRow("History:","history", list, activeReferenceHistory);
-	}
-
-	private renderSnapshots = (): React.ReactNode => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "snapshot") { return; }
-		const list = [...baseItemsDocument,...GetList.getSnapshots()];
-
-		const { activeReferenceSnapshot } = this.props;
-		return this.buildFilterRow("Snapshots:","snapshot", list, activeReferenceSnapshot);
-	}
-
-	private renderLayer = (): React.ReactNode => {
-		const { activeReferenceChannel, activeReferencePath, activeTargetReferenceDocument } = this.props;
-		const { selectedTargetReference } = this.props;
-		
-		if ((selectedTargetReference === "layer" || selectedTargetReference === "channel" || selectedTargetReference === "path") === false) {
-			return;
-		}
-		// only layer masks are layer related
-		if (selectedTargetReference === "channel" && (activeReferenceChannel.value !== "mask" && activeReferenceChannel.value !== "filterMask")) {
-			return;
-		}
-		// only vector masks are layer related
-		if (selectedTargetReference === "path" && activeReferencePath.value !== "vectorMask") {
-			return;
-		}
-
-		const list = [...baseItemsLayer,...GetList.getLayers(activeTargetReferenceDocument)];
-		
-		const { activeTargetLayerReference } = this.props;
-
-		return this.buildFilterRow("Layer:","layer", list, activeTargetLayerReference);
-	}
-
-	private renderCustomDescriptorCategory = (): React.ReactNode => {
-		if (this.props.selectedTargetReference !== "customDescriptor") {
-			return null;
-		}
-
-		const list = [...baseItemsCustomDescriptor];
-
-		return (
-			<div className="filter">
-				<div className="label">Category:</div>
-				<sp-dropdown quiet="true">
-					<sp-menu slot="options" onClick={(e: string) => { console.log(e); }}>
-						{
-							list.map(item => (
-								<sp-menu-item
-									key={item.value}
-									value={item.value}
-									selected={this.props.selectedTargetReference === item.value ? "selected" : null}
-								>{item.label}</sp-menu-item>
-							))
-						}
-					</sp-menu>
-				</sp-dropdown>
-			</div>
-		);
-	}
-
-	private renderMainClass = (): React.ReactNode => {
-		const { selectedTargetReference, filterBySelectedReferenceType} = this.props;
-		return this.buildFilterRow("Type:", "main", mainClasses, {
-			value: selectedTargetReference,
-			filterBy: filterBySelectedReferenceType
-		});
 	}
 
 	private buildFilterRow = (
@@ -328,11 +399,10 @@ export class LeftColumn extends React.Component<TLeftColumn> {
 		items: TBaseItems,
 		content: {value:string|null|number,filterBy:TState}
 	): React.ReactNode => {
-		console.log("Filter:", label, subType, items, content);
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
-				<sp-dropdown quiet="true" onClick={() => { console.log("click"); }}>
+				<sp-dropdown quiet="true" onMouseDown={()=>this.dropdownClick(subType)}>
 					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType(subType,e)}>
 						{
 							items.map(item => (
