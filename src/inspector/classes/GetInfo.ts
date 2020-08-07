@@ -3,8 +3,6 @@ import { cloneDeep } from "lodash";
 import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { DocumentExtra } from "./DocumentExtra";
-import type Document from "photoshop/dist/dom/Document";
-import { GetList } from "./GetList";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 const PS = photoshop.app;
 
@@ -262,6 +260,7 @@ export class GetInfo {
 		};
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private static async getFromGenerator(originalRef: ITargetReference): Promise<any>{
 		const startTime = Date.now();
 		const id = await this.getActiveDocumentID();
@@ -333,7 +332,7 @@ export class GetInfo {
 			synchronousExecution: true
 		}) as Descriptor[];
 
-		const pairs = desResult.map((d, index) => ({
+		const pairs = desResult.map((d) => ({
 			value: d.ID,
 			label: d.name,
 			snapshot: !d.auto
@@ -359,7 +358,7 @@ export class GetInfo {
 		return found.itemIndex;
 	}
 
-	public static getAllCommandsOfAction(actionItemID: number) {
+	public static getAllCommandsOfAction(actionItemID: number):Descriptor[] {
 		console.log("action command");
 		const action = new PS.Action(actionItemID);
 
@@ -490,7 +489,7 @@ export class GetInfo {
 		return null;
 	}
 
-	public static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path") {
+	public static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path"):Promise<Descriptor> {
 		const desc = {
 			_obj: "get",
 			_target: [
@@ -536,59 +535,5 @@ export class GetInfo {
 			return v.toString(16);
 		});
 	}
-
-	public static getDom(ref: TReference[]) {
-
-		const res: IDReference[] = ref?.filter(v => ("_ref" in v)) as IDReference[];
-		if (!res) {
-			return null;
-		}
-
-		if (res[0]._ref === "application") {
-			return GetInfo.getAppDom();
-		}
-
-		if (res[0]._ref === "layer") {
-			return GetInfo.getLayerDom(res[1]._id, res[0]._id);
-		}
-
-		if (res[0]._ref === "document") {
-			return GetInfo.getDocumentDom(res[0]._id);
-		}
-
-		if (res[0]._ref === "actionSet") {
-			return GetInfo.actionSetDom(res[0]._id);
-		}
-		if (res[0]._ref === "action") {
-			return GetInfo.actionItemDom(res[0]._id);
-		}
-		return null;
-	}
-
-	public static getAppDom() {
-		const appDom = new photoshop.app.Photoshop();
-		return appDom;
-	}
-
-	public static getLayerDom(doc:number,num:number) {
-		const layerDom = new photoshop.app.Layer(num, doc);
-		return layerDom;
-	}
-
-	public static getDocumentDom(doc: number) {
-		const docDom = new photoshop.app.Document(doc);
-		return docDom;
-	}
-
-	public static actionSetDom(actionSetID: number) {
-		const docDom = new photoshop.app.ActionSet(actionSetID);
-		return docDom;
-	}
-	public static actionItemDom(actionItemID: number) {
-		const docDom = new photoshop.app.Action(actionItemID);
-		return docDom;
-	}
-
-
 }
 
