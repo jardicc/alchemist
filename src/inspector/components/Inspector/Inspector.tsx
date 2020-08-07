@@ -91,17 +91,23 @@ export class Inspector extends React.Component<TInspector, IState> {
 									<TabPanel id="dom" title="DOM (live)" >
 										<TreeDomContainer />
 									</TabPanel>
-									<TabPanel id="reference" title="Info" >
+									<TabPanel id="reference" title="Code" >
 										<div className="info code">
 											<div className="noShrink">
-												Reference:
+												Generated code:
 												<textarea
 													className="infoBlock"
 													defaultValue={
 														this.props.originalReference
 													}
 												/>
-											Filter:
+											</div>
+										</div>
+									</TabPanel>
+									<TabPanel id="info" title="Used filter" >
+										<div className="info code">
+											<div className="noShrink">
+												Filter:
 												<textarea
 													className="infoBlock"
 													defaultValue={

@@ -137,7 +137,8 @@ export const getActiveDescriptorContent = createSelector([getActiveDescriptors, 
 	}	
 });
 
-export const getActiveDescriptorCalculatedReference =createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
+/*
+export const getPlayableReference = createSelector([getActiveDescriptorCalculatedReference], (reference) => {
 	if (selected.length > 1) {
 		return "Select 1 descriptor";
 	} else if (selected.length === 1) {
@@ -147,7 +148,8 @@ export const getActiveDescriptorCalculatedReference =createSelector([getActiveDe
 	} else {
 		return "Add some descriptor";
 	}	
-});
+});*/
+
 export const getActiveDescriptorOriginalReference =createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
 	if (selected.length > 1) {
 		return "Select 1 descriptor";
@@ -271,4 +273,36 @@ export const getDomExpandedNodes = createSelector([getInspectorDomTab], (t) => {
 });
 export const getDiffExpandedNodes = createSelector([getInspectorDifferenceTab], (t) => {	
 	return t.expandedTree;
+});
+
+export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath], (selected, autoActive, treePath) => {
+	if (selected.length > 1) {
+		return "Select 1 descriptor";
+	} else if (selected.length === 1 || autoActive) {
+		let data;
+		if (selected.length === 1) {
+			data = selected[0].calculatedReference;
+		} else if (autoActive) {
+			data = autoActive.calculatedReference;
+		}
+		
+		let str = JSON.stringify(data, null, 3);
+		str =
+			"const photoshop = require(\"photoshop\");\n" +
+			"\n" +
+			"const result = photoshop.action.batchPlay([\n" +
+			str +
+
+			"], {\n" +
+			"   synchronousExecution: true\n" +
+			"});\n";
+	
+		if (treePath.length) {
+			// eslint-disable-next-line quotes
+			str = `${str}const pinned = result["${treePath.join(`"]["`)}"];`;			
+		}
+		return str;
+	} else {
+		return "Add some descriptor";
+	}
 });
