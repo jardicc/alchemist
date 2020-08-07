@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+Inspector only
+- feature: changes reference into copy/paste ready generated code
+
 ## 0.20.0
 Inspector only
 - improves: tree expansion is not stored in redux state so it remembers expansions when you switch the tree
