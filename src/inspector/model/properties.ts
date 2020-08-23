@@ -1,5 +1,5 @@
 import { IProperty } from "../components/LeftColumn/LeftColumn";
-import { TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference, TGuideReference, TActionSet, TActionItem, TActionCommand } from "./types";
+import { TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference, TGuideReference, TActionSet, TActionItem, TActionCommand, TListenerCategoryReference } from "./types";
 
 export type TBaseItems = (
 	IProperty<TTargetReference> |
@@ -16,6 +16,7 @@ export type TBaseItems = (
 	
 
 export const mainClasses: IProperty<TTargetReference>[] = [
+	{ label: "Listener", value: "listener" },
 	{ label: "Application", value: "application" },
 	{ label: "Document", value: "document" },
 	{ label: "Layer", value: "layer" },
@@ -31,6 +32,11 @@ export const mainClasses: IProperty<TTargetReference>[] = [
 ];
 export const baseItemsProperty:IProperty<TBaseProperty>[] = [
 	{ label: "(not specified)", value: "notSpecified" },
+];
+export const baseItemsListener:IProperty<TListenerCategoryReference>[] = [
+	{ label: "(not specified)", value: "notSpecified" },
+	{ label: "Listener", value: "listener" },
+	{ label: "Replies", value: "reply" },
 ];
 export const baseItemsCustomDescriptor:IProperty<string>[] = [
 	{ label: "(undefined)", value: "undefined" },

@@ -13,6 +13,39 @@
 		height: 0;
 	}
 	
+	.search {
+		background-color: var(--divider);
+		padding: 0.3em;
+
+		input{
+			box-sizing: border-box;
+			margin: 0;
+			width: 100%;
+			appearance: none;
+			background-color: var(--divider);
+			color: var(--text);
+
+			&:hover{
+				color: var(--hover);
+			}
+		}
+	}
+
+	.ExcludeInclude{
+		display: flex;
+		align-items: center;
+		margin: 0 0.5em;
+		
+		.label{
+			width: 0;
+			min-width: 60px;
+		}
+
+		input{
+			margin-right: 1em;
+		}
+	}
+
 	
 	.filtersWrapper{
 	
@@ -33,6 +66,10 @@
 		display: flex;
 		align-items: center;
 		margin: 0 0.5em;
+
+		sp-dropdown{
+			flex-grow: 1;
+		}
 	}
 	
 	

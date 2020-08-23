@@ -19,7 +19,8 @@ export interface IInspectorProps{
 	descriptorContent: string
 	calculatedReference: string
 	originalReference: string
-	selectedDescriptors: IDescriptor[]
+	leftRawDiff:IDescriptor | null
+	rightRawDiff:IDescriptor | null
 }
 
 export interface IInspectorDispatch {
@@ -57,7 +58,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 					<TabPanel id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<Split
-								sizes={[40, 60]}
+								sizes={[30, 70]}
 								gutterSize={3}
 							>
 								<LeftColumnContainer />
@@ -82,8 +83,8 @@ export class Inspector extends React.Component<TInspector, IState> {
 											</TabPanel>
 											<TabPanel id="Raw" title="Raw" >
 												<VisualDiffTab
-													left={this.props.selectedDescriptors[0]?.originalData}
-													right={this.props.selectedDescriptors[1]?.originalData}
+													left={this.props.leftRawDiff}
+													right={this.props.rightRawDiff}
 												/>
 											</TabPanel>
 										</TabList>

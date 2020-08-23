@@ -5,6 +5,7 @@
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
+	cursor: pointer;
 
 	&:last-child {
 		border-bottom: 1px solid var(--divider);
@@ -15,12 +16,14 @@
 
 	&:hover {
 		color: var(--hover);
-		cursor: pointer;
 	}
 	
 	&.selected {
 		color: var(--active);
-		cursor: default;
+
+		&:hover {
+			color: var(--hover);
+		}
 	}
 
 	&.autoSelected{

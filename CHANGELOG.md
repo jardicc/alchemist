@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.22.0
+Merges Inspector and listener panels
+- shows by default content of item  first for more tabs if none is selected
+- adds auto inspector feature
+- adds possibility of continuous selection with Shift (add) or Ctrl+Shift (subtract)
+- implements search
+- implements merged raw content view
+- implements merged batch play code generation
+- shows "Event" for listened event instead of time. Since time is unknown
+- feature possibility to remove item (not) in view
+
 ## 0.21.0
 Inspector only
 - feature: changes reference into copy/paste ready generated code

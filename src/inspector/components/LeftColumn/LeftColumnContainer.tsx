@@ -1,9 +1,9 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn";
 import { IRootState } from "../../../shared/store";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor, getFilterBySelectedReferenceType, getActiveTargetReferenceForAM, getActiveReferenceHistory, getActiveReferenceSnapshot } from "../../selectors/inspectorSelectors";
-import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction } from "../../actions/inspectorActions";
-import { TDocumentReference, TLayerReference, TChannelReference, TGuideReference, TPathReference, TActionSet, TActionItem, TActionCommand, IContentWrapper, TBaseProperty, IHistory, THistoryReference, TSnapshotReference } from "../../model/types";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor, getFilterBySelectedReferenceType, getActiveTargetReferenceForAM, getActiveReferenceHistory, getActiveReferenceSnapshot, getInspectorSettings, getActiveTargetReferenceListenerCategory } from "../../selectors/inspectorSelectors";
+import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction } from "../../actions/inspectorActions";
+import { TDocumentReference, TLayerReference, TChannelReference, TGuideReference, TPathReference, TActionSet, TActionItem, TActionCommand, IContentWrapper, TBaseProperty, IHistory, THistoryReference, TSnapshotReference, TListenerCategoryReference } from "../../model/types";
 
 
 const mapStateToProps = (state: IRootState): ILeftColumnProps => {
@@ -29,9 +29,11 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => {
 		activeReferenceCommand: getActiveReferenceCommand(state) as IContentWrapper<TActionCommand>,
 		activeReferenceProperty: getActiveReferenceProperty(state) as IContentWrapper<TBaseProperty>,
 		activeReferenceHistory: getActiveReferenceHistory(state) as  IContentWrapper<THistoryReference>,
-		activeReferenceSnapshot:getActiveReferenceSnapshot(state) as  IContentWrapper<TSnapshotReference>,
+		activeReferenceSnapshot: getActiveReferenceSnapshot(state) as IContentWrapper<TSnapshotReference>,
+		activeTargetReferenceListenerCategory: getActiveTargetReferenceListenerCategory(state) as IContentWrapper<TListenerCategoryReference>,
 		hasAutoActiveDescriptor: getHasAutoActiveDescriptor(state),
 		activeTargetReferenceForAM: getActiveTargetReferenceForAM(state),
+		settings:getInspectorSettings(state),
 		
 		filterBySelectedReferenceType:getFilterBySelectedReferenceType(state),
 	};
@@ -48,7 +50,10 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record
 		onRemove: (arg) => dispatch(removeDescAction(arg)),
 		onLock: (lock, arg) => dispatch(lockDescAction(lock, arg)),
 
-		onSetFilter:(type,subType,state)=>dispatch(setFilterStateAction(type,subType,state))
+		onSetFilter: (type, subType, state) => dispatch(setFilterStateAction(type, subType, state)),
+		setListener: (enabled) => dispatch(setListenerAction(enabled)),
+		setAutoInspector: (enabled) => dispatch(setAutoInspectorAction(enabled)),
+		setSearchTerm: (str) => dispatch(setSearchTermAction(str)),
 	};
 };
 

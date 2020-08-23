@@ -1,6 +1,6 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ITreeDomDispatch, ITreeDomProps, TreeDom } from "./TreeDom";
-import { getTreeDom, getContentPath, getDomExpandedNodes, getTreeDomInstance, getDomPath } from "../../selectors/inspectorSelectors";
+import { getDomExpandedNodes, getTreeDomInstance, getDomPath } from "../../selectors/inspectorSelectors";
 import { IRootState } from "../../../shared/store";
 import {  setInspectorPathDomAction, setExpandedPathAction } from "../../actions/inspectorActions";
 

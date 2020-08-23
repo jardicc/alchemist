@@ -30,17 +30,24 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		let operation: TSelectDescriptorOperation = "replace";
 		
-		if (e.ctrlKey || e.metaKey) {
+		if (e.shiftKey && (e.ctrlKey || e.metaKey)) {
+			operation = "subtractContinuous";
+		} else if (e.shiftKey) {
+			operation = "addContinuous";
+		} else if (e.ctrlKey || e.metaKey) {
 			if (this.props.descriptor.selected) {
 				operation = "subtract";				
 			} else {
 				operation = "add";				
 			}
-		}
+		} 
 		this.props.onSelect(this.props.descriptor.id, operation);
 	}
 
-	private generateItemNameNew =  ():string => {
+	private generateItemNameNew = (): string => {
+		if (this.props.descriptor.originalReference.type==="listener") {
+			return this.props.descriptor.calculatedReference._obj;
+		}
 		const parts = getName(this.props.descriptor.calculatedReference._target);
 		//parts.push(...subs.map(d => d.subType + ": " + d.content.value));
 		const names = parts.map(p => /*p.typeTitle +*/ ((p.value) ? (/*": "*/ p.value) : p.typeTitle));
@@ -90,7 +97,7 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 				<div className="spread"></div>
 				{locked ? <div className="icon"><IconLockLocked/></div> : ""}
 				{pinned ? <div className="icon"><IconPin/></div>: ""}
-				<div className="time">{descriptor.endTime-descriptor.startTime} ms</div>
+				{descriptor.startTime===0 ? <div className="time">Event</div> : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
 			</div>
 		);
 	}

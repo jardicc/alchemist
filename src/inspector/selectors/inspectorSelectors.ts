@@ -3,6 +3,7 @@ import { IRootState } from "../../shared/store";
 import { IDescriptor } from "../model/types";
 import { cloneDeep } from "lodash";
 import { GetDOM } from "../classes/GetDOM";
+import { Descriptor } from "photoshop/dist/types/UXP";
 
 const all = (state:IRootState) => state.inspector;
  
@@ -12,7 +13,7 @@ export const getModeTabID = createSelector([all], s => s.inspector.activeTab);
 export const getSelectedTargetReference = createSelector([all], s => s.selectedReferenceType);
 export const getFilterBySelectedReferenceType = createSelector([all], s => s.filterBySelectedReferenceType);
 export const getTargetReference = createSelector([all], s => s.targetReference);
-export const getAutoUpdate = createSelector([all],s=>s.settings.autoUpdate);
+export const getAutoUpdate = createSelector([all],s=>s.settings.autoUpdateInspector);
 export const getAllDescriptors = createSelector([all], s => s.descriptors);
 export const getSelectedDescriptors = createSelector([all], s => s.descriptors.filter((d) => d.selected === true));
 export const getSelectedDescriptorsUUID = createSelector([getSelectedDescriptors], s => s.map(d => d.id));
@@ -24,6 +25,10 @@ export const getRemovableSelection = createSelector([getLockedSelection], s => !
 export const getActiveTargetReference = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
 	const result = targets?.find(item => item.type === selected);
 	return (result || null);
+});
+
+export const getInspectorSettings = createSelector([all], (s) => {
+	return s.settings;
 });
 
 // will exclude undefined objects in array
@@ -52,16 +57,19 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 	}
 	return false;
 });
-export const getDescriptorsListView = createSelector([getAllDescriptors,getActiveTargetReference,getFilterBySelectedReferenceType], (allDesc,activeRefFilter,rootFilter) => {	
+export const getDescriptorsListView = createSelector([getAllDescriptors, getActiveTargetReference, getFilterBySelectedReferenceType,getInspectorSettings], (allDesc, activeRefFilter, rootFilter,settings) => {	
+	
 	const pinned = allDesc.filter(i => i.pinned);
 	const notPinned = allDesc.filter(i => !i.pinned);
 	const reordered = [...pinned, ...notPinned];
 
-	if (rootFilter === "off") {
+	// add one search here... perhaps generate name and store it in redux store so it can be used in search
+
+	if (rootFilter === "off" && activeRefFilter?.type !== "listener") {
 		return reordered;
 	}
 
-	const filtered = reordered.filter((desc:IDescriptor) => {
+	let filtered = reordered.filter((desc:IDescriptor) => {
 		const origRefFilter = desc.originalReference;
 		if (activeRefFilter?.type !== origRefFilter.type) {
 			return false;
@@ -76,6 +84,21 @@ export const getDescriptorsListView = createSelector([getAllDescriptors,getActiv
 		}
 		return true;
 	});
+
+	if (activeRefFilter?.type === "listener") {
+		if (settings.listenerFilterType === "exclude" && settings.listenerExclude.join(";").trim().length) {
+			filtered = filtered.filter(item => 
+				!settings.listenerExclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim()))
+			);
+		} else if (settings.listenerFilterType === "include" && settings.listenerInclude.join(";").trim().length) {
+			filtered = filtered.filter(item => 
+				settings.listenerInclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim()))
+			);
+		}
+		if (settings.searchTerm) {
+			filtered = filtered.filter(item => (item.originalData as Descriptor)?._obj?.includes(settings.searchTerm as string));
+		} 
+	}
 
 	return filtered;
 });
@@ -112,10 +135,21 @@ export const getActiveDescriptors = createSelector([all], s => {
 	return selected;
 });
 
-export const getAutoActiveDescriptor = createSelector([getActiveDescriptors, getAllDescriptors], (activeDescs, all) => {
+export const getAutoActiveDescriptor = createSelector([getActiveDescriptors, getDescriptorsListView], (activeDescs, view) => {
+	const list = view.filter(item => !item.pinned);
 	if (activeDescs.length === 0) {
-		if (all.length) {
-			return all[0];			
+		if (list.length) {
+			return list[0];			
+		}
+	}
+	return null;
+});
+
+export const getSecondaryAutoActiveDescriptor = createSelector([getActiveDescriptors, getDescriptorsListView], (activeDescs, view) => {
+	const list = view.filter(item => !item.pinned);
+	if (activeDescs.length === 0) {
+		if (list.length >= 2) {
+			return list[1];
 		}
 	}
 	return null;
@@ -126,12 +160,10 @@ export const getHasAutoActiveDescriptor = createSelector([getAutoActiveDescripto
 });
 
 export const getActiveDescriptorContent = createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
-	if (selected.length > 1) {
-		return "Select 1 descriptor";
-	} else if (selected.length === 1) {
-		return JSON.stringify(selected[0].originalData, null, 3);		
+	if (selected.length >= 1) {
+		return JSON.stringify(selected.map(item => item.originalData), null, 3);	
 	} else if (autoActive) {
-		return JSON.stringify(autoActive.originalData, null, 3);
+		return JSON.stringify([autoActive.originalData], null, 3);
 	} else {
 		return "Add some descriptor";
 	}	
@@ -160,6 +192,13 @@ export const getActiveDescriptorOriginalReference =createSelector([getActiveDesc
 	} else {
 		return "Add some descriptor";
 	}	
+});
+
+export const getActiveTargetReferenceListenerCategory = createSelector([getActiveTargetReference], (t) => {
+	if (!t) { return null;}
+	const result = t.data.find(i => i.subType === "listenerCategory")?.content;
+
+	return (result===undefined) ? null : result;
 });
 
 export const getActiveTargetDocument = createSelector([getActiveTargetReference], (t) => {
@@ -202,30 +241,40 @@ export const getDomPath = createSelector([getInspectorDomTab], t => {
 	return t.treePath;
 });
 
-export const getLeftTreeDiff = createSelector([getSelectedDescriptors, getInspectorDifferenceTab], (t, d) => {
-	const path = cloneDeep(d.treePath);
+export const getLeftTreeDiff = createSelector([getSelectedDescriptors, getDiffPath, getAutoActiveDescriptor], (t, diffPath,autoDesc) => {
+	const path = cloneDeep(diffPath);
 	//path.shift();
-	let data:any = cloneDeep(t?.[0]?.originalData);
+	let data:any = cloneDeep(t?.[0]?.originalData ?? autoDesc?.originalData);
 	for (const part of path) {
 		data = (data)?.[part];
 	}
 	return data;
 });
 
-export const getRightTreeDiff  = createSelector([getSelectedDescriptors,getInspectorDifferenceTab],(t,d)=>{
-	const path = cloneDeep(d.treePath);
+export const getRightTreeDiff  = createSelector([getSelectedDescriptors,getDiffPath,getSecondaryAutoActiveDescriptor],(t,diffPath,autoDesc)=>{
+	const path = cloneDeep(diffPath);
 	//path.shift();
-	let data:any = cloneDeep(t?.[1]?.originalData);
+	let data:any = cloneDeep(t?.[1]?.originalData ?? autoDesc?.originalData);
 	for (const part of path) {
 		data = (data)?.[part];
 	}
 	return data;
 });
 
-export const getTreeContent = createSelector([getSelectedDescriptors, getInspectorContentTab], (t, d) => {
-	const path = cloneDeep(d.treePath);
-	//path.shift();
-	let data: any = cloneDeep(t?.[0]?.originalData);
+export const getLeftRawDiff = createSelector([getSelectedDescriptors, getAutoActiveDescriptor], (t, autoDesc) => {
+	const data:any = t?.[0]?.originalData ?? autoDesc?.originalData;
+	return data;
+});
+
+export const getRightRawDiff = createSelector([getSelectedDescriptors, getSecondaryAutoActiveDescriptor], (t, autoDesc) => {
+	const data:any = t?.[1]?.originalData ?? autoDesc?.originalData;
+	return data;
+});
+
+export const getTreeContent = createSelector([getSelectedDescriptors, getContentPath, getAutoActiveDescriptor], (t, d,autoActive) => {
+	const path = cloneDeep(d);
+	// selected or auto-selected
+	let data: any = cloneDeep(t?.[0]?.originalData ?? autoActive?.originalData);
 
 	for (const part of path) {
 		data = (data)?.[part];
@@ -239,16 +288,18 @@ export const getTreeContent = createSelector([getSelectedDescriptors, getInspect
 	return data;
 });
 
-export const getTreeDom = createSelector([getSelectedDescriptors, getInspectorDomTab], (t, d) => {
-	if (!t.length) {
+export const getTreeDom = createSelector([getSelectedDescriptors, getDomPath, getSelectedTargetReference, getAutoActiveDescriptor], (selectedDesc, domPath, mainClass, autoSelectedDesc) => {
+	
+	if ((!selectedDesc.length && !autoSelectedDesc) || mainClass === "listener") {
 		return {
 			ref: null,
 			path: []
 		};
 	}
 	const ref = {
-		ref: t?.[0]?.calculatedReference?._target,
-		path: d.treePath
+		// selected desc or auto selected
+		ref: selectedDesc?.[0]?.calculatedReference?._target ?? autoSelectedDesc?.calculatedReference?._target,
+		path: domPath
 	};
 	return ref;
 });
@@ -276,24 +327,22 @@ export const getDiffExpandedNodes = createSelector([getInspectorDifferenceTab], 
 });
 
 export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath], (selected, autoActive, treePath) => {
-	if (selected.length > 1) {
-		return "Select 1 descriptor";
-	} else if (selected.length === 1 || autoActive) {
+	if (selected.length >= 1 || autoActive) {
 		let data;
-		if (selected.length === 1) {
-			data = selected[0].calculatedReference;
+		if (selected.length >= 1) {
+			data = selected.map(item => item.calculatedReference);
 		} else if (autoActive) {
-			data = autoActive.calculatedReference;
+			data = [autoActive.calculatedReference];
 		}
 		
 		let str = JSON.stringify(data, null, 3);
 		str =
 			"const photoshop = require(\"photoshop\");\n" +
 			"\n" +
-			"const result = photoshop.action.batchPlay([\n" +
+			"const result = photoshop.action.batchPlay(\n" +
 			str +
 
-			"], {\n" +
+			", {\n" +
 			"   synchronousExecution: true\n" +
 			"});\n";
 	

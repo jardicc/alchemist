@@ -212,9 +212,11 @@ export const IconCaretTop=():JSX.Element=>(
 //export const IconCircleX=():JSX.Element=>(
 //
 //)
-//export const IconClipboard=():JSX.Element=>(
-//
-//)
+export const IconClipboard = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M3.5 0c-.28 0-.5.22-.5.5v.5h-.75c-.14 0-.25.11-.25.25v.75h3v-.75c0-.14-.11-.25-.25-.25h-.75v-.5c0-.28-.22-.5-.5-.5zm-3.25 1c-.14 0-.25.11-.25.25v6.5c0 .14.11.25.25.25h6.5c.14 0 .25-.11.25-.25v-6.5c0-.14-.11-.25-.25-.25h-.75v2h-5v-2h-.75z" />
+	</svg>
+);
 //export const IconClock=():JSX.Element=>(
 //
 //)
@@ -233,9 +235,11 @@ export const IconCaretTop=():JSX.Element=>(
 //export const IconCode=():JSX.Element=>(
 //
 //)
-//export const IconCog=():JSX.Element=>(
-//
-//)
+export const IconCog = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M3.5 0l-.5 1.19c-.1.03-.19.08-.28.13l-1.19-.5-.72.72.5 1.19c-.05.1-.09.18-.13.28l-1.19.5v1l1.19.5c.04.1.08.18.13.28l-.5 1.19.72.72 1.19-.5c.09.04.18.09.28.13l.5 1.19h1l.5-1.19c.09-.04.19-.08.28-.13l1.19.5.72-.72-.5-1.19c.04-.09.09-.19.13-.28l1.19-.5v-1l-1.19-.5c-.03-.09-.08-.19-.13-.28l.5-1.19-.72-.72-1.19.5c-.09-.04-.19-.09-.28-.13l-.5-1.19h-1zm.5 2.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z"/>
+	</svg>
+);
 //export const IconCollapseDown=():JSX.Element=>(
 //
 //)
@@ -464,9 +468,12 @@ export const IconEye = (): JSX.Element => (
 //export const IconLinkIntact=():JSX.Element=>(
 //
 //)
-//export const IconList=():JSX.Element=>(
-//
-//)
+export const IconList = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M.5 0c-.28 0-.5.22-.5.5s.22.5.5.5.5-.22.5-.5-.22-.5-.5-.5zm1.5 0v1h6v-1h-6zm-1.5 2c-.28 0-.5.22-.5.5s.22.5.5.5.5-.22.5-.5-.22-.5-.5-.5zm1.5 0v1h6v-1h-6zm-1.5 2c-.28 0-.5.22-.5.5s.22.5.5.5.5-.22.5-.5-.22-.5-.5-.5zm1.5 0v1h6v-1h-6zm-1.5 2c-.28 0-.5.22-.5.5s.22.5.5.5.5-.22.5-.5-.22-.5-.5-.5zm1.5 0v1h6v-1h-6z"
+		/>
+	</svg>
+);
 //export const IconListRich=():JSX.Element=>(
 //
 //)
@@ -504,9 +511,11 @@ export const IconLockUnlocked = (): JSX.Element => (
 //export const IconMediaPause=():JSX.Element=>(
 //
 //)
-//export const IconMediaPlay=():JSX.Element=>(
-//
-//)
+export const IconMediaPlay = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v6l6-3-6-3z" transform="translate(1 1)" />
+	</svg>
+);
 //export const IconMediaRecord=():JSX.Element=>(
 //
 //)
@@ -552,9 +561,11 @@ export const IconLockUnlocked = (): JSX.Element => (
 //export const IconPaperclip=():JSX.Element=>(
 //
 //)
-//export const IconPencil=():JSX.Element=>(
-//
-//)
+export const IconPencil = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M6 0l-1 1 2 2 1-1-2-2zm-2 2l-4 4v2h2l4-4-2-2z" />
+	</svg>
+);
 //export const IconPeople=():JSX.Element=>(
 //
 //)

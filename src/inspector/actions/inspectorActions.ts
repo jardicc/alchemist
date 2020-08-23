@@ -1,5 +1,6 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
+import { IRootState } from "../../shared/store";
 
 export interface ISetMainTab {
 	type: "SET_MAIN_TAB"
@@ -36,7 +37,7 @@ export interface ISelectDescriptor {
 
 export interface IClearViewAction{
 	type: "CLEAR_VIEW"
-	payload:null
+	payload:{keep:boolean}
 }
 export interface IClearAction{
 	type: "CLEAR"
@@ -64,11 +65,14 @@ export interface IRemoveDescAction{
 }
 export interface IImportStateAction{
 	type: "IMPORT_STATE"
-	payload:null
+	payload:IRootState
 }
-export interface IImportAppendAction{
-	type: "IMPORT_APPEND"
-	payload:null
+export interface IImportItemsAction{
+	type: "IMPORT_ITEMS"
+	payload: {
+		items: IDescriptor[],
+		kind: TImportItems
+	}
 }
 export interface IImportReplaceAction{
 	type: "IMPORT_REPLACE"
@@ -128,6 +132,63 @@ export interface ISetExpandedPathAction{
 		recursive: boolean
 		data:any
 	}
+}
+
+export interface IListenerAction{
+	type:"SET_LISTENER",
+	payload:boolean
+}
+export interface IAutoInspectorAction{
+	type:"SET_AUTO_INSPECTOR",
+	payload:boolean
+}
+
+// filter
+
+export interface ISetSearchTermAction{	
+	type: "SET_SEARCH_TERM_ACTION",
+	payload: string|null
+}
+export interface ISetFilterType{	
+	type: "SET_FILTER_TYPE",
+	payload: TFilterEvents
+}
+
+export interface ISetIncludeAction{	
+	type: "SET_INCLUDE_ACTION",
+	payload: string[]
+}
+
+export interface ISetExcludeAction{	
+	type: "SET_EXCLUDE_ACTION",
+	payload: string[]
+}
+
+export interface IGroupSameAction{	
+	type: "GROUP_SAME_ACTION",
+	payload: boolean
+}
+
+export interface IFilterEventNameAction{
+	type: "FILTER_EVENT_NAME_ACTION",
+	payload: {
+		eventName: string,
+		kind: "include" | "exclude",
+		operation: "add" | "remove"
+	}
+}
+
+export function setListenerAction(enabled:boolean):IListenerAction{
+	return{
+		type:"SET_LISTENER",
+		payload:enabled
+	};
+}
+export function setAutoInspectorAction(enabled:boolean):IAutoInspectorAction{
+	return{
+		type:"SET_AUTO_INSPECTOR",
+		payload:enabled
+	};
 }
 
 export function setExpandedPathAction(type: ITreeDataTabs,path: TPath, expand: boolean, recursive: boolean,data:any): ISetExpandedPathAction{
@@ -211,10 +272,10 @@ export function setSelectedReferenceTypeAction(type: TTargetReference): ISetSele
 	};
 }
 
-export function clearViewAction():IClearViewAction{
+export function clearViewAction(keep:boolean):IClearViewAction{
 	return{
 		type: "CLEAR_VIEW",
-		payload: null
+		payload: {keep}
 	};
 }
 export function clearAction():IClearAction{
@@ -253,16 +314,16 @@ export function removeDescAction(uuids:string[]):IRemoveDescAction{
 		payload: uuids
 	};
 }
-export function importStateAction():IImportStateAction{
+export function importStateAction(state:IRootState):IImportStateAction{
 	return{
 		type: "IMPORT_STATE",
-		payload: null
+		payload: state
 	};
 }
-export function importAppendAction():IImportAppendAction{
+export function importItemsAction(items:IDescriptor[],kind:TImportItems):IImportItemsAction{
 	return{
-		type: "IMPORT_APPEND",
-		payload: null
+		type: "IMPORT_ITEMS",
+		payload: {items,kind}
 	};
 }
 export function importReplaceAction():IImportReplaceAction{
@@ -290,9 +351,54 @@ export function exportStateAction():IExportStateAction{
 	};
 }
 
+/////////////////
+
+export function setSearchTermAction(str:string|null):ISetSearchTermAction{
+	return{
+		type: "SET_SEARCH_TERM_ACTION",
+		payload: str
+	};
+}
+
+export function setFilterTypeAction(filterType:TFilterEvents): ISetFilterType{
+	return {
+		type: "SET_FILTER_TYPE",
+		payload:filterType
+	};
+}
+
+export function setIncludeAction(arr:string[]):ISetIncludeAction{
+	return{
+		type: "SET_INCLUDE_ACTION",
+		payload:arr
+	};
+}
+export function setExcludeAction(arr:string[]):ISetExcludeAction{
+	return{
+		type: "SET_EXCLUDE_ACTION",
+		payload:arr
+	};
+}
+
+export function groupSameAction(enabled: boolean):IGroupSameAction {
+	return {
+		type: "GROUP_SAME_ACTION",
+		payload: enabled
+	};
+}
+
+export function filterEventNameAction(eventName:string, kind:"include"|"exclude", operation: "add"|"remove"):IFilterEventNameAction {
+	return {
+		type: "FILTER_EVENT_NAME_ACTION",
+		payload: {
+			eventName,kind,operation
+		}
+	};
+}
+
 
 export type TActions = ISetMainTab |
-ISetInspectorPathDOMAction|
+	ISetInspectorPathDOMAction |
 	ISetModeTab |
 	ISetTargetReference |
 	IAddDescriptorAction |
@@ -305,12 +411,19 @@ ISetInspectorPathDOMAction|
 	IPinDescAction |
 	IRemoveDescAction |
 	IImportStateAction |
-	IImportAppendAction |
-	IImportReplaceAction |
+	IImportItemsAction |
 	IExportSelectedDescAction |
 	IExportAllDescAction |
 	IExportStateAction |
 	ISetFilterStateAction |
 	ISetInspectorPathDiffAction |
 	ISetInspectorPathContentAction |
-	ISetExpandedPathAction
+	ISetExpandedPathAction |
+	IListenerAction |
+	IAutoInspectorAction |
+	ISetSearchTermAction |
+	ISetFilterType |
+	ISetIncludeAction |
+	ISetExcludeAction |
+	IGroupSameAction |
+	IFilterEventNameAction;

@@ -5,7 +5,7 @@ import { TActions } from "../actions/inspectorActions";
 import { IInspectorState, IContent, IDifference, IReference, IDOM, TPath } from "../model/types";
 import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
-import { getTreeDomInstance } from "../selectors/inspectorSelectors";
+import { getTreeDomInstance, getDescriptorsListView } from "../selectors/inspectorSelectors";
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
 	console.log(JSON.stringify(action, null, "\t"));
@@ -43,16 +43,32 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				if (operation === "replace") {
 					draft.descriptors.forEach(d => d.selected = false);
 				}
+
 				const found = draft.descriptors.find(d => d.id === uuid);
-				if (found) {
+				if (found) {					
 					if (operation === "add" || operation === "replace") {
 						found.selected = true;
 					} else if (operation === "subtract") {
 						found.selected = false;
+					} else if (operation === "addContinuous" || operation === "subtractContinuous") {
+						const view = getDescriptorsListView({inspector:state,listener:null as any});
+						const lastSelectedItemIndex = view.map(item => item.id).indexOf(state.settings.lastSelectedItem ?? "n/a");
+						const thisItemIndex = view.map(item => item.id).indexOf(uuid);
+						if (lastSelectedItemIndex !== -1 && thisItemIndex !== -1) {
+							const ids:string[] = [];
+							for (let i = Math.min(lastSelectedItemIndex, thisItemIndex), end = Math.max(lastSelectedItemIndex, thisItemIndex); i <= end; i++){
+								ids.push(view[i].id);
+							}
+							ids.forEach(id => {
+								const f = draft.descriptors.find(item => item.id === id);
+								if (f) { f.selected = operation === "addContinuous";}
+							});
+						}
 					}
 				}
 
 				//
+				draft.settings.lastSelectedItem = uuid;
 				draft.inspector.content.expandedTree = [];
 				draft.inspector.dom.expandedTree = [];
 				draft.inspector.difference.expandedTree = [];
@@ -67,7 +83,16 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "CLEAR_VIEW": {
 			state = produce(state, draft => {
-				console.log("empty");
+				const view = getDescriptorsListView({ inspector: state, listener: null as any });
+				const ids = view.filter(item => !item.locked).map(item => item.id);
+				draft.descriptors = state.descriptors.filter(item => {
+					if (action.payload.keep) {
+						return ids.includes(item.id);
+					} else {
+						return !ids.includes(item.id);						
+					}
+				}
+				);
 			});
 			break;
 		}
@@ -137,20 +162,18 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			break;
 		}
 		case "IMPORT_STATE": {
-			state = produce(state, draft => {
-				console.log("empty");
-			});
+			state = {
+				...action.payload.inspector
+			};
 			break;
 		}
-		case "IMPORT_APPEND": {
+		case "IMPORT_ITEMS": {
 			state = produce(state, draft => {
-				console.log("empty");
-			});
-			break;
-		}
-		case "IMPORT_REPLACE": {
-			state = produce(state, draft => {
-				console.log("empty");
+				if (action.payload.kind === "append") {
+					draft.descriptors = [...action.payload.items, ...state.descriptors];
+				} else if (action.payload.kind === "replace") {
+					draft.descriptors = action.payload.items;
+				}
 			});
 			break;
 		}
@@ -203,6 +226,18 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 						});
 					}
 				}
+			});
+			break;
+		}
+		case "SET_LISTENER": {
+			state = produce(state, draft => {
+				draft.settings.autoUpdateListener = action.payload;
+			});
+			break;
+		}
+		case "SET_AUTO_INSPECTOR": {
+			state = produce(state, draft => {
+				draft.settings.autoUpdateInspector = action.payload;
 			});
 			break;
 		}
@@ -307,6 +342,36 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				}
 			});
 			console.log(state.inspector);
+			break;
+		}
+		case "SET_SEARCH_TERM_ACTION": {
+			state = produce(state, draft => {
+				draft.settings.searchTerm = action.payload;
+			});
+			break;
+		}
+		case "SET_FILTER_TYPE": {
+			state = produce(state, draft => {
+				draft.settings.listenerFilterType = action.payload;
+			});
+			break;
+		}
+		case "SET_INCLUDE_ACTION": {
+			state = produce(state, draft => {
+				draft.settings.listenerInclude = action.payload;
+			});
+			break;
+		}
+		case "SET_EXCLUDE_ACTION": {
+			state = produce(state, draft => {
+				draft.settings.listenerExclude = action.payload;
+			});
+			break;
+		}
+		case "GROUP_SAME_ACTION": {
+			state = produce(state, draft => {
+				draft.settings.groupDescriptors = action.payload ? "strict":"none";
+			});
 			break;
 		}
 		//Settings.saveSettings(state);

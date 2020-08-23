@@ -18,7 +18,9 @@ export class Settings{
 	}
 
 	public static async saveSettingsWithDialog(object: any): Promise<void>{
-		const file = await localFileSystem.getFileForSaving(Date.now() + ".json", {
+		const time = new Date();
+		const name = time.toLocaleString("uk").replace(/:/gm, "-").replace(",", "");
+		const file = await localFileSystem.getFileForSaving("Alchemist state "+name + ".json", {
 			types: ["json"],
 			//initialLocation: await this.settingsFolder()
 		});

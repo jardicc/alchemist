@@ -8,6 +8,14 @@
 	height: 100vh;
 	flex-shrink: 0;
 	background: var(--bg);
+	
+	/*textarea{
+		appearance: none;
+		border: 1px solid red;
+		padding: 1em;
+		font-family: monospace;
+		border:1px solid gray;
+	}*/
 
 	.Raw{
 		position: relative;
@@ -138,6 +146,7 @@
 		border:1px solid gray;
 		cursor: pointer;
 		border-radius: 3px;
+		box-sizing: border-box;
 
 		&:hover{
 			color:var(--hover);
@@ -149,6 +158,15 @@
 			border:1px solid black;
 			color:black;
 			cursor: not-allowed;
+		}
+
+		&.activated{
+			color: var(--active);
+			border-color: var(--active);
+			border-width: 2px;
+		}
+		&.deactivated{
+			margin:calc(0.3em + 1px);
 		}
 	}
 	

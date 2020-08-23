@@ -114,31 +114,7 @@ export const listenerReducer = (state = getInitialState(), action: TActions):IAp
 		}
 			
 		// Filter
-		case "SET_SEARCH_TERM_ACTION": {
-			state = produce(state, draft => {
-				draft.filter.searchTerm = action.payload || null;
-			});
-			break;
-		}
-			
-		case "SET_FILTER_TYPE": {
-			state = produce(state, draft => {
-				draft.filter.filterEventsType = action.payload;
-			});
-			break;
-		}
-		case "SET_INCLUDE_ACTION":{
-			state = produce(state, draft => {
-				draft.filter.include = action.payload;
-			});
-			break;
-		}
-		case "SET_EXCLUDE_ACTION":{
-			state = produce(state, draft => {
-				draft.filter.exclude = action.payload;
-			});
-			break;
-		}
+
 		case "GROUP_SAME_ACTION": {
 			state = produce(state, draft => {
 				draft.filter.groupSame = action.payload;

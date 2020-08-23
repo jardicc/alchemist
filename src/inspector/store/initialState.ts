@@ -4,10 +4,20 @@ import { IInspectorState } from "../model/types";
 
 export function getInitialState(): IInspectorState {
 	return {
+		version: [3, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
 		targetReference: [
+			{
+				type: "listener",
+				data: [
+					{
+						subType: "listenerCategory",
+						content:{value:"notSpecified",filterBy:"off"}
+					}
+				]
+			},
 			{
 				type: "application",
 				data: [
@@ -176,9 +186,23 @@ export function getInitialState(): IInspectorState {
 			}
 		],
 		settings: {
+			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
 			selectReferenceBeforeGet: true,
-			autoUpdate: false,
-			activeDescriptors: ["uuid1, uuid2"],
+			searchTerm: null,
+			listenerFilterType: "exclude",
+			listenerExclude:[
+				"layersFiltered",
+				"toolModalStateChanged",
+				"invokeCommand",
+				"modalStateChanged"
+			],
+			listenerInclude: [],
+			lastHistoryID:-1,
+			autoUpdateInspector: false,
+			groupDescriptors: "none",
+			autoUpdateListener: false,
+			lastSelectedItem:null,
+			activeDescriptors: [],
 			properties: [
 				{
 					type: "application",

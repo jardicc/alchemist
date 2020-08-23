@@ -4,10 +4,19 @@ import { cloneDeep } from "lodash";
 import { GetInfo } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
-import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference } from "../../model/types";
+import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, ISettings, TListenerCategoryReference } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
-import { IconLockLocked, IconPin, IconTrash } from "../../../shared/components/icons";
+import { IconLockLocked, IconPin, IconTrash, IconCog, IconPencil, IconClipboard, IconPlayIcon, IconList } from "../../../shared/components/icons";
 import { GetList } from "../../classes/GetList";
+import { app, action } from "../../../shared/imports";
+import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
+import { Settings } from "../../../listener/classes/Settings";
+import { Listener } from "../../../listener/components/Listener";
+import { ListenerClass } from "../../classes/Listener";
+import photoshop from "photoshop";
+import { Descriptor } from "photoshop/dist/types/UXP";
+import { ActionDescriptor } from "photoshop/dist/types/photoshop";
+import { Helpers } from "../../classes/Helpers";
 
 export interface IProperty<T>{
 	label: string
@@ -30,6 +39,7 @@ export interface ILeftColumnProps{
 	selectedTargetReference: TTargetReference
 	filterBySelectedReferenceType: TState
 	
+	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
 	activeTargetReferenceDocument: IContentWrapper<TDocumentReference>
 	activeTargetLayerReference: IContentWrapper<TLayerReference>
 	activeReferenceGuide: IContentWrapper<TGuideReference>
@@ -41,7 +51,8 @@ export interface ILeftColumnProps{
 	activeReferenceActionItem:IContentWrapper<TActionItem>
 	activeReferenceCommand: IContentWrapper<TActionCommand>
 	activeReferenceProperty: IContentWrapper<TBaseProperty>
-	
+
+	settings:ISettings	
 	hasAutoActiveDescriptor:boolean
 }
 
@@ -55,7 +66,11 @@ export interface ILeftColumnDispatch {
 	onRemove: (uuids: string[]) => void
 	onLock: (lock: boolean, uuids: string[]) => void
 
-	onSetFilter:(type: TTargetReference,subType: TSubTypes|"main",state: TState)=>void
+	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
+	
+	setListener:(enabled:boolean)=>void
+	setAutoInspector: (enabled: boolean) => void
+	setSearchTerm(str: string): void
 }
 
 export interface IState{
@@ -124,6 +139,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const { selectedTargetReference } = this.props;
 		
 		switch (selectedTargetReference) {
+			case "listener":
 			case "customDescriptor":
 			case "featureData":
 			case "generator":
@@ -274,6 +290,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			case "customDescriptor":
 			case "featureData":
 			case "generator":
+			case "listener":
 				return;
 		}
 
@@ -431,10 +448,116 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 	}
 
+
+
+	private renderListenerFilter = () => {
+		if (this.props.selectedTargetReference !== "listener") {
+			return null;
+		}
+		return <ListenerFilterContainer />;
+	}
+
+	public inspector = async (event: string, descriptor: any): Promise<void> => {
+		const {activeTargetReferenceListenerCategory } = this.props;
+		if (event === "select") {
+			const startTime = Date.now();
+			const desc:ActionDescriptor = {
+				_obj: "get",
+				_target: descriptor._target,
+			};
+			const playResult = await photoshop.action.batchPlay([desc], {});
+			const result: IDescriptor = {			
+				endTime: Date.now(),
+				startTime: startTime,
+				id: Helpers.uuidv4(),
+				locked: false,
+				originalData: {
+					...playResult
+				},
+				originalReference: {
+					type: "listener",
+					data: [{
+						subType: "listenerCategory",
+						content: activeTargetReferenceListenerCategory // change. I think this has to be hardcoded
+					}]
+				},
+				pinned: false,
+				selected: false,
+				calculatedReference: desc as any
+			};
+	
+			//this.props.setLastHistoryID;
+			this.props.onAddDescriptor(result);
+		}
+	}
+
+	/**
+	 * Listener to be attached to all Photoshop notifications.
+	 */
+	public listener = async (event: string, descriptor: any): Promise<void> => {
+		const {activeTargetReferenceListenerCategory } = this.props;
+		//const {collapsed} = this.props.settings;
+		console.log(event);
+		//const historyName = "test"; //await this.getHistoryState();
+		const result: IDescriptor = {			
+			endTime: 0,
+			startTime: 0,
+			id: Helpers.uuidv4(),
+			locked: false,
+			originalData: {
+				_obj: event,
+				...descriptor
+			},
+			originalReference: {
+				type: "listener",
+				data: [{
+					subType: "listenerCategory",
+					content: activeTargetReferenceListenerCategory // change. I think this has to be hardcoded
+				}]
+			},
+			pinned: false,
+			selected: false,
+			calculatedReference: {
+				_obj: event,
+				...descriptor
+			}
+		};
+
+		//this.props.setLastHistoryID;
+		this.props.onAddDescriptor(result);
+	}
+
+	/**
+	 * Attaches the simple listener to the app.
+	 */
+	private attachListener = async () => {
+		const { settings: { autoUpdateListener } } = this.props;
+		if (autoUpdateListener) {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			ListenerClass.listenerCb = async (event,descriptor) => { };
+		} else {
+			ListenerClass.listenerCb = this.listener;
+		}
+		this.props.setListener(!autoUpdateListener);
+	}
+
+	private autoInspector = async () => {
+		const {settings:{autoUpdateInspector} } = this.props;
+		this.props.setAutoInspector(!autoUpdateInspector);
+		if (autoUpdateInspector) {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			ListenerClass.inspectorCb = async (event, descriptor) => { };
+		} else {
+			ListenerClass.inspectorCb = this.inspector;
+		}
+		this.props.setAutoInspector(!autoUpdateInspector);
+	}
+
 	private renderFilters = (): React.ReactNode => {
 		return (
 			<React.Fragment>
 				{this.renderMainClass()}
+				{this.renderListenerFilter()}
 				{this.renderDocument()}
 				{this.renderHistory()}
 				{this.renderSnapshots()}
@@ -460,8 +583,24 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		);
 	}
 
+	private onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+		this.props.setSearchTerm(e.currentTarget.value);
+	}
+
+	private playSelected = () => {
+		console.log("a");
+	}
+
+	private renameSelected = () => {
+		console.log("a");
+	}
+
+	private copySelected = () => {
+		console.log("a");
+	}
+
 	public render(): JSX.Element {
-		const { addAllowed, onLock, onPin, onRemove, selectedDescriptors, lockedSelection, pinnedSelection } = this.props;
+		const { addAllowed, onLock, onPin, onRemove, selectedDescriptors, lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
 		return (
 			<div className="LeftColumn">
 				<div className="oneMore">
@@ -472,12 +611,22 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					</div>
 					<div className="filterButtons">
 						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</div>
+						<div className={"listenerSwitch button"+(autoUpdateListener ? " activated":" deactivated")} onClick={this.attachListener}>Listener</div>
+						<div className={"autoInspectorSwitch button"+(autoUpdateInspector ? " activated":" deactivated")} onClick={this.autoInspector}>Auto Inspector</div>
+					</div>
+					<div className="search">
+						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
 					</div>
 					<div className="descriptorsWrapper">
 						{this.renderDescriptorsList()}
 					</div>
 					<div className="descriptorButtons">
 						<div className="spread"></div>
+						<div className="filter buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconList/></div>
+						<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
+						<div className="rename buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPencil/></div>
+						<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
+						<div className="play buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPlayIcon/></div>
 						<div className="lock buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconLockLocked/></div>
 						<div className="pin buttonIcon" onClick={() => { onPin(!pinnedSelection, selectedDescriptors); }}><IconPin/></div>
 						<div className="remove buttonIcon" onClick={() => { onRemove(selectedDescriptors); }}><IconTrash /></div>
