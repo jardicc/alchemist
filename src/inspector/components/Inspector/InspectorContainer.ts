@@ -1,8 +1,9 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IInspectorDispatch, IInspectorProps, Inspector } from "./Inspector";
-import { setMainTabAction, setModeTabAction } from "../../actions/inspectorActions";
-import { getMainTabID, getModeTabID, getActiveDescriptorContent, getActiveDescriptorCalculatedReference, getActiveDescriptorOriginalReference, getSelectedDescriptors, getLeftTreeDiff, getRightTreeDiff, getSecondaryAutoActiveDescriptor, getAutoActiveDescriptor, getRightRawDiff, getLeftRawDiff } from "../../selectors/inspectorSelectors";
+import { setMainTabAction, setModeTabAction, replaceWholeStateAction } from "../../actions/inspectorActions";
+import { getMainTabID, getModeTabID, getActiveDescriptorContent, getActiveDescriptorCalculatedReference, getActiveDescriptorOriginalReference, getRightRawDiff, getLeftRawDiff } from "../../selectors/inspectorSelectors";
 import { IRootState } from "../../../shared/store";
+import { Settings } from "../../../listener/classes/Settings";
 
 
 const mapStateToProps = (state: IRootState): IInspectorProps => {
@@ -20,7 +21,11 @@ const mapStateToProps = (state: IRootState): IInspectorProps => {
 const mapDispatchToProps: MapDispatchToPropsFunction<IInspectorDispatch, Record<string, unknown>> = (dispatch):IInspectorDispatch => {
 	return {
 		setMainTab: (key) => dispatch(setMainTabAction(key)),
-		setModeTab: (key)  => dispatch(setModeTabAction(key)),
+		setModeTab: (key) => dispatch(setModeTabAction(key)),
+		setWholeState: async () => {
+			dispatch(replaceWholeStateAction(await Settings.importState()));
+			Settings.loaded = true;
+		}
 	};
 };
 

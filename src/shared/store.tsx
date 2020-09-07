@@ -1,8 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { inspectorReducer } from "../inspector/reducers";
-import { listenerReducer } from "../listener/reducers";
-import { IAppState } from "../listener/reducers/initialStateListener";
 import { IInspectorState } from "../inspector/model/types";
 
 /*
@@ -12,7 +10,6 @@ import { IInspectorState } from "../inspector/model/types";
 
 export interface IRootState{
 	inspector: IInspectorState;
-	listener: IAppState;
  }
 
 const composeEnhancers = composeWithDevTools({
@@ -21,7 +18,7 @@ const composeEnhancers = composeWithDevTools({
 
 const rootReducer = combineReducers({
 	inspector:inspectorReducer,
-	listener: listenerReducer
+	//listener: listenerReducer
 });
 export const rootStore = createStore(rootReducer, /* preloadedState, */ composeEnhancers(
 	applyMiddleware(),

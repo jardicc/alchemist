@@ -8,7 +8,7 @@ export class ReloaderItem{
 		this.initialTime = await this.getModifiedTime();
 	}
 
-	public async reloadIfChanged():Promise<void> {
+	public async reloadIfChanged(): Promise<void> {
 		if (!this.initialTime) {
 			return;
 		}

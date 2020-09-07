@@ -6,6 +6,7 @@ import { IInspectorState, IContent, IDifference, IReference, IDOM, TPath } from 
 import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
 import { getTreeDomInstance, getDescriptorsListView } from "../selectors/inspectorSelectors";
+import { Settings } from "../../listener/classes/Settings";
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
 	console.log(JSON.stringify(action, null, "\t"));
@@ -33,7 +34,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "ADD_DESCRIPTOR": {
 			state = produce(state, draft => {
-				draft.descriptors.unshift(action.payload);
+				draft.descriptors.push(action.payload);
 			});
 			break;
 		}
@@ -51,7 +52,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					} else if (operation === "subtract") {
 						found.selected = false;
 					} else if (operation === "addContinuous" || operation === "subtractContinuous") {
-						const view = getDescriptorsListView({inspector:state,listener:null as any});
+						const view = getDescriptorsListView({inspector:state});
 						const lastSelectedItemIndex = view.map(item => item.id).indexOf(state.settings.lastSelectedItem ?? "n/a");
 						const thisItemIndex = view.map(item => item.id).indexOf(uuid);
 						if (lastSelectedItemIndex !== -1 && thisItemIndex !== -1) {
@@ -83,7 +84,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "CLEAR_VIEW": {
 			state = produce(state, draft => {
-				const view = getDescriptorsListView({ inspector: state, listener: null as any });
+				const view = getDescriptorsListView({ inspector: state});
 				const ids = view.filter(item => !item.locked).map(item => item.id);
 				draft.descriptors = state.descriptors.filter(item => {
 					if (action.payload.keep) {
@@ -304,7 +305,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				}
 
 				if (type === "dom") {		
-					data = getTreeDomInstance({ inspector: state, listener: {} as any });
+					data = getTreeDomInstance({ inspector: state});
 				}
 
 				if (draftPart) { 
@@ -374,7 +375,15 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
-		//Settings.saveSettings(state);
+		case "REPLACE_WHOLE_STATE": {
+			if (action.payload) {
+				action.payload.settings.autoUpdateListener = false;
+				action.payload.settings.autoUpdateInspector = false;
+				state = action.payload;				
+			}
+			break;
+		}
 	}
+	Settings.saveSettings(state);
 	return state;
 };

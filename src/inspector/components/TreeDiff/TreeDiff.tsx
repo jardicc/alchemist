@@ -6,6 +6,7 @@ import JSONTree from "../JSONTree";
 import { diff } from "jsondiffpatch";
 import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { TPath } from "../../model/types";
+import { divide } from "lodash";
 
 function stringifyAndShrink(val:any, isWideLayout=false) {
 	if (val === null) { return "null"; }
@@ -110,13 +111,19 @@ export default class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		const { left, right } = this.props;
 		const delta = this.state.data;
 		if (!delta && left && right) {
-			return "Content is same";
+			return (
+				<div className="TreeDiff">
+					<div className="message">Content is same</div>
+				</div>
+			);
 		}
 
 		if (!this.state.data) {
 			return (
-				<div className="stateDiffEmpty">
-					(states are equal)
+				<div className="TreeDiff">
+					<div className="stateDiffEmpty message">
+						(states are equal or missing)
+					</div>
 				</div>
 			);
 		}
@@ -138,7 +145,7 @@ export default class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 					isCustomNode={Array.isArray as any}
 					hideRoot={true}
 					sortObjectKeys={true}
-				/> : "Select 2 descriptors. (Hold Ctrl + click on descriptor item)"}
+				/> : <div className="message">Select 2 descriptors. (Hold Ctrl + click on descriptor item)</div>}
 			</div>
 		);
 	}

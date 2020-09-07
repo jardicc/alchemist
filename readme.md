@@ -8,11 +8,9 @@ This software was not created by Adobe and Adobe is not responsible for it. You 
 
 ## Quick usage
 
-Move/symlink `dist` folder itself (not its content) 
-into: `C:\Program Files\Common Files\Adobe\UXP\extensions` 
-or `/Library/Application Support/Adobe/UXP/extensions/`
+Install "Adobe UXP Developer Tool" if not already installed. Click add plugin button. And open `dist\manifest.json` in dialog. Then in actions you can click "load".
 
-Panel settings on Window can be found in: `c:\Users\<yourAccountName>\AppData\Local\UXP\PluginsData\Internal\cz.bereza.uxp_listener\settings.json`
+Panel settings on Window can be found in: `c:\Users\<yourAccountName>\AppData\Local\UXP\PluginsData\Internal\cz.bereza.alchemist\settings.json`
 
 ## Dev Setup
 

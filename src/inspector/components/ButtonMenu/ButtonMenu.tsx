@@ -140,7 +140,6 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 	}
 
 	private renderList = () => {
-		console.log("render list");
 		const { items,placement } = this.props;
 		return (
 			<div

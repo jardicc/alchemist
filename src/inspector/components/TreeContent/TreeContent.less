@@ -13,6 +13,7 @@
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
+
 	.JSONTree{
 		flex-grow: 1;
 		flex-shrink: 0;
@@ -31,10 +32,19 @@
 		}
 
 	}
+
 	.pathItem:not(:first-child)::before{
 		content: ">";
 	}
 
+	.message{
+		display: flex;
+		padding:0.5em;
+		flex-grow: 1;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
 	
 	.inspector {
 		display: flex;

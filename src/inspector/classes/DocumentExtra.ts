@@ -4,6 +4,8 @@ import type { Descriptor, PhotoshopAction } from "photoshop/dist/types/UXP";
 import { IDReference } from "./GetInfo";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import type Document from "photoshop/dist/dom/Document";
+import photoshop from "photoshop/dist/dom/Photoshop";
+import { action } from "../../shared/imports";
 
 type TDocument = typeof Document;
 
@@ -27,6 +29,10 @@ export class DocumentExtra extends DocumentNative{
 			"_ref": "document",
 			"_id": this._id
 		});
+	}
+
+	public get exists(): boolean{
+		return action.validateReference([this.amReference]);
 	}
 
 	public get colorMode(): number{

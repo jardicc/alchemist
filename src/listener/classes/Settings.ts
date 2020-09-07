@@ -6,21 +6,31 @@ export class Settings{
 	public static loaded = false;
 
 	private static readonly settingsFilename = "settings.json";
+	private static saveTimeout: number;
 
 	public static async settingsFolder() {
 		const folder = await localFileSystem.getDataFolder();
 		return folder;
 	}
 
-	public static async saveSettings(object: any): Promise<void> {		
-		const folder = await this.settingsFolder();
-		await this._saveSettings(object, folder);
+	public static async saveSettings(object: any): Promise<void> {
+		clearTimeout(this.saveTimeout);
+		this.saveTimeout = setTimeout(async () => {
+			const folder = await this.settingsFolder();
+			console.log(folder);
+			await this._saveSettings(object, folder);
+			console.log("saved");
+		}, 10 * 1000);
 	}
 
-	public static async saveSettingsWithDialog(object: any): Promise<void>{
+	private static getTimeStamp() {
 		const time = new Date();
 		const name = time.toLocaleString("uk").replace(/:/gm, "-").replace(",", "");
-		const file = await localFileSystem.getFileForSaving("Alchemist state "+name + ".json", {
+		return name;
+	}
+
+	public static async saveSettingsWithDialog(object: any): Promise<void> {
+		const file = await localFileSystem.getFileForSaving("Alchemist state " + this.getTimeStamp() + ".json", {
 			types: ["json"],
 			//initialLocation: await this.settingsFolder()
 		});

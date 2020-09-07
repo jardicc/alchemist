@@ -59,7 +59,7 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 				</div>
 				
 				{(content === undefined || content === null) ?
-					"Content is missing. Please make sure that you selected descriptor and your pinned property exists"
+					<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>					
 					:
 					<JSONTree
 						expandClicked={this.expandClicked}

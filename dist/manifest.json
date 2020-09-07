@@ -17,29 +17,7 @@
 		    "theme": [ "lightest", "light" ]
 		}
 	],
-	"entrypoints": [{
-			"type": "panel",
-			"id": "listener",
-			"label": {
-				"default": "Listener - UXP"
-			},
-			"minimumSize": {
-				"width": 230,
-				"height": 200
-			},
-			"maximumSize": {
-				"width": 2000,
-				"height": 2000
-			},
-			"preferredDockedSize": {
-				"width": 380,
-				"height": 700
-			},
-			"preferredFloatingSize": {
-				"width": 380,
-				"height": 700
-			}
-		},
+	"entrypoints": [
 		{
 			"type": "panel",
 			"id": "inspector",

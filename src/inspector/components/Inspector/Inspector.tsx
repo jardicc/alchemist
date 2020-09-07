@@ -25,7 +25,8 @@ export interface IInspectorProps{
 
 export interface IInspectorDispatch {
 	setMainTab(name: TActiveSection): void
-	setModeTab(mode:TActiveInspectorTab):void
+	setModeTab(mode: TActiveInspectorTab): void
+	setWholeState():void
 }
 
 
@@ -49,6 +50,10 @@ export class Inspector extends React.Component<TInspector, IState> {
 			...this.state,
 			diffSubtab: key
 		});
+	}
+
+	public componentDidMount(): void {
+		this.props.setWholeState();
 	}
 
 	public render(): JSX.Element {
@@ -123,7 +128,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 						</div>
 					</TabPanel>
 					<TabPanel id="settings" title="Settings">
-						settings
+						TODO
 					</TabPanel>
 				</TabList>
 				<FooterContainer />

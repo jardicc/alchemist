@@ -4,6 +4,8 @@ import { ButtonMenu } from "../ButtonMenu/ButtonMenu";
 import { Settings } from "../../../listener/classes/Settings";
 import { TExportItems, TImportItems, IDescriptor } from "../../model/types";
 import { IRootState } from "../../../shared/store";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const manifest = require("./../../../../uxp/manifest.json");
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IFooterProps{
@@ -54,6 +56,7 @@ export class Footer extends React.Component<TFooter> {
 	public render():React.ReactNode{
 		return (
 			<div className="Footer">
+				<div className="button" onClick={e=>location.reload()}>Reload</div>
 				<ButtonMenu
 					key="clear"
 					className="abc"
@@ -69,6 +72,10 @@ export class Footer extends React.Component<TFooter> {
 					<div className="button">Clear...</div>
 				</ButtonMenu>
 				<div className="button">Group same</div>
+				<div className="spread"></div>
+				<div>
+					<span className="version">v. {manifest.version}</span>
+				</div>
 				<div className="spread"></div>
 				<ButtonMenu
 					key="import"
@@ -89,7 +96,7 @@ export class Footer extends React.Component<TFooter> {
 					placement={"top"}
 					items={
 						<div className="column">
-							<div className="button" onClick={() => { debugger; this.exportState();}}>App state</div>
+							<div className="button" onClick={() => {this.exportState();}}>App state</div>
 							<div className="button" onClick={() => this.exportItems("all")}>All items</div>
 							<div className="button" onClick={() => this.exportItems("selected")}>Selected items</div>
 						</div>

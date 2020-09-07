@@ -7,7 +7,7 @@ import { getName } from "../../classes/GetName";
 
 export interface IDescriptorItemProps {
 	descriptor: IDescriptor
-	autoSelected: boolean
+	autoSelected: string[]
 	activeTargetReference: ITargetReference | null;
 	filterBySelectedReferenceType:TState
 }
@@ -87,12 +87,16 @@ export class DescriptorItem extends React.Component<TDescriptorItem> {
 		return titles.join(" / ");		
 	}
 
+	private get autoSelected():boolean {
+		return this.props.autoSelected.includes(this.props.descriptor.id);
+	}
+
 	public render(): React.ReactNode{
-		const { descriptor, autoSelected } = this.props;
+		const { descriptor } = this.props;
 		
 		const {descriptor:{locked,pinned} } = this.props;
 		return (
-			<div className={"DescriptorItem" + (descriptor.selected ? " selected" : "") + (autoSelected?" autoSelected":"")} onClick={this.select}>
+			<div className={"wrap" + (descriptor.selected ? " selected" : "") + (this.autoSelected?" autoSelected":"")} onClick={this.select}>
 				<div className="name">{this.generateItemNameNew()}</div>
 				<div className="spread"></div>
 				{locked ? <div className="icon"><IconLockLocked/></div> : ""}

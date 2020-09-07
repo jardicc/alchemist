@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 
@@ -176,6 +176,20 @@ export interface IFilterEventNameAction{
 		kind: "include" | "exclude",
 		operation: "add" | "remove"
 	}
+}
+
+export interface IReplaceWholeState{
+	type: "REPLACE_WHOLE_STATE",
+	payload: IInspectorState
+}
+
+
+
+export function replaceWholeStateAction(state: IInspectorState):IReplaceWholeState {
+	return {
+		type: "REPLACE_WHOLE_STATE",
+		payload: state
+	};
 }
 
 export function setListenerAction(enabled:boolean):IListenerAction{
@@ -426,4 +440,5 @@ export type TActions = ISetMainTab |
 	ISetIncludeAction |
 	ISetExcludeAction |
 	IGroupSameAction |
-	IFilterEventNameAction;
+	IFilterEventNameAction |
+	IReplaceWholeState

@@ -10,6 +10,8 @@ Merges Inspector and listener panels
 - implements merged batch play code generation
 - shows "Event" for listened event instead of time. Since time is unknown
 - feature possibility to remove item (not) in view
+- reverse order of descriptor items
+- autosafe for inspector panel after 10 seconds inactivity
 
 ## 0.21.0
 Inspector only

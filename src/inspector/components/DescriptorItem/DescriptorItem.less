@@ -1,11 +1,9 @@
 .DescriptorItem {
-	border-top: 1px solid var(--divider);
-	padding: 0.3em 1em;
-	background: var(--bg);
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	cursor: pointer;
+	
+	border-top: 1px solid var(--divider);
 
 	&:last-child {
 		border-bottom: 1px solid var(--divider);
@@ -14,22 +12,34 @@
 		border-top: none;
 	}
 
-	&:hover {
-		color: var(--hover);
-	}
-	
-	&.selected {
-		color: var(--active);
+	.wrap{		
+		cursor: pointer;
+		padding: 0.3em 1em;
+		background: var(--bg);
+		display: flex;
+		align-items: center;
+		flex-grow: 1;
 
+
+	
 		&:hover {
 			color: var(--hover);
 		}
+		
+		&.selected {
+			color: var(--active);
+	
+			&:hover {
+				color: var(--hover);
+			}
+		}
+	
+		&.autoSelected{
+			//color: var(--autoActive);
+			font-style: italic;
+		}
 	}
 
-	&.autoSelected{
-		//color: var(--autoActive);
-		font-style: italic;
-	}
 
 	.name {
 		overflow-wrap: anywhere;

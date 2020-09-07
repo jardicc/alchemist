@@ -1,6 +1,5 @@
 import React from "react";
 import { TSubTypes, ISettings, TFilterEvents, TTargetReference, TListenerCategoryReference, IContentWrapper } from "../../model/types";
-import { GetList } from "../../classes/GetList";
 import { TBaseItems, baseItemsListener } from "../../model/properties";
 import { TState, FilterButton } from "../FilterButton/FilterButton";
 
@@ -45,14 +44,14 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 			case "exclude": {
 				return (
 					<React.Fragment>
-						<div className="label">Exclude: </div><input onChange={this.setExclude} value={listenerExclude} type="text" />
+						<div className="label">Exclude: </div><input onChange={this.setExclude} value={listenerExclude.join(";")} type="text" />
 					</React.Fragment>
 				);
 			}
 			case "include": {
 				return (
 					<React.Fragment>
-						<div className="label">Include: </div><input onChange={this.setInclude} value={listenerInclude} type="text" />
+						<div className="label">Include: </div><input onChange={this.setInclude} value={listenerInclude.join(";")} type="text" />
 					</React.Fragment>
 				);
 			}
@@ -72,6 +71,7 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 				break;
 		}
 	}
+
 	private buildFilterRow = (
 		label: string,
 		subType: "listenerCategory",
@@ -81,8 +81,8 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
-				<sp-dropdown quiet="true" onMouseDown={()=>this.dropdownClick(subType)}>
-					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>) => { console.log(e);}}>
+				<sp-dropdown quiet="true" onMouseDown={() => this.dropdownClick(subType)}>
+					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>) => { console.log(e); }}>
 						{
 							items.map(item => (
 								<sp-menu-item
@@ -94,7 +94,7 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 						}
 					</sp-menu>
 				</sp-dropdown>
-				<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
+				<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype, state) => this.props.onSetFilter(this.props.selectedTargetReference, subtype, state)} />
 			</div>
 		);
 	}
@@ -106,7 +106,7 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 				<div className="category">
 					{this.buildFilterRow("Category","listenerCategory",baseItemsListener,activeTargetReferenceListenerCategory)}
 				</div>
-				<div className="filter">
+				<div className="filter excludeIncludeDropdownRow">
 					<div className="label">Filter:</div>
 					<sp-dropdown quiet="true">
 						<sp-menu slot="options" onClick={this.onSetFilterEventsType}>
@@ -123,7 +123,7 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 						</sp-menu>
 					</sp-dropdown>
 				</div>
-				<div className="ExcludeInclude">
+				<div className="excludeIncludeInput">
 					{this.renderFilterFields()}
 				</div>
 			</React.Fragment>

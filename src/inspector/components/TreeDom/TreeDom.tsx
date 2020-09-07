@@ -85,7 +85,7 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 				</div>
 				
 				{(content === undefined || content === null) ?
-					"Content is missing. Please make sure that you selected descriptor and your pinned property exists"
+					<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
 					:
 					<JSONTree
 						shouldExpandNode={shouldExpandNode(this.props.expandedKeys)}

@@ -4,6 +4,8 @@ import Layer from "photoshop/dist/dom/Layer";
 import { Photoshop } from "photoshop/dist/dom/Photoshop";
 import { ActionSet, Action } from "photoshop/dist/dom/Actions";
 import { TReference, IDReference } from "./GetInfo";
+import { DocumentExtra } from "./DocumentExtra";
+import { LayerExtra } from "./LayerExtra";
 
 export class GetDOM{
 	public static getDom(ref: TReference[]): Photoshop | Layer | Document | ActionSet | Action | null {
@@ -17,7 +19,11 @@ export class GetDOM{
 		}
 
 		if (res[0]._ref === "layer") {
-			return GetDOM.getLayerDom(res[1]._id, res[0]._id);
+			if (res.length === 1) {
+				return GetDOM.getLayerDom(res[0]._id);				
+			} else {
+				return GetDOM.getLayerDom(res[0]._id,res[1]._id);				
+			}
 		}
 
 		if (res[0]._ref === "document") {
@@ -38,13 +44,24 @@ export class GetDOM{
 		return appDom;
 	}
 
-	private static getLayerDom(doc:number,num:number):Layer {
-		const layerDom = new photoshop.app.Layer(num, doc);
+	private static getLayerDom(layer: number, doc?: number): Layer|null {
+		if (doc === undefined) {
+			doc = photoshop.app.activeDocument._id;
+		}
+		const layerDom = new photoshop.app.Layer(layer, doc);
+		const layerExtra = new LayerExtra(layerDom);
+		if (!layerExtra.exists) {
+			return null;
+		}
 		return layerDom;
 	}
 
-	private static getDocumentDom(doc: number):Document {
+	private static getDocumentDom(doc: number):Document|null {
 		const docDom = new photoshop.app.Document(doc);
+		const extraDom = new DocumentExtra(docDom);
+		if (!extraDom.exists) {
+			return null;
+		}
 		return docDom;
 	}
 

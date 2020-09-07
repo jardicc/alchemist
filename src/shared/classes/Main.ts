@@ -1,7 +1,5 @@
 import { Reloader } from "../../listener/classes/Reloader";
-import { renderListenerUI } from "../../listener/components";
 import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
-import { ThemeManager } from "./ThemeManager";
 import { ListenerClass } from "./../../inspector/classes/Listener";
 import "./../index.less";
 
@@ -14,10 +12,9 @@ export class Main{
 
 	public static start(): void {
 		ListenerClass.init();
-		renderListenerUI();
+		//renderListenerUI();
 		renderInspectorUI();
 		//Main.reloader.start();
-		ThemeManager.start();
 	}
 }
 

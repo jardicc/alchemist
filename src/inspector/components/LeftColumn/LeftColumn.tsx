@@ -8,13 +8,9 @@ import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TG
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { IconLockLocked, IconPin, IconTrash, IconCog, IconPencil, IconClipboard, IconPlayIcon, IconList } from "../../../shared/components/icons";
 import { GetList } from "../../classes/GetList";
-import { app, action } from "../../../shared/imports";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
-import { Settings } from "../../../listener/classes/Settings";
-import { Listener } from "../../../listener/components/Listener";
 import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
-import { Descriptor } from "photoshop/dist/types/UXP";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { Helpers } from "../../classes/Helpers";
 
@@ -103,6 +99,12 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			historyList: [],
 			snapshotsList:[],
 		};
+	}
+
+	private lastDescRef:React.RefObject<Element> = React.createRef();
+
+	public componentDidUpdate=()=> {
+		this.lastDescRef?.current?.scrollIntoView();
 	}
 
 	/** refactor into reducer? */
@@ -341,23 +343,25 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return (
 			<div className="filter">
 				<div className="label">Property:</div>
-				<sp-dropdown quiet="true">
-					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType("property",e)}>
-						{
-							baseItemsProperty.map(item => (
-								<sp-menu-item
-									key={item.value}
-									value={item.value}
-									selected={activeReferenceProperty.value === item.value ? "selected" : null}
-								>{item.label}</sp-menu-item>
-							))
-						}
-						{defaultEl}
-						{optional}
-						{hidden}
-					</sp-menu>
-				</sp-dropdown>
-				<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
+				<div className="dropdownWrap">
+					<sp-dropdown quiet="true">
+						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType("property",e)}>
+							{
+								baseItemsProperty.map(item => (
+									<sp-menu-item
+										key={item.value}
+										value={item.value}
+										selected={activeReferenceProperty.value === item.value ? "selected" : null}
+									>{item.label}</sp-menu-item>
+								))
+							}
+							{defaultEl}
+							{optional}
+							{hidden}
+						</sp-menu>
+					</sp-dropdown>
+					<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
+				</div>
 			</div>
 		);
 	}
@@ -419,20 +423,22 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
-				<sp-dropdown quiet="true" onMouseDown={()=>this.dropdownClick(subType)}>
-					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType(subType,e)}>
-						{
-							items.map(item => (
-								<sp-menu-item
-									key={item.value}
-									value={item.value}
-									selected={content.value === item.value ? "selected" : null}
-								>{item.label}</sp-menu-item>
-							))
-						}
-					</sp-menu>
-				</sp-dropdown>
-				<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
+				<div className="dropdownWrap">
+					<sp-dropdown quiet="true" onMouseDown={()=>this.dropdownClick(subType)}>
+						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType(subType,e)}>
+							{
+								items.map(item => (
+									<sp-menu-item
+										key={item.value}
+										value={item.value}
+										selected={content.value === item.value ? "selected" : null}
+									>{item.label}</sp-menu-item>
+								))
+							}
+						</sp-menu>
+					</sp-dropdown>
+					<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
+				</div>
 			</div>
 		);
 	}
@@ -534,7 +540,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const { settings: { autoUpdateListener } } = this.props;
 		if (autoUpdateListener) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			ListenerClass.listenerCb = async (event,descriptor) => { };
+			ListenerClass.listenerCb = async () => { };
 		} else {
 			ListenerClass.listenerCb = this.listener;
 		}
@@ -546,7 +552,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		this.props.setAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			ListenerClass.inspectorCb = async (event, descriptor) => { };
+			ListenerClass.inspectorCb = async () => { };
 		} else {
 			ListenerClass.inspectorCb = this.inspector;
 		}
@@ -578,7 +584,9 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const { allDescriptors, hasAutoActiveDescriptor } = this.props;
 		return (
 			allDescriptors.map((d, index) => (
-				<DescriptorItemContainer descriptor={d} key={d.id} autoSelected={index === 0 && hasAutoActiveDescriptor} />
+				<div className="DescriptorItem" key={index} ref={index===allDescriptors.length-1 ? this.lastDescRef as any : null}>
+					<DescriptorItemContainer descriptor={d} key={d.id} />
+				</div>
 			))
 		);
 	}
@@ -587,17 +595,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		this.props.setSearchTerm(e.currentTarget.value);
 	}
 
-	private playSelected = () => {
-		console.log("a");
-	}
 
-	private renameSelected = () => {
-		console.log("a");
-	}
 
-	private copySelected = () => {
-		console.log("a");
-	}
 
 	public render(): JSX.Element {
 		const { addAllowed, onLock, onPin, onRemove, selectedDescriptors, lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;

@@ -31,7 +31,7 @@
 		}
 	}
 
-	.ExcludeInclude{
+	.excludeIncludeInput{
 		display: flex;
 		align-items: center;
 		margin: 0 0.5em;
@@ -42,7 +42,9 @@
 		}
 
 		input{
-			margin-right: 1em;
+			flex-grow: 1;
+			width: 0;
+			margin: 0 0.3em 0 0;
 		}
 	}
 
@@ -52,7 +54,8 @@
 	}
 	
 	.filterButtons{
-	
+		display: flex;
+		flex-wrap: wrap;
 	}
 	
 	.oneMore {
@@ -64,11 +67,24 @@
 	
 	.filter{
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		margin: 0 0.5em;
 
+		&.excludeIncludeDropdownRow{
+			margin-right: 1.3em;
+		}
+
+		.dropdownWrap{
+			display: flex;
+			align-items: center;
+			flex-grow: 1;
+		}
+
 		sp-dropdown{
 			flex-grow: 1;
+			min-width: 8em;
+			width: 8em;
 		}
 	}
 	
@@ -76,6 +92,8 @@
 	.descriptorButtons{
 		display: flex;
 		align-items: center;
+		flex-wrap: wrap;
+		justify-content: flex-end;
 	}
 	
 	.descriptorButtons .button{

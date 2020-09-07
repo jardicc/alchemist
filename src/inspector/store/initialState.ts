@@ -194,7 +194,8 @@ export function getInitialState(): IInspectorState {
 				"layersFiltered",
 				"toolModalStateChanged",
 				"invokeCommand",
-				"modalStateChanged"
+				"modalStateChanged",
+				"historyStateChanged"
 			],
 			listenerInclude: [],
 			lastHistoryID:-1,

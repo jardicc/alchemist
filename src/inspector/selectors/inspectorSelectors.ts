@@ -47,6 +47,9 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 		if (s.type === "generator") {
 			return true;
 		}
+		if (s.type === "listener") {
+			return false;
+		}
 		for (const key in s.data) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			if ((s.data as any)[key] === "undefined") {
@@ -61,7 +64,7 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 	
 	const pinned = allDesc.filter(i => i.pinned);
 	const notPinned = allDesc.filter(i => !i.pinned);
-	const reordered = [...pinned, ...notPinned];
+	const reordered = [...notPinned,...pinned];
 
 	// add one search here... perhaps generate name and store it in redux store so it can be used in search
 
@@ -84,7 +87,6 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		}
 		return true;
 	});
-
 	if (activeRefFilter?.type === "listener") {
 		if (settings.listenerFilterType === "exclude" && settings.listenerExclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
@@ -139,7 +141,7 @@ export const getAutoActiveDescriptor = createSelector([getActiveDescriptors, get
 	const list = view.filter(item => !item.pinned);
 	if (activeDescs.length === 0) {
 		if (list.length) {
-			return list[0];			
+			return list[list.length-1];			
 		}
 	}
 	return null;
@@ -149,10 +151,20 @@ export const getSecondaryAutoActiveDescriptor = createSelector([getActiveDescrip
 	const list = view.filter(item => !item.pinned);
 	if (activeDescs.length === 0) {
 		if (list.length >= 2) {
-			return list[1];
+			return list[list.length-2];
 		}
 	}
 	return null;
+});
+
+export const getAutoSelectedIDs = createSelector([getAutoActiveDescriptor, getSecondaryAutoActiveDescriptor], (first,second) => {
+	const f = first?.id;
+	const s = second?.id;
+	const result: string[] = [];
+	if (f) { result.push(f); }
+	if (s) { result.push(s); }
+	
+	return result;
 });
 
 export const getHasAutoActiveDescriptor = createSelector([getAutoActiveDescriptor], d => {
