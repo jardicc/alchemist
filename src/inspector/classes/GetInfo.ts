@@ -4,11 +4,12 @@ import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { DocumentExtra } from "./DocumentExtra";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
+import { getName } from "./GetName";
 const PS = photoshop.app;
 
 
 export interface ITargetReferenceAM {
-	"_obj": "get",
+	"_obj": string,
 	"_target": TReference[]
 	"expandSmartObjects"?: boolean,
 	"getTextStyles"?: boolean,
@@ -246,6 +247,16 @@ export class GetInfo {
 		return this.buildReply(startTime, playResult, desc,originalRef);
 	}
 
+	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM): string => {
+		if (originalReference.type==="listener") {
+			return calculatedReference._obj;
+		}
+		const parts = getName(calculatedReference._target);
+		//parts.push(...subs.map(d => d.subType + ": " + d.content.value));
+		const names = parts.map(p => /*p.typeTitle +*/ ((p.value) ? (/*": "*/ p.value) : p.typeTitle));
+		return names.join(" / ");
+	}
+
 	private static buildReply(startTime:number,playResult:Descriptor[],desc: ITargetReferenceAM, originalRef: ITargetReference):IDescriptor {
 		return {
 			startTime,
@@ -256,7 +267,8 @@ export class GetInfo {
 			originalReference: originalRef,
 			pinned: false,
 			selected: false,
-			calculatedReference: desc 
+			calculatedReference: desc,
+			title:this.generateTitle(originalRef,desc)
 		};
 	}
 

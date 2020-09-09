@@ -4,6 +4,7 @@ import { IDescriptor } from "../model/types";
 import { cloneDeep } from "lodash";
 import { GetDOM } from "../classes/GetDOM";
 import { Descriptor } from "photoshop/dist/types/UXP";
+import { ITargetReferenceAM } from "../classes/GetInfo";
 
 const all = (state:IRootState) => state.inspector;
  
@@ -64,7 +65,12 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 	
 	const pinned = allDesc.filter(i => i.pinned);
 	const notPinned = allDesc.filter(i => !i.pinned);
-	const reordered = [...notPinned,...pinned];
+	let reordered = [...notPinned, ...pinned];
+	const { searchTerm } = settings;
+
+	if (searchTerm) {
+		reordered = reordered.filter(item => (item.title.toLowerCase().includes(searchTerm.toLowerCase())));
+	} 
 
 	// add one search here... perhaps generate name and store it in redux store so it can be used in search
 
@@ -72,7 +78,8 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		return reordered;
 	}
 
-	let filtered = reordered.filter((desc:IDescriptor) => {
+	let filtered = reordered.filter((desc: IDescriptor) => {
+		if (rootFilter === "off") { return true;}
 		const origRefFilter = desc.originalReference;
 		if (activeRefFilter?.type !== origRefFilter.type) {
 			return false;
@@ -97,10 +104,9 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 				settings.listenerInclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim()))
 			);
 		}
-		if (settings.searchTerm) {
-			filtered = filtered.filter(item => (item.originalData as Descriptor)?._obj?.includes(settings.searchTerm as string));
-		} 
 	}
+
+
 
 	return filtered;
 });
@@ -138,7 +144,7 @@ export const getActiveDescriptors = createSelector([all], s => {
 });
 
 export const getAutoActiveDescriptor = createSelector([getActiveDescriptors, getDescriptorsListView], (activeDescs, view) => {
-	const list = view.filter(item => !item.pinned);
+	const list = view;//.filter(item => !item.pinned);
 	if (activeDescs.length === 0) {
 		if (list.length) {
 			return list[list.length-1];			
@@ -148,7 +154,7 @@ export const getAutoActiveDescriptor = createSelector([getActiveDescriptors, get
 });
 
 export const getSecondaryAutoActiveDescriptor = createSelector([getActiveDescriptors, getDescriptorsListView], (activeDescs, view) => {
-	const list = view.filter(item => !item.pinned);
+	const list = view;//.filter(item => !item.pinned);
 	if (activeDescs.length === 0) {
 		if (list.length >= 2) {
 			return list[list.length-2];
@@ -310,7 +316,7 @@ export const getTreeDom = createSelector([getSelectedDescriptors, getDomPath, ge
 	}
 	const ref = {
 		// selected desc or auto selected
-		ref: selectedDesc?.[0]?.calculatedReference?._target ?? autoSelectedDesc?.calculatedReference?._target,
+		ref: (selectedDesc?.[0]?.calculatedReference as ITargetReferenceAM)?._target ?? (autoSelectedDesc ?.calculatedReference as ITargetReferenceAM)?._target,
 		path: domPath
 	};
 	return ref;

@@ -3,7 +3,7 @@ import { IInspectorDispatch, IInspectorProps, Inspector } from "./Inspector";
 import { setMainTabAction, setModeTabAction, replaceWholeStateAction } from "../../actions/inspectorActions";
 import { getMainTabID, getModeTabID, getActiveDescriptorContent, getActiveDescriptorCalculatedReference, getActiveDescriptorOriginalReference, getRightRawDiff, getLeftRawDiff } from "../../selectors/inspectorSelectors";
 import { IRootState } from "../../../shared/store";
-import { Settings } from "../../../listener/classes/Settings";
+import { Settings } from "../../classes/Settings";
 
 
 const mapStateToProps = (state: IRootState): IInspectorProps => {

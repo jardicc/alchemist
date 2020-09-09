@@ -1,13 +1,15 @@
 import React from "react";
-import { TSubTypes, ISettings, TFilterEvents, TTargetReference, TListenerCategoryReference, IContentWrapper } from "../../model/types";
+import { TSubTypes, ISettings, TFilterEvents, TTargetReference, TListenerCategoryReference, IContentWrapper, ITargetReference } from "../../model/types";
 import { TBaseItems, baseItemsListener } from "../../model/properties";
 import { TState, FilterButton } from "../FilterButton/FilterButton";
+import cloneDeep from "lodash/cloneDeep";
 
 
 export interface IListenerFilterProps{
 	settings: ISettings
 	selectedTargetReference: TTargetReference
 	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
+	activeTargetReference: ITargetReference | null;
 }
 
 export interface IListenerFilterDispatch {
@@ -15,16 +17,14 @@ export interface IListenerFilterDispatch {
 	setInclude(arr:string[]):void
 	setExclude(arr: string[]): void
 	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
+	onSetTargetReference: (arg: ITargetReference) => void
 }
 
 
 type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
 
-interface IState{
-	
-}
 
-export class ListenerFilter extends React.Component<TListenerFilter, IState> { 
+export class ListenerFilter extends React.Component<TListenerFilter, any> { 
 	constructor(props: TListenerFilter) {
 		super(props);
 	}
@@ -65,10 +65,17 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 		this.props.setFilterEventsType(e.target.value);
 	}
 
-	private dropdownClick = async (type: "listenerCategory") => {
-		switch (type) {
-			case "listenerCategory":
-				break;
+	private onSetSubType = (subType: TSubTypes, value: React.ChangeEvent<HTMLSelectElement>) => {
+
+		const { onSetTargetReference, activeTargetReference} = this.props;
+		const found = cloneDeep(activeTargetReference);
+		
+		if (found) {
+			const content = found?.data?.find(i => i.subType === subType)?.content;
+			if (content) {
+				content.value = value.target.value;
+				onSetTargetReference(found);
+			}
 		}
 	}
 
@@ -81,8 +88,8 @@ export class ListenerFilter extends React.Component<TListenerFilter, IState> {
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
-				<sp-dropdown quiet="true" onMouseDown={() => this.dropdownClick(subType)}>
-					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>) => { console.log(e); }}>
+				<sp-dropdown quiet="true">
+					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>) => this.onSetSubType("listenerCategory", e)}>
 						{
 							items.map(item => (
 								<sp-menu-item

@@ -1,9 +1,9 @@
 import React from "react";
 import "./Footer.less";
 import { ButtonMenu } from "../ButtonMenu/ButtonMenu";
-import { Settings } from "../../../listener/classes/Settings";
 import { TExportItems, TImportItems, IDescriptor } from "../../model/types";
 import { IRootState } from "../../../shared/store";
+import { Settings } from "../../classes/Settings";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const manifest = require("./../../../../uxp/manifest.json");
 

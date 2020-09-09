@@ -194,10 +194,11 @@ export interface IDescriptor{
 	endTime: number
 	pinned: boolean,
 	locked: boolean,
+	title:string
 	/** filter settings */
 	originalReference: ITargetReference,
 	/** used for AM */
-	calculatedReference: ITargetReferenceAM,
+	calculatedReference: ITargetReferenceAM|Descriptor[],
 	/** content */
 	originalData: Descriptor[]|Descriptor
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import "./LeftColumn.less";
 import { cloneDeep } from "lodash";
-import { GetInfo } from "../../classes/GetInfo";
+import { GetInfo, ITargetReferenceAM } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
 import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, ISettings, TListenerCategoryReference } from "../../model/types";
@@ -11,8 +11,8 @@ import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
 import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { Helpers } from "../../classes/Helpers";
+import { guessOrinalReference } from "../../classes/guessOriginalReference";
 
 export interface IProperty<T>{
 	label: string
@@ -463,38 +463,31 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return <ListenerFilterContainer />;
 	}
 
-	public inspector = async (event: string, descriptor: any): Promise<void> => {
-		const {activeTargetReferenceListenerCategory } = this.props;
-		if (event === "select") {
-			const startTime = Date.now();
-			const desc:ActionDescriptor = {
-				_obj: "get",
-				_target: descriptor._target,
-			};
-			const playResult = await photoshop.action.batchPlay([desc], {});
-			const result: IDescriptor = {			
-				endTime: Date.now(),
-				startTime: startTime,
-				id: Helpers.uuidv4(),
-				locked: false,
-				originalData: {
-					...playResult
-				},
-				originalReference: {
-					type: "listener",
-					data: [{
-						subType: "listenerCategory",
-						content: activeTargetReferenceListenerCategory // change. I think this has to be hardcoded
-					}]
-				},
-				pinned: false,
-				selected: false,
-				calculatedReference: desc as any
-			};
-	
-			//this.props.setLastHistoryID;
-			this.props.onAddDescriptor(result);
-		}
+	public autoInspector = async (event: string, descriptor: any): Promise<void> => {
+		if (event !== "select") { return; }
+		const startTime = Date.now();
+		const calculatedReference:ITargetReferenceAM = {
+			_obj: "get",
+			_target: descriptor._target,
+		};
+		const playResult = await photoshop.action.batchPlay([calculatedReference], {});
+		const originalReference: ITargetReference = guessOrinalReference(calculatedReference._target);
+
+		const result: IDescriptor = {			
+			endTime: Date.now(),
+			startTime: startTime,
+			id: Helpers.uuidv4(),
+			locked: false,
+			originalData: playResult,
+			originalReference,
+			pinned: false,
+			selected: false,
+			title: GetInfo.generateTitle(originalReference,calculatedReference),
+			calculatedReference
+		};
+
+		//this.props.setLastHistoryID;
+		this.props.onAddDescriptor(result);
 	}
 
 	/**
@@ -504,29 +497,30 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const {activeTargetReferenceListenerCategory } = this.props;
 		//const {collapsed} = this.props.settings;
 		console.log(event);
-		//const historyName = "test"; //await this.getHistoryState();
-		const result: IDescriptor = {			
+		const originalReference:ITargetReference = {
+			type: "listener",
+			data: [{
+				subType: "listenerCategory",
+				content: {
+					filterBy: "off",
+					value:"listener"
+				}
+			}]
+		};
+		const descWithEvent: ITargetReferenceAM = descriptor;
+		descWithEvent._obj = event;
+
+		const result: IDescriptor = {
 			endTime: 0,
 			startTime: 0,
 			id: Helpers.uuidv4(),
 			locked: false,
-			originalData: {
-				_obj: event,
-				...descriptor
-			},
-			originalReference: {
-				type: "listener",
-				data: [{
-					subType: "listenerCategory",
-					content: activeTargetReferenceListenerCategory // change. I think this has to be hardcoded
-				}]
-			},
+			originalData: descWithEvent,
+			originalReference,
 			pinned: false,
 			selected: false,
-			calculatedReference: {
-				_obj: event,
-				...descriptor
-			}
+			calculatedReference: descWithEvent,
+			title: GetInfo.generateTitle(originalReference, descWithEvent)
 		};
 
 		//this.props.setLastHistoryID;
@@ -547,14 +541,14 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		this.props.setListener(!autoUpdateListener);
 	}
 
-	private autoInspector = async () => {
+	private attachAutoInspector = async () => {
 		const {settings:{autoUpdateInspector} } = this.props;
 		this.props.setAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			ListenerClass.inspectorCb = async () => { };
 		} else {
-			ListenerClass.inspectorCb = this.inspector;
+			ListenerClass.inspectorCb = this.autoInspector;
 		}
 		this.props.setAutoInspector(!autoUpdateInspector);
 	}
@@ -611,7 +605,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					<div className="filterButtons">
 						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</div>
 						<div className={"listenerSwitch button"+(autoUpdateListener ? " activated":" deactivated")} onClick={this.attachListener}>Listener</div>
-						<div className={"autoInspectorSwitch button"+(autoUpdateInspector ? " activated":" deactivated")} onClick={this.autoInspector}>Auto Inspector</div>
+						<div className={"autoInspectorSwitch button"+(autoUpdateInspector ? " activated":" deactivated")} onClick={this.attachAutoInspector}>Auto Inspector</div>
 					</div>
 					<div className="search">
 						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />

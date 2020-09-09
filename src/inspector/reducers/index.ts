@@ -6,7 +6,7 @@ import { IInspectorState, IContent, IDifference, IReference, IDOM, TPath } from 
 import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
 import { getTreeDomInstance, getDescriptorsListView } from "../selectors/inspectorSelectors";
-import { Settings } from "../../listener/classes/Settings";
+import { Settings } from "../classes/Settings";
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
 	console.log(JSON.stringify(action, null, "\t"));

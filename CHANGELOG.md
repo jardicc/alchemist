@@ -12,6 +12,8 @@ Merges Inspector and listener panels
 - feature possibility to remove item (not) in view
 - reverse order of descriptor items
 - autosafe for inspector panel after 10 seconds inactivity
+- pinned item can now be autoselected
+- item title is now not calculated but stored inside of item
 
 ## 0.21.0
 Inspector only

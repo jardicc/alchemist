@@ -1,4 +1,4 @@
-import { Reloader } from "../../listener/classes/Reloader";
+import { Reloader } from "../../inspector/classes/Reloader";
 import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
 import { ListenerClass } from "./../../inspector/classes/Listener";
 import "./../index.less";
