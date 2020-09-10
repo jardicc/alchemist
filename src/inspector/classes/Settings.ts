@@ -60,13 +60,12 @@ export class Settings{
 
 	public static async importState(): Promise<any|null>{
 		const folder = await this.settingsFolder();
-		const entries:any[] = await folder.getEntries();
-		const found = entries.find(file => file.name === this.settingsFilename);
-		if (!found) {
+		const entry:any = await folder.getEntry(this.settingsFilename);
+		if (!entry.isFile) {
 			return null;
 		}
-		const data: string = await found.read();
 		try {
+			const data: string = await entry.read();
 			const result = JSON.parse(data);			
 			return result;
 		} catch (e) {

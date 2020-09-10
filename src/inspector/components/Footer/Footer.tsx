@@ -56,7 +56,7 @@ export class Footer extends React.Component<TFooter> {
 	public render():React.ReactNode{
 		return (
 			<div className="Footer">
-				<div className="button" onClick={e=>location.reload()}>Reload</div>
+				{/*<div className="button" onClick={e=>location.reload()}>Reload</div>*/}
 				<ButtonMenu
 					key="clear"
 					className="abc"

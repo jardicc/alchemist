@@ -494,7 +494,6 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	 * Listener to be attached to all Photoshop notifications.
 	 */
 	public listener = async (event: string, descriptor: any): Promise<void> => {
-		const {activeTargetReferenceListenerCategory } = this.props;
 		//const {collapsed} = this.props.settings;
 		console.log(event);
 		const originalReference:ITargetReference = {
@@ -507,8 +506,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				}
 			}]
 		};
-		const descWithEvent: ITargetReferenceAM = descriptor;
-		descWithEvent._obj = event;
+		const descWithEvent: ITargetReferenceAM = {
+			_obj:event,
+			...descriptor
+		};
 
 		const result: IDescriptor = {
 			endTime: 0,
@@ -615,11 +616,15 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					</div>
 					<div className="descriptorButtons">
 						<div className="spread"></div>
-						<div className="filter buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconList/></div>
-						<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
-						<div className="rename buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPencil/></div>
-						<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
-						<div className="play buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPlayIcon/></div>
+
+						{/*
+							<div className="filter buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconList /></div>
+							<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
+							<div className="rename buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPencil/></div>
+							<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
+							<div className="play buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPlayIcon /></div>
+						*/}
+						
 						<div className="lock buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconLockLocked/></div>
 						<div className="pin buttonIcon" onClick={() => { onPin(!pinnedSelection, selectedDescriptors); }}><IconPin/></div>
 						<div className="remove buttonIcon" onClick={() => { onRemove(selectedDescriptors); }}><IconTrash /></div>
