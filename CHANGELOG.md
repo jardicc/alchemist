@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.23.0
+- feature: adds dispatcher
+- feature: adds replay
+- feature: adds more version numbers in footer
+
 ## 0.22.0
 Merges Inspector and listener panels
 - shows by default content of item  first for more tabs if none is selected
