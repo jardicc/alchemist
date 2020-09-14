@@ -26,7 +26,7 @@ export type TDocumentReference = "active" | string;
 export type TLayerReference = "active" | string;
 export type TPathReference = "active" | "vectorMask" | "workPathIndex" | string;
 export type TGeneratorReference = "full"
-export type TListenerCategoryReference = "notSpecified" | "anySpecified"|"listener"|"reply";
+export type TListenerCategoryReference = "notSpecified" | "anySpecified"|"listener"|"reply"|"dispatch";
 export type TChannelReference = "active" | TChannelReferenceValid;
 export type TChannelReferenceValid = "composite" | "RGB" | "red" | "green" | "blue" | "CMYK" | "black" | "cyan" | "magenta" | "yellow" | "lab" | "lightness" | "a" | "b" | "gray" | "monotone" | "duotone" | "tritone" | "quadtone" | "mask" | "transparencyEnum" | "filterMask" | string;
 export type TGuideReference = "" | string;
@@ -48,12 +48,21 @@ export interface IInspectorState {
 	targetReference: ITargetReference[]
 	settings:ISettings
 	inspector:IInspector
-	descriptors:IDescriptor[]
+	descriptors: IDescriptor[]
+	dispatcher:IDispatcher
 }
 
 export interface ITargetReference {
 	type: TTargetReference,
 	data: TAllReferenceSubtypes[]
+}
+
+export interface IDispatcher{
+	snippets: [
+		{
+			content:string
+		}
+	]
 }
 
 
@@ -198,7 +207,7 @@ export interface IDescriptor{
 	/** filter settings */
 	originalReference: ITargetReference,
 	/** used for AM */
-	calculatedReference: ITargetReferenceAM|Descriptor[],
+	calculatedReference: ITargetReferenceAM|Descriptor,
 	/** content */
 	originalData: Descriptor[]|Descriptor
 }
