@@ -37,6 +37,7 @@ export const baseItemsListener:IProperty<TListenerCategoryReference>[] = [
 	{ label: "(not specified)", value: "notSpecified" },
 	{ label: "Listener", value: "listener" },
 	{ label: "Replies", value: "reply" },
+	{ label: "Dispatched", value: "dispatch" },
 ];
 export const baseItemsCustomDescriptor:IProperty<string>[] = [
 	{ label: "(undefined)", value: "undefined" },

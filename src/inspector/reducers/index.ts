@@ -383,6 +383,11 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			}
 			break;
 		}
+		case "SET_DISPATCHER_VALUE": {
+			state = produce(state, draft => {
+				draft.dispatcher.snippets[0].content = action.payload;
+			});
+		}
 	}
 	Settings.saveSettings(state);
 	return state;
