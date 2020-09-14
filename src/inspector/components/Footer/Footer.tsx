@@ -4,8 +4,9 @@ import { ButtonMenu } from "../ButtonMenu/ButtonMenu";
 import { TExportItems, TImportItems, IDescriptor } from "../../model/types";
 import { IRootState } from "../../../shared/store";
 import { Settings } from "../../classes/Settings";
+import { GetInfo } from "../../classes/GetInfo";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const manifest = require("./../../../../uxp/manifest.json");
+const versions = require("uxp").versions;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IFooterProps{
@@ -74,7 +75,11 @@ export class Footer extends React.Component<TFooter> {
 				<div className="button">Group same</div>
 				<div className="spread"></div>
 				<div>
-					<span className="version">v. {manifest.version}</span>
+					<span className="version">v. {versions.plugin}</span>
+					<span> / </span>
+					<span className="version">{versions.uxp}</span>
+					<span> / PS: </span>
+					<span className="version">{GetInfo.getBuildString()}</span>
 				</div>
 				<div className="spread"></div>
 				<ButtonMenu
