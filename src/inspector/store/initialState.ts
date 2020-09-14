@@ -8,6 +8,7 @@ export function getInitialState(): IInspectorState {
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
+
 		targetReference: [
 			{
 				type: "listener",
@@ -572,6 +573,9 @@ export function getInitialState(): IInspectorState {
 			}
 		},
 		descriptors: [
-		]
+		],
+		dispatcher: {
+			snippets:[{content:""}]
+		}
 	};
 }

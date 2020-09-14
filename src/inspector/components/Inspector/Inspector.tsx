@@ -11,6 +11,8 @@ import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
 import Split from "react-split";
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
+import { Dispatcher } from "../Dispatcher/Dispatcher";
+import { DispatcherContainer } from "../Dispatcher/DispatcherContainer";
 
 
 export interface IInspectorProps{
@@ -75,6 +77,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 											</TabPanel>
 											<TabPanel id="Raw" title="Raw" >
 												<textarea
+													maxLength={Number.MAX_SAFE_INTEGER}
 													className="rawCode"
 													defaultValue={this.props.descriptorContent}
 												/>
@@ -102,6 +105,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 											<div className="noShrink">
 												Generated code:
 												<textarea
+													maxLength={Number.MAX_SAFE_INTEGER}
 													className="infoBlock"
 													defaultValue={
 														this.props.originalReference
@@ -115,6 +119,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 											<div className="noShrink">
 												Filter:
 												<textarea
+													maxLength={Number.MAX_SAFE_INTEGER}
 													className="infoBlock"
 													defaultValue={
 														this.props.calculatedReference
@@ -126,6 +131,9 @@ export class Inspector extends React.Component<TInspector, IState> {
 								</TabList>
 							</Split>
 						</div>
+					</TabPanel>
+					<TabPanel id="dispatcher" title="Dispatch">
+						<DispatcherContainer />
 					</TabPanel>
 					<TabPanel id="settings" title="Settings">
 						TODO

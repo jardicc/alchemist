@@ -183,7 +183,18 @@ export interface IReplaceWholeState{
 	payload: IInspectorState
 }
 
+export interface ISetDispatcherValueAction{
+	type: "SET_DISPATCHER_VALUE",
+	payload:string
+}
 
+
+export function setDispatcherValueAction(value:string): ISetDispatcherValueAction{
+	return {
+		type: "SET_DISPATCHER_VALUE",
+		payload:value
+	};
+}
 
 export function replaceWholeStateAction(state: IInspectorState):IReplaceWholeState {
 	return {
@@ -441,4 +452,5 @@ export type TActions = ISetMainTab |
 	ISetExcludeAction |
 	IGroupSameAction |
 	IFilterEventNameAction |
-	IReplaceWholeState
+	IReplaceWholeState |
+	ISetDispatcherValueAction
