@@ -14,11 +14,11 @@ export class Settings{
 	}
 
 	public static async saveSettings(object: any): Promise<void> {
-		clearTimeout(this.saveTimeout);
-		this.saveTimeout = setTimeout(async () => {
-			const folder = await this.settingsFolder();
+		clearTimeout(Settings.saveTimeout);
+		Settings.saveTimeout = setTimeout(async () => {
+			const folder = await Settings.settingsFolder();
 			console.log(folder);
-			await this._saveSettings(object, folder);
+			await Settings._saveSettings(object, folder);
 			console.log("saved");
 		}, 10 * 1000);
 	}
@@ -30,9 +30,9 @@ export class Settings{
 	}
 
 	public static async saveSettingsWithDialog(object: any): Promise<void> {
-		const file = await localFileSystem.getFileForSaving("Alchemist state " + this.getTimeStamp() + ".json", {
+		const file = await localFileSystem.getFileForSaving("Alchemist state " + Settings.getTimeStamp() + ".json", {
 			types: ["json"],
-			//initialLocation: await this.settingsFolder()
+			//initialLocation: await Settings.settingsFolder()
 		});
 		if (!file) {
 			return;
@@ -44,13 +44,13 @@ export class Settings{
 	}
 
 	private static async _saveSettings(object: any, folder: any): Promise<void>{
-		if (!this.loaded) {
+		if (!Settings.loaded) {
 			return;
 		}
 
 		const data = JSON.stringify(object, null, "\t");
 		//console.log(folder);
-		const created = await folder.createFile(this.settingsFilename, {
+		const created = await folder.createFile(Settings.settingsFilename, {
 			overwrite: true
 		});
 		await created.write(data, {
@@ -58,18 +58,23 @@ export class Settings{
 		});
 	}
 
-	public static async importState(): Promise<any|null>{
-		const folder = await this.settingsFolder();
-		const entry:any = await folder.getEntry(this.settingsFilename);
-		if (!entry.isFile) {
-			return null;
-		}
+	public static async importState(): Promise<any | null> {
+		const folder = await Settings.settingsFolder();
+		let entry: any
 		try {
+			entry = await folder.getEntry(Settings.settingsFilename);
+		
+			if (!entry.isFile) {
+				return null;
+			}
 			const data: string = await entry.read();
-			const result = JSON.parse(data);			
+			const result = JSON.parse(data);
 			return result;
 		} catch (e) {
 			console.log("Error - with reading of settings!");
+			await folder.createFile(Settings.settingsFilename, {
+				overwrite: true
+			});
 			return null;
 		}
 	}
@@ -78,7 +83,7 @@ export class Settings{
 		const files = await localFileSystem.getFileForOpening({
 			types: ["json"],
 			allowMultiple: true
-			//initialLocation: await this.settingsFolder()
+			//initialLocation: await Settings.settingsFolder()
 		});
 		if (!files || !files.length) {
 			return null;
