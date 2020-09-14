@@ -179,9 +179,10 @@ export const getHasAutoActiveDescriptor = createSelector([getAutoActiveDescripto
 
 export const getActiveDescriptorContent = createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
 	if (selected.length >= 1) {
-		return JSON.stringify(selected.map(item => item.originalData), null, 3);	
+		const toSend = selected.map(item => item.originalData);
+		return JSON.stringify(toSend.length === 1 ? toSend[0] : toSend, null, 3);
 	} else if (autoActive) {
-		return JSON.stringify([autoActive.originalData], null, 3);
+		return JSON.stringify(autoActive.originalData, null, 3);
 	} else {
 		return "Add some descriptor";
 	}	
@@ -372,4 +373,8 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 	} else {
 		return "Add some descriptor";
 	}
+});
+
+export const getDispatcherSnippet = createSelector([all], (all) => {
+	return all.dispatcher.snippets[0].content;
 });
