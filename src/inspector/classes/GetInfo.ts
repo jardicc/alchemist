@@ -247,9 +247,9 @@ export class GetInfo {
 		return this.buildReply(startTime, playResult, desc,originalRef);
 	}
 
-	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM): string => {
+	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM, reply=false): string => {
 		if (originalReference.type==="listener") {
-			return calculatedReference._obj;
+			return (reply ? "Reply: " : "") + calculatedReference._obj;
 		}
 		const parts = getName(calculatedReference._target);
 		//parts.push(...subs.map(d => d.subType + ": " + d.content.value));
@@ -499,6 +499,29 @@ export class GetInfo {
 			return result.ID as number;
 		}
 		return null;
+	}
+
+	public static getBuildString(): string {
+
+		const result = photoshop.action.batchPlay([
+			{
+				"_obj": "get",
+				"_target": [
+					{
+						"_property": "buildNumber"
+					},
+					{
+						"_ref": "application",
+						"_enum": "ordinal",
+						"_value": "targetEnum"
+					}
+				]
+			}
+		], {
+			synchronousExecution: true
+		}) as Descriptor[];
+
+		return result?.[0]?.["buildNumber"] ?? "n/a";
 	}
 
 	public static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path"):Promise<Descriptor> {
