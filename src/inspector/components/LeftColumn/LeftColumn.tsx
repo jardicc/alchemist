@@ -13,6 +13,8 @@ import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
 import { Helpers } from "../../classes/Helpers";
 import { guessOrinalReference } from "../../classes/guessOriginalReference";
+import { Descriptor } from "photoshop/dist/types/UXP";
+import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 
 export interface IProperty<T>{
 	label: string
@@ -23,7 +25,8 @@ export interface ILeftColumnProps{
 	targetReference: ITargetReference[]
 	autoUpdate: boolean
 	addAllowed:boolean
-	selectedDescriptors: string[]
+	selectedDescriptorsUUIDs: string[]
+	selectedDescriptors: IDescriptor[]
 	propertySettings: IPropertySettings[]
 	lockedSelection: boolean
 	pinnedSelection: boolean
@@ -494,7 +497,9 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	 * Listener to be attached to all Photoshop notifications.
 	 */
 	public listener = async (event: string, descriptor: any): Promise<void> => {
-		//const {collapsed} = this.props.settings;
+		// delete because it will be added as a first later
+		delete descriptor._obj;
+
 		console.log(event);
 		const originalReference:ITargetReference = {
 			type: "listener",
@@ -590,11 +595,50 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		this.props.setSearchTerm(e.currentTarget.value);
 	}
 
+	private onPlaySeparated = async () => {
+		const toPlay = this.props.selectedDescriptors;
+		for await (const item of toPlay) {
+			const startTime = Date.now();
+			const descriptors = await photoshop.action.batchPlay(
+				[
+					item.calculatedReference as ActionDescriptor
+				], {
+					synchronousExecution: false
+				}
+			);
+			const endTime = Date.now();
 
+			const originalReference: ITargetReference = {
+				type: "listener",
+				data: [{
+					subType: "listenerCategory",
+					content: {
+						filterBy: "off",
+						value: "reply"
+					}
+				}]
+			};
 
+			const result: IDescriptor = {
+				endTime,
+				startTime,
+				id: Helpers.uuidv4(),
+				locked: false,
+				originalData: descriptors,
+				originalReference,
+				pinned: false,
+				selected: false,
+				calculatedReference: descriptors,
+				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true)
+			};
+
+			//this.props.setLastHistoryID;
+			this.props.onAddDescriptor(result);
+		}
+	}
 
 	public render(): JSX.Element {
-		const { addAllowed, onLock, onPin, onRemove, selectedDescriptors, lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
+		const { addAllowed, onLock, onPin, onRemove, selectedDescriptorsUUIDs: selectedDescriptors, lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
 		return (
 			<div className="LeftColumn">
 				<div className="oneMore">
@@ -622,9 +666,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 							<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
 							<div className="rename buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPencil/></div>
 							<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
-							<div className="play buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPlayIcon /></div>
 						*/}
-						
+						<div className="play buttonIcon" onClick={this.onPlaySeparated}><IconPlayIcon /></div>						
 						<div className="lock buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconLockLocked/></div>
 						<div className="pin buttonIcon" onClick={() => { onPin(!pinnedSelection, selectedDescriptors); }}><IconPin/></div>
 						<div className="remove buttonIcon" onClick={() => { onRemove(selectedDescriptors); }}><IconTrash /></div>
