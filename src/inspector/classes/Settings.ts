@@ -1,3 +1,6 @@
+import { IDescriptor } from "../model/types";
+import { alert } from "./Helpers";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem = require("uxp").storage.localFileSystem;
 
@@ -7,6 +10,21 @@ export class Settings{
 
 	private static readonly settingsFilename = "settings.json";
 	private static saveTimeout: number;
+
+	public static async reset() {
+		try {
+			const folder = await Settings.settingsFolder();
+			const entry = await folder.getEntry(Settings.settingsFilename);
+		
+			if (!entry.isFile) {
+				return;
+			}
+			await entry.delete();
+			location.reload();
+		} catch (e) {
+			console.error("Error - settings reset failed!");
+		}
+	}
 
 	public static async settingsFolder() {
 		const folder = await localFileSystem.getDataFolder();
@@ -29,12 +47,30 @@ export class Settings{
 		return name;
 	}
 
+	public static async exportDescriptorItems(descriptors: IDescriptor[]): Promise<void> {
+		if (!descriptors.length) {
+			await alert("There are no descriptors to export");
+			return;
+		}
+		const file = await localFileSystem.getFileForSaving("Descriptor items " + Settings.getTimeStamp() + ".json", {
+			types: ["json"],
+		});
+		if (!file) {
+			await alert("There was a problem with file");
+			return;
+		}
+		const data = JSON.stringify(descriptors, null, "\t");
+		await file.write(data, {
+			append: false
+		});
+	}
+
 	public static async saveSettingsWithDialog(object: any): Promise<void> {
 		const file = await localFileSystem.getFileForSaving("Alchemist state " + Settings.getTimeStamp() + ".json", {
 			types: ["json"],
-			//initialLocation: await Settings.settingsFolder()
 		});
 		if (!file) {
+			await alert("There was a problem with file");
 			return;
 		}
 		const data = JSON.stringify(object, null, "\t");
