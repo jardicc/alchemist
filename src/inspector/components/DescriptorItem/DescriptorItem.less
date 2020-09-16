@@ -12,7 +12,7 @@
 		border-top: none;
 	}
 
-	.wrap{		
+	.wrap.normalMode{		
 		cursor: pointer;
 		padding: 0.3em 1em;
 		background: var(--bg);
@@ -59,5 +59,24 @@
 
 	.icon{
 		fill:var(--text);
+	}
+
+	.editMode{
+		padding:0;
+		display: flex;
+
+		.renameInput{
+			appearance: none;
+			margin:0;
+			flex-grow: 1;
+			background-color: var(--divider);
+			box-sizing: border-box;
+			margin: 0;
+			width: 100%;
+		}
+
+		.button{
+			margin:0;
+		}
 	}
 }

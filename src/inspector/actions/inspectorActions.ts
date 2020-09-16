@@ -31,7 +31,7 @@ export interface ISelectDescriptor {
 	type: "SELECT_DESCRIPTOR"
 	payload: {
 		operation:TSelectDescriptorOperation
-		uuid:string
+		uuid?:string
 	}
 }
 
@@ -188,6 +188,40 @@ export interface ISetDispatcherValueAction{
 	payload:string
 }
 
+export interface ISetRenameModeAction{
+	type: "SET_RENAME_MODE",
+	payload: {
+		uuid: string,
+		on:boolean
+	}
+}
+
+export interface IRenameDescriptorAction{
+	type: "RENAME_DESCRIPTOR",
+	payload: {
+		uuid: string,
+		name:string
+	}
+}
+
+export function setRenameModeAction(uuid:string,on:boolean):ISetRenameModeAction{
+	return {
+		type: "SET_RENAME_MODE",
+		payload: {
+			on,
+			uuid
+		}
+	};
+}
+export function renameDescriptorAction(uuid:string,name:string):IRenameDescriptorAction{
+	return {
+		type: "RENAME_DESCRIPTOR",
+		payload: {
+			name,
+			uuid
+		}
+	};
+}
 
 export function setDispatcherValueAction(value:string): ISetDispatcherValueAction{
 	return {
@@ -284,7 +318,7 @@ export function addDescriptorAction(arg:IDescriptor):IAddDescriptorAction{
 		payload: arg
 	};
 }
-export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid: string): ISelectDescriptor {
+export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string): ISelectDescriptor {
 	return {
 		type: "SELECT_DESCRIPTOR",
 		payload: {operation,uuid}
@@ -453,4 +487,6 @@ export type TActions = ISetMainTab |
 	IGroupSameAction |
 	IFilterEventNameAction |
 	IReplaceWholeState |
-	ISetDispatcherValueAction
+	ISetDispatcherValueAction |
+	ISetRenameModeAction |
+	IRenameDescriptorAction
