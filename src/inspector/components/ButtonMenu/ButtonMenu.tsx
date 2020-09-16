@@ -159,7 +159,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 				...this.state,
 				expanded: false
 			});
-		},100);
+		},0);
 	}
 
 	private toggle = (): void => {
