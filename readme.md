@@ -1,6 +1,6 @@
-# Listener - UXP for Photoshop
+# Alchemist for Photoshop ~~(Listener + Inspector)~~
 
-Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Another panel is Inspector and this is for inspecting PS DOM and PS AM descriptors.
+Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Or ScriptListener plugin for ExtendScript but in panel. Also can inspect PS DOM and show PS AM descriptors from various places.
 
 ## Disclaimer
 
@@ -8,9 +8,17 @@ This software was not created by Adobe and Adobe is not responsible for it. You 
 
 ## Quick usage
 
-Install "Adobe UXP Developer Tool" if not already installed. Click add plugin button. And open `dist\manifest.json` in dialog. Then in actions you can click "load".
+Install "Adobe UXP Developer Tool" if not already installed. Click add plugin button. And open `dist\manifest.json` in dialog. Then click "load" in actions.
 
-Panel settings on Window can be found in: `c:\Users\<yourAccountName>\AppData\Local\UXP\PluginsData\Internal\cz.bereza.alchemist\settings.json`
+Panel settings on Window can be found in: 
+```
+c:\Users\<AccountName>\AppData\Roaming\Adobe\UXP\PluginsStorage\PHSP\22\Developer\cz.bereza.alchemist\PluginData\settings.json
+```
+
+or for non-developers 
+```
+c:\Users\<AccountName>\AppData\Roaming\Adobe\UXP\PluginsStorage\PHSP\22\Internal\cz.bereza.alchemist\PluginData\settings.json
+```
 
 ## Dev Setup
 
@@ -27,32 +35,18 @@ npm build
 # or "npm watch" to watch for file changes and rebuild automatically
 ```
 
-Soft link the dist folder into your extension folder
-
-```
-sudo ln -s [path to repo/dist] /Library/Application\ Support/Adobe/UXP/extensions/[name-of-extension]
-```
-
-On Windows, create a link to the folder at
-
-```
-C:\Program Files\Common Files\Adobe\UXP\extensions
-```
+Load plugin as described above in quick usage section.
 
 ## (PreRelease) Prerequisites
 
 While we're still developing UXP, we want to make sure these features are behind flags so they don't affect end users. To enable UXP development and see your panels in Photoshop, you will need to enable that in Photoshop preferences.
-`PS > Edit > Preferences > Plugins > Enable Developer Mode`
+`PS > Edit > Preferences > Plugins > Enable Developer Mode` and also `PS > Edit > Preferences > Technology Previews > UXPEnablePluginMarketPlace`
 
 ## Panel Entrypoints
 
-The ui entrypoint of a UXP extension as a panel is defined in it's `manifest.json` file. This is subject to change, so please refer to latest copy of the starter repository as above.
-
-The extension will be available in `Plugins > Listener UXP` menu with the extension's name. This will open up a PS panel with your extension loaded in it.
+The extension will be available in `Plugins > Alchemist > Alchemist` menu with the extension's name. This will open up a PS panel with your extension loaded in it.
 
 
 ## Debugging
 
-In Chrome, navigate to `chrome://inspect`. Press Configure... next to Discover network targets checkbox, and add localhost:9444 (or the port you declared in your debug.json). 
-
-When the extension is loaded, it should show up with it's ID on this page.
+In "Adobe UXP Developer Tool" click actions triple dot and click debug.
