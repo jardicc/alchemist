@@ -1,5 +1,5 @@
 import React from "react";
-import { IconPin } from "../../../shared/components/icons";
+import { IconPinDown } from "../../../shared/components/icons";
 import { TShouldExpandNode } from "../JSONTree/types";
 import { TPath } from "../../model/types";
 
@@ -22,7 +22,7 @@ export const labelRenderer = ([key, ...rest]: TPath, onInspectPath: (path: TPath
 					() => onInspectPath([...[key, ...rest].reverse()], "add")
 				}
 			>
-				<IconPin />
+				<IconPinDown />
 			</span>}
 			{!expanded && ": "}
 		</span>
