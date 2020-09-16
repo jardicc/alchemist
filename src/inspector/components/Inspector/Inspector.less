@@ -8,6 +8,8 @@
 	height: 100vh;
 	flex-shrink: 0;
 	background: var(--bg);
+
+	
 	
 	/*textarea{
 		appearance: none;
@@ -184,7 +186,7 @@
 			height: 12px;
 		}
 
-		&:hover{
+		&:not(.disallowed):hover{
 			color:var(--hover);
 			background: var(--divider);
 			border:1px solid var(--hover);
@@ -192,9 +194,12 @@
 		
 		&.disallowed{
 			pointer-events: none;
-			border:1px solid black;
 			color:black;
 			cursor: not-allowed;
+
+			svg{
+				fill:var(--textDisallowed)
+			}
 		}
 	}
 
