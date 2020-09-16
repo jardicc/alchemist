@@ -3,6 +3,7 @@
 		--bg: #353535;
 		--bgList: #2B2B2B;
 		--text:#E1E1E1;
+		--textDisallowed:#E1E1E170;
 		--textFade: #848484;
 		--active: lime;
 		--autoActive:yellow;
@@ -16,6 +17,7 @@
 		--bg: #545454;
 		--bgList: #4D4D4D;
 		--text:#F0F0F0;
+		--textDisallowed:#f0f0f070;
 		--textFade: #989898;
 		--active: lime;
 		--hover: aqua;
@@ -29,6 +31,7 @@
 		--bg: #B7B7B7;
 		--bgList: #B0B0B0;
 		--text:#303030;
+		--textDisallowed:#30303070;
 		--textFade: #6E6E6E;
 		--active: rgb(0, 145, 0);
 		--hover: rgb(0, 92, 197);
@@ -42,6 +45,7 @@
 		--bg: #EFEFF0;
 		--bgList: #E8E8E8;
 		--text:#464646;
+		--textDisallowed:#46464670;
 		--textFade: #909090;
 		--active: rgb(0, 184, 0);
 		--hover: rgb(0, 92, 197);
