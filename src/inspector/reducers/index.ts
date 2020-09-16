@@ -41,12 +41,14 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		case "SELECT_DESCRIPTOR": {
 			state = produce(state, draft => {
 				const { operation, uuid } = action.payload;
-				if (operation === "replace") {
+				if (operation === "none") {
+					draft.descriptors.forEach(desc => desc.selected = false);
+				} else if (operation === "replace") {
 					draft.descriptors.forEach(d => d.selected = false);
 				}
 
 				const found = draft.descriptors.find(d => d.id === uuid);
-				if (found) {					
+				if (found && operation !== "none") {					
 					if (operation === "add" || operation === "replace") {
 						found.selected = true;
 					} else if (operation === "subtract") {
@@ -54,7 +56,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					} else if (operation === "addContinuous" || operation === "subtractContinuous") {
 						const view = getDescriptorsListView({inspector:state});
 						const lastSelectedItemIndex = view.map(item => item.id).indexOf(state.settings.lastSelectedItem ?? "n/a");
-						const thisItemIndex = view.map(item => item.id).indexOf(uuid);
+						const thisItemIndex = view.map(item => item.id).indexOf(uuid as string);
 						if (lastSelectedItemIndex !== -1 && thisItemIndex !== -1) {
 							const ids:string[] = [];
 							for (let i = Math.min(lastSelectedItemIndex, thisItemIndex), end = Math.max(lastSelectedItemIndex, thisItemIndex); i <= end; i++){
@@ -69,7 +71,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				}
 
 				//
-				draft.settings.lastSelectedItem = uuid;
+				draft.settings.lastSelectedItem = uuid || getInitialState().settings.lastSelectedItem;
 				draft.inspector.content.expandedTree = [];
 				draft.inspector.dom.expandedTree = [];
 				draft.inspector.difference.expandedTree = [];
@@ -171,7 +173,8 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		case "IMPORT_ITEMS": {
 			state = produce(state, draft => {
 				if (action.payload.kind === "append") {
-					draft.descriptors = [...action.payload.items, ...state.descriptors];
+					action.payload.items.forEach(desc => desc.id = GetInfo.uuidv4());
+					draft.descriptors = [...state.descriptors,...action.payload.items];
 				} else if (action.payload.kind === "replace") {
 					draft.descriptors = action.payload.items;
 				}
@@ -387,6 +390,25 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			state = produce(state, draft => {
 				draft.dispatcher.snippets[0].content = action.payload;
 			});
+			break;
+		}
+		case "RENAME_DESCRIPTOR": {
+			state = produce(state, draft => {
+				const found = draft.descriptors.find(desc => desc.id === action.payload.uuid);
+				if (found) {
+					found.title = action.payload.name;
+				}
+			});
+			break;
+		}
+		case "SET_RENAME_MODE": {
+			state = produce(state, draft => {
+				const found = draft.descriptors.find(desc => desc.id === action.payload.uuid);
+				if (found) {
+					found.renameMode = action.payload.on;
+				}
+			});
+			break;
 		}
 	}
 	Settings.saveSettings(state);
