@@ -268,6 +268,7 @@ export class GetInfo {
 			pinned: false,
 			selected: false,
 			calculatedReference: desc,
+			renameMode: false,
 			title:this.generateTitle(originalRef,desc)
 		};
 	}
@@ -564,7 +565,7 @@ export class GetInfo {
 		return result[0].mode._value;
 	}
 
-	private static uuidv4():string {
+	public static uuidv4():string {
 		return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
 			const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
 			return v.toString(16);
