@@ -56,6 +56,7 @@ export class Dispatcher extends React.Component<TDispatcher, any> {
 				originalReference,
 				pinned: false,
 				selected: false,
+				renameMode: false,
 				calculatedReference: data,
 				title: "Dispatched"
 			};

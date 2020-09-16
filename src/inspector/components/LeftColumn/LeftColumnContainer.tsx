@@ -2,8 +2,8 @@ import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn";
 import { IRootState } from "../../../shared/store";
 import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor, getFilterBySelectedReferenceType, getActiveTargetReferenceForAM, getActiveReferenceHistory, getActiveReferenceSnapshot, getInspectorSettings, getActiveTargetReferenceListenerCategory, getSelectedDescriptors } from "../../selectors/inspectorSelectors";
-import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction } from "../../actions/inspectorActions";
-import { TDocumentReference, TLayerReference, TChannelReference, TGuideReference, TPathReference, TActionSet, TActionItem, TActionCommand, IContentWrapper, TBaseProperty, IHistory, THistoryReference, TSnapshotReference, TListenerCategoryReference } from "../../model/types";
+import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction } from "../../actions/inspectorActions";
+import { TDocumentReference, TLayerReference, TChannelReference, TGuideReference, TPathReference, TActionSet, TActionItem, TActionCommand, IContentWrapper, TBaseProperty, IHistory, THistoryReference, TSnapshotReference, TListenerCategoryReference, TSelectDescriptorOperation } from "../../model/types";
 
 
 const mapStateToProps = (state: IRootState): ILeftColumnProps => {
@@ -55,6 +55,8 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record
 		setListener: (enabled) => dispatch(setListenerAction(enabled)),
 		setAutoInspector: (enabled) => dispatch(setAutoInspectorAction(enabled)),
 		setSearchTerm: (str) => dispatch(setSearchTermAction(str)),
+		setRenameMode: (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid, on)),
+		onSelect: (operation: TSelectDescriptorOperation,uuid?:string) => dispatch(selectDescriptorAction(operation, uuid)),
 	};
 };
 

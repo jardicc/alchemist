@@ -4,9 +4,9 @@ import { cloneDeep } from "lodash";
 import { GetInfo, ITargetReferenceAM } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
-import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, ISettings, TListenerCategoryReference } from "../../model/types";
+import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, ISettings, TListenerCategoryReference, TSelectDescriptorOperation } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
-import { IconLockLocked, IconPin, IconTrash, IconCog, IconPencil, IconClipboard, IconPlayIcon, IconList } from "../../../shared/components/icons";
+import { IconLockLocked, IconPinDown, IconTrash, IconCog, IconPencil, IconClipboard, IconPlayIcon, IconList, IconLockUnlocked, IconPinLeft } from "../../../shared/components/icons";
 import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
 import { ListenerClass } from "../../classes/Listener";
@@ -59,6 +59,7 @@ export interface ILeftColumnDispatch {
 	onSetTargetReference: (arg: ITargetReference) => void
 	onAddDescriptor: (descriptor: IDescriptor) => void
 	onSetSelectedReferenceType: (type: TTargetReference) => void
+	onSelect: (operation: TSelectDescriptorOperation,uuid?: string) => void
 	
 	onClear: () => void
 	onPin: (pin: boolean, uuids: string[]) => void
@@ -69,7 +70,8 @@ export interface ILeftColumnDispatch {
 	
 	setListener:(enabled:boolean)=>void
 	setAutoInspector: (enabled: boolean) => void
-	setSearchTerm(str: string): void
+	setSearchTerm:(str: string)=> void
+	setRenameMode:(uuid: string, on: boolean) => void
 }
 
 export interface IState{
@@ -484,6 +486,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			originalData: playResult,
 			originalReference,
 			pinned: false,
+			renameMode: false,
 			selected: false,
 			title: GetInfo.generateTitle(originalReference,calculatedReference),
 			calculatedReference
@@ -525,6 +528,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			originalReference,
 			pinned: false,
 			selected: false,
+			renameMode: false,
 			calculatedReference: descWithEvent,
 			title: GetInfo.generateTitle(originalReference, descWithEvent)
 		};
@@ -628,6 +632,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				originalReference,
 				pinned: false,
 				selected: false,
+				renameMode: false,
 				calculatedReference: descriptors,
 				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true)
 			};
@@ -637,40 +642,48 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		}
 	}
 
+	private rename = () => {
+		const { setRenameMode, selectedDescriptorsUUIDs } = this.props;
+		if (selectedDescriptorsUUIDs.length) {
+			setRenameMode(selectedDescriptorsUUIDs[0], true);			
+		}
+	}
+
 	public render(): JSX.Element {
-		const { addAllowed, onLock, onPin, onRemove, selectedDescriptorsUUIDs: selectedDescriptors, lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
+		const { addAllowed,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
 		return (
 			<div className="LeftColumn">
 				<div className="oneMore">
-
-				
 					<div className="filtersWrapper">
 						{this.renderFilters()}
 					</div>
 					<div className="filterButtons">
 						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</div>
-						<div className={"listenerSwitch button"+(autoUpdateListener ? " activated":" deactivated")} onClick={this.attachListener}>Listener</div>
-						<div className={"autoInspectorSwitch button"+(autoUpdateInspector ? " activated":" deactivated")} onClick={this.attachAutoInspector}>Auto Inspector</div>
+						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>Listener</div>
+						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>Auto Inspector</div>
 					</div>
 					<div className="search">
 						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
 					</div>
-					<div className="descriptorsWrapper">
+					<div className="descriptorsWrapper" onClick={()=>this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}
 					</div>
 					<div className="descriptorButtons">
 						<div className="spread"></div>
 
 						{/*
-							<div className="filter buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconList /></div>
 							<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
-							<div className="rename buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconPencil/></div>
 							<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
 						*/}
-						<div className="play buttonIcon" onClick={this.onPlaySeparated}><IconPlayIcon /></div>						
-						<div className="lock buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconLockLocked/></div>
-						<div className="pin buttonIcon" onClick={() => { onPin(!pinnedSelection, selectedDescriptors); }}><IconPin/></div>
-						<div className="remove buttonIcon" onClick={() => { onRemove(selectedDescriptors); }}><IconTrash /></div>
+						<div className={"rename buttonIcon " + ((selectedDescriptors?.length !== 1) ? "disallowed" : "")} onClick={this.rename}><IconPencil /></div>
+						<div className={"play buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
+						<div className={"lock buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
+							{selectedDescriptors.some(desc=>desc.locked) ? <IconLockUnlocked />:<IconLockLocked />}
+						</div>
+						<div className={"pin buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onPin(!pinnedSelection, selectedDescriptorsUUIDs); }}>
+							{selectedDescriptors.some(desc=>desc.pinned) ? <IconPinLeft/>:<IconPinDown />}
+						</div>
+						<div className={"remove buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onRemove(selectedDescriptorsUUIDs); }}><IconTrash /></div>
 					</div>
 				</div>
 			</div>
