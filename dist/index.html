@@ -3,13 +3,30 @@
 
 <head>
 	<script src="index.js"></script>
+	<style>
+		.Inspector .loadingWrapper{
+			display: flex;
+			width: 100vw;
+			height: 100vh;
+			justify-content: center;
+		}
+		.Inspector .loadingMessage{
+			color:white;
+			display: flex;
+			flex-grow: 0;
+			align-self: center;
+			font-size: 2em;
+		}
+	</style>
 </head>
 
 <body>
 	<div id="root"></div>
 	<uxp-panel panelid="inspector">
 		<div class="Inspector">
-			Loading...
+			<div class="loadingWrapper">
+				<div class="loadingMessage">Loading...</div>
+			</div>
 		</div>
 	</uxp-panel>
 </body>

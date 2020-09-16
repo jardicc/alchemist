@@ -2,7 +2,7 @@
 	"name": "Alchemist",
 	"id": "cz.bereza.alchemist",
 	"main": "index.html",
-	"version": "0.23.0",
+	"version": "0.24.0",
 	"manifestVersion": 4,
 	"host": {
 		"app": "PS",
@@ -39,6 +39,13 @@
 			"preferredFloatingSize": {
 				"width": 600,
 				"height": 540
+			}
+		},
+		{
+			"type": "command",
+			"id": "resetStateFn",
+			"label": {
+			    "default": "Reset Alchemist state"
 			}
 		}
 	]
