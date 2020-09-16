@@ -35,7 +35,7 @@ export type TActionItem = "" | string;
 export type TActionCommand = "" | string;
 export type TFilterEvents = "none" | "include" | "exclude";
 
-export type TSelectDescriptorOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous";
+export type TSelectDescriptorOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
 
 export type TProtoMode = "none" | "uxp" | "advanced" | "all";
 
@@ -203,7 +203,8 @@ export interface IDescriptor{
 	endTime: number
 	pinned: boolean,
 	locked: boolean,
-	title:string
+	renameMode:boolean,
+	title:string,
 	/** filter settings */
 	originalReference: ITargetReference,
 	/** used for AM */
