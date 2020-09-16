@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.24.0
+- feature: adds menu item to reset panel settings
+- feature: adds possibility to rename item
+- feature: adds clear non-existent. Uses built-in validate reference method. Currently it checks whether it can get those data.
+- improvement: finishes export/import
+- improvement: shows error message instead of blank screen and offers reload and reset panel state
+- improvement: shows bulk buttons allowance based on items selection
+- improvement: click on empty space bellow descriptor items will deselect all items similar to layer panel
+
 ## 0.23.0
 - feature: adds dispatcher
 - feature: adds replay
@@ -43,7 +52,7 @@ Inspector only
 ## 0.18.0
 Inspector only
 - improves: shows names in descriptor titles
-- improves: content tree view can pin primite values
+- improves: content tree view can pin primitive values
 - improves: tree view was forked and customized
 - improves: tree view has now mode allowing to show prototyped properties
 - feature: adds DOM tab to inspect PS DOM
@@ -86,7 +95,7 @@ Inspector only
 
 ## 0.11.0
 - fix: initial value in filter dropdown
-- change: event names now can contain space at the begging and end (trim) within semicolor separated exclude/include string
+- change: event names now can contain space at the begging and end (trim) within semicolon separated exclude/include string
 - change: plugin icon by "rechmbrs"
 - fix: changes utf8 symbols into icon components and fixes icons on MacOS
 - feature: adds modalBehavior when playable code is turned on
@@ -94,7 +103,7 @@ Inspector only
 
 
 ## 0.10.0
-- feature: possibility to add/remove action event name into include/exlude filter list using action menu
+- feature: possibility to add/remove action event name into include/exclude filter list using action menu
 - feature: export/import plugin state (settings+actions)
 - feature: append actions from JSON file
 - feature: remove action from list (not a filter)
@@ -128,8 +137,8 @@ Inspector only
 - code: adds types
 
 ## 0.2.0
-- feature: collapsable actions
-- feature: default option for collapsable action
+- feature: collapsible actions
+- feature: default option for collapsible action
 
 ## 0.1.0
 - initial release
