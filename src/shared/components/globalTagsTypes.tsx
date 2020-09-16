@@ -8,11 +8,16 @@ declare global {
 		interface IntrinsicElements {
 			"sp-icon": any;
 			"sp-button": any;
+			"sp-action-group": any;
 			"sp-action-button": any;
 			"sp-checkbox": any;
 			"sp-menu": any;
 			"sp-menu-group": any;
+			"sp-split-button": any;
 			"sp-menu-item": any;
+			"sp-popover": any;
+			"p-action-group>": any;
+			"sp-action-menu": any;
 			"sp-menu-divider": any;
 			"sp-dropdown": any;
 			"sp-radio-group": any;
