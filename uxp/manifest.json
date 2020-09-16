@@ -40,6 +40,13 @@
 				"width": 600,
 				"height": 540
 			}
+		},
+		{
+			"type": "command",
+			"id": "resetStateFn",
+			"label": {
+			    "default": "Reset Alchemist state"
+			}
 		}
 	]
 }
