@@ -4,10 +4,10 @@
 	"main": "index.html",
 	"version": "0.24.0",
 	"manifestVersion": 4,
-	"host": {
+	"host": [{
 		"app": "PS",
 		"minVersion": "22.0.0"
-	},
+	}],
 	"icons": [
 		{
 		    "width": 23, "height": 23, "path": "icons/dark.png", "scale": [ 1, 2 ],
