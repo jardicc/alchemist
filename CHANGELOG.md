@@ -6,6 +6,7 @@
 - improvement: removes right bottom artifact
 - improvement: cleaner path to the pinned property in generated source code
 - improvement: now it shows autoselected descriptor underline for only autocative items. 2 for difference 1 for others
+- fix: initial text flash from black to theme color
 
 
 ## 0.24.0
