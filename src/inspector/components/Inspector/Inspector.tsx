@@ -4,25 +4,20 @@ import { TabPanel } from "../Tabs/TabPanel";
 import "./../../../shared/ThemeVars.css";
 import "./Inspector.less";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
-import { TActiveSection, TActiveInspectorTab, IDescriptor } from "../../model/types";
+import { TActiveSection, TActiveInspectorTab } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
-import { VisualDiffTab } from "../VisualDiff/VisualDiff";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
 import Split from "react-split";
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
-import { Dispatcher } from "../Dispatcher/Dispatcher";
 import { DispatcherContainer } from "../Dispatcher/DispatcherContainer";
+import { GeneratedCodeContainer } from "../GeneratedCode/GeneratedCodeContainer";
 
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
 	modeTab: TActiveInspectorTab	
-	descriptorContent: string
 	calculatedReference: string
-	originalReference: string
-	leftRawDiff:IDescriptor | null
-	rightRawDiff:IDescriptor | null
 }
 
 export interface IInspectorDispatch {
@@ -35,34 +30,22 @@ export interface IInspectorDispatch {
 type TInspector = IInspectorProps & IInspectorDispatch
 
 interface IState{
-	diffSubtab: "Tree"|"Raw"
 }
 
 export class Inspector extends React.Component<TInspector, IState> { 
 	constructor(props: TInspector) {
 		super(props);
 
-		this.state = {
-			diffSubtab: "Tree"
-		};
-	}
-
-	private setDiffSubtab = (key:"Tree"|"Raw") => {
-		this.setState({
-			...this.state,
-			diffSubtab: key
-		});
-	}
-
-	public componentDidMount(): void {
 		this.props.setWholeState();
+		this.state = {
+		};
 	}
 
 	public render(): JSX.Element {
 		return (
 			<div className="Inspector">
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
-					<TabPanel id="descriptors" title="Descriptors" >
+					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<Split
 								sizes={[30, 70]}
@@ -71,48 +54,16 @@ export class Inspector extends React.Component<TInspector, IState> {
 								<LeftColumnContainer />
 								<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
 									<TabPanel id="content" title="Content" >
-										<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
-											<TabPanel id="Tree" title="Tree" >
-												<TreeContentContainer />
-											</TabPanel>
-											<TabPanel id="Raw" title="Raw" >
-												<textarea
-													maxLength={Number.MAX_SAFE_INTEGER}
-													className="rawCode"
-													defaultValue={this.props.descriptorContent}
-												/>
-											</TabPanel>
-										</TabList>
+										<TreeContentContainer />
 									</TabPanel>
 									<TabPanel id="difference" title="Difference" >
-										<TabList className="tabsView" activeKey={this.state.diffSubtab} onChange={this.setDiffSubtab}>
-											<TabPanel id="Tree" title="Tree" >
-												<TreeDiffContainer />
-											</TabPanel>
-											<TabPanel id="Raw" title="Raw" >
-												<VisualDiffTab
-													left={this.props.leftRawDiff}
-													right={this.props.rightRawDiff}
-												/>
-											</TabPanel>
-										</TabList>
+										<TreeDiffContainer />
 									</TabPanel>
 									<TabPanel id="dom" title="DOM (live)" >
 										<TreeDomContainer />
 									</TabPanel>
 									<TabPanel id="reference" title="Code" >
-										<div className="info code">
-											<div className="noShrink">
-												Generated code:
-												<textarea
-													maxLength={Number.MAX_SAFE_INTEGER}
-													className="infoBlock"
-													defaultValue={
-														this.props.originalReference
-													}
-												/>
-											</div>
-										</div>
+										<GeneratedCodeContainer />
 									</TabPanel>
 									<TabPanel id="info" title="Used filter" >
 										<div className="info code">
@@ -136,7 +87,17 @@ export class Inspector extends React.Component<TInspector, IState> {
 						<DispatcherContainer />
 					</TabPanel>
 					<TabPanel id="settings" title="Settings">
-						TODO
+						<div><span className="title">Descriptor settings: </span></div>
+						<div className="row">
+							<div className="label">Raw data type format</div>
+							<sp-dropdown quiet="false" disabled={"true"}>
+								<sp-menu slot="options" onClick={(e: string) => { console.log(e); }}>
+									<sp-menu-item key={"ignore"} value={"ignore"} selected={false}>Ignore (placeholder)</sp-menu-item>
+									<sp-menu-item key={"readability"} value={"readability"} selected={false}>Readability (array)</sp-menu-item>
+									<sp-menu-item key={"executability"} value={"executability"} selected={false}>Executability (base64)</sp-menu-item>
+								</sp-menu>
+							</sp-dropdown>
+						</div>
 					</TabPanel>
 				</TabList>
 				<FooterContainer />
