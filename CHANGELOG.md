@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.25.0
+- feature: adds possibility to set batchPlay options for selected descriptors and also default settings for recorded items
+- improvement: adds new icon (made by Petr Štefek https://www.behance.net/phob )
+- improvement: removes right bottom artifact
+- improvement: cleaner path to the pinned property in generated source code
+- improvement: now it shows autoselected descriptor underline for only autocative items. 2 for difference 1 for others
+
+
 ## 0.24.0
 - feature: adds menu item to reset panel settings
 - feature: adds possibility to rename item
