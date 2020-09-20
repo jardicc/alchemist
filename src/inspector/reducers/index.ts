@@ -1,12 +1,16 @@
 
+
 import produce from "immer";
 import { getInitialState } from "../store/initialState";
 import { TActions } from "../actions/inspectorActions";
-import { IInspectorState, IContent, IDifference, IReference, IDOM, TPath } from "../model/types";
+import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType } from "../model/types";
 import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
-import { getTreeDomInstance, getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { Settings } from "../classes/Settings";
+import { getDescriptorsListView } from "../selectors/inspectorSelectors";
+import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
+import { TGeneratedCode } from "../components/GeneratedCode/GeneratedCode";
+
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
 	console.log(JSON.stringify(action, null, "\t"));
@@ -409,6 +413,48 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				}
 			});
 			break;
+		}
+		case "SET_DESCRIPTOR_OPTIONS": {
+			state = produce(state, draft => {
+				if (action.payload.uuids === "default") {
+					draft.settings.initialDescriptorSettings = {
+						...state.settings.initialDescriptorSettings,
+						...action.payload.options
+					};
+				} else {
+					for (let i = 0, len = action.payload.uuids.length; i < len; i++){
+						let foundIndex = 0;
+						const found = draft.descriptors.find((desc, j) => {
+							foundIndex = j;
+							return desc.id === action.payload.uuids[i];
+						});
+						if (found) {
+							found.descriptorSettings = {
+								...state.descriptors[foundIndex].descriptorSettings,
+								...action.payload.options
+							};
+						}
+					}
+				}
+			});
+			break;	
+		}
+		case "SET_INSPECTOR_VIEW_ACTION": {
+			state = produce(state, draft => {
+				const {inspectorType,viewType } = action.payload;
+
+				switch (inspectorType) {
+					case "code":
+						draft.inspector.code.viewType = viewType as TCodeViewType;
+						break;
+					case "content":
+						draft.inspector.content.viewType = viewType as TGenericViewType;
+						break;
+					case "diff":
+						draft.inspector.difference.viewType = viewType as TGenericViewType;
+						break;
+				}
+			});
 		}
 	}
 	Settings.saveSettings(state);

@@ -1,11 +1,12 @@
 import React from "react";
 import "./Dispatcher.less";
 import { Helpers } from "../../classes/Helpers";
-import { ITargetReference, IDescriptor } from "../../model/types";
+import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
 
 
 export interface IDispatcherProps{
-	snippet:string
+	snippet: string
+	settings:ISettings
 }
 
 export interface IDispatcherDispatch {
@@ -58,7 +59,8 @@ export class Dispatcher extends React.Component<TDispatcher, any> {
 				selected: false,
 				renameMode: false,
 				calculatedReference: data,
-				title: "Dispatched"
+				title: "Dispatched",
+				descriptorSettings: this.props.settings.initialDescriptorSettings
 			};
 
 			//this.props.setLastHistoryID;

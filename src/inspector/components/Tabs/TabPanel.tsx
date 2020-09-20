@@ -3,7 +3,8 @@ import React from "react";
 
 export interface ITabPanelProps{
 	id: string
-	title:string|JSX.Element
+	title: string | JSX.Element
+	noPadding?:boolean
 }
 
 export interface ITabPanelDispatch {

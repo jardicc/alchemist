@@ -2,13 +2,20 @@ import type { ITargetReferenceAM } from "../classes/GetInfo";
 import type { Descriptor } from "photoshop/dist/types/UXP";
 import { TState } from "../components/FilterButton/FilterButton";
 
+export type TDialogOptions = "silent" | "dontDisplay" | "display";
+export type TModalBehavior = "wait" | "execute" | "fail"
+
 export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" | "layer" | "path" | "property" | "snapshot"|"listenerCategory";
 export type TTargetReference = "listener"|"customDescriptor" | "featureData" | "generator" | TPropertyClass;
 export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" | "action";
 export type TPropertyType = "hidden" | "optional" | "default";
 export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"
 export type TActiveInspectorTab = ITreeDataTabs;
-export type TViewType = "tree" | "raw";
+
+
+export type TGenericViewType = "tree" | "raw";
+export type TCodeViewType = "generated" | "options";
+
 export type TActiveSection = "descriptors" | "settings";
 
 export type TExportItems = "selected" | "all";
@@ -49,7 +56,7 @@ export interface IInspectorState {
 	settings:ISettings
 	inspector:IInspector
 	descriptors: IDescriptor[]
-	dispatcher:IDispatcher
+	dispatcher: IDispatcher
 }
 
 export interface ITargetReference {
@@ -153,7 +160,14 @@ export interface ISettings{
 	lastSelectedItem: string|null,
 	activeDescriptors:string[],
 	properties:IPropertySettings[]
-	maximumItems:number
+	maximumItems: number
+	initialDescriptorSettings:IDescriptorSettings
+}
+
+export interface IDescriptorSettings {
+	dialogOptions: "mixed"|TDialogOptions | null,
+	modalBehavior: "mixed"|TModalBehavior | null,
+	synchronousExecution: "mixed"|boolean | null
 }
 
 export interface IPropertySettings {
@@ -172,7 +186,12 @@ export interface IInspector{
 	dom: IDOM
 	content: IContent
 	difference: IDifference
+	code: ICode
 	info: IReference
+}
+
+export interface ICode{
+	viewType: "generated"|"options"
 }
 
 export interface IDOM{
@@ -181,13 +200,13 @@ export interface IDOM{
 }
 
 export interface IContent{
-	viewType: TViewType
+	viewType: TGenericViewType
 	treePath: string[]
 	expandedTree:TPath[]
 }
 
 export interface IDifference{
-	viewType: TViewType
+	viewType: TGenericViewType
 	treePath: string[]
 	expandedTree:TPath[]
 }
@@ -210,7 +229,8 @@ export interface IDescriptor{
 	/** used for AM */
 	calculatedReference: ITargetReferenceAM|Descriptor,
 	/** content */
-	originalData: Descriptor[]|Descriptor
+	originalData: Descriptor[] | Descriptor,
+	descriptorSettings:IDescriptorSettings
 }
 
 export interface IGetNameOutput{

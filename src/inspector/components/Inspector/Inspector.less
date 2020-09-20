@@ -9,15 +9,9 @@
 	flex-shrink: 0;
 	background: var(--bg);
 
-	
-	
-	/*textarea{
-		appearance: none;
-		border: 1px solid red;
-		padding: 1em;
-		font-family: monospace;
-		border:1px solid gray;
-	}*/
+	textarea{		
+		margin: 0;
+	}
 
 	.Raw{
 		position: relative;
@@ -43,14 +37,7 @@
 		}
 	}
 
-	.code{
-		color:var(--text);
-		font-size: 11px;
-		white-space: pre;
-		font-family: 'Courier New', Monaco;
-		line-height: 1.4em;
-		padding: 1em;
-	}
+
 	
 	
 	.descriptorsColumns{
@@ -164,8 +151,9 @@
 
 		&.activated{
 			color: var(--active);
-			border-color: var(--active);
-			border-width: 2px;
+			border-color: transparent;
+			//border-width: 2px;
+			outline: 2px solid var(--active);
 		}
 		&.deactivated{
 			margin:calc(0.3em + 1px);

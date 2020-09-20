@@ -1,8 +1,8 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ITreeContentDispatch, ITreeContentProps, TreeContent } from "./TreeContent";
-import { getTreeContent, getContentPath, getContentExpandedNodes } from "../../selectors/inspectorSelectors";
 import { IRootState } from "../../../shared/store";
-import { setInspectorPathContentAction, setExpandedPathAction } from "../../actions/inspectorActions";
+import { setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction } from "../../actions/inspectorActions";
+import { getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView } from "../../selectors/inspectorContentSelectors";
 
 
 const mapStateToProps = (state: IRootState): ITreeContentProps => {
@@ -11,13 +11,16 @@ const mapStateToProps = (state: IRootState): ITreeContentProps => {
 		path: getContentPath(state),
 		protoMode: "none",
 		expandedKeys: getContentExpandedNodes(state),
+		descriptorContent: getActiveDescriptorContent(state),
+		viewType:getContentActiveView(state),
 	};
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Record<string, unknown>> = (dispatch):ITreeContentDispatch => {
 	return {
 		onInspectPath: (path, mode) => dispatch(setInspectorPathContentAction(path, mode)),
-		onSetExpandedPath: (path, expand, recursive,data) => dispatch(setExpandedPathAction("content",path, expand, recursive,data)),
+		onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("content", path, expand, recursive, data)),
+		onSetView:(viewType) => dispatch(setInspectorViewAction("content",viewType))
 	};
 };
 

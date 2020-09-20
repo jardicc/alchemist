@@ -550,7 +550,12 @@ export function getInitialState(): IInspectorState {
 					]
 				},
 			],
-			maximumItems: 200
+			maximumItems: 200,
+			initialDescriptorSettings: {
+				dialogOptions:"dontDisplay",
+				modalBehavior: "fail",
+				synchronousExecution: false
+			}
 		},
 		inspector: {
 			activeTab: "content",
@@ -563,6 +568,9 @@ export function getInitialState(): IInspectorState {
 				viewType: "tree",
 				treePath: [],
 				expandedTree:[]
+			},
+			code: {
+				viewType: "generated"
 			},
 			dom: {
 				treePath: [],

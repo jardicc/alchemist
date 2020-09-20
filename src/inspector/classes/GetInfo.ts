@@ -5,6 +5,7 @@ import { Descriptor } from "photoshop/dist/types/UXP";
 import { DocumentExtra } from "./DocumentExtra";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { getName } from "./GetName";
+import { getInitialState } from "../store/initialState";
 const PS = photoshop.app;
 
 
@@ -22,6 +23,7 @@ export interface ITargetReferenceAM {
 	"compInfo"?: boolean,
 	"layerInfo"?: boolean,
 	"includeAncestors"?: boolean,
+	[prop: string]: any;
 }
 
 export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference|IndexReference
@@ -269,7 +271,8 @@ export class GetInfo {
 			selected: false,
 			calculatedReference: desc,
 			renameMode: false,
-			title:this.generateTitle(originalRef,desc)
+			title: this.generateTitle(originalRef, desc),
+			descriptorSettings: getInitialState().settings.initialDescriptorSettings
 		};
 	}
 

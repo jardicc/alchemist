@@ -36,7 +36,7 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => {
 		settings: getInspectorSettings(state),
 		selectedDescriptors: getSelectedDescriptors(state),
 		
-		filterBySelectedReferenceType:getFilterBySelectedReferenceType(state),
+		filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),		
 	};
 };
 

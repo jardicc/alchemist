@@ -1,14 +1,16 @@
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IDispatcherProps, IDispatcherDispatch, Dispatcher } from "./Dispatcher";
-import { getDispatcherSnippet } from "../../selectors/inspectorSelectors";
 import { IRootState } from "../../../shared/store";
 import { setDispatcherValueAction, addDescriptorAction } from "../../actions/inspectorActions";
+import { getDispatcherSnippet } from "../../selectors/dispatcherSelectors";
+import { getInspectorSettings } from "../../selectors/inspectorSelectors";
 
 
 
 const mapStateToProps = (state: IRootState): IDispatcherProps => {
 	return {
-		snippet:getDispatcherSnippet(state)
+		snippet: getDispatcherSnippet(state),
+		settings: getInspectorSettings(state),
 	};
 };
 

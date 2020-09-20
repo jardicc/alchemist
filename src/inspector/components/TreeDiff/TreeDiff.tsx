@@ -5,8 +5,11 @@ import "./TreeDiff.less";
 import JSONTree from "../JSONTree";
 import { diff } from "jsondiffpatch";
 import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
-import { TPath } from "../../model/types";
+import { IDescriptor, TPath, TGenericViewType } from "../../model/types";
 import { divide } from "lodash";
+import { TabList } from "../Tabs/TabList";
+import { TabPanel } from "../Tabs/TabPanel";
+import { VisualDiffTab } from "../VisualDiff/VisualDiff";
 
 function stringifyAndShrink(val:any, isWideLayout=false) {
 	if (val === null) { return "null"; }
@@ -47,17 +50,21 @@ export interface ITreeDiffProps{
 	expandedKeys: TPath[]
 	invertTheme:boolean,
 	isWideLayout: boolean,
+	leftRawDiff:IDescriptor | null
+	rightRawDiff: IDescriptor | null
+	viewType:TGenericViewType
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreeDiffDispatch {
 	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data:any)=>void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onSetView: (viewType: TGenericViewType) => void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ITreeDiffState{
-	data:any
+	data: any
 }
 
 export type TTreeDiff = ITreeDiffProps & ITreeDiffDispatch
@@ -68,7 +75,7 @@ export default class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		super(props);
 
 		this.state = {
-			data: {}
+			data: {},
 		};
 	}
 
@@ -129,24 +136,35 @@ export default class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		}
 
 		return (
-			<div className="TreeDiff">
-				<div className="path">
-					{this.renderPath()}
-				</div>
+			<TabList className="tabsView" activeKey={this.props.viewType} onChange={this.props.onSetView}>
+				<TabPanel id="tree" title="Tree" >
+					<div className="TreeDiff">
+						<div className="path">
+							{this.renderPath()}
+						</div>
 
-				{left && right ? <JSONTree {...props} // node module
-					shouldExpandNode={shouldExpandNode(this.props.expandedKeys)}
-					expandClicked={this.expandClicked}
-					labelRenderer={this.labelRenderer}
-					data={this.state.data}
-					getItemString={this.getItemString}
-					valueRenderer={this.valueRenderer}
-					postprocessValue={prepareDelta}
-					isCustomNode={Array.isArray as any}
-					hideRoot={true}
-					sortObjectKeys={true}
-				/> : <div className="message">Select 2 descriptors. (Hold Ctrl + click on descriptor item)</div>}
-			</div>
+						{left && right ? <JSONTree {...props} // node module
+							shouldExpandNode={shouldExpandNode(this.props.expandedKeys)}
+							expandClicked={this.expandClicked}
+							labelRenderer={this.labelRenderer}
+							data={this.state.data}
+							getItemString={this.getItemString}
+							valueRenderer={this.valueRenderer}
+							postprocessValue={prepareDelta}
+							isCustomNode={Array.isArray as any}
+							hideRoot={true}
+							sortObjectKeys={true}
+						/> : <div className="message">Select 2 descriptors. (Hold Ctrl + click on descriptor item)</div>}
+					</div>
+				</TabPanel>
+				<TabPanel id="raw" title="Raw" >
+					<VisualDiffTab
+						left={this.props.leftRawDiff}
+						right={this.props.rightRawDiff}
+					/>
+				</TabPanel>
+			</TabList>
+			
 		);
 	}
 

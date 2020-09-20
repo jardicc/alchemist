@@ -13,8 +13,9 @@ import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
 import { Helpers } from "../../classes/Helpers";
 import { guessOrinalReference } from "../../classes/guessOriginalReference";
-import { Descriptor } from "photoshop/dist/types/UXP";
+import { CommandOptions, Descriptor } from "photoshop/dist/types/UXP";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
+import { getInitialState } from "../../store/initialState";
 
 export interface IProperty<T>{
 	label: string
@@ -489,7 +490,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			renameMode: false,
 			selected: false,
 			title: GetInfo.generateTitle(originalReference,calculatedReference),
-			calculatedReference
+			calculatedReference,
+			descriptorSettings: this.props.settings.initialDescriptorSettings
 		};
 
 		//this.props.setLastHistoryID;
@@ -519,6 +521,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			...descriptor
 		};
 
+		debugger;
+
 		const result: IDescriptor = {
 			endTime: 0,
 			startTime: 0,
@@ -530,7 +534,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			selected: false,
 			renameMode: false,
 			calculatedReference: descWithEvent,
-			title: GetInfo.generateTitle(originalReference, descWithEvent)
+			title: GetInfo.generateTitle(originalReference, descWithEvent),
+			descriptorSettings: this.props.settings.initialDescriptorSettings
 		};
 
 		//this.props.setLastHistoryID;
@@ -585,7 +590,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	private renderDescriptorsList = (): React.ReactNode => {
-		const { allDescriptors, hasAutoActiveDescriptor } = this.props;
+		const { allDescriptors } = this.props;
 		return (
 			allDescriptors.map((d, index) => (
 				<div className="DescriptorItem" key={index} ref={index===allDescriptors.length-1 ? this.lastDescRef as any : null}>
@@ -634,7 +639,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				selected: false,
 				renameMode: false,
 				calculatedReference: descriptors,
-				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true)
+				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true),
+				descriptorSettings: this.props.settings.initialDescriptorSettings
 			};
 
 			//this.props.setLastHistoryID;

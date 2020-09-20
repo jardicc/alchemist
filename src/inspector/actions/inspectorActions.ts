@@ -1,6 +1,7 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
+import { CommandOptions } from "photoshop/dist/types/UXP";
 
 export interface ISetMainTab {
 	type: "SET_MAIN_TAB"
@@ -202,6 +203,42 @@ export interface IRenameDescriptorAction{
 		uuid: string,
 		name:string
 	}
+}
+
+export interface ISetDescriptorOptionsAction {
+	type: "SET_DESCRIPTOR_OPTIONS",
+	payload: {
+		uuids: string[] | "default"
+		options: CommandOptions
+	}
+}
+
+export interface ISetInspectorViewAction {
+	type: "SET_INSPECTOR_VIEW_ACTION",
+	payload: {
+		inspectorType: "content" | "diff" | "code"
+		viewType: TGenericViewType | TCodeViewType
+	}
+}
+
+export function setInspectorViewAction(inspectorType:"content" | "diff" | "code", viewType:TGenericViewType|TCodeViewType): ISetInspectorViewAction{
+	return {
+		type: "SET_INSPECTOR_VIEW_ACTION",
+		payload: {
+			inspectorType,
+			viewType
+		}
+	};
+}
+
+export function setDescriptorOptionsAction(uuids:string[]|"default",options: CommandOptions): ISetDescriptorOptionsAction{
+	return {
+		type: "SET_DESCRIPTOR_OPTIONS",
+		payload: {
+			uuids,
+			options
+		}
+	};
 }
 
 export function setRenameModeAction(uuid:string,on:boolean):ISetRenameModeAction{
@@ -489,4 +526,6 @@ export type TActions = ISetMainTab |
 	IReplaceWholeState |
 	ISetDispatcherValueAction |
 	ISetRenameModeAction |
-	IRenameDescriptorAction
+	IRenameDescriptorAction |
+	ISetDescriptorOptionsAction |
+	ISetInspectorViewAction

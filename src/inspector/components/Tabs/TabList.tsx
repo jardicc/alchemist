@@ -6,7 +6,7 @@ import { iteratorSymbol } from "immer/dist/internal";
 
 export interface ITabListProps{
 	activeKey: string
-	className:string
+	className: string
 	children: React.ReactNode
 	onChange:(id:string)=>void
 }
@@ -47,23 +47,26 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 	}
 
 	private renderTabContent = (): React.ReactNode => {
-		const {activeKey,children } = this.props;
+		const { activeKey, children } = this.props;
+
 		if (Array.isArray(children)) {
 			const found = children.find((item: TTabPanelComponent) => item.props.id === activeKey);
 			if (!found) {
-				return <div className="tabContent">No content</div>;
+				return <div className={"tabContent "}>No content</div>;
 			}
-			else if(typeof found === "object" && "props" in found) {
-				return <div className={"tabContent"+" "+found.props.id}>{found}</div>;
+			else if (typeof found === "object" && "props" in found) {
+				
+				const noPaddingClassName = found.props.noPadding ? "noPadding " : "";
+				return <div className={"tabContent " + noPaddingClassName + found.props.id}>{found}</div>;
 			}
 		}
-		return <div className="tabContent">not array</div>;
+		return <div className={"tabContent "}>not array</div>;
 	}
 
 	public render(): JSX.Element {
 		
 		return (
-			<div className={"TabList"+" "+(this.props.className||"")}>
+			<div className={"TabList "+(this.props.className||"")}>
 				{this.renderTabs()}
 				{this.renderTabContent()}
 			</div>
