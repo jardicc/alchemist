@@ -1,3 +1,16 @@
+/* init = dark */
+:root{
+	--bg: #545454;
+	--bgList: #4D4D4D;
+	--text:#F0F0F0;
+	--textDisallowed:#f0f0f070;
+	--textFade: #989898;
+	--active: lime;
+	--hover: aqua;
+	--autoActive:yellow;
+	--divider: #383838
+}
+
 @media (prefers-color-scheme: darkest) {
 	:root{
 		--bg: #353535;
