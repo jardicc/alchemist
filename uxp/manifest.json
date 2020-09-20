@@ -2,7 +2,7 @@
 	"name": "Alchemist",
 	"id": "cz.bereza.alchemist",
 	"main": "index.html",
-	"version": "0.24.0",
+	"version": "0.25.0",
 	"manifestVersion": 4,
 	"host": [{
 		"app": "PS",
@@ -25,8 +25,8 @@
 				"default": "Alchemist"
 			},
 			"minimumSize": {
-				"width": 230,
-				"height": 200
+				"width": 450,
+				"height": 360
 			},
 			"maximumSize": {
 				"width": 2000,
