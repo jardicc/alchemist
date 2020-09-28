@@ -455,6 +455,38 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 						break;
 				}
 			});
+			break;
+		}
+		case "SET_COLUMN_SIZE_ACTION": {
+			state = produce(state, draft => {
+				draft.settings.leftColumnWidthPx = action.payload;
+			});
+			break;
+		}
+		case "SET_RECORD_RAW": {
+			state = produce(state, draft => {
+				draft.settings.recordRawData = action.payload;
+			});
+			break;
+		}
+		case "SET_AUTOEXPAND_LEVEL": {
+			state = produce(state, draft => {
+				switch (action.payload.part) {
+					case "DOM": {
+						draft.inspector.dom.autoExpandLevels = action.payload.level;
+						break;
+					}
+					case "content": {
+						draft.inspector.content.autoExpandLevels = action.payload.level;
+						break;
+					}
+					case "diff": {
+						draft.inspector.difference.autoExpandLevels = action.payload.level;
+						break;
+					}
+				}
+			});
+			break;
 		}
 	}
 	Settings.saveSettings(state);
