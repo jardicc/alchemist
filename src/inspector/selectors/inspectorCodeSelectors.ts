@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash";
 import { CommandOptions } from "photoshop/dist/types/UXP";
 import { createSelector } from "reselect";
+import { RawDataConverter } from "../classes/RawDataConverter";
 import { IDescriptor, IDescriptorSettings } from "../model/types";
 import { getContentPath } from "./inspectorContentSelectors";
 import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings } from "./inspectorSelectors";
@@ -64,12 +65,17 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 			iDesc = [autoActive];
 		}
 		data = iDesc.map(item => addPerItemOptions(item));
+		// adds raw data type support
+		data = cloneDeep(data);
+		data.forEach(item => RawDataConverter.convertFakeRawInCode(item));
 		
 		let str = JSON.stringify(data, null, 3);
+		str = str.replace(/"\$\$\$Left_/gm, "");
+		str = str.replace(/_Right\$\$\$"/gm, "");
 		str =
-			"const photoshop = require(\"photoshop\");\n" +
+			"const batchPlay = require(\"photoshop\").action.batchPlay;\n" +
 			"\n" +
-			"const result = photoshop.action.batchPlay(\n" +
+			"const result = batchPlay(\n" +
 			str +
 
 			","+JSON.stringify(addCommonOptions(iDesc), null, 3)+");\n";

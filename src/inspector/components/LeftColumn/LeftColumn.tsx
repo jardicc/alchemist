@@ -16,6 +16,7 @@ import { guessOrinalReference } from "../../classes/guessOriginalReference";
 import { CommandOptions, Descriptor } from "photoshop/dist/types/UXP";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { getInitialState } from "../../store/initialState";
+import { RawDataConverter } from "../../classes/RawDataConverter";
 
 export interface IProperty<T>{
 	label: string
@@ -484,7 +485,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			startTime: startTime,
 			id: Helpers.uuidv4(),
 			locked: false,
-			originalData: playResult,
+			originalData: RawDataConverter.replaceArrayBuffer(playResult),
 			originalReference,
 			pinned: false,
 			renameMode: false,
@@ -528,7 +529,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			startTime: 0,
 			id: Helpers.uuidv4(),
 			locked: false,
-			originalData: descWithEvent,
+			originalData: RawDataConverter.replaceArrayBuffer(descWithEvent),
 			originalReference,
 			pinned: false,
 			selected: false,
@@ -633,7 +634,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				startTime,
 				id: Helpers.uuidv4(),
 				locked: false,
-				originalData: descriptors,
+				originalData: RawDataConverter.replaceArrayBuffer(descriptors),
 				originalReference,
 				pinned: false,
 				selected: false,

@@ -12,18 +12,22 @@ import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
 import { DispatcherContainer } from "../Dispatcher/DispatcherContainer";
 import { GeneratedCodeContainer } from "../GeneratedCode/GeneratedCodeContainer";
+import { Helpers } from "../../classes/Helpers";
+import { SettingsContainer } from "../Settings/SettingsContainer";
 
 
 export interface IInspectorProps{
 	mainTab: TActiveSection
 	modeTab: TActiveInspectorTab	
 	calculatedReference: string
+	columnSizesPercentage: [number,number]
 }
 
 export interface IInspectorDispatch {
 	setMainTab(name: TActiveSection): void
 	setModeTab(mode: TActiveInspectorTab): void
-	setWholeState():void
+	setWholeState(): void
+	setColumnSize(px:number):void
 }
 
 
@@ -41,25 +45,45 @@ export class Inspector extends React.Component<TInspector, IState> {
 		};
 	}
 
+	/*private static _loaded = false;
+
+	public static get loaded(): boolean{
+		return this._loaded;
+	}*/
+
+	/*public componentDidMount():void {
+		Inspector._loaded = true;
+	}*/
+
+
+	/*private onSplitChange = (sizes: [number, number]) => {
+		if (sizes?.length === 2) {
+			this.props.setColumnSize(Helpers.percToPanelWidthPx("inspector",sizes[0]));
+		}
+	}*/
+
 	public render(): JSX.Element {
+		const { columnSizesPercentage } = this.props;
 		return (
 			<div className="Inspector">
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
 					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<Split
-								sizes={[30, 70]}
+								sizes={/*Inspector.loaded ? columnSizesPercentage:*/[30,70] }
 								gutterSize={3}
+								//onDragEnd={this.onSplitChange as any}
+								//onDrag={(e)=>console.log(e)}
 							>
 								<LeftColumnContainer />
 								<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
-									<TabPanel id="content" title="Content" >
+									<TabPanel id="content" title="Content" noPadding={true}>
 										<TreeContentContainer />
 									</TabPanel>
-									<TabPanel id="difference" title="Difference" >
+									<TabPanel id="difference" title="Difference"  noPadding={true}>
 										<TreeDiffContainer />
 									</TabPanel>
-									<TabPanel id="dom" title="DOM (live)" >
+									<TabPanel id="dom" title="DOM (live)" noPadding={true} >
 										<TreeDomContainer />
 									</TabPanel>
 									<TabPanel id="reference" title="Code" >
@@ -87,17 +111,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 						<DispatcherContainer />
 					</TabPanel>
 					<TabPanel id="settings" title="Settings">
-						<div><span className="title">Descriptor settings: </span></div>
-						<div className="row">
-							<div className="label">Raw data type format</div>
-							<sp-dropdown quiet="false" disabled={"true"}>
-								<sp-menu slot="options" onClick={(e: string) => { console.log(e); }}>
-									<sp-menu-item key={"ignore"} value={"ignore"} selected={false}>Ignore (placeholder)</sp-menu-item>
-									<sp-menu-item key={"readability"} value={"readability"} selected={false}>Readability (array)</sp-menu-item>
-									<sp-menu-item key={"executability"} value={"executability"} selected={false}>Executability (base64)</sp-menu-item>
-								</sp-menu>
-							</sp-dropdown>
-						</div>
+						<SettingsContainer />
 					</TabPanel>
 				</TabList>
 				<FooterContainer />

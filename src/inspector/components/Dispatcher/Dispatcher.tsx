@@ -2,6 +2,7 @@ import React from "react";
 import "./Dispatcher.less";
 import { Helpers } from "../../classes/Helpers";
 import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
+import { RawDataConverter } from "../../classes/RawDataConverter";
 
 
 export interface IDispatcherProps{
@@ -53,7 +54,7 @@ export class Dispatcher extends React.Component<TDispatcher, any> {
 				startTime,
 				id: Helpers.uuidv4(),
 				locked: false,
-				originalData: data,
+				originalData: RawDataConverter.replaceArrayBuffer(data),
 				originalReference,
 				pinned: false,
 				selected: false,
