@@ -42,3 +42,7 @@ export const getTreeDomInstance = createSelector([getTreeDom], (t) => {
 export const getDomExpandedNodes = createSelector([getInspectorDomTab], (t) => {	
 	return t.expandedTree;
 });
+
+export const getDOMExpandLevel = createSelector([getInspectorDomTab], (t) => {
+	return t?.autoExpandLevels ?? 0;
+});

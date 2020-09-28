@@ -3,10 +3,11 @@ import "./TreeContent.less";
 import { getItemString } from "../TreeDiff/getItemString";
 import JSONTree from "./../JSONTree";
 import { TProtoMode, TPath, TGenericViewType } from "../../model/types";
-import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
+import { labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { TLabelRenderer } from "../JSONTree/types";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
+import { TreePath } from "../TreePath/TreePath";
 
 export interface ITreeContentProps{
 	content: any
@@ -14,7 +15,8 @@ export interface ITreeContentProps{
 	expandedKeys: TPath[]
 	protoMode: TProtoMode
 	descriptorContent: string
-	viewType:TGenericViewType
+	viewType: TGenericViewType
+	autoExpandLevels:number
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -22,6 +24,7 @@ export interface ITreeContentDispatch {
 	onInspectPath: (path: string[], mode: "replace" | "add") => void;
 	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
 	onSetView: (viewType: TGenericViewType) => void
+	onSetAutoExpandLevel:(level:number)=>void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -36,14 +39,10 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 	constructor(props: TTreeContent) {
 		super(props);
 	}
+
 	
 	private labelRenderer:TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable): JSX.Element => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
-	}
-
-	private renderPath = () => {
-		const { path, onInspectPath } = this.props;
-		return renderPath(path, onInspectPath);
 	}
 
 	public getItemString = (type: any, data: any): JSX.Element => {
@@ -54,31 +53,37 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
 	}
 	
+	
 	public render(): React.ReactNode {
-		const { content,protoMode } = this.props;
+		const { content, protoMode, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys, viewType ,onSetView} = this.props;
 		//console.log(content);
 		return (
-			<TabList className="tabsView" activeKey={this.props.viewType} onChange={this.props.onSetView}>
-				<TabPanel id="tree" title="Tree" >
+			<TabList className="tabsView" activeKey={viewType} onChange={onSetView}>
+				<TabPanel id="tree" title="Tree" noPadding={true}>
 					<div className="TreeContent">
-						<div className="path">
-							{this.renderPath()}
+						<TreePath
+							autoExpandLevels = {autoExpandLevels}
+							onInspectPath = {onInspectPath}
+							onSetAutoExpandLevel = {onSetAutoExpandLevel}
+							path={path}
+							allowInfinityLevels={true}
+						/>
+						<div className="TreeContentBox">
+							{(content === undefined || content === null) ?
+								<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
+								:
+								<JSONTree
+									expandClicked={this.expandClicked}
+									labelRenderer={this.labelRenderer}
+									shouldExpandNode={shouldExpandNode(expandedKeys,autoExpandLevels, true)}
+									data={content}
+									getItemString={this.getItemString} // shows object content shortcut
+									hideRoot={true}
+									sortObjectKeys={true}
+									protoMode={protoMode}
+								/>
+							}
 						</div>
-				
-						{(content === undefined || content === null) ?
-							<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
-							:
-							<JSONTree
-								expandClicked={this.expandClicked}
-								labelRenderer={this.labelRenderer}
-								shouldExpandNode={shouldExpandNode(this.props.expandedKeys)}
-								data={content}
-								getItemString={this.getItemString} // shows object content shortcut
-								hideRoot={true}
-								sortObjectKeys={true}
-								protoMode={protoMode}
-							/>
-						}
 					</div>
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
@@ -89,7 +94,6 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 					/>
 				</TabPanel>
 			</TabList>
-
 		);
 	}
 }

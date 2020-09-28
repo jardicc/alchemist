@@ -45,3 +45,7 @@ export const getActiveDescriptorContent = createSelector([getActiveDescriptors, 
 export const getContentExpandedNodes = createSelector([getInspectorContentTab], (t) => {	
 	return t.expandedTree;
 });
+
+export const getContentExpandLevel = createSelector([getInspectorContentTab], (t) => {
+	return t?.autoExpandLevels ?? 0;
+});

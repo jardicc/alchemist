@@ -221,6 +221,48 @@ export interface ISetInspectorViewAction {
 	}
 }
 
+export interface ISetColumnSizeAction{
+	type: "SET_COLUMN_SIZE_ACTION",
+	payload:number
+}
+
+export interface ISetRecordRawAction{
+	type: "SET_RECORD_RAW",
+	payload:boolean
+}
+
+export interface ISetAutoExpandLevelAction {
+	type: "SET_AUTOEXPAND_LEVEL",
+	payload: {
+		level: number
+		part: "DOM" | "content" | "diff"
+	}
+}
+
+export function setAutoExpandLevelAction(part: "DOM" | "content" | "diff",level: number): ISetAutoExpandLevelAction{
+	return {
+		type: "SET_AUTOEXPAND_LEVEL",
+		payload: {
+			level,
+			part
+		}
+	};
+}
+
+export function setRecordRawAction(value: boolean): ISetRecordRawAction{
+	return {
+		type: "SET_RECORD_RAW",
+		payload: value
+	};
+}
+
+export function setColumnSizeAction(px: number): ISetColumnSizeAction{
+	return {
+		type: "SET_COLUMN_SIZE_ACTION",
+		payload: px
+	};
+}
+
 export function setInspectorViewAction(inspectorType:"content" | "diff" | "code", viewType:TGenericViewType|TCodeViewType): ISetInspectorViewAction{
 	return {
 		type: "SET_INSPECTOR_VIEW_ACTION",
@@ -528,4 +570,7 @@ export type TActions = ISetMainTab |
 	ISetRenameModeAction |
 	IRenameDescriptorAction |
 	ISetDescriptorOptionsAction |
-	ISetInspectorViewAction
+	ISetInspectorViewAction |
+	ISetColumnSizeAction | 
+	ISetRecordRawAction |
+	ISetAutoExpandLevelAction

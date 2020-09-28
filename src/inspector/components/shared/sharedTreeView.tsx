@@ -45,8 +45,9 @@ export const renderPath = (path: TPath, onInspectPath: (path: TPath, mode: "repl
 	return parts;
 };
 
-export const shouldExpandNode = (expandedKeys: TPath[]): TShouldExpandNode => {
+export const shouldExpandNode = (expandedKeys: TPath[],autoExpandLevels=0,allowInfinity=false): TShouldExpandNode => {
 	return (keyPath, data, level) => {
+
 		const keyPathString = [...keyPath].reverse().join("-");
 		for (const path of expandedKeys) {
 			if (path.length === level) { // cheap check				
@@ -54,6 +55,15 @@ export const shouldExpandNode = (expandedKeys: TPath[]): TShouldExpandNode => {
 					return true;
 				}
 			}
+		}		
+
+		// 0 = off
+		if (autoExpandLevels !== 0) {
+			// 10 = all
+			if (autoExpandLevels === 10 && allowInfinity) {
+				return true;
+			}
+			return  level <= autoExpandLevels;
 		}
 		return false;
 	};

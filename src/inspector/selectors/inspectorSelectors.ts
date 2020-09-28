@@ -2,6 +2,7 @@ import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
 import { IDescriptor, IInspectorState } from "../model/types";
 import { Descriptor } from "photoshop/dist/types/UXP";
+import { Helpers } from "../classes/Helpers";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
  
@@ -218,3 +219,10 @@ export const getActiveTargetLayer = createSelector([getActiveTargetReference], (
 
 	return (result===undefined) ? null : result;
 });
+
+/*export const getColumnSizesPercentage = createSelector([getInspectorSettings], (s) => {
+	debugger;
+	const leftColumnPerc = Helpers.pxToPanelWidthPercentage("inspector", s.leftColumnWidthPx);
+
+	return [leftColumnPerc,100-leftColumnPerc] as [number,number];
+});*/

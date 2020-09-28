@@ -47,3 +47,7 @@ export const getRightRawDiff = createSelector([getSelectedDescriptors, getSecond
 export const getDiffExpandedNodes = createSelector([getInspectorDifferenceTab], (t) => {	
 	return t.expandedTree;
 });
+
+export const getDiffExpandLevel = createSelector([getInspectorDifferenceTab], (t) => {
+	return t?.autoExpandLevels ?? 0;
+});

@@ -6,6 +6,7 @@ import { TProtoMode, TPath } from "../../model/types";
 import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { TReference, GetInfo } from "../../classes/GetInfo";
 import { cloneDeep } from "lodash";
+import { TreePath } from "../TreePath/TreePath";
 
 export interface ITreeDomProps{
 	/*content: {
@@ -15,13 +16,15 @@ export interface ITreeDomProps{
 	path:TPath
 	content: any
 	expandedKeys: TPath[]
-	protoMode:TProtoMode
+	protoMode: TProtoMode
+	autoExpandLevels:number
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreeDomDispatch {
 	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data:any)=>void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onSetAutoExpandLevel:(level:number)=>void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -44,11 +47,6 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
 	}
 
-	private renderPath = () => {
-		const { path, onInspectPath } = this.props;
-		return renderPath(path, onInspectPath);
-	}
-
 	public getItemString = (type: any, data: any): JSX.Element => {
 		return getItemString(type, data, true, false);
 	}
@@ -58,7 +56,7 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 	}
 	
 	public render(): React.ReactNode {
-		const { content, protoMode, onInspectPath } = this.props;
+		const { content, protoMode, onInspectPath,autoExpandLevels,onSetAutoExpandLevel } = this.props;
 		if (!content) {
 			return "Nothing to see there";
 		}
@@ -80,25 +78,29 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 		//console.log(content);
 		return (
 			<div className="TreeDom">
-				<div className="path">
-					{this.renderPath()}
+				<TreePath
+					autoExpandLevels = {autoExpandLevels}
+					onInspectPath = {onInspectPath}
+					onSetAutoExpandLevel = {onSetAutoExpandLevel}
+					path = {path}
+				/>
+				<div className="TreeDomBox">
+					{(content === undefined || content === null) ?
+						<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
+						:
+						<JSONTree
+							shouldExpandNode={shouldExpandNode(this.props.expandedKeys,autoExpandLevels)}
+							expandClicked={this.expandClicked}
+							data={data}
+							keyPath={path}
+							protoMode={protoMode}
+							labelRenderer={this.labelRenderer}
+							getItemString={this.getItemString} // shows object content shortcut
+							hideRoot={true}
+							sortObjectKeys={true}
+						/>
+					}
 				</div>
-				
-				{(content === undefined || content === null) ?
-					<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
-					:
-					<JSONTree
-						shouldExpandNode={shouldExpandNode(this.props.expandedKeys)}
-						expandClicked={this.expandClicked}
-						data={data}
-						keyPath={path}
-						protoMode={protoMode}
-						labelRenderer={this.labelRenderer}
-						getItemString={this.getItemString} // shows object content shortcut
-						hideRoot={true}
-						sortObjectKeys={true}
-					/>
-				}
 			</div>
 		);
 	}

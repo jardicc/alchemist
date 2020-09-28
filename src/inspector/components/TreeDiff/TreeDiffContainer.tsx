@@ -1,7 +1,8 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { setInspectorPathDiffAction, setExpandedPathAction, setInspectorViewAction } from "../../actions/inspectorActions";
-import { getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, getLeftRawDiff, getRightRawDiff, getDiffActiveView } from "../../selectors/inspectorDiffSelectors";
+import { setInspectorPathDiffAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction } from "../../actions/inspectorActions";
+import { getContentExpandLevel } from "../../selectors/inspectorContentSelectors";
+import { getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, getLeftRawDiff, getRightRawDiff, getDiffActiveView, getDiffExpandLevel } from "../../selectors/inspectorDiffSelectors";
 import TreeDiff, { ITreeDiffDispatch, ITreeDiffProps } from "./TreeDiff";
 
 
@@ -15,7 +16,8 @@ const mapStateToProps = (state: IRootState): ITreeDiffProps => {
 		expandedKeys: getDiffExpandedNodes(state),
 		rightRawDiff: getRightRawDiff(state),
 		leftRawDiff: getLeftRawDiff(state),
-		viewType:getDiffActiveView(state),
+		viewType: getDiffActiveView(state),
+		autoExpandLevels: getDiffExpandLevel(state)
 	};
 };
 
@@ -23,7 +25,8 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDiffDispatch, Record<s
 	return {
 		onInspectPath: (path, mode) => dispatch(setInspectorPathDiffAction(path, mode)),
 		onSetExpandedPath: (path, expand, recursive,data) => dispatch(setExpandedPathAction("difference",path, expand, recursive,data)),
-		onSetView:(viewType) => dispatch(setInspectorViewAction("diff",viewType))
+		onSetView: (viewType) => dispatch(setInspectorViewAction("diff", viewType)),
+		onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("diff", level))
 	};
 };
 
