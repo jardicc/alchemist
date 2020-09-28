@@ -148,6 +148,7 @@ export type TAllReferenceSubtypes = ICategory|IProperty | ICustomDescriptor | IH
 /////
 
 export interface ISettings{
+	recordRawData:boolean,
 	selectReferenceBeforeGet: boolean,
 	autoUpdateInspector: boolean,
 	groupDescriptors: "none"|"strict",
@@ -161,6 +162,7 @@ export interface ISettings{
 	activeDescriptors:string[],
 	properties:IPropertySettings[]
 	maximumItems: number
+	leftColumnWidthPx: number
 	initialDescriptorSettings:IDescriptorSettings
 }
 
@@ -196,18 +198,21 @@ export interface ICode{
 
 export interface IDOM{
 	treePath: string[]
+	autoExpandLevels:number
 	expandedTree:TPath[]
 }
 
 export interface IContent{
 	viewType: TGenericViewType
 	treePath: string[]
+	autoExpandLevels:number
 	expandedTree:TPath[]
 }
 
 export interface IDifference{
 	viewType: TGenericViewType
 	treePath: string[]
+	autoExpandLevels:number
 	expandedTree:TPath[]
 }
 
