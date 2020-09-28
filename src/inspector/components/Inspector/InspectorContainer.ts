@@ -1,6 +1,6 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IInspectorDispatch, IInspectorProps, Inspector } from "./Inspector";
-import { setMainTabAction, setModeTabAction, replaceWholeStateAction } from "../../actions/inspectorActions";
+import { setMainTabAction, setModeTabAction, replaceWholeStateAction, setColumnSizeAction } from "../../actions/inspectorActions";
 import { IRootState } from "../../../shared/store";
 import { Settings } from "../../classes/Settings";
 import { getMainTabID, getModeTabID, getActiveDescriptorOriginalReference } from "../../selectors/inspectorSelectors";
@@ -11,6 +11,7 @@ const mapStateToProps = (state: IRootState): IInspectorProps => {
 		mainTab: getMainTabID(state),
 		modeTab: getModeTabID(state),
 		calculatedReference: getActiveDescriptorOriginalReference(state),
+		columnSizesPercentage: [0,0] //getColumnSizesPercentage(state)
 	};
 };
 
@@ -21,7 +22,8 @@ const mapDispatchToProps: MapDispatchToPropsFunction<IInspectorDispatch, Record<
 		setWholeState: async () => {
 			dispatch(replaceWholeStateAction(await Settings.importState()));
 			Settings.loaded = true;
-		}
+		},
+		setColumnSize:(px)=>dispatch(setColumnSizeAction(px)),
 	};
 };
 
