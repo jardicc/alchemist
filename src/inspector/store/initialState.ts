@@ -188,6 +188,7 @@ export function getInitialState(): IInspectorState {
 		],
 		settings: {
 			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
+			recordRawData:false,
 			selectReferenceBeforeGet: true,
 			searchTerm: null,
 			listenerFilterType: "exclude",
@@ -551,6 +552,7 @@ export function getInitialState(): IInspectorState {
 				},
 			],
 			maximumItems: 200,
+			leftColumnWidthPx: 200, // todo
 			initialDescriptorSettings: {
 				dialogOptions:"dontDisplay",
 				modalBehavior: "fail",
@@ -562,19 +564,22 @@ export function getInitialState(): IInspectorState {
 			content: {
 				viewType: "tree",
 				treePath: [],
+				autoExpandLevels:0,
 				expandedTree:[]
 			},
 			difference: {
 				viewType: "tree",
 				treePath: [],
+				autoExpandLevels:0,
+				expandedTree:[]
+			},
+			dom: {
+				treePath: [],
+				autoExpandLevels:0,
 				expandedTree:[]
 			},
 			code: {
 				viewType: "generated"
-			},
-			dom: {
-				treePath: [],
-				expandedTree:[]
 			},
 			info: {
 				showOptionalDocumentReference: true,
