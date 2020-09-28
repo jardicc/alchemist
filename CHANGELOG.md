@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.26.0
+- feature: adds partial support for raw data type (fake structure in views and attempt to generate code in code tab)
+- feature: adds posibility to enable/disable raw data type support
+- feature: add expand slider into tree views
+- improvement: breadcrumb in tree view is now at fixed position when scrolling
+
 ## 0.25.0
 - feature: adds possibility to set batchPlay options for selected descriptors and also default settings for recorded items
 - improvement: adds new icon (made by Petr Štefek https://www.behance.net/phob )
