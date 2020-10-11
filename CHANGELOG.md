@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.27.0
+- improvement: shows error dialog when something failes outside of react error component
+- workaround: allows to make production version of plugin. See: https://forums.adobeprerelease.com/photoshop/discussion/2138/severe-issue-with-listener-in-production-use#latest
+- improvement: adds info in footer whether this is production or development version of plugin. Also adds copyright.
+- improvement: generates "await" keyword for async batchplay
+- improvement: won't generate nonsense code for replay reply and dispatched code
+- improvement: disables replay button for replay reply and dispatched code
+- improvement: shows notification when adding of descriptor failed
+- improvement: shows notification when replay failed
+- change: "hides used" filter tab
+
+
 ## 0.26.0
 - feature: adds partial support for raw data type (fake structure in views and attempt to generate code in code tab)
 - feature: adds posibility to enable/disable raw data type support
