@@ -6,6 +6,7 @@ import { IRootState } from "../../../shared/store";
 import { Settings } from "../../classes/Settings";
 import { GetInfo } from "../../classes/GetInfo";
 import { filterNonExistent } from "../../classes/filterNonExistent";
+import { Main } from "../../../shared/classes/Main";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const versions = require("uxp").versions;
 
@@ -58,7 +59,9 @@ export class Footer extends React.Component<TFooter> {
 
 
 	public render(): React.ReactNode{
-		const {onClear,onClearView,allItems,onClearNonExistent } = this.props;
+		const { onClear, onClearView, allItems, onClearNonExistent } = this.props;
+		const psVersionSegments = GetInfo.getBuildString().split(" ");
+		const psVersionString = psVersionSegments[0] + " " + psVersionSegments[1].replace("(","");
 		return (
 			<div className="Footer">
 				{/*<div className="button" onClick={e=>location.reload()}>Reload</div>*/}
@@ -76,15 +79,19 @@ export class Footer extends React.Component<TFooter> {
 					}>
 					<div className="button">Clear...</div>
 				</ButtonMenu>
-				<div className="button">Group same</div>
+				{
+					//<div className="button">Group same</div>
+				}
 				<div className="spread"></div>
-				<div>
-					<span className="version">v. {versions.plugin}</span>
+				<div className="versionBar">
+					<span className="version">v. {versions.plugin} {Main.devMode ? "DEV":"PROD"}</span>
 					<span> / </span>
 					<span className="version">{versions.uxp}</span>
 					<span> / PS: </span>
-					<span className="version">{GetInfo.getBuildString()}</span>
+					<span className="version">{psVersionString}</span>
 				</div>
+				<div className="spread"></div>
+				<div className="copy">Copyright © 2020 <a href="https://bereza.cz">Bereza.cz</a></div>
 				<div className="spread"></div>
 				<ButtonMenu
 					key="import"
