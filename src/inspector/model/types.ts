@@ -6,7 +6,7 @@ export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
 
 export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" | "layer" | "path" | "property" | "snapshot"|"listenerCategory";
-export type TTargetReference = "listener"|"customDescriptor" | "featureData" | "generator" | TPropertyClass;
+export type TTargetReference = "listener"|"customDescriptor" | "featureData" | "generator" | "overkill" | TPropertyClass;
 export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" | "action";
 export type TPropertyType = "hidden" | "optional" | "default";
 export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"

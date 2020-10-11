@@ -27,7 +27,8 @@ export const mainClasses: IProperty<TTargetReference>[] = [
 	{ label: "History", value: "history" },
 	{ label: "Snapshot", value: "snapshot" },
 	{ label: "Generator", value: "generator" },
-	{ label: "Custom descriptor", value: "customDescriptor" },
+	// { label: "Overkill", value: "overkill" },
+	//{ label: "Custom descriptor", value: "customDescriptor" },
 	//{ label: "Features", value: "featureData" },
 ];
 export const baseItemsProperty:IProperty<TBaseProperty>[] = [
