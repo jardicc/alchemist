@@ -516,9 +516,11 @@ export const IconMediaPlay = (): JSX.Element => (
 		<path d="M0 0v6l6-3-6-3z" transform="translate(1 1)" />
 	</svg>
 );
-//export const IconMediaRecord=():JSX.Element=>(
-//
-//)
+export const IconMediaRecord = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M3 0c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" transform="translate(1 1)" />
+	</svg>
+);
 //export const IconMediaSkipBackward=():JSX.Element=>(
 //
 //)
@@ -531,9 +533,11 @@ export const IconMediaPlay = (): JSX.Element => (
 //export const IconMediaStepForward=():JSX.Element=>(
 //
 //)
-//export const IconMediaStop=():JSX.Element=>(
-//
-//)
+export const IconMediaStop = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v6h6v-6h-6z" transform="translate(1 1)" />
+	</svg>
+);
 //export const IconMedicalCross=():JSX.Element=>(
 //
 //)
@@ -591,9 +595,11 @@ export const IconPinDown = (): JSX.Element => (
 //export const IconPlayCircle=():JSX.Element=>(
 //
 //)
-//export const IconPlus=():JSX.Element=>(
-//
-//)
+export const IconPlus = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z" />
+	</svg>
+);
 //export const IconPowerStandby=():JSX.Element=>(
 //
 //)

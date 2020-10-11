@@ -7,9 +7,23 @@ body, html, .root, .panel{
 	margin: 0;
 }
 
+a[href]{
+	color:var(--text);
+	text-decoration: underline;;
+}
+
+a:hover{
+	color:var(--hover);
+}
+
 [panelid="inspector"]{
 	display:flex;
 	flex-direction: column;
 }
 
 *{box-sizing: border-box;}
+
+code{
+	font-family: 'Courier New', Monaco;
+	background-color: var(--divider);
+}

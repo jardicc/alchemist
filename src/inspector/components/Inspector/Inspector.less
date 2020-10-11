@@ -129,7 +129,8 @@
 	}
 	
 	.button{
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
 		padding:0.3em 0.5em;
 		margin:0.3em;
 		border:1px solid gray;
@@ -137,16 +138,27 @@
 		border-radius: 3px;
 		box-sizing: border-box;
 
+		svg{
+			margin-right: 0.3em;
+			fill:var(--text)
+		}
+
 		&:hover{
 			color:var(--hover);
 			border:1px solid var(--hover);
+			svg{
+				fill:var(--hover);
+			}
 		}
 		
 		&.disallowed{
 			pointer-events: none;
-			border:1px solid black;
-			color:black;
+			border:1px dashed var(--textFade);;
+			color:var(--textFade) !important;
 			cursor: not-allowed;
+			svg{
+				fill:var(--textFade);
+			}
 		}
 
 		&.activated{
@@ -154,9 +166,13 @@
 			border-color: transparent;
 			//border-width: 2px;
 			outline: 2px solid var(--active);
+			svg{
+				fill:var(--active);
+			}
 		}
 		&.deactivated{
 			margin:calc(0.3em + 1px);
+			
 		}
 	}
 	

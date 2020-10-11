@@ -8,7 +8,9 @@
 	--active: lime;
 	--hover: aqua;
 	--autoActive:yellow;
-	--divider: #383838
+	--divider: #383838;
+
+	--biggerText:1.15em;
 }
 
 @media (prefers-color-scheme: darkest) {
@@ -67,7 +69,7 @@
 	}
 }
 
-.JSONDiff, .TreeContent, .JSONTree{
+.JSONDiff, .TreeContent, .JSONTree, .VisualDiff{
 	--TEXT_COLOR: #e8e8e8;
 	--TEXT_PLACEHOLDER_COLOR: #e8e8e8;
 	--BACKGROUND_COLOR: #181818;
@@ -86,8 +88,8 @@
 	--TAB_BACK_COLOR: #181818;
 	--TAB_BACK_HOVER_COLOR: #585858;
 	--TAB_BORDER_COLOR: #585858;
-	--DIFF_ADD_COLOR: #65AD00;
-	--DIFF_REMOVE_COLOR: red;
+	--DIFF_ADD_COLOR: #599701;
+	--DIFF_REMOVE_COLOR: rgb(223, 15, 15);
 	--DIFF_ARROW_COLOR: #EC31C0;
 	--LINK_COLOR: #EC31C0;
 	--LINK_HOVER_COLOR: #EC31C0;
