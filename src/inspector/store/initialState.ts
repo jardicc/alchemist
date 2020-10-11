@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import { IInspectorState } from "../model/types";
 
 
@@ -205,7 +206,7 @@ export function getInitialState(): IInspectorState {
 			groupDescriptors: "none",
 			autoUpdateListener: false,
 			lastSelectedItem:null,
-			activeDescriptors: [],
+			activeDescriptors: [],			
 			properties: [
 				{
 					type: "application",
@@ -551,7 +552,7 @@ export function getInitialState(): IInspectorState {
 					]
 				},
 			],
-			maximumItems: 200,
+			maximumItems: 150,
 			leftColumnWidthPx: 200, // todo
 			initialDescriptorSettings: {
 				dialogOptions:"dontDisplay",
@@ -588,7 +589,7 @@ export function getInitialState(): IInspectorState {
 		descriptors: [
 		],
 		dispatcher: {
-			snippets:[{content:""}]
+			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nbatchPlay([{"_obj": "invert"}],{});`}]
 		}
 	};
 }

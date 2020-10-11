@@ -231,6 +231,11 @@ export interface ISetRecordRawAction{
 	payload:boolean
 }
 
+export interface ISetMaximumItemsAction{
+	type: "SET_MAXIMUM_ITEMS",
+	payload:string
+}
+
 export interface ISetAutoExpandLevelAction {
 	type: "SET_AUTOEXPAND_LEVEL",
 	payload: {
@@ -253,6 +258,14 @@ export function setRecordRawAction(value: boolean): ISetRecordRawAction{
 	return {
 		type: "SET_RECORD_RAW",
 		payload: value
+	};
+}
+
+export function setMaximumItems(value: string):ISetMaximumItemsAction {
+	return {
+		type: "SET_MAXIMUM_ITEMS",
+		payload: value
+		
 	};
 }
 
@@ -573,4 +586,5 @@ export type TActions = ISetMainTab |
 	ISetInspectorViewAction |
 	ISetColumnSizeAction | 
 	ISetRecordRawAction |
-	ISetAutoExpandLevelAction
+	ISetAutoExpandLevelAction |
+	ISetMaximumItemsAction
