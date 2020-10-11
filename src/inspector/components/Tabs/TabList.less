@@ -1,0 +1,40 @@
+.TabList{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	flex-shrink: 0;
+	border: 0px solid yellow;
+}
+
+.TabList .tabContent{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	padding: 1em;
+	position: relative;
+
+	&.noPadding{
+		padding:0;
+	}
+}
+
+.TabList .tabRow{
+	display: flex;
+	border-bottom: 1px solid var(--divider);
+	flex-shrink: 0;
+}
+
+.TabList .tabHeader{
+	flex-shrink: 0;
+	padding:0.5em 0.5em;
+}
+
+.TabList .tabHeader:hover{
+	color:var(--hover);
+	cursor: pointer;
+}
+
+.TabList .tabHeader.active{
+	color:var(--active);
+	cursor: default;
+}

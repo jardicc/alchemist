@@ -1,0 +1,153 @@
+.JSONTree{
+	border: 0;
+	padding: 0.5em;
+	margin: 0;
+	margin-right: 0;
+	list-style: none;
+	background-color: var(--BACKGROUND_COLOR);
+	font-family: 'Courier New', Monaco;
+	font-size: 10.5px;
+
+	.arrowContainer{
+		position: absolute;
+		left: 0em;
+		padding: 0;
+		padding-top: 0.2em;
+		cursor: pointer;
+	}
+
+	.arrow{
+		fill:var(--ARROW_COLOR);
+		&:hover{
+			fill:var(--ARROW_COLOR_HOVER);
+		}
+	}
+
+	.rootNode {
+		padding: 0;
+		margin: 0;
+	}
+
+	.rootNodeChildren {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+
+		/*>.nestedNode{
+			margin-left: 0.8em;
+			padding-left: 0.8em;
+		}
+		>.value{
+			margin-left: 0.8em;
+			padding-left: 0.8em;
+		}*/
+	}
+
+	.nestedNodeItemType {
+		margin-left: 0.3em;
+		margin-right: 0.3em;
+	}
+
+	.label {
+		display: inline-block;
+		color: var(--LABEL_COLOR);
+	}
+
+	.nestedNodeLabel{
+		position: relative;
+		margin-left: 0;
+		padding-left:  0;
+	}
+
+	.nestedNode{
+		position: relative;
+		padding-top: 0.3em;
+		margin-left:  0.875em;
+		padding-left: 1.1em;
+	}
+
+	.valueLabel {
+		margin: 0 0.5em 0 0;
+	}
+
+	.itemRange{
+		position: relative;
+		padding-top: 0.3em;
+		padding-right: 0;
+		margin-left: 0.875em;
+		padding-left: 1.1em;
+		cursor: pointer;
+		color: var(--LABEL_COLOR);
+		fill: var(--LABEL_COLOR);
+		&:hover{
+			color: var(--LABEL_COLOR_HOVER);
+			fill: var(--LABEL_COLOR_HOVER);
+		}
+	}
+
+	.nestedNodeLabel{
+		margin: 0;
+		padding: 0;
+		cursor: default;
+
+		&.expandable{
+			cursor: pointer;
+		}
+	}
+
+	.value{
+		padding-top: 0.3em;
+		padding-right: 0;
+		margin-left: 0.875em;
+		padding-left: 1.1em;
+		text-indent: -0.5em;
+		word-wrap: break-word;
+		word-break: break-all
+	}
+
+	.valueText{
+		&.String{
+			color: var(--STRING_COLOR);
+		}
+		&.Date{
+			color: var(--DATE_COLOR);
+		}
+		&.Number{
+			color: var(--NUMBER_COLOR);
+		}
+		&.Boolean{
+			color: var(--BOOLEAN_COLOR);
+		}
+		&.Null{
+			color: var(--NULL_COLOR);
+		}
+		&.Undefined{
+			color: var(--UNDEFINED_COLOR);
+		}
+		&.Function{
+			color: var(--FUNCTION_COLOR);
+		}
+		&.Symbol{
+			color: var(--SYMBOL_COLOR);
+		}
+	}
+
+	.nestedNodeItemString{
+		padding-left: 0.5em;
+		cursor: default;
+		color: var(--ITEM_STRING_COLOR);
+		&.expanded{
+			color: var(--ITEM_STRING_EXPANDED_COLOR);
+		}
+	}
+
+	.nestedNodeChildren{
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		display:none;
+		&.expanded{
+			display: block;
+		}
+	}
+}

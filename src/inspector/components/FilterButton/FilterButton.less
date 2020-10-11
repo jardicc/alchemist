@@ -1,0 +1,36 @@
+.FilterButton {
+	display: inline-block;
+	padding: 0.3em 0.5em;
+	margin: 0.3em;
+	border: 1px solid var(--divider);
+	cursor: pointer;
+	border-radius: 3px;
+	margin-left: 0.5em;
+	
+	fill: var(--text);
+
+	&.on{
+		background: var(--divider);
+	}
+
+	&.semi{
+		background: var(--divider);
+		fill: var(--textFade);
+	}
+
+	&.off{
+		border: 1px solid transparent;
+	}
+
+	&:hover {
+		color: var(--hover);
+		border: 1px solid var(--hover);
+	}
+
+	&.disallowed {
+		pointer-events: none;
+		border: 1px solid black;
+		color: black;
+		cursor: not-allowed;
+	}
+}

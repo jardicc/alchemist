@@ -1,0 +1,59 @@
+{
+	"name": "Alchemist",
+	"id": "cz.bereza.alchemist",
+	"main": "index.html",
+	"version": "0.27.0",
+	"manifestVersion": 4,
+	"host": {
+		"app": "PS",
+		"minVersion": "22.0.0"
+	},
+	"entrypoints": [
+		{
+			"type": "panel",
+			"id": "inspector",
+			"label": {
+				"default": "Alchemist"
+			},
+			"minimumSize": {
+				"width": 450,
+				"height": 360
+			},
+			"maximumSize": {
+				"width": 2000,
+				"height": 2000
+			},
+			"preferredDockedSize": {
+				"width": 600,
+				"height": 540
+			},
+			"preferredFloatingSize": {
+				"width": 600,
+				"height": 540
+			},
+			"icons": [
+				{
+				    "width": 23, "height": 23, "path": "icons/light.png", "scale": [ 1, 2 ],
+				    "theme": [ "darkest", "dark", "medium" ]
+				}, {
+				    "width": 23, "height": 23, "path": "icons/dark.png", "scale": [ 1, 2 ],
+				    "theme": [ "lightest", "light" ]
+				}
+			]
+		},
+		{
+			"type": "command",
+			"id": "resetStateFn",
+			"label": {
+			    "default": "Reset Alchemist state"
+			}
+		}
+	],
+	"icons": [
+		{
+		    "width": 48, "height": 48, "path": "icons/plugin.png", "scale": [ 1, 2 ],
+		    "theme": [ "darkest", "dark", "medium", "lightest", "light", "all" ],
+		    "species": [ "pluginList" ]
+		}
+	  ]
+}

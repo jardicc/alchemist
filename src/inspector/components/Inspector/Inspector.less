@@ -1,0 +1,211 @@
+.Inspector{
+	color:var(--text);
+	font-size: 10px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	width: 100vw;
+	height: 100vh;
+	flex-shrink: 0;
+	background: var(--bg);
+
+	textarea{		
+		margin: 0;
+	}
+
+	.Raw{
+		position: relative;
+	}
+
+	.Tree{
+		position: relative;
+		overflow: visible;
+
+		.TreeContent{
+			overflow: scroll !important;
+		}
+	}
+
+	.gutter{
+		background: var(--divider);
+		border: 1px solid var(--divider);
+		cursor: ew-resize;
+
+		&:hover{
+			border: 1px solid var(--divider);
+			background: var(--hover);
+		}
+	}
+
+
+	
+	
+	.descriptorsColumns{
+		display: flex;
+		flex-grow: 1;
+		position: relative;
+
+		>div{
+			display: flex;
+			position: absolute;
+			top:0;
+			bottom: 0;
+			right: 0;
+			left: 0;
+		}
+	}
+	
+	.descriptorsColumns > .TabList{
+		//left: 200px;
+		//top: 0;
+		//right: 0;
+		//bottom: 0;
+		//position: absolute;
+	}
+	
+	> .TabList{
+		flex-grow: 1;
+	}
+
+	.tabsDescriptor{
+		/*
+		position: absolute;
+		top:0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		*/
+
+		> .tabContent{
+			position: relative;
+
+			.tabsView{
+				position: absolute;
+				top:0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+
+				> .tabContent{
+					display: flex;
+					flex-direction: column;
+					flex-grow: 1;
+					//overflow: scroll;
+				}
+			}
+		}
+	}
+
+
+	
+	.code, .rawCode{
+		white-space: pre;
+		//overflow: scroll;
+		//border: 0px solid red;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+	}
+	
+	.info{
+		.noShrink{
+			flex-shrink: 0;
+			display: flex;
+			flex-grow: 1;
+			flex-direction: column;
+
+
+			.infoBlock{
+				white-space: pre;
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+			}
+		}
+	}
+	
+	.spread{
+		flex-grow: 1;
+	}
+	
+	.button{
+		display: inline-flex;
+		align-items: center;
+		padding:0.3em 0.5em;
+		margin:0.3em;
+		border:1px solid gray;
+		cursor: pointer;
+		border-radius: 3px;
+		box-sizing: border-box;
+
+		svg{
+			margin-right: 0.3em;
+			fill:var(--text)
+		}
+
+		&:hover{
+			color:var(--hover);
+			border:1px solid var(--hover);
+			svg{
+				fill:var(--hover);
+			}
+		}
+		
+		&.disallowed{
+			pointer-events: none;
+			border:1px dashed var(--textFade);;
+			color:var(--textFade) !important;
+			cursor: not-allowed;
+			svg{
+				fill:var(--textFade);
+			}
+		}
+
+		&.activated{
+			color: var(--active);
+			border-color: transparent;
+			//border-width: 2px;
+			outline: 2px solid var(--active);
+			svg{
+				fill:var(--active);
+			}
+		}
+		&.deactivated{
+			margin:calc(0.3em + 1px);
+			
+		}
+	}
+	
+	.buttonIcon{
+		display: flex;
+		padding: 0.5em;
+		margin:0;
+		border:1px solid transparent;
+		cursor: pointer;
+		border-radius: 0;
+		fill:var(--text);
+
+		svg{
+			width: 12px;
+			height: 12px;
+		}
+
+		&:not(.disallowed):hover{
+			color:var(--hover);
+			background: var(--divider);
+			border:1px solid var(--hover);
+		}
+		
+		&.disallowed{
+			pointer-events: none;
+			color:black;
+			cursor: not-allowed;
+
+			svg{
+				fill:var(--textDisallowed)
+			}
+		}
+	}
+
+}
+

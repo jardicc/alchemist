@@ -1,0 +1,121 @@
+.TreeDom{
+
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+
+	.TreeDomBox{
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+	}
+	
+	.JSONTree{
+		flex-grow: 1;
+		flex-shrink: 0;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.message{
+		display: flex;
+		padding:0.5em;
+		flex-grow: 1;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+
+	.inspector {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100%;
+		font-family: monaco, Consolas, 'Lucida Console', monospace;
+		font-size: 12px;
+		font-smoothing: antialiased;
+		line-height: 1.5em;
+
+		background-color: var(--BACKGROUND_COLOR);
+		color: var(--TEXT_COLOR);
+	}
+
+	.stateDiff {
+		padding: 5px 0;
+	}
+
+	.stateDiffEmpty {
+		padding: 10px;
+
+		color: var(--TEXT_PLACEHOLDER_COLOR);
+	}
+
+	.treeItemKey{
+		&.expandable:hover {
+			text-decoration: underline;
+			color: var(--LABEL_COLOR_HOVER);
+		}
+	}
+
+	.treeItemPin {
+		display: inline-block;
+		padding-left: 0.2em;
+		padding-top: 0.2em;
+		cursor: pointer;
+
+		&:hover {
+			color: var(--PIN_COLOR_HOVER);
+			fill: var(--PIN_COLOR_HOVER);
+		}
+
+		color: var(--PIN_COLOR);
+		fill: var(--PIN_COLOR);
+	}
+
+	.treeItemHint {
+		color: var(--ITEM_HINT_COLOR);
+	}
+
+	.diffHighlight {
+		padding: 2px 3px;
+		border-radius: 3px;
+		position: relative;
+		color: var(--TEXT_COLOR);
+	}
+
+	.diffWrap {
+		position: relative;
+		z-index: 1;
+	}
+
+	.diffAdd {
+		background-color: var(--DIFF_ADD_COLOR);
+	}
+
+	.diffRemove {
+		text-decoration: line-through;
+		background-color: var(--DIFF_REMOVE_COLOR);
+	}
+
+	.diffUpdateFrom {
+		text-decoration: line-through;
+		background-color: var(--DIFF_REMOVE_COLOR);
+	}
+
+	.diffUpdateTo {
+		background-color: var(--DIFF_ADD_COLOR);
+	}
+
+	.diffUpdateArrow {
+		color: var(--DIFF_ARROW_COLOR);
+	}
+}

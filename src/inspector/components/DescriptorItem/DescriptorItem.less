@@ -1,0 +1,82 @@
+.DescriptorItem {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	
+	border-top: 1px solid var(--divider);
+
+	&:last-child {
+		border-bottom: 1px solid var(--divider);
+	}
+	&:first-child {
+		border-top: none;
+	}
+
+	.wrap.normalMode{		
+		cursor: pointer;
+		padding: 0.3em 1em;
+		background: var(--bg);
+		display: flex;
+		align-items: center;
+		flex-grow: 1;
+
+
+	
+		&:hover {
+			color: var(--hover);
+		}
+		
+		&.selected {
+			color: var(--active);
+	
+			&:hover {
+				color: var(--hover);
+			}
+		}
+	
+		&.autoSelected{
+			//color: var(--autoActive);
+			font-style: italic;
+			text-decoration: underline;
+		}
+	}
+
+
+	.name {
+		overflow-wrap: anywhere;
+		display: flex;
+	}
+
+	.icon{
+		margin: 0 0.3em;
+	}
+
+	.time {
+		color: var(--textFade);
+		font-style: italic;
+		margin-left: 1em;
+	}
+
+	.icon{
+		fill:var(--text);
+	}
+
+	.editMode{
+		padding:0;
+		display: flex;
+
+		.renameInput{
+			appearance: none;
+			margin:0;
+			flex-grow: 1;
+			background-color: var(--divider);
+			box-sizing: border-box;
+			margin: 0;
+			width: 100%;
+		}
+
+		.button{
+			margin:0;
+		}
+	}
+}
