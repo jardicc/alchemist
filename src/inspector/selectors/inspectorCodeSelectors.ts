@@ -4,11 +4,11 @@ import { createSelector } from "reselect";
 import { RawDataConverter } from "../classes/RawDataConverter";
 import { IDescriptor, IDescriptorSettings } from "../model/types";
 import { getContentPath } from "./inspectorContentSelectors";
-import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings } from "./inspectorSelectors";
+import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
 
-export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath], (selected, autoActive, treePath) => {
+export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath, getReplayEnabled], (selected, autoActive, treePath, replayEnabled) => {
 
-	function makeNicePropertyPath(segments:string[]):string {
+	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
 		
 		let result = "";
@@ -59,10 +59,14 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 
 	if (selected.length >= 1 || autoActive) {
 		let data = null, iDesc: IDescriptor[] = [];
+
 		if (selected.length >= 1) {
 			iDesc = selected;
 		} else if (autoActive) {
 			iDesc = [autoActive];
+		}
+		if (iDesc.some(item => item.originalReference.data.some(subitem => subitem.content.value === "reply" || subitem.content.value === "dispatch"))) {
+			return "// Alchemist can't generate code from replay reply and dispatched code";
 		}
 		data = iDesc.map(item => addPerItemOptions(item));
 		// adds raw data type support
@@ -70,19 +74,21 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 		data.forEach(item => RawDataConverter.convertFakeRawInCode(item));
 		
 		let str = JSON.stringify(data, null, 3);
+		const commandOptions = addCommonOptions(iDesc);
+		
 		str = str.replace(/"\$\$\$Left_/gm, "");
 		str = str.replace(/_Right\$\$\$"/gm, "");
 		str =
 			"const batchPlay = require(\"photoshop\").action.batchPlay;\n" +
-			"\n" +
-			"const result = batchPlay(\n" +
-			str +
+				"\n" +
+				"const result =" + (commandOptions.synchronousExecution ? "" : " await") + " batchPlay(\n" +
+				str +
 
-			","+JSON.stringify(addCommonOptions(iDesc), null, 3)+");\n";
+				"," + JSON.stringify(commandOptions, null, 3) + ");\n";
 	
 		if (treePath.length) {
 			// eslint-disable-next-line quotes
-			str = `${str}const pinned = result${makeNicePropertyPath(treePath)};`;			
+			str = `${str}const pinned = result${makeNicePropertyPath(treePath)};`;
 		}
 		return str;
 	} else {
