@@ -70,7 +70,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<Split
-								sizes={/*Inspector.loaded ? columnSizesPercentage:*/[30,70] }
+								sizes={/*Inspector.loaded ? columnSizesPercentage:*/[35,65] }
 								gutterSize={3}
 								//onDragEnd={this.onSplitChange as any}
 								//onDrag={(e)=>console.log(e)}
@@ -89,7 +89,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 									<TabPanel id="reference" title="Code" >
 										<GeneratedCodeContainer />
 									</TabPanel>
-									<TabPanel id="info" title="Used filter" >
+									{/*<TabPanel id="info" title="Used filter" >
 										<div className="info code">
 											<div className="noShrink">
 												Filter:
@@ -102,7 +102,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 												/>
 											</div>
 										</div>
-									</TabPanel>
+									</TabPanel>*/}
 								</TabList>
 							</Split>
 						</div>
