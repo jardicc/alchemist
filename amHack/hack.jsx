@@ -1,41 +1,72 @@
-﻿var key = "amHack";
-
-$.global.amHack = {
-	executeAction: $.global.amHack || $.global.executeAction,
-	executeActionGet: $.global.amHack || $.global.executeActionGet
+﻿function sendToAlchemist(value, property){
+	var list = getList();
+	var desc = wrapData(value, property);
+	list.putObject(stringIDToTypeID("item"),desc);
+	putList(list);
 }
 
-$.global.executeAction = function(eventID, descriptor, displayDialogs){
-	var desc;
-	var list;
+
+function getList(){
 	try{
-		desc = app.getCustomOptions (key);
-		list = desc.getList(stringIDToTypeID("list"));
+		var desc = app.getCustomOptions(stringIDToTypeID("cz-bereza-alchemist-list"));
 	}catch(e){
-		desc = new ActionDescriptor();
-		list = new ActionList();
-		desc.putList(stringIDToTypeID("list"),list);
-	}
-
-	descriptor.putString(stringIDToTypeID("_obj"),eventID);
-	list.putDescriptor(descriptor);
-	
-	return $.global.amHack.executeAction(eventID, descriptor, displayDialogs)
+		return new ActionList();
+	}	
+	var list = desc.getList(stringIDToTypeID("list"));
+	return list || new ActionList();
 }
 
-$.global.executeActionGet = function(reference){
-	var desc;
-	var list;
+function putList(list){
+	const desc = new ActionDescriptor();
+	desc.putList(stringIDToTypeID("list"),list);
+	app.putCustomOptions (stringIDToTypeID("cz-bereza-alchemist-list"), desc, false);
+}
+
+function wrapData(value, property){
+	if(!property){
+		var counter = readCounter();
+		property = "ExtendScript value: " + counter;
+		setCounter (counter+1);
+	}
+	var desc = new ActionDescriptor();
+	desc.putString(stringIDToTypeID("propertyName"),property);
+	var valueKey = stringIDToTypeID("propertyValue");
+	if(typeof value === "number"){
+		desc.putDouble(valueKey,value);
+	} else if (typeof value === "string"){
+		desc.putString(valueKey,value);
+	} else if (typeof value === "boolean"){
+		desc.putBoolean(valueKey,value);
+	} else if (value.typename === "ActionDescriptor"){
+		desc.putObject(valueKey,valueKey,value);
+	} else if (value.typename === "ActionList"){
+		desc.putList(valueKey,valueKey,value);
+	} else if (value.typename === "ActionReference"){
+		desc.putReference(valueKey,valueKey,value);
+	}
+	return desc;
+}
+
+
+function readCounter(){
 	try{
-		desc = app.getCustomOptions (key);
-		list = desc.getList(stringIDToTypeID("list"));
+		var desc = app.getCustomOptions(stringIDToTypeID("cz-bereza-alchemist-counter"));
 	}catch(e){
-		desc = new ActionDescriptor();
-		list = new ActionList();
-		desc.putList(stringIDToTypeID("list"),list);
-	}
-
-	list.putDescriptor(reference);
-	
-	return $.global.amHack.executeActionGet(reference);
+		return 1;
+	}	
+	var counter = desc.getInteger(stringIDToTypeID("counter"));
+	return counter || 1;
 }
+
+function setCounter(counter){
+	const desc = new ActionDescriptor();
+	desc.putInteger(stringIDToTypeID("counter"),counter);
+	app.putCustomOptions (stringIDToTypeID("cz-bereza-alchemist-counter"), desc, true);
+}
+
+var value = new ActionDescriptor();
+value.putBoolean(stringIDToTypeID("ccc"),true);
+
+sendToAlchemist (value, "abc");
+sendToAlchemist (value);
+sendToAlchemist (value, "xyz");
