@@ -6,17 +6,17 @@ import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContain
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, baseItemsProperty, TBaseItems } from "../../model/properties";
 import { IPropertySettings, IDescriptor, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, ISettings, TListenerCategoryReference, TSelectDescriptorOperation } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
-import { IconLockLocked, IconPinDown, IconTrash, IconCog, IconPencil, IconClipboard, IconPlayIcon, IconList, IconLockUnlocked, IconPinLeft } from "../../../shared/components/icons";
+import { IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop } from "../../../shared/components/icons";
 import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
 import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
 import { Helpers } from "../../classes/Helpers";
 import { guessOrinalReference } from "../../classes/guessOriginalReference";
-import { CommandOptions, Descriptor } from "photoshop/dist/types/UXP";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
-import { getInitialState } from "../../store/initialState";
 import { RawDataConverter } from "../../classes/RawDataConverter";
+import {NotificationManager} from "react-notifications";
+import { Descriptor } from "photoshop/dist/types/UXP";
 
 export interface IProperty<T>{
 	label: string
@@ -33,6 +33,7 @@ export interface ILeftColumnProps{
 	lockedSelection: boolean
 	pinnedSelection: boolean
 	removableSelection: boolean
+	replayEnabled:boolean
 	allDescriptors: IDescriptor[]
 
 	activeTargetReferenceForAM: ITargetReference | null;
@@ -456,7 +457,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			return;
 		}
 		const result = await GetInfo.getAM(activeTargetReferenceForAM);
-		if (result === null) { return; }
+		if (result === null) {
+			NotificationManager.error("Please make sure that item you want to add exists in Photoshop","Failed", 3500);
+			return;
+		}
 		this.props.onAddDescriptor(result);
 
 	}
@@ -522,8 +526,6 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			...descriptor
 		};
 
-		debugger;
-
 		const result: IDescriptor = {
 			endTime: 0,
 			startTime: 0,
@@ -550,9 +552,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const { settings: { autoUpdateListener } } = this.props;
 		if (autoUpdateListener) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			ListenerClass.listenerCb = async () => { };
+			//ListenerClass.listenerCb = async () => { };
+			ListenerClass.stopListener();
 		} else {
-			ListenerClass.listenerCb = this.listener;
+			//ListenerClass.listenerCb = this.listener;
+			ListenerClass.startListener(this.listener);
 		}
 		this.props.setListener(!autoUpdateListener);
 	}
@@ -562,9 +566,9 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		this.props.setAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			ListenerClass.inspectorCb = async () => { };
+			ListenerClass.stopInspector();
 		} else {
-			ListenerClass.inspectorCb = this.autoInspector;
+			ListenerClass.startInspector(this.autoInspector);
 		}
 		this.props.setAutoInspector(!autoUpdateInspector);
 	}
@@ -609,13 +613,21 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const toPlay = this.props.selectedDescriptors;
 		for await (const item of toPlay) {
 			const startTime = Date.now();
-			const descriptors = await photoshop.action.batchPlay(
-				[
-					item.calculatedReference as ActionDescriptor
-				], {
-					synchronousExecution: false
-				}
-			);
+			let descriptors:Descriptor;
+			try {
+				descriptors = await photoshop.action.batchPlay(
+					[
+						item.calculatedReference as ActionDescriptor
+					], {
+						synchronousExecution: false
+					}
+				);				
+			} catch (e) {
+				debugger;
+				NotificationManager.error(e.message,"Replay failed", 5000);
+				console.error("error");
+				return;
+			}
 			const endTime = Date.now();
 
 			const originalReference: ITargetReference = {
@@ -657,24 +669,21 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	public render(): JSX.Element {
-		const { addAllowed,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
+		const { addAllowed,replayEnabled,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
 		return (
 			<div className="LeftColumn">
 				<div className="oneMore">
 					<div className="filtersWrapper">
 						{this.renderFilters()}
 					</div>
-					<div className="filterButtons">
-						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}>+ Add</div>
-						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>Listener</div>
-						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>Auto Inspector</div>
-					</div>
+
 					<div className="search">
 						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
 					</div>
 					<div className="descriptorsWrapper" onClick={()=>this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}
 					</div>
+
 					<div className="descriptorButtons">
 						<div className="spread"></div>
 
@@ -683,7 +692,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 							<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
 						*/}
 						<div className={"rename buttonIcon " + ((selectedDescriptors?.length !== 1) ? "disallowed" : "")} onClick={this.rename}><IconPencil /></div>
-						<div className={"play buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
+						<div className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
 						<div className={"lock buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
 							{selectedDescriptors.some(desc=>desc.locked) ? <IconLockUnlocked />:<IconLockLocked />}
 						</div>
@@ -691,6 +700,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 							{selectedDescriptors.some(desc=>desc.pinned) ? <IconPinLeft/>:<IconPinDown />}
 						</div>
 						<div className={"remove buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onRemove(selectedDescriptorsUUIDs); }}><IconTrash /></div>
+					</div>
+					<div className="filterButtons">
+						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}><IconPlus /> Add</div>
+						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> :<IconMediaRecord />}Listener</div>
+						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> :<IconMediaRecord />}Inspector</div>
 					</div>
 				</div>
 			</div>

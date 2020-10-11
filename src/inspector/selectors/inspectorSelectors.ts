@@ -220,6 +220,17 @@ export const getActiveTargetLayer = createSelector([getActiveTargetReference], (
 	return (result===undefined) ? null : result;
 });
 
+export const getReplayEnabled = createSelector([getActiveDescriptors], (selected) => {
+
+	if (selected.length < 1) {
+		return false;
+	}
+	if (selected.some(item => item.originalReference.data.some(subitem => subitem.content.value === "reply" || subitem.content.value === "dispatch"))) {
+		return false;
+	}
+	return true;
+});
+
 /*export const getColumnSizesPercentage = createSelector([getInspectorSettings], (s) => {
 	debugger;
 	const leftColumnPerc = Helpers.pxToPanelWidthPercentage("inspector", s.leftColumnWidthPx);

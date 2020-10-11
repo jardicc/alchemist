@@ -1,7 +1,7 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { ILeftColumnDispatch, ILeftColumnProps, LeftColumn } from "./LeftColumn";
 import { IRootState } from "../../../shared/store";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor, getFilterBySelectedReferenceType, getActiveTargetReferenceForAM, getActiveReferenceHistory, getActiveReferenceSnapshot, getInspectorSettings, getActiveTargetReferenceListenerCategory, getSelectedDescriptors } from "../../selectors/inspectorSelectors";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getSelectedDescriptorsUUID, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getSelectedTargetReference, getDescriptorsListView, getHasAutoActiveDescriptor, getFilterBySelectedReferenceType, getActiveTargetReferenceForAM, getActiveReferenceHistory, getActiveReferenceSnapshot, getInspectorSettings, getActiveTargetReferenceListenerCategory, getSelectedDescriptors, getReplayEnabled } from "../../selectors/inspectorSelectors";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction } from "../../actions/inspectorActions";
 import { TDocumentReference, TLayerReference, TChannelReference, TGuideReference, TPathReference, TActionSet, TActionItem, TActionCommand, IContentWrapper, TBaseProperty, IHistory, THistoryReference, TSnapshotReference, TListenerCategoryReference, TSelectDescriptorOperation } from "../../model/types";
 
@@ -35,6 +35,7 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => {
 		activeTargetReferenceForAM: getActiveTargetReferenceForAM(state),
 		settings: getInspectorSettings(state),
 		selectedDescriptors: getSelectedDescriptors(state),
+		replayEnabled: getReplayEnabled(state),
 		
 		filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),		
 	};

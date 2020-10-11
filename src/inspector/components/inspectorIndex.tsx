@@ -4,7 +4,8 @@ import { Provider } from "react-redux";
 import { InspectorContainer } from "./Inspector/InspectorContainer";
 import { rootStore } from "../../shared/store";
 import { ErrorBoundary } from "./ErrorBoundary/ErrorBoundary";
-
+import { NotificationContainer } from "react-notifications";
+import "../styleOverrides/notifications.css";
 export function renderInspectorUI(): void {
 	const el = document.querySelector("[panelid=inspector]");
 	if (!el) {
@@ -14,7 +15,8 @@ export function renderInspectorUI(): void {
 	render(
 		<Provider store={rootStore}>
 			<ErrorBoundary>
-				<InspectorContainer  />
+				<NotificationContainer />
+				<InspectorContainer />
 			</ErrorBoundary>
 		</Provider>, el as HTMLElement
 	);
