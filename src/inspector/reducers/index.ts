@@ -38,6 +38,17 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "ADD_DESCRIPTOR": {
 			state = produce(state, draft => {
+				if (state.descriptors.length >= state.settings.maximumItems) {
+					for (let i = 0; i<draft.descriptors.length; i++){
+						if (!draft.descriptors[i].locked) {
+							// in case that we downsized limit and more than 1 item has to be removed
+							if (draft.descriptors.length < state.settings.maximumItems) {
+								break;								
+							}
+							draft.descriptors.splice(i, 1);
+						}
+					}
+				}
 				draft.descriptors.push(action.payload);
 			});
 			break;
@@ -487,6 +498,15 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				}
 			});
 			break;
+		}
+		case "SET_MAXIMUM_ITEMS": {
+			state = produce(state, draft => {
+				let num = parseInt(action.payload);
+				if (num < 3 || Number.isNaN(num)) {
+					num = 3;
+				}
+				draft.settings.maximumItems = num;
+			});
 		}
 	}
 	Settings.saveSettings(state);
