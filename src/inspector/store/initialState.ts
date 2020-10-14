@@ -205,7 +205,8 @@ export function getInitialState(): IInspectorState {
 			autoUpdateInspector: false,
 			groupDescriptors: "none",
 			autoUpdateListener: false,
-			lastSelectedItem:null,
+			lastSelectedItem: null,
+			dontShowMarketplaceInfo:false,
 			activeDescriptors: [],			
 			properties: [
 				{

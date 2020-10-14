@@ -10,6 +10,7 @@
 - improvement: shows notification when adding of descriptor failed
 - improvement: shows notification when replay failed
 - change: "hides used" filter tab
+- change: in Marketplace version of plugin it shows dialog about Photoshop limitations
 
 
 ## 0.26.0

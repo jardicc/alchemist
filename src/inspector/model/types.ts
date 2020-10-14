@@ -158,7 +158,8 @@ export interface ISettings{
 	listenerInclude:string[],
 	lastHistoryID:number,
 	autoUpdateListener: boolean,
-	lastSelectedItem: string|null,
+	lastSelectedItem: string | null,
+	dontShowMarketplaceInfo:boolean
 	activeDescriptors:string[],
 	properties:IPropertySettings[]
 	maximumItems: number

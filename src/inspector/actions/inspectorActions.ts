@@ -244,6 +244,18 @@ export interface ISetAutoExpandLevelAction {
 	}
 }
 
+export interface IDontShowMarketplaceInfoAction{
+	type: "DONT_SHOW_MARKETPLACE_INFO_ACTION",
+	payload:boolean
+}
+
+export function setDontShowMarketplaceInfoAction(enabled: boolean): IDontShowMarketplaceInfoAction{
+	return {
+		type: "DONT_SHOW_MARKETPLACE_INFO_ACTION",
+		payload: enabled
+	};
+}
+
 export function setAutoExpandLevelAction(part: "DOM" | "content" | "diff",level: number): ISetAutoExpandLevelAction{
 	return {
 		type: "SET_AUTOEXPAND_LEVEL",
@@ -584,7 +596,8 @@ export type TActions = ISetMainTab |
 	IRenameDescriptorAction |
 	ISetDescriptorOptionsAction |
 	ISetInspectorViewAction |
-	ISetColumnSizeAction | 
+	ISetColumnSizeAction |
 	ISetRecordRawAction |
 	ISetAutoExpandLevelAction |
-	ISetMaximumItemsAction
+	ISetMaximumItemsAction |
+	IDontShowMarketplaceInfoAction;

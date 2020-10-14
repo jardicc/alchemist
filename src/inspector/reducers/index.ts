@@ -507,6 +507,13 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				}
 				draft.settings.maximumItems = num;
 			});
+			break;
+		}
+		case "DONT_SHOW_MARKETPLACE_INFO_ACTION": {
+			state = produce(state, draft => {
+				draft.settings.dontShowMarketplaceInfo = action.payload;
+			});
+			break;
 		}
 	}
 	Settings.saveSettings(state);

@@ -18,6 +18,8 @@ import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
 import { Descriptor } from "photoshop/dist/types/UXP";
 
+import { Main } from "../../../shared/classes/Main";
+
 export interface IProperty<T>{
 	label: string
 	value:T
@@ -74,7 +76,9 @@ export interface ILeftColumnDispatch {
 	setListener:(enabled:boolean)=>void
 	setAutoInspector: (enabled: boolean) => void
 	setSearchTerm:(str: string)=> void
-	setRenameMode:(uuid: string, on: boolean) => void
+	setRenameMode: (uuid: string, on: boolean) => void
+	
+	onSetDontShowMarketplaceInfo: (enabled: boolean) => void
 }
 
 export interface IState{
@@ -107,8 +111,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			historyList: [],
 			snapshotsList:[],
 		};
+		this.marketplaceDialogRef = React.createRef();
 	}
 
+	private marketplaceDialogRef: React.RefObject<any>;
 	private lastDescRef:React.RefObject<Element> = React.createRef();
 
 	public componentDidUpdate=()=> {
@@ -549,7 +555,16 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	 * Attaches the simple listener to the app.
 	 */
 	private attachListener = async () => {
-		const { settings: { autoUpdateListener } } = this.props;
+		const { settings:{dontShowMarketplaceInfo,autoUpdateListener}} = this.props;
+		if (!dontShowMarketplaceInfo && !autoUpdateListener && !Main.devMode) {
+			const res = await this.marketplaceDialogRef.current.uxpShowModal({
+				title: "Advice",
+				size: {
+					width: 400,
+				}
+			});
+		}
+		
 		if (autoUpdateListener) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			//ListenerClass.listenerCb = async () => { };
@@ -623,7 +638,6 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					}
 				);				
 			} catch (e) {
-				debugger;
 				NotificationManager.error(e.message,"Replay failed", 5000);
 				console.error("error");
 				return;
@@ -668,6 +682,25 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		}
 	}
 
+	private renderMarketplaceDialog = () => {
+		const { onSetDontShowMarketplaceInfo } = this.props;
+
+		return (<dialog className="MarketplaceAdvice" ref={this.marketplaceDialogRef}>
+			<form>
+				<sp-heading>This is marketplace version of Alchemist</sp-heading>
+				<sp-body>
+					<p>This version will not listen to all events due to limitation in Photoshop but it will try to listen as much as possible. If you know such a event please post it <a href="https://github.com/jardicc/alchemist/issues/3">here</a>.</p>
+					<p>Also Alchemist might be unresponsive for several seconds once you click continue. <a href="https://github.com/jardicc/alchemist">Get development version here</a></p>					
+				</sp-body>
+				<footer>
+					<label className="dontShowLabel"><input onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSetDontShowMarketplaceInfo(e.currentTarget.checked)} type="checkbox" />{"Don't show again"}</label>
+					{/*<sp-button quiet="true" variant="secondary">Cancel</sp-button>*/}
+					<sp-button variant="cta" onClick={() => { this.marketplaceDialogRef.current.close("true"); }}>Continue</sp-button>
+				</footer>
+			</form>
+		</dialog>);
+	}
+
 	public render(): JSX.Element {
 		const { addAllowed,replayEnabled,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
 		return (
@@ -707,6 +740,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> :<IconMediaRecord />}Inspector</div>
 					</div>
 				</div>
+				{this.renderMarketplaceDialog()}
 			</div>
 		);
 	}

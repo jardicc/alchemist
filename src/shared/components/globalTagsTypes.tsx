@@ -31,6 +31,8 @@ declare global {
 			"sp-tag": any;
 			"sp-textfield": any;
 			"sp-tooltip": any;
+			"sp-heading":any;
+			"sp-body":any;
 		}
 	}
 }
