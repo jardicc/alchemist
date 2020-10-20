@@ -1,4 +1,4 @@
-# Alchemist for Photoshop ~~(Listener + Inspector)~~
+# Alchemist for Photoshop
 
 Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Or ScriptListener plugin for ExtendScript but in panel. Also can inspect PS DOM and show PS AM descriptors from various places.
 
