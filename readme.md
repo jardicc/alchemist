@@ -7,8 +7,10 @@ Listens all (most of) Photoshop events. Something like actions panel in Photosho
 This software was not created by Adobe and Adobe is not responsible for it. You are using this software on your own risk and I am also not responsible for anything. I personally don't expect any big issue. But because someone in USA can use this software... and people there love to sue for nonsense... :-D 
 
 ## Quick usage
+In Photoshop enable Developer Mode `PS > Edit > Preferences > Plugins > Enable Developer Mode`.
 
-Install "Adobe UXP Developer Tool" if not already installed. Click add plugin button. And open `dist\manifest.json` in dialog. Then click "load" in actions.
+Install "Adobe UXP Developer Tool" if not already installed. (Get it here: https://www.adobe.io/photoshop/uxp/devtool/#download ) 
+Click add plugin button. And open `dist\manifest.json` in dialog. Then click "load" in actions.
 
 Panel settings on Window can be found in: 
 ```
