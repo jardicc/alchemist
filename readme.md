@@ -37,10 +37,10 @@ npm build
 
 Load plugin as described above in quick usage section.
 
-## (PreRelease) Prerequisites
+## Prerequisites
 
-While we're still developing UXP, we want to make sure these features are behind flags so they don't affect end users. To enable UXP development and see your panels in Photoshop, you will need to enable that in Photoshop preferences.
-`PS > Edit > Preferences > Plugins > Enable Developer Mode` and also `PS > Edit > Preferences > Technology Previews > UXPEnablePluginMarketPlace`
+To enable UXP development and see your panels in Photoshop, you will need to enable that in Photoshop preferences.
+`PS > Edit > Preferences > Plugins > Enable Developer Mode`
 
 ## Panel Entrypoints
 
