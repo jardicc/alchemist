@@ -1,8 +1,8 @@
 {
 	"name": "Alchemist",
-	"id": "cz.bereza.alchemist",
+	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "0.27.0",
+	"version": "1.0.1",
 	"manifestVersion": 4,
 	"host": {
 		"app": "PS",
