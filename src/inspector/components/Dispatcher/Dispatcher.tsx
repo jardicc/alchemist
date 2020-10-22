@@ -83,7 +83,10 @@ export class Dispatcher extends React.Component<TDispatcher, any> {
 		return (
 			<div className="Dispatcher">				
 				<div className="help">Content of variable or value itself at the last line will be recorded. Use <code>{`batchPlay([{_obj:"invert"}])`}</code> instead of <code>{`const result = batchPlay([{_obj:"invert"}])`}</code><br /></div>
-				<textarea defaultValue={this.props.snippet} onChange={this.change} maxLength={Number.MAX_SAFE_INTEGER} placeholder={getInitialState().dispatcher.snippets[0].content} />
+				<div className="textareaWrap">
+					<span className="placeholder">{this.props.snippet}</span>
+					<textarea defaultValue={this.props.snippet} onChange={this.change} maxLength={Number.MAX_SAFE_INTEGER} placeholder={getInitialState().dispatcher.snippets[0].content} />
+				</div>
 				<div className="button" onClick={this.send}>Send</div>
 			</div>
 		);

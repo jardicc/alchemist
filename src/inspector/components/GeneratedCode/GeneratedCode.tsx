@@ -85,13 +85,16 @@ export class GeneratedCode extends Component<TGeneratedCode, IGeneratedCodeState
 						<div className="info code">
 							<div className="noShrink">
 								Generated code:
-								<textarea
-									maxLength={Number.MAX_SAFE_INTEGER}
-									className="infoBlock"
-									defaultValue={
-										this.props.originalReference
-									}
-								/>
+								<div className="textareaWrap">
+									<span className="placeholder">{this.props.originalReference}</span>
+									<textarea
+										maxLength={Number.MAX_SAFE_INTEGER}
+										className="infoBlock"
+										defaultValue={
+											this.props.originalReference
+										}
+									/>
+								</div>
 							</div>
 						</div>
 					</TabPanel>

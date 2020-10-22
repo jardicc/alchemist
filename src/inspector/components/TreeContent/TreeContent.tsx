@@ -87,11 +87,14 @@ export class TreeContent extends Component<TTreeContent, ITreeContentState> {
 					</div>
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
-					<textarea
-						maxLength={Number.MAX_SAFE_INTEGER}
-						className="rawCode"
-						defaultValue={this.props.descriptorContent}
-					/>
+					<div className="textareaWrap">
+						<span className="placeholder">{this.props.descriptorContent.substr(0,2000)}</span>
+						<textarea
+							maxLength={Number.MAX_SAFE_INTEGER}
+							className="rawCode"
+							defaultValue={this.props.descriptorContent}
+						/>
+					</div>
 				</TabPanel>
 			</TabList>
 		);

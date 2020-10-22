@@ -8,13 +8,15 @@ export interface IItem{
 	title: React.ReactNode
 }
 
-export type TPlacement = "top" | "right" | "bottom" | "left";
+export type TPlacementVertical = "top" | "bottom";
+export type TPlacementHorizontal = "right" | "left";
 
 export interface IButtonMenuProps{
 	className:string
 	//onChange: (id: string) => void
 	items: React.ReactNode
-	placement:TPlacement
+	placementVertical: TPlacementVertical
+	placementHorizontal: TPlacementHorizontal
 	children: JSX.Element
 }
 
@@ -105,42 +107,27 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 	private generatePosition = () => {
 		let result: React.CSSProperties = {};
 		
-		const { placement} = this.props;
+		const { placementVertical,placementHorizontal} = this.props;
 
-		switch (placement) {
-			case "bottom": result = {
-				bottom: `-${this.state.listHeight}px`
-			};
+		switch (placementVertical) {
+			case "bottom": result = { bottom: `-${this.state.listHeight}px` };
 				break;
-			case "left": result = {
-				left: `-${this.state.listWidth}px`,
-				top: "0px"
-			};
-				break;
-			case "right": result = {
-				top: "0px",
-				right: `-${this.state.listWidth}px`
-			};
-				break;
-			case "top": result = {
-				top: `-${this.state.listHeight}px`,
-			};
+			case "top": result = { top: `-${this.state.listHeight}px` };
 				break;
 		}
 
-		if (placement === "top" || placement === "bottom") {
-			if ((this.listBox()?.right ?? Infinity) > (this.panelBox()?.right ?? -Infinity)) {
-				result.right = "0px";
-			} else {
-				result.left = "0px";
-			}
+		switch (placementHorizontal) {
+			case "left": result.right = "0px";
+				break;
+			case "right": result.left = "0px";
+				break;
 		}
 
 		return result;
 	}
 
 	private renderList = () => {
-		const { items,placement } = this.props;
+		const { items } = this.props;
 		return (
 			<div
 				className={"list"}
@@ -154,19 +141,32 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 
 	private hide = () => {
 		console.log("blur");
-		setTimeout(() => {
-			this.setState({
-				...this.state,
-				expanded: false
-			});
-		},0);
+		//setTimeout(() => {
+		this.setState({
+			...this.state,
+			expanded: false
+		}, () => {
+			if (this.state.expanded) {
+				document.body.classList.add("menuExpanded");			
+			} else {
+				document.body.classList.remove("menuExpanded");
+			}
+		});
+		//},1000);
 	}
 
 	private toggle = (): void => {
-		console.log("Toggle button menu",this.state.expanded);
+		console.log("Toggle button menu", this.state.expanded);
+
 		this.setState({
 			...this.state,
 			expanded: !this.state.expanded
+		}, () => {
+			if (this.state.expanded) {
+				document.body.classList.add("menuExpanded");			
+			} else {
+				document.body.classList.remove("menuExpanded");
+			}
 		});
 	}
 

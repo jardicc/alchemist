@@ -68,7 +68,8 @@ export class Footer extends React.Component<TFooter> {
 				<ButtonMenu
 					key="clear"
 					className="abc"
-					placement={"top"}
+					placementVertical="top"
+					placementHorizontal="right"
 					items={
 						<div className="column">
 							<div className="button" onMouseDown={() => { onClear(); }}>All</div>
@@ -96,7 +97,8 @@ export class Footer extends React.Component<TFooter> {
 				<ButtonMenu
 					key="import"
 					className="abc"
-					placement={"top"}
+					placementVertical="top"
+					placementHorizontal="left"
 					items={
 						<div className="column">
 							<div className="button" onMouseDown={this.importState}>App state</div>
@@ -109,7 +111,8 @@ export class Footer extends React.Component<TFooter> {
 				<ButtonMenu
 					key="export"
 					className="abc"
-					placement={"top"}
+					placementVertical="top"
+					placementHorizontal="left"
 					items={
 						<div className="column">
 							<div className="button" onMouseDown={() => { this.exportState();}}>App state</div>

@@ -2,6 +2,8 @@
 :root{
 	--bg: #545454;
 	--bgList: #4D4D4D;
+	--bgInput:#454545;
+	--borderInput: #666666;
 	--text:#F0F0F0;
 	--textDisallowed:#f0f0f070;
 	--textFade: #989898;
@@ -17,6 +19,8 @@
 	:root{
 		--bg: #353535;
 		--bgList: #2B2B2B;
+		--bgInput:#292929;
+		--borderInput: #474747;
 		--text:#E1E1E1;
 		--textDisallowed:#E1E1E170;
 		--textFade: #848484;
@@ -31,6 +35,8 @@
 	:root{
 		--bg: #545454;
 		--bgList: #4D4D4D;
+		--bgInput:#454545;
+		--borderInput: #666666;
 		--text:#F0F0F0;
 		--textDisallowed:#f0f0f070;
 		--textFade: #989898;
@@ -45,6 +51,8 @@
 	:root{
 		--bg: #B7B7B7;
 		--bgList: #B0B0B0;
+		--bgInput:#D1D1D1;
+		--borderInput: #949494;
 		--text:#303030;
 		--textDisallowed:#30303070;
 		--textFade: #6E6E6E;
@@ -59,6 +67,8 @@
 	:root{
 		--bg: #EFEFF0;
 		--bgList: #E8E8E8;
+		--bgInput:#FCFCFC;
+		--borderInput: #CCCCCC;
 		--text:#464646;
 		--textDisallowed:#46464670;
 		--textFade: #909090;

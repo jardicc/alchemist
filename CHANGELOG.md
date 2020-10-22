@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+- change: revert button back due to bug cause Photoshop to crash
+
+## 1.0.0
+- change: button menus in footer are now using dropdown so those can be shown out of panel boundary
+
 ## 0.27.0
 - improvement: shows error dialog when something failes outside of react error component
 - workaround: allows to make production version of plugin. See: https://forums.adobeprerelease.com/photoshop/discussion/2138/severe-issue-with-listener-in-production-use#latest
