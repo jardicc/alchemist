@@ -2,6 +2,8 @@
 
 ## 1.0.1
 - change: revert button back due to bug cause Photoshop to crash
+- workaround: replaces textarea with div placeholder when menu is opened to solve z-index bug in PS
+- fix: menu should not be now rendered outside of plugin and cropped
 
 ## 1.0.0
 - change: button menus in footer are now using dropdown so those can be shown out of panel boundary
