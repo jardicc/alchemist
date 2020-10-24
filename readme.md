@@ -10,7 +10,7 @@ You are using this software at your own risk. Possibly Photoshop could crash if 
 ## Difference between Marketplace and Development version
 Feature to listen to all Photoshop events is available only in Development version. This is intentionally forbidden by Adobe in Production version of plugin. Alchemist tries to listen to as many events as possible but it might perform badly. If you don't need Listener then it doesn't matter which version you will use.
 
-## Quick usage - Development version (Recomended)
+## Quick usage - Development version (Recommended)
 In Photoshop enable Developer Mode `PS > Edit > Preferences > Plugins > Enable Developer Mode`.
 
 Install "Adobe UXP Developer Tool" if not already installed. (Get it here: https://www.adobe.io/photoshop/uxp/devtool/#download ) 
