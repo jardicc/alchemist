@@ -2,6 +2,8 @@
 
 Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Or ScriptListener plugin for ExtendScript but in panel. Also can inspect PS DOM and show PS AM descriptors from various places.
 
+![alt Plugin screenshot](md_images/screen.png)
+
 ## Disclaimer
 You are using this software at your own risk. Possibly Photoshop could crash if you ask Photoshop to do something unusual via Alchemist. So just save your work if you are concerned.
 
@@ -14,10 +16,10 @@ In Photoshop enable Developer Mode `PS > Edit > Preferences > Plugins > Enable D
 Install "Adobe UXP Developer Tool" if not already installed. (Get it here: https://www.adobe.io/photoshop/uxp/devtool/#download ) 
 Click add plugin button. And open `dist\manifest.json` in dialog. Then click "load" in actions.
 
-## Even quicker usage - Marketplace version  (Not prefered)
+## Even quicker usage - Marketplace version  (Not preferred)
 Download `installer/2bcdb900.ccx` installer file in https://github.com/jardicc/alchemist/raw/master/installer/2bcdb900.ccx And double click file in file explorer.
 
-## Quickest usage - Marketplace version  (Not prefered)
+## Quickest usage - Marketplace version  (Not preferred)
 You just click the button to add plugin automatically in Photoshop from Marketplace https://adobe.com/go/cc_plugins_discover_plugin?pluginId=2bcdb900&workflow=share
 
 ## Panel Entrypoints
