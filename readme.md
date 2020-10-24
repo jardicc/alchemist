@@ -17,7 +17,7 @@ Click add plugin button. And open `dist\manifest.json` in dialog. Then click "lo
 ## Even quicker usage - Marketplace version  (Not prefered)
 Download `installer/2bcdb900.ccx` installer file in https://github.com/jardicc/alchemist/raw/master/installer/2bcdb900.ccx And double click file in file explorer.
 
-## Quickets usage - Marketplace version  (Not prefered)
+## Quickest usage - Marketplace version  (Not prefered)
 You just click the button to add plugin automatically in Photoshop from Marketplace https://adobe.com/go/cc_plugins_discover_plugin?pluginId=2bcdb900&workflow=share
 
 ## Panel Entrypoints
