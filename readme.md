@@ -59,3 +59,9 @@ Load plugin as described above in quick usage section.
 ## Debugging
 
 In "Adobe UXP Developer Tool" click actions triple dot and click debug.
+
+## Credits
+
+- Plugin icon and logo: Petr Štefek - https://twitter.com/phobik
+- Original inspiration and some derived components: https://github.com/zalmoxisus/redux-devtools-extension
+- JSONViewer Component - Dave Vedder <veddermatic@gmail.com> http://www.eskimospy.com/
