@@ -2,6 +2,12 @@
 
 Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Or ScriptListener plugin for ExtendScript but in panel. Also can inspect PS DOM and show PS AM descriptors from various places.
 
+Videos on how to use it from Davide Barranca series about UXP:
+- #7 BatchPlay (part 2): the Alchemist listener https://www.youtube.com/watch?v=aZn_6X6nvUM
+- #8 BatchPlay (part 3): the Alchemist inspector https://www.youtube.com/watch?v=qDw3mdGAG2o
+
+(I highly recommend you to check the whole series)
+
 ![alt Plugin screenshot](md_images/screen.png)
 
 ## Disclaimer
