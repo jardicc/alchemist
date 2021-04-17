@@ -395,7 +395,9 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			break;
 		}
 		case "REPLACE_WHOLE_STATE": {
-			if (action.payload) {
+			if (action.payload &&
+				getInitialState().version[0] === action.payload.version[0] // load only compatible version
+			) {
 				action.payload.settings.autoUpdateListener = false;
 				action.payload.settings.autoUpdateInspector = false;
 				action.payload.amConvertor = cloneDeep(state.amConvertor);
