@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.0
+- improvement: adds AM Converter tool
+
 ## 1.0.1
 - change: revert button back due to bug cause Photoshop to crash
 - workaround: replaces textarea with div placeholder when menu is opened to solve z-index bug in PS
