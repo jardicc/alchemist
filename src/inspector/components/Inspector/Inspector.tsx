@@ -14,6 +14,7 @@ import { DispatcherContainer } from "../Dispatcher/DispatcherContainer";
 import { GeneratedCodeContainer } from "../GeneratedCode/GeneratedCodeContainer";
 import { SettingsContainer } from "../Settings/SettingsContainer";
 import { AMConverterContainer } from "../AMConverter/AMConverter";
+import { IconX} from "../../../shared/components/icons";
 
 
 export interface IInspectorProps{
@@ -34,6 +35,9 @@ export interface IInspectorDispatch {
 type TInspector = IInspectorProps & IInspectorDispatch
 
 interface IState{
+	showMessage: boolean
+	message: string
+	link:string
 }
 
 export class Inspector extends React.Component<TInspector, IState> { 
@@ -42,48 +46,54 @@ export class Inspector extends React.Component<TInspector, IState> {
 
 		this.props.setWholeState();
 		this.state = {
+			showMessage: false,
+			message: "",
+			link:""
 		};
 	}
 
-	/*private static _loaded = false;
+	private closeMessage = () => {
+		this.setState({
+			...this.state,
+			showMessage: false
+		});
+	}
 
-	public static get loaded(): boolean{
-		return this._loaded;
-	}*/
-
-	/*public componentDidMount():void {
-		Inspector._loaded = true;
-	}*/
-
-
-	/*private onSplitChange = (sizes: [number, number]) => {
-		if (sizes?.length === 2) {
-			this.props.setColumnSize(Helpers.percToPanelWidthPx("inspector",sizes[0]));
-		}
-	}*/
-
-	// move converter into container
-
+	public componentDidMount():void {		
+		(async () => {
+			const res = await fetch("http://alchemist.bereza.cz/alchemist-message.json");
+			if (res.status !== 200) {
+				return;
+			}
+			const data = await res.json();
+			this.setState({
+				...this.state,
+				message: data.message,
+				link: data.link,
+				showMessage:true
+			});
+			console.log("fetch",data);			
+		})();
+	}
 
 	public render(): JSX.Element {
-		const { columnSizesPercentage } = this.props;
 		return (
 			<div className="Inspector">
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
 					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<Split
-								sizes={/*Inspector.loaded ? columnSizesPercentage:*/[35,65] }
+								sizes={/*Inspector.loaded ? columnSizesPercentage:*/[35, 65]}
 								gutterSize={3}
-								//onDragEnd={this.onSplitChange as any}
-								//onDrag={(e)=>console.log(e)}
+							//onDragEnd={this.onSplitChange as any}
+							//onDrag={(e)=>console.log(e)}
 							>
 								<LeftColumnContainer />
 								<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
 									<TabPanel id="content" title="Content" noPadding={true}>
 										<TreeContentContainer />
 									</TabPanel>
-									<TabPanel id="difference" title="Difference"  noPadding={true}>
+									<TabPanel id="difference" title="Difference" noPadding={true}>
 										<TreeDiffContainer />
 									</TabPanel>
 									<TabPanel id="dom" title="DOM (live)" noPadding={true} >
@@ -121,6 +131,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 					</TabPanel>
 				</TabList>
 				<FooterContainer />
+				{this.state.showMessage && <div className="messageStrip"><a href={this.state.link} className="link">{this.state.message}</a><span className="close" onClick={this.closeMessage}><IconX /></span></div>}
 			</div>
 		);
 	}

@@ -9,6 +9,35 @@
 	flex-shrink: 0;
 	background: var(--bg);
 
+	.messageStrip{
+		border-top:1px solid var(--divider);
+		padding:0.5em;
+		display: inline-flex;
+		align-items: center;
+		font-size: 1.05em;
+
+		.link{
+			text-decoration: none;
+			color:var(--autoActive);
+
+			&:hover{
+				color:var(--hover);
+				text-decoration: underline;
+			}
+		}
+
+		.close{
+			fill:var(--text);
+			margin-left: auto;
+			text-decoration: none;
+			cursor: pointer;
+
+			&:hover{
+				fill:var(--hover);
+			}
+		}
+	}
+
 	textarea{		
 		margin: 0;
 	}
