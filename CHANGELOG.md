@@ -2,6 +2,7 @@
 
 ## 1.2.0
 - improvement: option to choose font size: https://github.com/jardicc/alchemist/issues/5
+- improvement: adds possibility to show message strip with link
 - fix: wrong layer property names https://github.com/jardicc/alchemist/issues/13 https://github.com/jardicc/alchemist/issues/11
 
 ## 1.1.0
