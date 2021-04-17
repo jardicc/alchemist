@@ -27,12 +27,12 @@ The extension will be available in `Plugins > Alchemist > Alchemist` menu with t
 I hope you won't need to do anything with that file but in case that something goes wrong it is here.
 Panel settings for development version on Window can be found in: 
 ```
-c:\Users\<AccountName>\AppData\Roaming\Adobe\UXP\PluginsStorage\PHSP\22\Developer\cz.bereza.alchemist\PluginData\settings.json
+c:\Users\<AccountName>\AppData\Roaming\Adobe\UXP\PluginsStorage\PHSP\22\Developer\2bcdb900\PluginData\settings.json
 ```
 
 or for marketplace version
 ```
-c:\Users\<AccountName>\AppData\Roaming\Adobe\UXP\PluginsStorage\PHSP\22\Internal\cz.bereza.alchemist\PluginData\settings.json
+c:\Users\<AccountName>\AppData\Roaming\Adobe\UXP\PluginsStorage\PHSP\22\Internal\2bcdb900\PluginData\settings.json
 ```
 
 
