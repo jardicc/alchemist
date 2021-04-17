@@ -189,6 +189,7 @@ export function getInitialState(): IInspectorState {
 		],
 		settings: {
 			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
+			fontSize:"size-default",
 			recordRawData:false,
 			selectReferenceBeforeGet: true,
 			searchTerm: null,

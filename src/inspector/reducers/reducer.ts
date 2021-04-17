@@ -526,6 +526,12 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
+		case "SET_FONT_SIZE": {
+			state = produce(state, draft => {
+				draft.settings.fontSize = action.payload;
+			});
+			break;
+		}
 	}
 	Settings.saveSettings(state);
 	return state;

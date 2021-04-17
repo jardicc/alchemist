@@ -30,6 +30,10 @@ export const getInspectorSettings = createSelector([all], (s) => {
 	return s.settings;
 });
 
+export const getFontSizeSettings = createSelector([getInspectorSettings], (s) => {
+	return s.fontSize;
+});
+
 // will exclude undefined objects in array
 export const getActiveTargetReferenceForAM = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
 	const result = targets?.find(item => item.type === selected);

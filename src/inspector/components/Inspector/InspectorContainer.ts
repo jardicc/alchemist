@@ -3,7 +3,7 @@ import { IInspectorDispatch, IInspectorProps, Inspector } from "./Inspector";
 import { setMainTabAction, setModeTabAction, replaceWholeStateAction, setColumnSizeAction } from "../../actions/inspectorActions";
 import { IRootState } from "../../../shared/store";
 import { Settings } from "../../classes/Settings";
-import { getMainTabID, getModeTabID, getActiveDescriptorOriginalReference } from "../../selectors/inspectorSelectors";
+import { getMainTabID, getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings } from "../../selectors/inspectorSelectors";
 
 
 const mapStateToProps = (state: IRootState): IInspectorProps => {
@@ -11,7 +11,8 @@ const mapStateToProps = (state: IRootState): IInspectorProps => {
 		mainTab: getMainTabID(state),
 		modeTab: getModeTabID(state),
 		calculatedReference: getActiveDescriptorOriginalReference(state),
-		columnSizesPercentage: [0,0] //getColumnSizesPercentage(state)
+		columnSizesPercentage: [0, 0], //getColumnSizesPercentage(state),
+		fontSizeSettings: getFontSizeSettings(state)
 	};
 };
 

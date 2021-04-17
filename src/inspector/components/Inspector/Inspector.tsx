@@ -4,7 +4,7 @@ import { TabPanel } from "../Tabs/TabPanel";
 import "./../../../shared/ThemeVars.css";
 import "./Inspector.less";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
-import { TActiveSection, TActiveInspectorTab } from "../../model/types";
+import { TActiveSection, TActiveInspectorTab, TFontSizeSettings } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
 import Split from "react-split";
@@ -21,7 +21,8 @@ export interface IInspectorProps{
 	mainTab: TActiveSection
 	modeTab: TActiveInspectorTab	
 	calculatedReference: string
-	columnSizesPercentage: [number,number]
+	columnSizesPercentage: [number, number]
+	fontSizeSettings:TFontSizeSettings
 }
 
 export interface IInspectorDispatch {
@@ -77,8 +78,9 @@ export class Inspector extends React.Component<TInspector, IState> {
 	}
 
 	public render(): JSX.Element {
+		const { fontSizeSettings} = this.props;
 		return (
-			<div className="Inspector">
+			<div className={`Inspector ${fontSizeSettings}`}>
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
 					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">

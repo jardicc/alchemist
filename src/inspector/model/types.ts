@@ -4,6 +4,7 @@ import { TState } from "../components/FilterButton/FilterButton";
 
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
+export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "size-bigger" | "size-big" | "size-youMustBeJoking"
 
 export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" | "layer" | "path" | "property" | "snapshot"|"listenerCategory";
 export type TTargetReference = "listener"|"customDescriptor" | "featureData" | "generator" | "overkill" | TPropertyClass;
@@ -149,19 +150,20 @@ export type TAllReferenceSubtypes = ICategory|IProperty | ICustomDescriptor | IH
 /////
 
 export interface ISettings{
-	recordRawData:boolean,
-	selectReferenceBeforeGet: boolean,
-	autoUpdateInspector: boolean,
-	groupDescriptors: "none"|"strict",
-	searchTerm:string|null,
-	listenerFilterType:TFilterEvents,
-	listenerExclude:string[],
-	listenerInclude:string[],
-	lastHistoryID:number,
-	autoUpdateListener: boolean,
-	lastSelectedItem: string | null,
+	fontSize:TFontSizeSettings
+	recordRawData:boolean
+	selectReferenceBeforeGet: boolean
+	autoUpdateInspector: boolean
+	groupDescriptors: "none"|"strict"
+	searchTerm:string|null
+	listenerFilterType:TFilterEvents
+	listenerExclude:string[]
+	listenerInclude:string[]
+	lastHistoryID:number
+	autoUpdateListener: boolean
+	lastSelectedItem: string | null
 	dontShowMarketplaceInfo:boolean
-	activeDescriptors:string[],
+	activeDescriptors:string[]
 	properties:IPropertySettings[]
 	maximumItems: number
 	leftColumnWidthPx: number
