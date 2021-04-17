@@ -371,7 +371,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "count", stringID: "count", type: "default" },
 						{ title: "fillOpacity", stringID: "fillOpacity", type: "default" },
 						{ title: "globalAngle", stringID: "globalAngle", type: "default" },
-						{ title: "clipped", stringID: "clipped", type: "default" },
+						{ title: "group", stringID: "group", type: "default" }, // clipped
 						{ title: "hasUserMask", stringID: "hasUserMask", type: "default" },
 						{ title: "hasVectorMask", stringID: "hasVectorMask", type: "default" },
 						{ title: "itemIndex", stringID: "itemIndex", type: "default" },
@@ -380,7 +380,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "layerKind", stringID: "layerKind", type: "default" },
 						{ title: "layerLocking", stringID: "layerLocking", type: "default" },
 						{ title: "layerSection", stringID: "layerSection", type: "default" },
-						{ title: "blendMode", stringID: "blendMode", type: "default" },
+						{ title: "mode", stringID: "mode", type: "default" }, // blend mode
 						{ title: "name", stringID: "name", type: "default" },
 						{ title: "opacity", stringID: "opacity", type: "default" },
 						{ title: "targetChannels", stringID: "targetChannels", type: "default" },
