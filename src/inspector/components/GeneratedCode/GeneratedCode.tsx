@@ -115,9 +115,9 @@ export class GeneratedCode extends Component<TGeneratedCode, IGeneratedCodeState
 							<div className="label">dialogOptions</div>
 							<sp-dropdown quiet="true">
 								<sp-menu slot="options" onClick={this.onSetDialogOptions}>
-									<sp-menu-item key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? "selected" : null}>silent</sp-menu-item>
-									<sp-menu-item key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? "selected" : null}>dontDisplay</sp-menu-item>
-									<sp-menu-item key={"display"} value={"display"} selected={(dialogOptions === "display") ? "selected" : null}>display</sp-menu-item>
+									<sp-menu-item key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? "selected" : null}>silent (DialogModes.NO)</sp-menu-item>
+									<sp-menu-item key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? "selected" : null}>dontDisplay (DialogModes.ERROR)</sp-menu-item>
+									<sp-menu-item key={"display"} value={"display"} selected={(dialogOptions === "display") ? "selected" : null}>display (DialogModes.ALL)</sp-menu-item>
 									<sp-menu-item key={"default"} value={"default"} selected={(dialogOptions === null) ? "selected" : null}>Default</sp-menu-item>
 								</sp-menu>
 							</sp-dropdown>
