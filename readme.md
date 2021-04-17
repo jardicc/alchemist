@@ -2,22 +2,30 @@
 
 Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Or ScriptListener plugin for ExtendScript but in panel. Also can inspect PS DOM and show PS AM descriptors from various places.
 
+Videos on how to use it from Davide Barranca series about UXP:
+- #7 BatchPlay (part 2): the Alchemist listener https://www.youtube.com/watch?v=aZn_6X6nvUM
+- #8 BatchPlay (part 3): the Alchemist inspector https://www.youtube.com/watch?v=qDw3mdGAG2o
+
+(I highly recommend you to check the whole series)
+
+![alt Plugin screenshot](md_images/screen.png)
+
 ## Disclaimer
 You are using this software at your own risk. Possibly Photoshop could crash if you ask Photoshop to do something unusual via Alchemist. So just save your work if you are concerned.
 
 ## Difference between Marketplace and Development version
 Feature to listen to all Photoshop events is available only in Development version. This is intentionally forbidden by Adobe in Production version of plugin. Alchemist tries to listen to as many events as possible but it might perform badly. If you don't need Listener then it doesn't matter which version you will use.
 
-## Quick usage - Development version (Recomended)
+## Quick usage - Development version (Recommended)
 In Photoshop enable Developer Mode `PS > Edit > Preferences > Plugins > Enable Developer Mode`.
 
 Install "Adobe UXP Developer Tool" if not already installed. (Get it here: https://www.adobe.io/photoshop/uxp/devtool/#download ) 
 Click add plugin button. And open `dist\manifest.json` in dialog. Then click "load" in actions.
 
-## Even quicker usage - Marketplace version  (Not prefered)
+## Even quicker usage - Marketplace version  (Not preferred)
 Download `installer/2bcdb900.ccx` installer file in https://github.com/jardicc/alchemist/raw/master/installer/2bcdb900.ccx And double click file in file explorer.
 
-## Quickest usage - Marketplace version  (Not prefered)
+## Quickest usage - Marketplace version  (Not preferred)
 You just click the button to add plugin automatically in Photoshop from Marketplace https://adobe.com/go/cc_plugins_discover_plugin?pluginId=2bcdb900&workflow=share
 
 ## Panel Entrypoints
@@ -57,3 +65,9 @@ Load plugin as described above in quick usage section.
 ## Debugging
 
 In "Adobe UXP Developer Tool" click actions triple dot and click debug.
+
+## Credits
+
+- Plugin icon and logo: Petr Štefek - https://twitter.com/phobik
+- Original inspiration and some derived components: https://github.com/zalmoxisus/redux-devtools-extension
+- JSONViewer Component - Dave Vedder <veddermatic@gmail.com> http://www.eskimospy.com/
