@@ -4,7 +4,8 @@ import React from "react";
 export interface ITabPanelProps{
 	id: string
 	title: string | JSX.Element
-	noPadding?:boolean
+	noPadding?: boolean
+	showScrollbars?:boolean
 }
 
 export interface ITabPanelDispatch {

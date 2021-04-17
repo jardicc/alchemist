@@ -587,6 +587,10 @@ export function getInitialState(): IInspectorState {
 				showOptionalDocumentReference: true,
 			}
 		},
+		amConvertor: {
+			isPresetFileInstalled: false,
+			snippet:"n/a"
+		},
 		descriptors: [
 		],
 		dispatcher: {

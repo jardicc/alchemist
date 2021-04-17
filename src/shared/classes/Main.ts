@@ -4,6 +4,7 @@ import { ListenerClass } from "./../../inspector/classes/Listener";
 import "./../index.less";
 import { Settings } from "../../inspector/classes/Settings";
 import photoshop from "photoshop";
+import { AMHackFileFactory } from "../../inspector/classes/AMHackFileFactory";
 
 export class Main{
 
@@ -11,7 +12,11 @@ export class Main{
 
 	public static start(): void {
 		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "inspector", "value": true });
+		AMHackFileFactory.createFileToInclude();
 		renderInspectorUI();
+		AMHackFileFactory.getHackCode();
+
+		
 	}
 }
 
@@ -39,3 +44,4 @@ if (Main.devMode) {
 		});
 	}
 }
+

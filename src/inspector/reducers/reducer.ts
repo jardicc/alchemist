@@ -10,6 +10,7 @@ import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
 import { TGeneratedCode } from "../components/GeneratedCode/GeneratedCode";
+import { clone, cloneDeep } from "lodash";
 
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
@@ -397,6 +398,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			if (action.payload) {
 				action.payload.settings.autoUpdateListener = false;
 				action.payload.settings.autoUpdateInspector = false;
+				action.payload.amConvertor = cloneDeep(state.amConvertor);
 				state = action.payload;				
 			}
 			break;
@@ -512,6 +514,15 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		case "DONT_SHOW_MARKETPLACE_INFO_ACTION": {
 			state = produce(state, draft => {
 				draft.settings.dontShowMarketplaceInfo = action.payload;
+			});
+			break;
+		}
+		case "SET_CONVERTER": {
+			state = produce(state, draft => {
+				draft.amConvertor = {
+					...state.amConvertor,
+					...action.payload
+				};
 			});
 			break;
 		}

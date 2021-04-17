@@ -11,6 +11,7 @@ export class ListenerClass{
 
 	private static listenerCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
 	private static inspectorCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
+	private static listenerAMHackCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
 
 	private static eventsArrayCache:eventsArray|null = null;
 
@@ -23,6 +24,7 @@ export class ListenerClass{
 
 	public static startListener(cb: TNotificationListenerCb): void{
 		this.listenerCb = cb;
+		ListenerClass.addAMConverterHack();
 		if (Main.devMode) {
 			app.eventNotifier = this.listenerCb;
 		} else {
@@ -31,6 +33,7 @@ export class ListenerClass{
 	}
 
 	public static stopListener(): void{
+		this.removeAMConverterHack();
 		if (Main.devMode) {
 			app.eventNotifier = () => { };
 		} else {
@@ -45,5 +48,19 @@ export class ListenerClass{
 
 	public static stopInspector(): void{
 		action.removeNotificationListener([{ event: "select"}], this.inspectorCb);
+	}
+
+	// AM coverter hack
+
+	public static addAMConverterHack() {
+		ListenerClass.listenerAMHackCb = async (event, descriptor) => {
+			const eventName = descriptor._isReference ? "_ref" : descriptor._alchemistAMHack._obj;
+			this.listenerCb(eventName, descriptor._alchemistAMHack);
+		};
+		action.addNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66", universal: true }],ListenerClass.listenerAMHackCb);
+	}
+
+	public static removeAMConverterHack() {
+		action.removeNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66", universal: true }], ListenerClass.listenerAMHackCb);
 	}
 }

@@ -250,7 +250,7 @@ export class GetInfo {
 		return this.buildReply(startTime, playResult, desc,originalRef);
 	}
 
-	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM, reply=false): string => {
+	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM, reply=false, reference=false): string => {
 		if (originalReference.type==="listener") {
 			return (reply ? "Reply: " : "") + calculatedReference._obj;
 		}

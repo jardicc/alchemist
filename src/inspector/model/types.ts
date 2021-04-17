@@ -56,6 +56,7 @@ export interface IInspectorState {
 	settings:ISettings
 	inspector:IInspector
 	descriptors: IDescriptor[]
+	amConvertor: IAMCoverter
 	dispatcher: IDispatcher
 }
 
@@ -182,6 +183,11 @@ export interface IPropertyItem {
 	title: string,
 	stringID: string,
 	type: TPropertyType
+}
+
+export interface IAMCoverter{
+	isPresetFileInstalled: boolean
+	snippet:string
 }
 
 export interface IInspector{

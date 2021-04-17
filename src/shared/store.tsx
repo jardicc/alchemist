@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { inspectorReducer } from "../inspector/reducers";
+import { inspectorReducer } from "../inspector/reducers/reducer";
 import { IInspectorState } from "../inspector/model/types";
 
 /*

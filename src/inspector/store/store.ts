@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from "redux";
-import { inspectorReducer } from "../reducers/index";
+import { inspectorReducer } from "../reducers/reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 /*

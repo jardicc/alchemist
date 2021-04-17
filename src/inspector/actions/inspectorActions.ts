@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 import { CommandOptions } from "photoshop/dist/types/UXP";
@@ -247,6 +247,18 @@ export interface ISetAutoExpandLevelAction {
 export interface IDontShowMarketplaceInfoAction{
 	type: "DONT_SHOW_MARKETPLACE_INFO_ACTION",
 	payload:boolean
+}
+
+export interface ISetConverterInfoAction{
+	type: "SET_CONVERTER",
+	payload: Partial<IAMCoverter>
+}
+
+export function setConverterInfoAction(info: Partial<IAMCoverter>): ISetConverterInfoAction{
+	return {
+		type: "SET_CONVERTER",
+		payload: info
+	};
 }
 
 export function setDontShowMarketplaceInfoAction(enabled: boolean): IDontShowMarketplaceInfoAction{
@@ -600,4 +612,5 @@ export type TActions = ISetMainTab |
 	ISetRecordRawAction |
 	ISetAutoExpandLevelAction |
 	ISetMaximumItemsAction |
-	IDontShowMarketplaceInfoAction;
+	IDontShowMarketplaceInfoAction |
+	ISetConverterInfoAction

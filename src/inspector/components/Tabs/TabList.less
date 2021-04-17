@@ -4,17 +4,21 @@
 	flex-grow: 1;
 	flex-shrink: 0;
 	border: 0px solid yellow;
-}
 
-.TabList .tabContent{
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	padding: 1em;
-	position: relative;
+	.tabContent{
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		padding: 1em;
+		position: relative;
+	
+		&.noPadding{
+			padding:0;
+		}
 
-	&.noPadding{
-		padding:0;
+		&.showScrollbars{
+			overflow: auto;
+		}
 	}
 }
 

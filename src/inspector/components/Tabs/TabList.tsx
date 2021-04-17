@@ -49,18 +49,20 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 	private renderTabContent = (): React.ReactNode => {
 		const { activeKey, children } = this.props;
 
+		let clsName = "tabContent "; 
+
 		if (Array.isArray(children)) {
 			const found = children.find((item: TTabPanelComponent) => item.props.id === activeKey);
 			if (!found) {
-				return <div className={"tabContent "}>No content</div>;
+				return <div className={clsName}>No content</div>;
 			}
 			else if (typeof found === "object" && "props" in found) {
-				
-				const noPaddingClassName = found.props.noPadding ? "noPadding " : "";
-				return <div className={"tabContent " + noPaddingClassName + found.props.id}>{found}</div>;
+				clsName += (found.props.showScrollbars ? "showScrollbars " : "");
+				clsName +=  found.props.noPadding ? "noPadding " : "";
+				return <div className={clsName + found.props.id}>{found}</div>;
 			}
 		}
-		return <div className={"tabContent "}>not array</div>;
+		return <div className={clsName}>not array</div>;
 	}
 
 	public render(): JSX.Element {

@@ -12,8 +12,8 @@ import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
 import { DispatcherContainer } from "../Dispatcher/DispatcherContainer";
 import { GeneratedCodeContainer } from "../GeneratedCode/GeneratedCodeContainer";
-import { Helpers } from "../../classes/Helpers";
 import { SettingsContainer } from "../Settings/SettingsContainer";
+import { AMConverterContainer } from "../AMConverter/AMConverter";
 
 
 export interface IInspectorProps{
@@ -62,6 +62,9 @@ export class Inspector extends React.Component<TInspector, IState> {
 		}
 	}*/
 
+	// move converter into container
+
+
 	public render(): JSX.Element {
 		const { columnSizesPercentage } = this.props;
 		return (
@@ -102,7 +105,7 @@ export class Inspector extends React.Component<TInspector, IState> {
 												/>
 											</div>
 										</div>
-									</TabPanel>*/}
+												</TabPanel>*/}
 								</TabList>
 							</Split>
 						</div>
@@ -112,6 +115,9 @@ export class Inspector extends React.Component<TInspector, IState> {
 					</TabPanel>
 					<TabPanel id="settings" title="Settings">
 						<SettingsContainer />
+					</TabPanel>
+					<TabPanel id="amConverter" title="AM Converter" showScrollbars={true}>
+						<AMConverterContainer />
 					</TabPanel>
 				</TabList>
 				<FooterContainer />

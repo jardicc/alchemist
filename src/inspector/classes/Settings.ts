@@ -1,8 +1,9 @@
 import { IDescriptor } from "../model/types";
 import { alert } from "./Helpers";
+import type {uxp} from "../types/uxp";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem = require("uxp").storage.localFileSystem;
+const localFileSystem:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
 
 export class Settings{
 
@@ -96,7 +97,7 @@ export class Settings{
 
 	public static async importState(): Promise<any | null> {
 		const folder = await Settings.settingsFolder();
-		let entry: any
+		let entry: any;
 		try {
 			entry = await folder.getEntry(Settings.settingsFilename);
 		
