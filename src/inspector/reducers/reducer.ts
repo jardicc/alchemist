@@ -9,7 +9,7 @@ import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
-import { clone, cloneDeep } from "lodash";
+import { cloneDeep } from "lodash";
 
 
 export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
@@ -121,12 +121,14 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
+		/*
 		case "CLEAR_NON_EXISTENT": {
 			state = produce(state, draft => {
 				console.log("empty");
 			});
 			break;
 		}
+		*/
 		case "LOCK_DESC": {
 			state = produce(state, draft => {
 				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.locked = action.payload.lock);
@@ -196,6 +198,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
+		/*
 		case "EXPORT_SELECTED_DESC": {
 			state = produce(state, draft => {
 				console.log("empty");
@@ -214,6 +217,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
+		*/
 		case "SET_FILTER_STATE": {
 			state = produce(state, draft => {
 				const { payload: { state, subType, type } } = action;

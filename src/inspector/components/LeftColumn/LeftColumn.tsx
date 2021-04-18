@@ -117,7 +117,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	private marketplaceDialogRef: React.RefObject<any>;
 	private lastDescRef:React.RefObject<Element> = React.createRef();
 
-	public componentDidUpdate=()=> {
+	public componentDidUpdate=():void=> {
 		this.lastDescRef?.current?.scrollIntoView();
 	}
 
@@ -563,6 +563,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					width: 400,
 				}
 			});
+			console.log(res);
 		}
 		
 		if (autoUpdateListener) {

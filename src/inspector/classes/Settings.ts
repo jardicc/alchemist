@@ -12,7 +12,7 @@ export class Settings{
 	private static readonly settingsFilename = "settings.json";
 	private static saveTimeout: number;
 
-	public static async reset() {
+	public static async reset():Promise<void> {
 		try {
 			const folder = await Settings.settingsFolder();
 			const entry = await folder.getEntry(Settings.settingsFilename);
@@ -27,7 +27,7 @@ export class Settings{
 		}
 	}
 
-	public static async settingsFolder() {
+	public static async settingsFolder():Promise<uxp.storage.Folder> {
 		const folder = await localFileSystem.getDataFolder();
 		return folder;
 	}

@@ -143,7 +143,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		return expanded;
 	}
 
-	render() {
+	render():JSX.Element {
 		//console.log("STATE",this.state);
 		const {
 			getItemString,

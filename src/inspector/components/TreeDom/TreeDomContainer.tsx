@@ -8,8 +8,7 @@ import "./TreeDom.less";
 import { getItemString } from "../TreeDiff/getItemString";
 import {JSONTree} from "./../JSONTree";
 import { TProtoMode, TPath } from "../../model/types";
-import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
-import { TReference, GetInfo } from "../../classes/GetInfo";
+import { labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { cloneDeep } from "lodash";
 import { TreePath } from "../TreePath/TreePath";
 

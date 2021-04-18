@@ -1,7 +1,6 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setInspectorPathDiffAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction } from "../../actions/inspectorActions";
-import { getContentExpandLevel } from "../../selectors/inspectorContentSelectors";
 import { getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, getLeftRawDiff, getRightRawDiff, getDiffActiveView, getDiffExpandLevel } from "../../selectors/inspectorDiffSelectors";
 
 import React, { Component } from "react";
@@ -10,9 +9,8 @@ import {getItemString} from "./getItemString";
 import "./TreeDiff.less";
 import {JSONTree} from "../JSONTree";
 import { diff } from "jsondiffpatch";
-import { renderPath, labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
+import { labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { IDescriptor, TPath, TGenericViewType } from "../../model/types";
-import { divide } from "lodash";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";

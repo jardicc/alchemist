@@ -55,8 +55,6 @@ class Settings extends Component<TSettings, ISettingsState> {
 			{ label: "Big", val: "size-big" },
 			{ label: "You must be joking", val: "size-youMustBeJoking" }
 		];
-		const itemsLabels:TFontSizeSettings[] = ["size-tiny", "size-small", "size-default", "size-bigger", "size-big", "size-youMustBeJoking"];
-		//<sp-checkbox onClick={this.onGroupSame} checked={groupSame ? true : null}>
 		return (
 			<div className="Settings">
 				<div><span className="title">Descriptor settings: </span></div>
