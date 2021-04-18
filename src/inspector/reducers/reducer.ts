@@ -109,7 +109,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 					} else {
 						return !ids.includes(item.id);						
 					}
-				}
+				},
 				);
 			});
 			break;
@@ -183,7 +183,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "IMPORT_STATE": {
 			state = {
-				...action.payload.inspector
+				...action.payload.inspector,
 			};
 			break;
 		}
@@ -437,7 +437,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 				if (action.payload.uuids === "default") {
 					draft.settings.initialDescriptorSettings = {
 						...state.settings.initialDescriptorSettings,
-						...action.payload.options
+						...action.payload.options,
 					};
 				} else {
 					for (let i = 0, len = action.payload.uuids.length; i < len; i++){
@@ -449,7 +449,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 						if (found) {
 							found.descriptorSettings = {
 								...state.descriptors[foundIndex].descriptorSettings,
-								...action.payload.options
+								...action.payload.options,
 							};
 						}
 					}
@@ -526,7 +526,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			state = produce(state, draft => {
 				draft.amConvertor = {
 					...state.amConvertor,
-					...action.payload
+					...action.payload,
 				};
 			});
 			break;

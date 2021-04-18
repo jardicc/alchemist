@@ -28,7 +28,7 @@ export class RawDataConverter{
 						if (settings.recordRawData) {
 							data[key] = {
 								"_data": arr,
-								"_rawData": "alchemistFakeType"
+								"_rawData": "alchemistFakeType",
 							};							
 						} else {
 							data[key] = "<ArrayBuffer> This value was ignored for performance reasons. Turn this on in Alchemist > Settings > Support raw data type";

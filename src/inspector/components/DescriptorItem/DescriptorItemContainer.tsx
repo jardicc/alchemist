@@ -38,7 +38,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		super(props);
 		
 		this.state = {
-			tempName:this.props.descriptor.title
+			tempName:this.props.descriptor.title,
 		};
 	}
 	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -65,7 +65,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 
 	private onNameChange=(e: React.ChangeEvent<HTMLInputElement>)=> {
 		this.setState({
-			tempName: e.currentTarget.value
+			tempName: e.currentTarget.value,
 		});
 	}
 
@@ -120,8 +120,8 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 			<div className={"normalMode " + this.generateClassName()} onClick={this.select}>
 				<div className="name">{descriptor.title}</div>
 				<div className="spread"></div>
-				{locked ? <div className="icon"><IconLockLocked/></div> : ""}
-				{pinned ? <div className="icon"><IconPinDown/></div>: ""}
+				{locked && <div className="icon"><IconLockLocked/></div> }
+				{pinned && <div className="icon"><IconPinDown/></div>}
 				{descriptor.startTime===0 ? <div className="time">Event</div> : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
 			</div>
 		);

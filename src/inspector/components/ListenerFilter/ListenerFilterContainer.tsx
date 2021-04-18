@@ -87,7 +87,7 @@ class ListenerFilter extends React.Component<TListenerFilter, any> {
 		label: string,
 		subType: "listenerCategory",
 		items: TBaseItems,
-		content: {value:string|null|number,filterBy:TState}
+		content: {value:string|null|number,filterBy:TState},
 	): React.ReactNode => {
 		return (
 			<div className="filter">

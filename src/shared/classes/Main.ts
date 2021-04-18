@@ -40,8 +40,11 @@ if (Main.devMode) {
 	} catch (e) {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		require("photoshop").core.showAlert({
-			message: e.stack
+			message: e.stack,
 		});
 	}
 }
-
+const a = [
+	"a",
+	"b",
+];

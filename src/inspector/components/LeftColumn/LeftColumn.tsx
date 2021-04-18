@@ -127,7 +127,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			this.onSetMainClass(value);
 			return;
 		}
-		const { onSetTargetReference, activeTargetReference, } = this.props;
+		const { onSetTargetReference, activeTargetReference } = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
 		if (found) {
@@ -147,7 +147,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const { selectedTargetReference, filterBySelectedReferenceType} = this.props;
 		return this.buildFilterRow("Type:", "main", mainClasses, {
 			value: selectedTargetReference,
-			filterBy: filterBySelectedReferenceType
+			filterBy: filterBySelectedReferenceType,
 		});
 	}
 	
@@ -387,43 +387,43 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		switch (type) {
 			case "layer": 
 				return this.setState({...this.state,
-					layersList: GetList.getLayers(activeTargetReferenceDocument)
+					layersList: GetList.getLayers(activeTargetReferenceDocument),
 				});
 			case "document":
 				return this.setState({...this.state,
-					documentsList: await GetList.getDocuments()
+					documentsList: await GetList.getDocuments(),
 				});
 			case "action":
 				return this.setState({...this.state,
-					actionItemsList: GetList.getActionItem(parseInt(activeReferenceActionSet.value))
+					actionItemsList: GetList.getActionItem(parseInt(activeReferenceActionSet.value)),
 				});
 			case "actionset":
 				return this.setState({...this.state,
-					actionSetsList: GetList.getActionSets()
+					actionSetsList: GetList.getActionSets(),
 				});
 			case "command":
 				return this.setState({...this.state,
-					actionCommandsList: GetList.getActionCommand(parseInt(activeReferenceActionItem.value))
+					actionCommandsList: GetList.getActionCommand(parseInt(activeReferenceActionItem.value)),
 				});
 			case "channel":
 				return this.setState({...this.state,
-					channelsList: GetList.getChannels(activeTargetReferenceDocument)
+					channelsList: GetList.getChannels(activeTargetReferenceDocument),
 				});
 			case "path":
 				return this.setState({...this.state,
-					pathsList: GetList.getPaths(activeTargetReferenceDocument)
+					pathsList: GetList.getPaths(activeTargetReferenceDocument),
 				});
 			case "guide":
 				return this.setState({...this.state,
-					guidesList: GetList.getGuides(activeTargetReferenceDocument)
+					guidesList: GetList.getGuides(activeTargetReferenceDocument),
 				});
 			case "history":
 				return this.setState({...this.state,
-					historyList: GetList.getHistory()
+					historyList: GetList.getHistory(),
 				});
 			case "snapshot":
 				return this.setState({...this.state,
-					snapshotsList: GetList.getSnapshots()
+					snapshotsList: GetList.getSnapshots(),
 				});
 		}
 	}
@@ -432,7 +432,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		label: string,
 		subType: TSubTypes|"main",
 		items: TBaseItems,
-		content: {value:string|null|number,filterBy:TState}
+		content: {value:string|null|number,filterBy:TState},
 	): React.ReactNode => {
 		return (
 			<div className="filter">
@@ -502,7 +502,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			selected: false,
 			title: GetInfo.generateTitle(originalReference,calculatedReference),
 			calculatedReference,
-			descriptorSettings: this.props.settings.initialDescriptorSettings
+			descriptorSettings: this.props.settings.initialDescriptorSettings,
 		};
 
 		//this.props.setLastHistoryID;
@@ -523,13 +523,13 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				subType: "listenerCategory",
 				content: {
 					filterBy: "off",
-					value:"listener"
-				}
-			}]
+					value:"listener",
+				},
+			}],
 		};
 		const descWithEvent: ITargetReferenceAM = {
 			_obj:event,
-			...descriptor
+			...descriptor,
 		};
 
 		const result: IDescriptor = {
@@ -544,7 +544,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			renameMode: false,
 			calculatedReference: descWithEvent,
 			title: GetInfo.generateTitle(originalReference, descWithEvent),
-			descriptorSettings: this.props.settings.initialDescriptorSettings
+			descriptorSettings: this.props.settings.initialDescriptorSettings,
 		};
 
 		//this.props.setLastHistoryID;
@@ -561,7 +561,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				title: "Advice",
 				size: {
 					width: 400,
-				}
+				},
 			});
 			console.log(res);
 		}
@@ -633,10 +633,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			try {
 				descriptors = await photoshop.action.batchPlay(
 					[
-						item.calculatedReference as ActionDescriptor
+						item.calculatedReference as ActionDescriptor,
 					], {
-						synchronousExecution: false
-					}
+						synchronousExecution: false,
+					},
 				);				
 			} catch (e) {
 				NotificationManager.error(e.message,"Replay failed", 5000);
@@ -651,9 +651,9 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					subType: "listenerCategory",
 					content: {
 						filterBy: "off",
-						value: "reply"
-					}
-				}]
+						value: "reply",
+					},
+				}],
 			};
 
 			const result: IDescriptor = {
@@ -668,7 +668,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				renameMode: false,
 				calculatedReference: descriptors,
 				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true),
-				descriptorSettings: this.props.settings.initialDescriptorSettings
+				descriptorSettings: this.props.settings.initialDescriptorSettings,
 			};
 
 			//this.props.setLastHistoryID;

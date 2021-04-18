@@ -15,7 +15,7 @@ export function getName(refs: TReference[]): IGetNameOutput[] {
 			nameParts.push({
 				typeRef: copyRef[0]._ref,
 				typeTitle:getTypeTitle(copyRef[0]._ref),
-				value: getNameProp(copyRef)
+				value: getNameProp(copyRef),
 			});
 		}
 		
@@ -81,15 +81,15 @@ function getNameProp(refs: TReference[]):string|null {
 		_obj: "get",
 		_target: [
 			{
-				"_property": propName
+				"_property": propName,
 			},
-			...refs
-		]
+			...refs,
+		],
 	};
 	const result = photoshop.action.batchPlay([
-		desc
+		desc,
 	], {
-		synchronousExecution: true
+		synchronousExecution: true,
 	}) as Descriptor[];
 	let name = result[0][propName];
 	if (name === undefined || name === null) {

@@ -34,14 +34,13 @@ class AMConverter extends Component<TAMConverter, ISettingsState> {
 			const snippet: string = await AMHackFileFactory.getHackCode();
 			this.props.setConverterInfoAction({
 				isPresetFileInstalled,
-				snippet
+				snippet,
 			});
 		})();
 	}
 	
 	public render(): React.ReactNode {
-		const {setConverterInfoAction,codeSnippet,isFileInstalled} = this.props;
-		//<sp-checkbox onClick={this.onGroupSame} checked={groupSame ? true : null}>
+		const {codeSnippet,isFileInstalled} = this.props;
 		return (
 			<div className="AMConverter">
 				<div>
@@ -86,7 +85,7 @@ class AMConverter extends Component<TAMConverter, ISettingsState> {
 const mapStateToProps = (state: IRootState): IAMConverterProps => {
 	return {
 		codeSnippet: state.inspector.amConvertor.snippet,
-		isFileInstalled: state.inspector.amConvertor.isPresetFileInstalled
+		isFileInstalled: state.inspector.amConvertor.isPresetFileInstalled,
 	};
 };
 

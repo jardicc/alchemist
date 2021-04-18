@@ -27,7 +27,7 @@ export class DocumentExtra extends DocumentNative{
 	public get amReference():IDReference {
 		return ({
 			"_ref": "document",
-			"_id": this._id
+			"_id": this._id,
 		});
 	}
 
@@ -64,15 +64,15 @@ export class DocumentExtra extends DocumentNative{
 				_target: [
 					{
 						"_ref": "guide",
-						"_index": i
+						"_index": i,
 					},
-					this.amReference
-				]
+					this.amReference,
+				],
 			});
 		}
 
 		const desResult = this.action.batchPlay(desc, {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 
 		const pairs = desResult.map((d) => ({
@@ -91,18 +91,18 @@ export class DocumentExtra extends DocumentNative{
 				_obj: "get",
 				_target: [
 					{
-						"_property": "ID"
+						"_property": "ID",
 					},
 					{
 						"_ref": "channel",
-						"_index": i
+						"_index": i,
 					},
-					this.amReference
-				]
+					this.amReference,
+				],
 			});
 		}
 		const desResultIDs = this.action.batchPlay(descID, {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 
 		const descName: ActionDescriptor[] = [];
@@ -111,24 +111,24 @@ export class DocumentExtra extends DocumentNative{
 				_obj: "get",
 				_target: [
 					{
-						"_property": "channelName"
+						"_property": "channelName",
 					},
 					{
 						"_ref": "channel",
-						"_index": i
+						"_index": i,
 					},
-					this.amReference
-				]
+					this.amReference,
+				],
 			});
 		}
 		const desResultNames = this.action.batchPlay(descName, {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 
 		const pairs = desResultIDs.map((d, index) => ({
 			value: d.ID,
 			label: desResultNames[index].channelName,
-			index: index
+			index: index,
 		})).filter(pair => (typeof pair.value === "number"));
 
 		return pairs;
@@ -143,20 +143,20 @@ export class DocumentExtra extends DocumentNative{
 				_target: [
 					{
 						"_ref": "path",
-						"_index": i
+						"_index": i,
 					},
-					this.amReference
-				]
+					this.amReference,
+				],
 			});
 		}
 		const desResult = this.action.batchPlay(desc, {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 
 		let pairs = desResult.map((d) => ({
 			value: d.ID,
 			label: d.pathName,
-			type: d.kind._value
+			type: d.kind._value,
 		}));
 		pairs = pairs.filter(pair => (pair.type === "clippingPathEPS" || pair.type === "normalPath"));
 		//const result = pairs.map(pair => ({value:pair.value,label:pair.label}));
@@ -171,13 +171,13 @@ export class DocumentExtra extends DocumentNative{
 				_obj: "get",
 				_target: [
 					{
-						"_property": property
+						"_property": property,
 					},
-					this.amReference
-				]
-			}
+					this.amReference,
+				],
+			},
 		], {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 		return desc?.[0]?.[property];
 	}
@@ -188,13 +188,13 @@ export class DocumentExtra extends DocumentNative{
 				_obj: "get",
 				_target: [
 					{
-						"_property": property
+						"_property": property,
 					},
-					this.amReference
-				]
-			}
+					this.amReference,
+				],
+			},
 		], {
-			synchronousExecution: false
+			synchronousExecution: false,
 		});
 		return desc?.[0]?.[property];
 	}

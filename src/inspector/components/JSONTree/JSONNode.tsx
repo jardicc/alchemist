@@ -27,7 +27,7 @@ export const JSONNode = ({
 		labelRenderer,
 		nodeType,
 		value,
-		valueRenderer
+		valueRenderer,
 	};
 
 	const nestedNodeProps:INestedNodeProps = {
@@ -35,7 +35,7 @@ export const JSONNode = ({
 		...simpleNodeProps,
 		data: value,
 		protoMode,
-		isCustomNode
+		isCustomNode,
 	};
 
 	switch (nodeType) {
@@ -96,11 +96,11 @@ export const JSONNode = ({
 JSONNode.propTypes = {
 	getItemString: PropTypes.func.isRequired,
 	keyPath: PropTypes.arrayOf(
-		PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+		PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	).isRequired,
 	labelRenderer: PropTypes.func.isRequired,
 	value: PropTypes.any,
 	valueRenderer: PropTypes.func.isRequired,
 	isCustomNode: PropTypes.func.isRequired,
-	protoMode: PropTypes.string
+	protoMode: PropTypes.string,
 };

@@ -92,14 +92,14 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 		if (height && height !== this.state.listHeight) {
 			this.setState({
 				...this.state,
-				listHeight: height
+				listHeight: height,
 			});
 		}
 
 		if (width && width !== this.state.listWidth) {
 			this.setState({
 				...this.state,
-				listWidth: width
+				listWidth: width,
 			});
 		}
 	}
@@ -144,7 +144,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 		//setTimeout(() => {
 		this.setState({
 			...this.state,
-			expanded: false
+			expanded: false,
 		}, () => {
 			if (this.state.expanded) {
 				document.body.classList.add("menuExpanded");			
@@ -160,7 +160,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 
 		this.setState({
 			...this.state,
-			expanded: !this.state.expanded
+			expanded: !this.state.expanded,
 		}, () => {
 			if (this.state.expanded) {
 				document.body.classList.add("menuExpanded");			

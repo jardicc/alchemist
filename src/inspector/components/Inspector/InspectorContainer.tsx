@@ -55,14 +55,14 @@ class Inspector extends React.Component<TInspector, IState> {
 		this.state = {
 			showMessage: false,
 			message: "",
-			link:""
+			link:"",
 		};
 	}
 
 	private closeMessage = () => {
 		this.setState({
 			...this.state,
-			showMessage: false
+			showMessage: false,
 		});
 	}
 
@@ -77,7 +77,7 @@ class Inspector extends React.Component<TInspector, IState> {
 				...this.state,
 				message: data.message,
 				link: data.link,
-				showMessage:true
+				showMessage:true,
 			});
 			console.log("fetch",data);			
 		})();
@@ -151,7 +151,7 @@ const mapStateToProps = (state: IRootState): IInspectorProps => {
 		modeTab: getModeTabID(state),
 		calculatedReference: getActiveDescriptorOriginalReference(state),
 		columnSizesPercentage: [0, 0], //getColumnSizesPercentage(state),
-		fontSizeSettings: getFontSizeSettings(state)
+		fontSizeSettings: getFontSizeSettings(state),
 	};
 };
 

@@ -66,7 +66,7 @@ export class GetInfo {
 		
 		const desc: ITargetReferenceAM = {
 			"_obj": "get",
-			"_target": []
+			"_target": [],
 		};
 		const rootT = desc._target;
 
@@ -92,7 +92,7 @@ export class GetInfo {
 			if (t.type !== "history" && t.type !== "snapshot") {
 				rootT.push({
 					"_ref": "document",
-					"_id": doc.content.value === "active" ? activeID : parseInt(doc.content.value as string)
+					"_id": doc.content.value === "active" ? activeID : parseInt(doc.content.value as string),
 				});
 			}
 		}
@@ -107,7 +107,7 @@ export class GetInfo {
 			) {
 				rootT.push({
 					"_ref": "layer",
-					"_id": layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string)
+					"_id": layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string),
 				});
 			}
 		}
@@ -118,19 +118,19 @@ export class GetInfo {
 				if (typeof actionset?.content?.value === "string") {
 					rootT.push({
 						"_ref": "actionSet",
-						"_id": parseInt(actionset.content.value) // TODO get index based on ID
+						"_id": parseInt(actionset.content.value), // TODO get index based on ID
 					});
 				}
 				if (typeof action?.content?.value === "string") {
 					rootT.push({
 						"_ref": "action",
-						"_id": parseInt(action.content.value)
+						"_id": parseInt(action.content.value),
 					});
 				}
 				if (typeof command?.content?.value === "string" && typeof action?.content?.value === "string") {
 					rootT.push({
 						"_ref": "command",
-						"_index": this.getActionCommandIndexByID(parseInt(command.content.value),parseInt(action.content.value))
+						"_index": this.getActionCommandIndexByID(parseInt(command.content.value),parseInt(action.content.value)),
 					});
 				}
 
@@ -140,7 +140,7 @@ export class GetInfo {
 				rootT.push({
 					"_ref": "application",
 					"_enum": "ordinal",
-					"_value": "targetEnum"
+					"_value": "targetEnum",
 				});
 				break;
 			}
@@ -153,13 +153,13 @@ export class GetInfo {
 					if (typeof activeID === "number") {
 						rootT.push({
 							"_ref": "channel",
-							"_index": activeID
+							"_index": activeID,
 						});						
 					} else {
 						rootT.push({
 							_enum: "channel",
 							_ref: "channel",
-							_value: activeID
+							_value: activeID,
 						});
 					}
 				} else if (Number.isInteger(parseInt(channel.content.value))) {
@@ -174,13 +174,13 @@ export class GetInfo {
 					if (!found) { return null;}
 					rootT.push({
 						"_ref": "channel",
-						"_index": found.index
+						"_index": found.index,
 					});	
 				} else if (typeof channel.content.value === "string") {
 					rootT.push({
 						_enum: "channel",
 						_ref: "channel",
-						_value: channel.content.value
+						_value: channel.content.value,
 					});
 				}
 				break;
@@ -193,17 +193,17 @@ export class GetInfo {
 					rootT.push({
 						_enum: "path",
 						_ref: "path",
-						_value: activeID
+						_value: activeID,
 					});
 				} else if (activeID === "workPathIndex") {
 					rootT.push({
 						"_property": "workPath",
-						"_ref": "path"
+						"_ref": "path",
 					});
 				} else if (typeof path?.content.value === "string") {
 					rootT.push({
 						"_ref": "path",
-						"_id": path?.content.value === "active" ? activeID : parseInt(path?.content.value as string)
+						"_id": path?.content.value === "active" ? activeID : parseInt(path?.content.value as string),
 					});
 				}
 				break;
@@ -213,7 +213,7 @@ export class GetInfo {
 				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "historyState",
-					"_id": history?.content.value === "active" ? activeID : parseInt(history?.content.value as string)
+					"_id": history?.content.value === "active" ? activeID : parseInt(history?.content.value as string),
 				});
 				break;
 			}
@@ -222,14 +222,14 @@ export class GetInfo {
 				if (activeID === null) { return null; }
 				rootT.push({
 					"_ref": "snapshotClass",
-					"_id": snapshot?.content.value === "active" ? activeID : parseInt(snapshot?.content.value as string)
+					"_id": snapshot?.content.value === "active" ? activeID : parseInt(snapshot?.content.value as string),
 				});
 				break;
 			}
 			case "guide": {
 				rootT.push({
 					"_ref": "guide",
-					"_id": parseInt(guide?.content.value as string)
+					"_id": parseInt(guide?.content.value as string),
 				});
 				break;
 			}
@@ -239,7 +239,7 @@ export class GetInfo {
 		// add property when demanded by user
 		if ((property) && property.content.value !== "notSpecified" && property.content.value !== "anySpecified" && typeof property.content.value === "string") {
 			rootT.push({
-				"_property": property.content.value
+				"_property": property.content.value,
 			});
 		}
 
@@ -273,7 +273,7 @@ export class GetInfo {
 			calculatedReference: desc,
 			renameMode: false,
 			title: this.generateTitle(originalRef, desc),
-			descriptorSettings: getInitialState().settings.initialDescriptorSettings
+			descriptorSettings: getInitialState().settings.initialDescriptorSettings,
 		};
 	}
 
@@ -288,11 +288,11 @@ export class GetInfo {
 			"_obj": "get",
 			"_target": [
 				{
-					"_property": "json"
+					"_property": "json",
 				}, {
 					"_ref": "document",
-					"_id": id
-				}
+					"_id": id,
+				},
 			],
 			"expandSmartObjects": true,
 			"getTextStyles": true,
@@ -318,14 +318,14 @@ export class GetInfo {
 			_target: [
 				{
 					"_ref": "historyState",
-					"_property": "currentHistoryState"
-				}
-			]
+					"_property": "currentHistoryState",
+				},
+			],
 		};
 		const result = photoshop.action.batchPlay([
-			desc
+			desc,
 		], {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 		return result[0].count;
 	}
@@ -339,20 +339,20 @@ export class GetInfo {
 				_target: [
 					{
 						"_ref": "historyState",
-						"_index": i
-					}
-				]
+						"_index": i,
+					},
+				],
 			});
 		}
 
 		const desResult = photoshop.action.batchPlay(desc, {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 
 		const pairs = desResult.map((d) => ({
 			value: d.ID,
 			label: d.name,
-			snapshot: !d.auto
+			snapshot: !d.auto,
 		}));
 	
 		return pairs;
@@ -384,18 +384,18 @@ export class GetInfo {
 			_target: [
 				{
 					"_ref": "action",
-					"_id": action._id
+					"_id": action._id,
 				},
 				{
 					"_ref": "actionSet",
-					"_id": action.parent._id
-				}
-			]
+					"_id": action.parent._id,
+				},
+			],
 		};
 		const result = photoshop.action.batchPlay([
-			desc
+			desc,
 		], {
-			synchronousExecution:true
+			synchronousExecution:true,
 		}) as Descriptor[];
 
 		
@@ -407,21 +407,21 @@ export class GetInfo {
 				_target: [
 					{
 						"_ref": "command",
-						"_index": i // get index based on ID
+						"_index": i, // get index based on ID
 					},
 					{
 						"_ref": "action",
-						"_id": action._id
+						"_id": action._id,
 					},
 					{
 						"_ref": "actionSet",
-						"_id": action.parent._id
-					}
-				]
+						"_id": action.parent._id,
+					},
+				],
 			});
 		}
 		const result2 = photoshop.action.batchPlay(desc2, {
-			synchronousExecution:true
+			synchronousExecution:true,
 		}) as Descriptor[];
 		return result2;
 	}
@@ -513,17 +513,17 @@ export class GetInfo {
 				"_obj": "get",
 				"_target": [
 					{
-						"_property": "buildNumber"
+						"_property": "buildNumber",
 					},
 					{
 						"_ref": "application",
 						"_enum": "ordinal",
-						"_value": "targetEnum"
-					}
-				]
-			}
+						"_value": "targetEnum",
+					},
+				],
+			},
 		], {
-			synchronousExecution: true
+			synchronousExecution: true,
 		}) as Descriptor[];
 
 		return result?.[0]?.["buildNumber"] ?? "n/a";
@@ -534,17 +534,17 @@ export class GetInfo {
 			_obj: "get",
 			_target: [
 				{
-					"_property": property
+					"_property": property,
 				},
 				{
 					"_ref": myClass as string,
 					"_enum": "ordinal",
-					"_value": "targetEnum"
-				}
-			]
+					"_value": "targetEnum",
+				},
+			],
 		};
 		const result = await photoshop.action.batchPlay([
-			desc
+			desc,
 		],{});
 		return result[0];
 	}
@@ -554,17 +554,17 @@ export class GetInfo {
 			_obj: "get",
 			_target: [
 				{
-					"_property": "mode"
+					"_property": "mode",
 				},
 				{
 					"_ref": "document",
 					"_enum": "ordinal",
-					"_value": "targetEnum"
-				}
-			]
+					"_value": "targetEnum",
+				},
+			],
 		};
 		const result = await photoshop.action.batchPlay([
-			desc
+			desc,
 		],{});
 		return result[0].mode._value;
 	}

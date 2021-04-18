@@ -13,7 +13,7 @@ export const JSONValueNode = ({
 	keyPath,
 	valueRenderer,
 	value,
-	valueGetter
+	valueGetter,
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }:ISimpleNodeProps&{valueGetter:(value:any)=>any}) => (
 	<li className="value">
@@ -32,14 +32,14 @@ JSONValueNode.propTypes = {
 	nodeType: PropTypes.string.isRequired,
 	labelRenderer: PropTypes.func.isRequired,
 	keyPath: PropTypes.arrayOf(
-		PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+		PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	).isRequired,
 	valueRenderer: PropTypes.func.isRequired,
 	value: PropTypes.any,
-	valueGetter: PropTypes.func
+	valueGetter: PropTypes.func,
 };
 
 JSONValueNode.defaultProps = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	valueGetter: (value:any) => value
+	valueGetter: (value:any) => value,
 };

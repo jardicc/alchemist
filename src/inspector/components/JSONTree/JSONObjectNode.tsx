@@ -26,5 +26,5 @@ export const JSONObjectNode = ({ data, ...props }: INestedNodeProps):JSX.Element
 
 JSONObjectNode.propTypes = {
 	data: PropTypes.object,
-	nodeType: PropTypes.string
+	nodeType: PropTypes.string,
 };

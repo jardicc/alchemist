@@ -62,7 +62,7 @@ export class Settings{
 		}
 		const data = JSON.stringify(descriptors, null, "\t");
 		await file.write(data, {
-			append: false
+			append: false,
 		});
 	}
 
@@ -76,7 +76,7 @@ export class Settings{
 		}
 		const data = JSON.stringify(object, null, "\t");
 		await file.write(data, {
-			append: false
+			append: false,
 		});
 	}
 
@@ -88,10 +88,10 @@ export class Settings{
 		const data = JSON.stringify(object, null, "\t");
 		//console.log(folder);
 		const created = await folder.createFile(Settings.settingsFilename, {
-			overwrite: true
+			overwrite: true,
 		});
 		await created.write(data, {
-			append: false
+			append: false,
 		});
 	}
 
@@ -110,7 +110,7 @@ export class Settings{
 		} catch (e) {
 			console.log("Error - with reading of settings!");
 			await folder.createFile(Settings.settingsFilename, {
-				overwrite: true
+				overwrite: true,
 			});
 			return null;
 		}
@@ -119,7 +119,7 @@ export class Settings{
 	public static async importStateWithDialog(): Promise<any|null>{
 		const files = await localFileSystem.getFileForOpening({
 			types: ["json"],
-			allowMultiple: true
+			allowMultiple: true,
 			//initialLocation: await Settings.settingsFolder()
 		});
 		if (!files || !files.length) {

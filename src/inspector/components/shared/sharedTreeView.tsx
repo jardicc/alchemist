@@ -33,13 +33,13 @@ export const renderPath = (path: TPath, onInspectPath: (path: TPath, mode: "repl
 	const parts: React.ReactNode[] = [
 		<span className="pathItem" key="root" onClick={() => { onInspectPath([], "replace"); }}>
 			<span className="link">root</span>
-		</span>
+		</span>,
 	];
 	for (let i = 0, len = path.length; i < len; i++) {
 		parts.push(
 			<span className="pathItem" key={i} onClick={() => { onInspectPath(path.slice(0, i + 1), "replace"); }}>
 				<span className="link">{path[i]}</span>
-			</span>
+			</span>,
 		);
 	}
 	return parts;

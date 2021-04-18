@@ -152,14 +152,14 @@ const mapStateToProps = (state: IRootState): IGeneratedCodeProps => {
 		selected: getActiveDescriptors(state),
 		autoSelectedUUIDs: getAutoSelectedUUIDs(state),
 		descriptorSettings: getDescriptorOptions(state),
-		viewType: getCodeActiveView(state)
+		viewType: getCodeActiveView(state),
 	};
 };
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IGeneratedCodeDispatch, Record<string, unknown>> = (dispatch):IGeneratedCodeDispatch => {
 	return {
 		onSetOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
-		onSetView:(viewType) => dispatch(setInspectorViewAction("code",viewType))
+		onSetView:(viewType) => dispatch(setInspectorViewAction("code",viewType)),
 	};
 };
 

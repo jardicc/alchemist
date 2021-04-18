@@ -18,7 +18,7 @@ function renderChildNodes(props:any, from?:number, to?:number) {
 		keyPath,
 		postprocessValue,
 		sortObjectKeys,
-		protoMode
+		protoMode,
 	} = props;
 	const childNodes:any = [];
 
@@ -39,7 +39,7 @@ function renderChildNodes(props:any, from?:number, to?:number) {
 					from={entry.from}
 					to={entry.to}
 					renderChildNodes={renderChildNodes}
-				/>
+				/>,
 			);
 		} else {
 			const { key, value } = entry;
@@ -88,7 +88,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		createItemString: PropTypes.func.isRequired,
 		collectionLimit: PropTypes.number,
 		keyPath: PropTypes.arrayOf(
-			PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+			PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		).isRequired,
 		labelRenderer: PropTypes.func.isRequired,
 		shouldExpandNode: PropTypes.func,
@@ -96,7 +96,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		sortObjectKeys: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 		isCircular: PropTypes.bool,
 		expandable: PropTypes.bool,
-		protoMode: PropTypes.string
+		protoMode: PropTypes.string,
 	};
 
 	static defaultProps = {
@@ -104,7 +104,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		circularCache: [],
 		level: 0,
 		expandable: true,
-		protoMode: "none"
+		protoMode: "none",
 	};
 
 	constructor(props:any) {
@@ -177,7 +177,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 			nodeType,
 			data,
 			itemType,
-			createItemString(data, collectionLimit)
+			createItemString(data, collectionLimit),
 		);
 		const stylingArgs = [keyPath, nodeType, expanded, expandable];
 

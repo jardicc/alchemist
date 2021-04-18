@@ -11,7 +11,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 		super(props);
 		this.state = {
 			hasError: false,
-			error:null
+			error:null,
 		};
 	}
     
@@ -20,7 +20,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 		console.log(error);
 		return {
 			hasError: true,
-			error: error
+			error: error,
 		};
 	}
     
@@ -37,12 +37,12 @@ export class ErrorBoundary extends React.Component<any, IState> {
 				color: "white",
 				height: "100vh",
 				display: "flex",
-				flexDirection: "column"
+				flexDirection: "column",
 			};
 
 			const whiteColor: React.CSSProperties = {
 				color: "white",
-				textDecoration:"underline"
+				textDecoration:"underline",
 			};
 
 			const stack: React.CSSProperties = {
@@ -52,7 +52,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 				padding: "1em",
 				fontSize: "1.3em",
 				overflow: "auto",
-				flexGrow: 1
+				flexGrow: 1,
 			};
 			// You can render any custom fallback UI ¯\_(ツ)_/¯
 			return (

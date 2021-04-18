@@ -57,9 +57,9 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 					subType: "listenerCategory",
 					content: {
 						filterBy: "off",
-						value: "dispatch"
-					}
-				}]
+						value: "dispatch",
+					},
+				}],
 			};
 
 			const result: IDescriptor = {
@@ -74,7 +74,7 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 				renameMode: false,
 				calculatedReference: data,
 				title: "Dispatched",
-				descriptorSettings: this.props.settings.initialDescriptorSettings
+				descriptorSettings: this.props.settings.initialDescriptorSettings,
 			};
 
 			//this.props.setLastHistoryID;

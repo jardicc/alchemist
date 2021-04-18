@@ -16,13 +16,13 @@ export const getTreeDom = createSelector([getSelectedDescriptors, getDomPath, ge
 	if ((!selectedDesc.length && !autoSelectedDesc) || mainClass === "listener") {
 		return {
 			ref: null,
-			path: []
+			path: [],
 		};
 	}
 	const ref = {
 		// selected desc or auto selected
 		ref: (selectedDesc?.[0]?.calculatedReference as ITargetReferenceAM)?._target ?? (autoSelectedDesc ?.calculatedReference as ITargetReferenceAM)?._target,
-		path: domPath
+		path: domPath,
 	};
 	return ref;
 });

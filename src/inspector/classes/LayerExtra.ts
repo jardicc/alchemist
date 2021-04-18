@@ -16,12 +16,12 @@ export class LayerExtra extends LayerNative{
 		return ([
 			{
 				"_ref": "layer",
-				"_id": this._id
+				"_id": this._id,
 			},
 			{
 				"_ref": "document",
-				"_id": this._docId
-			}
+				"_id": this._docId,
+			},
 		]);
 	}
 

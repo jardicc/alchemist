@@ -149,7 +149,7 @@ const mapDispatchToProps: MapDispatchToPropsFunction<IFooterDispatch, IOwn> = (d
 		onClearView: (keep) => dispatch(clearViewAction(keep)),
 		importItems:(items,kind)=>dispatch(importItemsAction(items,kind)),
 		setWholeState: (state) => dispatch(importStateAction(state)),
-		onClearNonExistent:(items)=>dispatch(importItemsAction(items,"replace"))
+		onClearNonExistent:(items)=>dispatch(importItemsAction(items,"replace")),
 	};
 };
 

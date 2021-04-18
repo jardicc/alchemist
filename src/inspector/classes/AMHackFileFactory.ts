@@ -84,10 +84,10 @@ app.playbackDisplayDialogs;`;
 		const folder = await AMHackFileFactory.settingsFolder();
 		console.log(folder);
 		const created = await folder.createFile(AMHackFileFactory.includeHackFileName, {
-			overwrite: true
+			overwrite: true,
 		});
 		await created.write(AMHackFileFactory.hackContent, {
-			append: false
+			append: false,
 		});
 		console.log("saved");
 	}

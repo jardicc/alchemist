@@ -23,5 +23,5 @@ export const JSONArrayNode = ({ data, ...props }:INestedNodeProps):JSX.Element =
 );
 
 JSONArrayNode.propTypes = {
-	data: PropTypes.array
+	data: PropTypes.array,
 };

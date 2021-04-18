@@ -9,7 +9,7 @@ export const guessOrinalReference = (refAM: TReference[]): ITargetReference => {
 
 	const result: ITargetReference = {
 		type,
-		data: generateData(type,r)
+		data: generateData(type,r),
 	};
 
 	return result;

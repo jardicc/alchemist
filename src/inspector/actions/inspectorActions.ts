@@ -262,21 +262,21 @@ export interface ISetFontSizeAction{
 export function setFontSizeAction(size: TFontSizeSettings):ISetFontSizeAction {
 	return {
 		type: "SET_FONT_SIZE",
-		payload: size
+		payload: size,
 	};
 }
 
 export function setConverterInfoAction(info: Partial<IAMCoverter>): ISetConverterInfoAction{
 	return {
 		type: "SET_CONVERTER",
-		payload: info
+		payload: info,
 	};
 }
 
 export function setDontShowMarketplaceInfoAction(enabled: boolean): IDontShowMarketplaceInfoAction{
 	return {
 		type: "DONT_SHOW_MARKETPLACE_INFO_ACTION",
-		payload: enabled
+		payload: enabled,
 	};
 }
 
@@ -285,22 +285,22 @@ export function setAutoExpandLevelAction(part: "DOM" | "content" | "diff",level:
 		type: "SET_AUTOEXPAND_LEVEL",
 		payload: {
 			level,
-			part
-		}
+			part,
+		},
 	};
 }
 
 export function setRecordRawAction(value: boolean): ISetRecordRawAction{
 	return {
 		type: "SET_RECORD_RAW",
-		payload: value
+		payload: value,
 	};
 }
 
 export function setMaximumItems(value: string):ISetMaximumItemsAction {
 	return {
 		type: "SET_MAXIMUM_ITEMS",
-		payload: value
+		payload: value,
 		
 	};
 }
@@ -308,7 +308,7 @@ export function setMaximumItems(value: string):ISetMaximumItemsAction {
 export function setColumnSizeAction(px: number): ISetColumnSizeAction{
 	return {
 		type: "SET_COLUMN_SIZE_ACTION",
-		payload: px
+		payload: px,
 	};
 }
 
@@ -317,8 +317,8 @@ export function setInspectorViewAction(inspectorType:"content" | "diff" | "code"
 		type: "SET_INSPECTOR_VIEW_ACTION",
 		payload: {
 			inspectorType,
-			viewType
-		}
+			viewType,
+		},
 	};
 }
 
@@ -327,8 +327,8 @@ export function setDescriptorOptionsAction(uuids:string[]|"default",options: Com
 		type: "SET_DESCRIPTOR_OPTIONS",
 		payload: {
 			uuids,
-			options
-		}
+			options,
+		},
 	};
 }
 
@@ -337,8 +337,8 @@ export function setRenameModeAction(uuid:string,on:boolean):ISetRenameModeAction
 		type: "SET_RENAME_MODE",
 		payload: {
 			on,
-			uuid
-		}
+			uuid,
+		},
 	};
 }
 export function renameDescriptorAction(uuid:string,name:string):IRenameDescriptorAction{
@@ -346,35 +346,35 @@ export function renameDescriptorAction(uuid:string,name:string):IRenameDescripto
 		type: "RENAME_DESCRIPTOR",
 		payload: {
 			name,
-			uuid
-		}
+			uuid,
+		},
 	};
 }
 
 export function setDispatcherValueAction(value:string): ISetDispatcherValueAction{
 	return {
 		type: "SET_DISPATCHER_VALUE",
-		payload:value
+		payload:value,
 	};
 }
 
 export function replaceWholeStateAction(state: IInspectorState):IReplaceWholeState {
 	return {
 		type: "REPLACE_WHOLE_STATE",
-		payload: state
+		payload: state,
 	};
 }
 
 export function setListenerAction(enabled:boolean):IListenerAction{
 	return{
 		type:"SET_LISTENER",
-		payload:enabled
+		payload:enabled,
 	};
 }
 export function setAutoInspectorAction(enabled:boolean):IAutoInspectorAction{
 	return{
 		type:"SET_AUTO_INSPECTOR",
-		payload:enabled
+		payload:enabled,
 	};
 }
 
@@ -382,8 +382,8 @@ export function setExpandedPathAction(type: ITreeDataTabs,path: TPath, expand: b
 	return {
 		type: "SET_EXPANDED_PATH",
 		payload: {
-			type,path, expand, recursive,data
-		}
+			type,path, expand, recursive,data,
+		},
 	};
 }
 
@@ -392,8 +392,8 @@ export function setInspectorPathDomAction(path:string[],mode:"replace"|"add"):IS
 		type: "SET_INSPECTOR_PATH_DOM",
 		payload: {
 			path,
-			mode
-		}
+			mode,
+		},
 	};
 }
 export function setInspectorPathDiffAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDiffAction{
@@ -401,8 +401,8 @@ export function setInspectorPathDiffAction(path:string[],mode:"replace"|"add"):I
 		type: "SET_INSPECTOR_PATH_DIFF",
 		payload: {
 			path,
-			mode
-		}
+			mode,
+		},
 	};
 }
 export function setInspectorPathContentAction(path:string[],mode:"replace"|"add"):ISetInspectorPathContentAction{
@@ -410,71 +410,71 @@ export function setInspectorPathContentAction(path:string[],mode:"replace"|"add"
 		type: "SET_INSPECTOR_PATH_CONTENT",
 		payload: {
 			path,
-			mode
-		}
+			mode,
+		},
 	};
 }
 export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main",state: TState): ISetFilterStateAction {
 	return {
 		type: "SET_FILTER_STATE",
 		payload: {
-			type, subType, state
-		}
+			type, subType, state,
+		},
 	};
 }
 export function setMainTabAction(id:TActiveSection):ISetMainTab{
 	return {
 		type: "SET_MAIN_TAB",
-		payload: id
+		payload: id,
 	};
 }
 export function setModeTabAction(id:TActiveInspectorTab):ISetModeTab{
 	return {
 		type: "SET_MODE_TAB",
-		payload: id
+		payload: id,
 	};
 }
 export function setTargetReferenceAction(arg:ITargetReference):ISetTargetReference{
 	return {
 		type: "SET_TARGET_REFERENCE",
-		payload: arg
+		payload: arg,
 	};
 }
 export function addDescriptorAction(arg:IDescriptor):IAddDescriptorAction{
 	return {
 		type: "ADD_DESCRIPTOR",
-		payload: arg
+		payload: arg,
 	};
 }
 export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string): ISelectDescriptor {
 	return {
 		type: "SELECT_DESCRIPTOR",
-		payload: {operation,uuid}
+		payload: {operation,uuid},
 	};
 }
 export function setSelectedReferenceTypeAction(type: TTargetReference): ISetSelectedReferenceTypeAction {
 	return {
 		type: "SET_SELECTED_REFERENCE_TYPE_ACTION",
-		payload: type
+		payload: type,
 	};
 }
 
 export function clearViewAction(keep:boolean):IClearViewAction{
 	return{
 		type: "CLEAR_VIEW",
-		payload: {keep}
+		payload: {keep},
 	};
 }
 export function clearAction():IClearAction{
 	return{
 		type: "CLEAR",
-		payload: null
+		payload: null,
 	};
 }
 export function clearNonExistentAction():IClearNonExistentAction{
 	return{
 		type: "CLEAR_NON_EXISTENT",
-		payload: null
+		payload: null,
 	};
 }
 export function lockDescAction(lock:boolean,uuids:string[]):ILockDescAction{
@@ -482,8 +482,8 @@ export function lockDescAction(lock:boolean,uuids:string[]):ILockDescAction{
 		type: "LOCK_DESC",
 		payload: {
 			uuids,
-			lock
-		}
+			lock,
+		},
 	};
 }
 export function pinDescAction(pin:boolean,uuids:string[]):IPinDescAction{
@@ -491,50 +491,50 @@ export function pinDescAction(pin:boolean,uuids:string[]):IPinDescAction{
 		type: "PIN_DESC",
 		payload: {
 			uuids,
-			pin
-		}
+			pin,
+		},
 	};
 }
 export function removeDescAction(uuids:string[]):IRemoveDescAction{
 	return{
 		type: "REMOVE_DESC",
-		payload: uuids
+		payload: uuids,
 	};
 }
 export function importStateAction(state:IRootState):IImportStateAction{
 	return{
 		type: "IMPORT_STATE",
-		payload: state
+		payload: state,
 	};
 }
 export function importItemsAction(items:IDescriptor[],kind:TImportItems):IImportItemsAction{
 	return{
 		type: "IMPORT_ITEMS",
-		payload: {items,kind}
+		payload: {items,kind},
 	};
 }
 export function importReplaceAction():IImportReplaceAction{
 	return{
 		type: "IMPORT_REPLACE",
-		payload: null
+		payload: null,
 	};
 }
 export function exportSelectedDescAction():IExportSelectedDescAction{
 	return{
 		type: "EXPORT_SELECTED_DESC",
-		payload: null
+		payload: null,
 	};
 }
 export function exportAllDescAction():IExportAllDescAction{
 	return{
 		type: "EXPORT_ALL_DESC",
-		payload: null
+		payload: null,
 	};
 }
 export function exportStateAction():IExportStateAction{
 	return{
 		type: "EXPORT_STATE",
-		payload: null
+		payload: null,
 	};
 }
 
@@ -543,34 +543,34 @@ export function exportStateAction():IExportStateAction{
 export function setSearchTermAction(str:string|null):ISetSearchTermAction{
 	return{
 		type: "SET_SEARCH_TERM_ACTION",
-		payload: str
+		payload: str,
 	};
 }
 
 export function setFilterTypeAction(filterType:TFilterEvents): ISetFilterType{
 	return {
 		type: "SET_FILTER_TYPE",
-		payload:filterType
+		payload:filterType,
 	};
 }
 
 export function setIncludeAction(arr:string[]):ISetIncludeAction{
 	return{
 		type: "SET_INCLUDE_ACTION",
-		payload:arr
+		payload:arr,
 	};
 }
 export function setExcludeAction(arr:string[]):ISetExcludeAction{
 	return{
 		type: "SET_EXCLUDE_ACTION",
-		payload:arr
+		payload:arr,
 	};
 }
 
 export function groupSameAction(enabled: boolean):IGroupSameAction {
 	return {
 		type: "GROUP_SAME_ACTION",
-		payload: enabled
+		payload: enabled,
 	};
 }
 
@@ -578,8 +578,8 @@ export function filterEventNameAction(eventName:string, kind:"include"|"exclude"
 	return {
 		type: "FILTER_EVENT_NAME_ACTION",
 		payload: {
-			eventName,kind,operation
-		}
+			eventName,kind,operation,
+		},
 	};
 }
 

@@ -16,176 +16,176 @@ export function getInitialState(): IInspectorState {
 				data: [
 					{
 						subType: "listenerCategory",
-						content:{value:"notSpecified",filterBy:"off"}
-					}
-				]
+						content:{value:"notSpecified",filterBy:"off"},
+					},
+				],
 			},
 			{
 				type: "application",
 				data: [
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "customDescriptor",
 				data: [
 					{
 						subType: "category",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "history",
 				data: [
 					{
 						subType: "document",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "history",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "snapshot",
 				data: [
 					{
 						subType: "document",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "snapshot",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "layer",
 				data: [
 					{
 						subType: "document",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "layer",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "path",
 				data: [
 					{
 						subType: "document",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "path",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "layer",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "channel",
 				data: [
 					{
 						subType: "document",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "channel",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "layer",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "document",
 				data: [
 					{
 						subType: "document",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "guide",
 				data: [
 					{
 						subType: "document",
-						content: { value: "active", filterBy: "off" }
+						content: { value: "active", filterBy: "off" },
 					},
 					{
 						subType: "guide",
-						content: { value: "", filterBy: "off" }
+						content: { value: "", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "action",
 				data: [
 					{
 						subType: "actionset",
-						content: { value: "", filterBy: "off" }
+						content: { value: "", filterBy: "off" },
 					},
 					{
 						subType: "action",
-						content: { value: "", filterBy: "off" }
+						content: { value: "", filterBy: "off" },
 					},
 					{
 						subType: "command",
-						content: { value: "", filterBy: "off" }
+						content: { value: "", filterBy: "off" },
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" }
-					}
-				]
+						content: { value: "notSpecified", filterBy: "off" },
+					},
+				],
 			},
 			{
 				type: "generator",
-				data: []
-			}
+				data: [],
+			},
 		],
 		settings: {
 			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
@@ -199,7 +199,7 @@ export function getInitialState(): IInspectorState {
 				"toolModalStateChanged",
 				"invokeCommand",
 				"modalStateChanged",
-				"historyStateChanged"
+				"historyStateChanged",
 			],
 			listenerInclude: [],
 			lastHistoryID:-1,
@@ -336,7 +336,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "pixelScaleFactorList", stringID: "pixelScaleFactorList", type: "hidden" },
 						{ title: "recentFileEntries", stringID: "recentFileEntries", type: "hidden" },
 						{ title: "recentlyUsedCCLibrariesTemplateElements", stringID: "recentlyUsedCCLibrariesTemplateElements", type: "hidden" },
-					]
+					],
 				},
 				{
 					type: "history",
@@ -348,7 +348,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "historyBrushSource", stringID: "historyBrushSource", type: "default" },
 						{ title: "itemIndex", stringID: "itemIndex", type: "default" },
 						{ title: "name", stringID: "name", type: "default" },
-					]
+					],
 				},
 				{
 					type: "snapshot",
@@ -360,7 +360,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "historyBrushSource", stringID: "historyBrushSource", type: "default" },
 						{ title: "itemIndex", stringID: "itemIndex", type: "default" },
 						{ title: "name", stringID: "name", type: "default" },
-					]
+					],
 				},
 				{
 					type: "layer",
@@ -430,7 +430,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "proportionalScaling", stringID: "proportionalScaling", type: "hidden" },
 						{ title: "videoLayer", stringID: "videoLayer", type: "hidden" },
 						{ title: "XMPMetadataAsUTF8", stringID: "XMPMetadataAsUTF8", type: "hidden" },
-					]
+					],
 				},
 				{
 					type: "path",
@@ -443,7 +443,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "pathContents", stringID: "pathContents", type: "default" },
 						{ title: "pathName", stringID: "pathName", type: "default" },
 						{ title: "targetPath", stringID: "targetPath", type: "default" },
-					]
+					],
 				},
 				{
 					type: "channel",
@@ -455,7 +455,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "histogram", stringID: "histogram", type: "default" },
 						{ title: "itemIndex", stringID: "itemIndex", type: "default" },
 						{ title: "visible", stringID: "visible", type: "default" },
-					]
+					],
 				},
 				{
 					type: "document",
@@ -527,7 +527,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "printSettings", stringID: "printSettings", type: "hidden" },
 						{ title: "rulerPoints", stringID: "rulerPoints", type: "hidden" },
 						{ title: "selection", stringID: "selection", type: "hidden" },
-					]
+					],
 				},
 				{
 					type: "guide",
@@ -539,7 +539,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "orientation", stringID: "orientation", type: "default" },
 						{ title: "position", stringID: "position", type: "default" },
 						{ title: "layerID", stringID: "layerID", type: "default" },
-					]
+					],
 				},
 				{
 					type: "action",
@@ -551,7 +551,7 @@ export function getInitialState(): IInspectorState {
 						{ title: "numberOfChildren", stringID: "numberOfChildren", type: "default" },
 						{ title: "parentIndex", stringID: "parentIndex", type: "default" },
 						{ title: "parentName", stringID: "parentName", type: "default" },
-					]
+					],
 				},
 			],
 			maximumItems: 150,
@@ -559,8 +559,8 @@ export function getInitialState(): IInspectorState {
 			initialDescriptorSettings: {
 				dialogOptions:"dontDisplay",
 				modalBehavior: "fail",
-				synchronousExecution: false
-			}
+				synchronousExecution: false,
+			},
 		},
 		inspector: {
 			activeTab: "content",
@@ -568,34 +568,34 @@ export function getInitialState(): IInspectorState {
 				viewType: "tree",
 				treePath: [],
 				autoExpandLevels:0,
-				expandedTree:[]
+				expandedTree:[],
 			},
 			difference: {
 				viewType: "tree",
 				treePath: [],
 				autoExpandLevels:0,
-				expandedTree:[]
+				expandedTree:[],
 			},
 			dom: {
 				treePath: [],
 				autoExpandLevels:0,
-				expandedTree:[]
+				expandedTree:[],
 			},
 			code: {
-				viewType: "generated"
+				viewType: "generated",
 			},
 			info: {
 				showOptionalDocumentReference: true,
-			}
+			},
 		},
 		amConvertor: {
 			isPresetFileInstalled: false,
-			snippet:"n/a"
+			snippet:"n/a",
 		},
 		descriptors: [
 		],
 		dispatcher: {
-			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nbatchPlay([{"_obj": "invert"}],{});`}]
-		}
+			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nbatchPlay([{"_obj": "invert"}],{});`}],
+		},
 	};
 }

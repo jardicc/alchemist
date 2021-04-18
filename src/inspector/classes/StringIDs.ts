@@ -6723,5 +6723,5 @@ export const stringIDs = [
 	"zoomOut",
 	"ZOOMTOOL",
 	"zoomTool",
-	"zoomWithScrollWheel"
+	"zoomWithScrollWheel",
 ];

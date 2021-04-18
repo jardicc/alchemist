@@ -40,7 +40,7 @@ export const getActiveTargetReferenceForAM = createSelector([getTargetReference,
 	if (!result) { return null; }
 	const newRes = {
 		...result,
-		data: result.data.filter(ref => ref.content.value !== "")
+		data: result.data.filter(ref => ref.content.value !== ""),
 	};
 	return (newRes || null);
 });
@@ -100,11 +100,11 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 	if (activeRefFilter?.type === "listener") {
 		if (settings.listenerFilterType === "exclude" && settings.listenerExclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				!settings.listenerExclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim()))
+				!settings.listenerExclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim())),
 			);
 		} else if (settings.listenerFilterType === "include" && settings.listenerInclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				settings.listenerInclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim()))
+				settings.listenerInclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim())),
 			);
 		}
 	}

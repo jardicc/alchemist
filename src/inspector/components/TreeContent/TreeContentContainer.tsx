@@ -112,7 +112,7 @@ const mapStateToProps = (state: IRootState): ITreeContentProps => {
 		expandedKeys: getContentExpandedNodes(state),
 		descriptorContent: getActiveDescriptorContent(state),
 		viewType: getContentActiveView(state),
-		autoExpandLevels: getContentExpandLevel(state)
+		autoExpandLevels: getContentExpandLevel(state),
 	};
 };
 
@@ -121,7 +121,7 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Recor
 		onInspectPath: (path, mode) => dispatch(setInspectorPathContentAction(path, mode)),
 		onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("content", path, expand, recursive, data)),
 		onSetView: (viewType) => dispatch(setInspectorViewAction("content", viewType)),
-		onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("content", level))
+		onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("content", level)),
 	};
 };
 

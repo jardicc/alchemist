@@ -31,7 +31,7 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 		if (data.descriptorSettings.dialogOptions) {
 			data = cloneDeep(data);
 			data.calculatedReference._options = {
-				dialogOptions: data.descriptorSettings.dialogOptions
+				dialogOptions: data.descriptorSettings.dialogOptions,
 			} as IDescriptorSettings;
 		}
 		return data.calculatedReference;
@@ -116,7 +116,7 @@ export const getDescriptorOptions = createSelector([getActiveDescriptors, getAut
 	const res: IDescriptorSettings = {
 		dialogOptions: getValue(desc.map(item=>item.descriptorSettings.dialogOptions)),
 		modalBehavior: getValue(desc.map(item=>item.descriptorSettings.modalBehavior)),
-		synchronousExecution: getValue(desc.map(item=>item.descriptorSettings.synchronousExecution))
+		synchronousExecution: getValue(desc.map(item=>item.descriptorSettings.synchronousExecution)),
 	};
 
 	return res;

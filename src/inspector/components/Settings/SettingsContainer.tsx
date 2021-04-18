@@ -33,7 +33,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 		this.state = {
 			maxItemsTempValue: this.props.settings.maximumItems.toString(),
-			maxItemsFocus: false
+			maxItemsFocus: false,
 		};
 	}
 
@@ -41,7 +41,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		this.setState({
 			...this.state,
 			maxItemsTempValue: value,
-			maxItemsFocus: focus
+			maxItemsFocus: focus,
 		});
 	}
 	
@@ -53,7 +53,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 			{ label: "Default", val: "size-default" },
 			{ label: "Bigger", val: "size-bigger" },
 			{ label: "Big", val: "size-big" },
-			{ label: "You must be joking", val: "size-youMustBeJoking" }
+			{ label: "You must be joking", val: "size-youMustBeJoking" },
 		];
 		return (
 			<div className="Settings">
@@ -107,7 +107,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 const mapStateToProps = (state: IRootState): ISettingsProps => {
 	return {
-		settings: getInspectorSettings(state)
+		settings: getInspectorSettings(state),
 	};
 };
 
@@ -115,7 +115,7 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ISettingsDispatch, Record<s
 	return {
 		onSetRecordRaw: (value) => dispatch(setRecordRawAction(value)),
 		onSetMaximumItems: (value) => dispatch(setMaximumItems(value)),
-		onSetFontSize:(value)=>dispatch(setFontSizeAction(value))
+		onSetFontSize:(value)=>dispatch(setFontSizeAction(value)),
 	};
 };
 

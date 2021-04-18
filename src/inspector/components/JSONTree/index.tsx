@@ -35,11 +35,11 @@ export class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
 		hideRoot: PropTypes.bool,
 		theme: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 		keyPath: PropTypes.arrayOf(
-			PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+			PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		),
 		postprocessValue: PropTypes.func,
 		sortObjectKeys: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-		protoMode: PropTypes.string
+		protoMode: PropTypes.string,
 	};
 
 	static defaultProps = {
@@ -52,7 +52,7 @@ export class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
 		postprocessValue: identity,
 		isCustomNode: noCustomNode,
 		collectionLimit: 50,
-		protoMode: "none"
+		protoMode: "none",
 	};
 
 	constructor(props:IDefSettings) {
