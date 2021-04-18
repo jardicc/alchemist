@@ -7,7 +7,7 @@ import { ISimpleNodeProps } from "./types";
  * Renders simple values (eg. strings, numbers, booleans, etc)
  */
 
-const JSONValueNode = ({
+export const JSONValueNode = ({
 	nodeType,
 	labelRenderer,
 	keyPath,
@@ -43,5 +43,3 @@ JSONValueNode.defaultProps = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	valueGetter: (value:any) => value
 };
-
-export default JSONValueNode;

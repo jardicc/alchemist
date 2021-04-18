@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {JSONArrow} from "./JSONArrow";
 import { IItemRange, IItemState } from "./types";
 
-export default class ItemRange extends React.Component<IItemRange,IItemState> {
+export class ItemRange extends React.Component<IItemRange,IItemState> {
 	static propTypes = {
 		from: PropTypes.number.isRequired,
 		to: PropTypes.number.isRequired,

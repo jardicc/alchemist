@@ -24,7 +24,7 @@ const createItemString = (data: any, limit: number) => {
 };
 
 // Configures <JSONNestedNode> to render an iterable
-export default function JSONIterableNode({ ...props }:INestedNodeProps):JSX.Element {
+export function JSONIterableNode({ ...props }:INestedNodeProps):JSX.Element {
 	return (
 		<JSONNestedNode
 			{...props}

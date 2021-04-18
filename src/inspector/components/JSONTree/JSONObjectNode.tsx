@@ -12,7 +12,7 @@ function createItemString(data:any) {
 }
 
 // Configures <JSONNestedNode> to render an Object
-const JSONObjectNode = ({ data, ...props }: INestedNodeProps):JSX.Element => {
+export const JSONObjectNode = ({ data, ...props }: INestedNodeProps):JSX.Element => {
 	return (
 		<JSONNestedNode
 			{...props}
@@ -28,5 +28,3 @@ JSONObjectNode.propTypes = {
 	data: PropTypes.object,
 	nodeType: PropTypes.string
 };
-
-export default JSONObjectNode;

@@ -7,7 +7,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import JSONNode from "./JSONNode";
+import {JSONNode} from "./JSONNode";
 import "./JSONTree.less";
 import { IDefSettings, TShouldExpandNode, TGetItemString, TValueRenderer, TLabelRenderer, TIsCustomNode } from "./types";
 
@@ -29,7 +29,7 @@ interface ITreeContentState{
 	
 }
 
-export default class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
+export class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
 	static propTypes = {
 		data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 		hideRoot: PropTypes.bool,

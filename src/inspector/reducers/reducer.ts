@@ -9,7 +9,6 @@ import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
-import { TGeneratedCode } from "../components/GeneratedCode/GeneratedCode";
 import { clone, cloneDeep } from "lodash";
 
 

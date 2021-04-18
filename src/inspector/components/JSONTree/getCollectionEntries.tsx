@@ -98,7 +98,7 @@ function getRanges(from:number, to:number, limit:number) {
 	return ranges;
 }
 
-export default function getCollectionEntries(
+export function getCollectionEntries(
 	protoMode:TProtoMode,
 	type:TNodeType,
 	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

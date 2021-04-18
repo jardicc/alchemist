@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import objType from "./objType";
-import JSONObjectNode from "./JSONObjectNode";
-import JSONArrayNode from "./JSONArrayNode";
-import JSONIterableNode from "./JSONIterableNode";
-import JSONValueNode from "./JSONValueNode";
+import {objType} from "./objType";
+import {JSONObjectNode} from "./JSONObjectNode";
+import {JSONArrayNode} from "./JSONArrayNode";
+import {JSONIterableNode} from "./JSONIterableNode";
+import {JSONValueNode} from "./JSONValueNode";
 import { IDefSettings, ISimpleNodeProps, INestedNodeProps, TCircularCache } from "./types";
 
-const JSONNode = ({
+export const JSONNode = ({
 	getItemString,
 	keyPath,
 	labelRenderer,
@@ -104,5 +104,3 @@ JSONNode.propTypes = {
 	isCustomNode: PropTypes.func.isRequired,
 	protoMode: PropTypes.string
 };
-
-export default JSONNode;

@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {JSONArrow} from "./JSONArrow";
-import getCollectionEntries from "./getCollectionEntries";
-import JSONNode from "./JSONNode";
-import ItemRange from "./ItemRange";
+import {getCollectionEntries} from "./getCollectionEntries";
+import {JSONNode} from "./JSONNode";
+import {ItemRange} from "./ItemRange";
 
 /**
  * Renders nested values (eg. objects, arrays, lists, etc.)

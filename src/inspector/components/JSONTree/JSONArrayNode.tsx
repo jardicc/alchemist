@@ -11,7 +11,7 @@ function createItemString(data:any) {
 }
 
 // Configures <JSONNestedNode> to render an Array
-const JSONArrayNode = ({ data, ...props }:INestedNodeProps):JSX.Element => (
+export const JSONArrayNode = ({ data, ...props }:INestedNodeProps):JSX.Element => (
 	<JSONNestedNode
 		{...props}
 		data={data}
@@ -25,5 +25,3 @@ const JSONArrayNode = ({ data, ...props }:INestedNodeProps):JSX.Element => (
 JSONArrayNode.propTypes = {
 	data: PropTypes.array
 };
-
-export default JSONArrayNode;
