@@ -2,42 +2,52 @@
 module.exports = {
 	"env": {
 		"browser": true,
-		"es2020": true
+		"es2020": true,
 	},
 	"extends": [
 		"eslint:recommended",
 		"plugin:react/recommended",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:@typescript-eslint/recommended",
 	],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaFeatures": {
-			"jsx": true
+			"jsx": true,
 		},
 		"ecmaVersion": 11,
-		"sourceType": "module"
+		"sourceType": "module",
 	},
 	"plugins": [
 		"react",
-		"@typescript-eslint"
+		"@typescript-eslint",
 	],
 	"rules": {
+		"no-unreachable-loop": [
+			"error",	
+		],
+		"no-promise-executor-return": [
+			"error",	
+		],
 		"indent": [
 			"error",
 			"tab",
-			{ "SwitchCase": 1 }
+			{ "SwitchCase": 1},
 		],
 		"linebreak-style": [
 			"error",
-			"windows"
+			"windows",
 		],
 		"quotes": [
 			"error",
-			"double"
+			"double",
+		],
+		"comma-dangle": [
+			"error",
+			"always-multiline",
 		],
 		"semi": [
 			"error",
-			"always"
-		]
-	}
+			"always",
+		],
+	},
 };
