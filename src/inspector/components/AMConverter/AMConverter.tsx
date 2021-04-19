@@ -64,7 +64,7 @@ class AMConverter extends Component<TAMConverter, ISettingsState> {
 							<span>Status: </span><span className={(isFileInstalled?"isInstalled":"isNotInstalled")+" status"}>{isFileInstalled ? "File is installed" : "File is NOT installed"}</span>
 						</p>
 						
-						<span>If script file is not installed please create this file: </span><pre>[rootFolderOfPhotoshop]/Scripts/Presets/Alchemist-Listener.jsx</pre>
+						<span>If script file is not installed please create this file: </span><pre>[rootFolderOfPhotoshop]/Presets/Scripts/Alchemist-Listener.jsx</pre>
 						
 						
 					</div>
