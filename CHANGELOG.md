@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+- min. required PS version hotfix
+- code cleanup
+
 ## 1.2.0
 - improvement: add explaining labels to the dialog modes https://github.com/jardicc/alchemist/issues/8
 - improvement: option to choose font size: https://github.com/jardicc/alchemist/issues/5
