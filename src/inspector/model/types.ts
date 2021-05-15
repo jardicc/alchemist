@@ -149,25 +149,26 @@ export type TAllReferenceSubtypes = ICategory|IProperty | ICustomDescriptor | IH
 
 /////
 
-export interface ISettings{
-	fontSize:TFontSizeSettings
-	recordRawData:boolean
+export interface ISettings {
+	fontSize: TFontSizeSettings
+	recordRawData: boolean
 	selectReferenceBeforeGet: boolean
 	autoUpdateInspector: boolean
-	groupDescriptors: "none"|"strict"
-	searchTerm:string|null
-	listenerFilterType:TFilterEvents
-	listenerExclude:string[]
-	listenerInclude:string[]
-	lastHistoryID:number
+	groupDescriptors: "none" | "strict"
+	searchTerm: string | null
+	listenerFilterType: TFilterEvents
+	listenerExclude: string[]
+	listenerInclude: string[]
+	lastHistoryID: number
 	autoUpdateListener: boolean
 	lastSelectedItem: string | null
-	dontShowMarketplaceInfo:boolean
-	activeDescriptors:string[]
-	properties:IPropertySettings[]
+	dontShowMarketplaceInfo: boolean
+	activeDescriptors: string[]
+	properties: IPropertySettings[]
 	maximumItems: number
 	leftColumnWidthPx: number
-	initialDescriptorSettings:IDescriptorSettings
+	initialDescriptorSettings: IDescriptorSettings
+	neverRecordActionNames:string[]
 }
 
 export interface IDescriptorSettings {

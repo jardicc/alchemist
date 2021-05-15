@@ -208,7 +208,8 @@ export function getInitialState(): IInspectorState {
 			autoUpdateListener: false,
 			lastSelectedItem: null,
 			dontShowMarketplaceInfo:false,
-			activeDescriptors: [],			
+			activeDescriptors: [],
+			neverRecordActionNames:["idle"],
 			properties: [
 				{
 					type: "application",

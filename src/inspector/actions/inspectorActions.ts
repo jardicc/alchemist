@@ -259,6 +259,18 @@ export interface ISetFontSizeAction{
 	payload: TFontSizeSettings
 }
 
+export interface ISetNeverRecordActionNamesAction{
+	type: "SET_NEVER_RECORD_ACTION_NAMES_ACTION",
+	payload: string[]
+}
+
+export function setNeverRecordActionNamesAction(value: string):ISetNeverRecordActionNamesAction {
+	return {
+		type: "SET_NEVER_RECORD_ACTION_NAMES_ACTION",
+		payload: value.split(/[\n\r]/g).map(v => v.trim()),
+	};
+}
+
 export function setFontSizeAction(size: TFontSizeSettings):ISetFontSizeAction {
 	return {
 		type: "SET_FONT_SIZE",
@@ -626,4 +638,5 @@ export type TActions = ISetMainTab |
 	ISetMaximumItemsAction |
 	IDontShowMarketplaceInfoAction |
 	ISetConverterInfoAction |
-	ISetFontSizeAction
+	ISetFontSizeAction |
+	ISetNeverRecordActionNamesAction

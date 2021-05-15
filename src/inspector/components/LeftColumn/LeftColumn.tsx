@@ -513,6 +513,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	 * Listener to be attached to all Photoshop notifications.
 	 */
 	public listener = async (event: string, descriptor: any): Promise<void> => {
+		if (this.props.settings.neverRecordActionNames.includes(event)) {
+			return;
+		}
+
 		// delete because it will be added as a first later
 		delete descriptor._obj;
 

@@ -537,6 +537,12 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
+		case "SET_NEVER_RECORD_ACTION_NAMES_ACTION": {
+			state = produce(state, draft => {
+				draft.settings.neverRecordActionNames = action.payload;
+			});
+			break;
+		}
 	}
 	Settings.saveSettings(state);
 	return state;
