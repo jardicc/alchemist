@@ -11,7 +11,9 @@ import { Helpers } from "../../classes/Helpers";
 import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import { getInitialState } from "../../store/initialState";
-
+import { str as crc } from "crc-32";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+import Sval from "sval";
 
 export interface IDispatcherProps{
 	snippet: string
@@ -39,13 +41,30 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 		this.props.setDispatcherValue(e.currentTarget.value);
 	}
 
-	private send = () => {
+	private send = async () => {
 		try {
 			const snippet = this.props.snippet;
 			const startTime = Date.now();			
 			let data: any;
 			try {
-				data = (function () { return eval(snippet); })();
+				data = await (async function  () {
+					const interpreter = new Sval({
+						ecmaVer: 9,
+						sandBox: false,
+					});
+					// eslint-disable-next-line @typescript-eslint/no-var-requires
+					interpreter.import("uxp", require("uxp"));
+					// eslint-disable-next-line @typescript-eslint/no-var-requires
+					interpreter.import("os", require("os"));
+
+					interpreter.run(`
+						"use strict";
+						async function userCode(){${snippet}};
+						exports.returnValue = userCode();
+					`);
+					const res = await interpreter.exports.returnValue;
+					return res;
+				})();
 			} catch (e) {
 				data = {error:e.stack};
 			}
@@ -61,12 +80,13 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 					},
 				}],
 			};
-
 			const result: IDescriptor = {
 				endTime,
 				startTime,
 				id: Helpers.uuidv4(),
 				locked: false,
+				//crc:Date.now()+Math.random(),
+				crc:crc(JSON.stringify(data||"__empty__")),
 				originalData: RawDataConverter.replaceArrayBuffer(data),
 				originalReference,
 				pinned: false,
@@ -88,7 +108,7 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 	public render(): JSX.Element {
 		return (
 			<div className="Dispatcher">				
-				<div className="help">Content of variable or value itself at the last line will be recorded. Use <code>{`batchPlay([{_obj:"invert"}])`}</code> instead of <code>{`const result = batchPlay([{_obj:"invert"}])`}</code><br /></div>
+				<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
 				<div className="textareaWrap">
 					<span className="placeholder">{this.props.snippet}</span>
 					<textarea defaultValue={this.props.snippet} onChange={this.change} maxLength={Number.MAX_SAFE_INTEGER} placeholder={getInitialState().dispatcher.snippets[0].content} />
