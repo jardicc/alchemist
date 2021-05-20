@@ -11,7 +11,7 @@ Videos on how to use it from Davide Barranca series about UXP:
 ![alt Plugin screenshot](md_images/screen.png)
 
 ## Disclaimer
-You are using this software at your own risk. Possibly Photoshop could crash if you ask Photoshop to do something unusual via Alchemist. So just save your work if you are concerned.
+You are using this software at your own risk. It is possible that Photoshop could crash if you ask Photoshop to do something unusual via Alchemist. So just save your work if you are concerned. 
 
 ## Difference between Marketplace and Development version
 Feature to listen to all Photoshop events is available only in Development version. This is intentionally forbidden by Adobe in Production version of plugin. Alchemist tries to listen to as many events as possible but it might perform badly. If you don't need Listener then it doesn't matter which version you will use.
@@ -65,6 +65,11 @@ Load plugin as described above in quick usage section.
 ## Debugging
 
 In "Adobe UXP Developer Tool" click actions triple dot and click debug.
+
+## Supporters
+The Alchemist plugin for Photoshop was developed with support from the **Adobe Fund for Design**.
+
+Also big thanks to other supporters and developers who decided to donate. 
 
 ## Credits
 
