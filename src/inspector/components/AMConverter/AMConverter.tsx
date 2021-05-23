@@ -6,6 +6,9 @@ import { IRootState } from "../../../shared/store";
 import { getInspectorSettings } from "../../selectors/inspectorSelectors";
 import { setConverterInfoAction, setMaximumItems, setRecordRawAction } from "../../actions/inspectorActions";
 import { AMHackFileFactory } from "../../classes/AMHackFileFactory";
+import semver from "semver";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const psVersion = require("uxp").host.version;
 
 export interface IAMConverterProps{
 	codeSnippet: string
@@ -46,6 +49,7 @@ class AMConverter extends Component<TAMConverter, ISettingsState> {
 				<div>
 					<div>
 						<h3>AM Converter</h3>
+						{!semver.satisfies(psVersion, " 22.2.0 || 22.3.0 || 22.3.1 ") && <div className="warning"><h4>Warning!</h4> <span>This works only in PS versions 22.2.0, 22.3.0, 22.3.1 due to removal of feature called universal listener. Consider downgrade if you want to use this converter.</span></div> }
 						<p>
 							This tool will help you to convert Action Manager code from ExtendScript into UXP batchPlay. Once everything is set please click &quot;Listener&quot; button in &quot;Descriptors&quot; tab and action descriptors will appear here and in code tab you will see generated code.
 						</p>
