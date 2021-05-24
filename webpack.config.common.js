@@ -16,11 +16,11 @@ module.exports = {
 	},
 	externals: {
 		"photoshop": "commonjs2 photoshop",
-		"uxp": "commonjs2 uxp"
+		"uxp": "commonjs2 uxp",
 	},
 	performance: {
 		maxEntrypointSize: Infinity,
-		maxAssetSize: Infinity
+		maxAssetSize: Infinity,
 	},
 	module: {
 		rules: [

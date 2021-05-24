@@ -5,7 +5,7 @@ export interface ITabPanelProps{
 	id: string
 	title: string | JSX.Element
 	noPadding?: boolean
-	showScrollbars?:boolean
+	showScrollbars?: boolean
 }
 
 export interface ITabPanelDispatch {

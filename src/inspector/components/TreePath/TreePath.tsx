@@ -11,7 +11,7 @@ export interface ITreePathProps{
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ITreePathDispatch {
-	onInspectPath: (path: string[], mode: "replace" | "add") => void;
+	onInspectPath: (path: TPath, mode: "replace" | "add") => void;
 	onSetAutoExpandLevel:(level:number)=>void
 }
 

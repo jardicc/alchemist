@@ -18,7 +18,7 @@ export function renderInspectorUI(): void {
 				<NotificationContainer />
 				<InspectorContainer />
 			</ErrorBoundary>
-		</Provider>, el as HTMLElement
+		</Provider>, el as HTMLElement,
 	);
 }
 

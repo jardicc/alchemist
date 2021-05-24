@@ -16,7 +16,7 @@ const composeEnhancers = composeWithDevTools({
 	// Specify name here, actionsBlacklist, actionsCreators and other options if needed
 });
 
-const rootReducer = combineReducers({
+const rootReducer = combineReducers<IRootState>({
 	inspector:inspectorReducer,
 	//listener: listenerReducer
 });
