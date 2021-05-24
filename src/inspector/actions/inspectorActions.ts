@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 import { CommandOptions } from "photoshop/dist/types/UXP";
@@ -408,7 +408,7 @@ export function setInspectorPathDomAction(path:string[],mode:"replace"|"add"):IS
 		},
 	};
 }
-export function setInspectorPathDiffAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDiffAction{
+export function setInspectorPathDiffAction(path:TPath,mode:"replace"|"add"):ISetInspectorPathDiffAction{
 	return {
 		type: "SET_INSPECTOR_PATH_DIFF",
 		payload: {

@@ -9,6 +9,7 @@ export function getInitialState(): IInspectorState {
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
+		descriptorsGrouping: "eventName",
 
 		targetReference: [
 			{

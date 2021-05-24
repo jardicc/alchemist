@@ -3,6 +3,7 @@ import { IRootState } from "../../shared/store";
 import { IDescriptor, IInspectorState } from "../model/types";
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { Helpers } from "../classes/Helpers";
+import { cloneDeep } from "lodash";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
  
@@ -67,7 +68,6 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 });
 
 export const getDescriptorsListView = createSelector([getAllDescriptors, getActiveTargetReference, getFilterBySelectedReferenceType,getInspectorSettings], (allDesc, activeRefFilter, rootFilter,settings) => {	
-	
 	const pinned = allDesc.filter(i => i.pinned);
 	const notPinned = allDesc.filter(i => !i.pinned);
 	let reordered = [...notPinned, ...pinned];
@@ -80,6 +80,7 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 	// add one search here... perhaps generate name and store it in redux store so it can be used in search
 
 	if (rootFilter === "off" && activeRefFilter?.type !== "listener") {
+		// handle this!!
 		return reordered;
 	}
 
@@ -108,6 +109,23 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 			filtered = filtered.filter(item => 
 				settings.listenerInclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim())),
 			);
+		}
+	}
+
+	console.log("!!!");
+
+	filtered = cloneDeep(filtered);
+
+	// group (remove) duplicates
+	for (let i = 0; i < filtered.length-1; i++) {
+		const element = filtered[i];
+		for (let j = i+1; j < filtered.length; j++) {
+			const next = filtered[j];
+			if (next.crc === element.crc) {
+				filtered.splice(j, 1);
+				j -= 1;
+				element.groupCount = (!element.groupCount) ? 2 : element.groupCount+1;
+			}
 		}
 	}
 
