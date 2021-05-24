@@ -10,30 +10,11 @@ import { Settings } from "../../classes/Settings";
 import { GetInfo } from "../../classes/GetInfo";
 import { filterNonExistent } from "../../classes/filterNonExistent";
 import { Main } from "../../../shared/classes/Main";
+import { Dispatch } from "redux";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const versions = require("uxp").versions;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IFooterProps{
-	wholeState: IRootState
-	viewItems: IDescriptor[]
-	allItems:IDescriptor[]
-	selectedItems:IDescriptor[]
-}
-
-export interface IFooterDispatch {
-	onClear: () => void
-	onClearView: (keep: boolean) => void
-	setWholeState: (state: IRootState) => void
-	importItems: (items: IDescriptor[], kind: TImportItems) => void
-	onClearNonExistent:(items: IDescriptor[])=>void
-}
-
-
-export type TFooter = IFooterProps & IFooterDispatch
-export type TFooterComponent = React.Component<TFooter>
-
-class Footer extends React.Component<TFooter> { 
+class Footer extends React.Component<TFooter,Record<string,unknown>> { 
 	constructor(props: TFooter) {
 		super(props);
 	}
@@ -130,27 +111,37 @@ class Footer extends React.Component<TFooter> {
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IOwn{
+
+type TFooter = IFooterProps & IDispatcherDispatch
+
+interface IFooterProps{
+	wholeState: IRootState
+	viewItems: IDescriptor[]
+	allItems:IDescriptor[]
+	selectedItems:IDescriptor[]
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IFooterProps => {
-	return {
-		wholeState: state,
-		viewItems: getDescriptorsListView(state),
-		allItems: getAllDescriptors(state),
-		selectedItems: getSelectedDescriptors(state),
-	};
-};
+const mapStateToProps = (state: IRootState): IFooterProps => ({
+	wholeState: state,
+	viewItems: getDescriptorsListView(state),
+	allItems: getAllDescriptors(state),
+	selectedItems: getSelectedDescriptors(state),
+});
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IFooterDispatch, IOwn> = (dispatch): IFooterDispatch => {
-	return {
-		onClear: () => dispatch(clearAction()),
-		onClearView: (keep) => dispatch(clearViewAction(keep)),
-		importItems:(items,kind)=>dispatch(importItemsAction(items,kind)),
-		setWholeState: (state) => dispatch(importStateAction(state)),
-		onClearNonExistent:(items)=>dispatch(importItemsAction(items,"replace")),
-	};
-};
+interface IDispatcherDispatch {
+	onClear: () => void
+	onClearView: (keep: boolean) => void
+	setWholeState: (state: IRootState) => void
+	importItems: (items: IDescriptor[], kind: TImportItems) => void
+	onClearNonExistent:(items: IDescriptor[])=>void
+}
 
-export const FooterContainer = connect<IFooterProps, IFooterDispatch, IOwn>(mapStateToProps, mapDispatchToProps)(Footer);
+const mapDispatchToProps= (dispatch:Dispatch): IDispatcherDispatch => ({
+	onClear: () => dispatch(clearAction()),
+	onClearView: (keep) => dispatch(clearViewAction(keep)),
+	importItems:(items,kind)=>dispatch(importItemsAction(items,kind)),
+	setWholeState: (state) => dispatch(importStateAction(state)),
+	onClearNonExistent:(items)=>dispatch(importItemsAction(items,"replace")),
+});
+
+export const FooterContainer = connect<IFooterProps, IDispatcherDispatch, Record<string,unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Footer);

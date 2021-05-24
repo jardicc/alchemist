@@ -8,31 +8,10 @@ import { TBaseItems, baseItemsListener } from "../../model/properties";
 import { TState, FilterButton } from "../FilterButton/FilterButton";
 import cloneDeep from "lodash/cloneDeep";
 
-
-export interface IListenerFilterProps{
-	settings: ISettings
-	selectedTargetReference: TTargetReference
-	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
-	activeTargetReference: ITargetReference | null;
-}
-
-export interface IListenerFilterDispatch {
-	setFilterEventsType(type: TFilterEvents): void
-	setInclude(arr:string[]):void
-	setExclude(arr: string[]): void
-	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
-	onSetTargetReference: (arg: ITargetReference) => void
-}
-
-
-type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
-
-
-class ListenerFilter extends React.Component<TListenerFilter, any> { 
+class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> { 
 	constructor(props: TListenerFilter) {
 		super(props);
 	}
-
 	
 	private setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.props.setExclude(e.currentTarget.value.split(";"));
@@ -142,23 +121,37 @@ class ListenerFilter extends React.Component<TListenerFilter, any> {
 	}
 }
 
-const mapStateToProps = (state: IRootState): IListenerFilterProps => {
-	return {
-		settings: getInspectorSettings(state),
-		selectedTargetReference: getSelectedTargetReference(state),		
-		activeTargetReferenceListenerCategory: getActiveTargetReferenceListenerCategory(state) as IContentWrapper<TListenerCategoryReference>,
-		activeTargetReference: getActiveTargetReference(state),
-	};
-};
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IListenerFilterDispatch, Record<string, unknown>> = (dispatch):IListenerFilterDispatch => {
-	return {
-		setExclude: (arr) => dispatch(setExcludeAction(arr)),
-		setFilterEventsType: (type) => dispatch(setFilterTypeAction(type)),
-		setInclude: (arr) => dispatch(setIncludeAction(arr)),
-		onSetFilter: (type, subType, state) => dispatch(setFilterStateAction(type, subType, state)),
-		onSetTargetReference:(arg) => dispatch(setTargetReferenceAction(arg)),
-	};
-};
+type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
 
-export const ListenerFilterContainer = connect<IListenerFilterProps, IListenerFilterDispatch>(mapStateToProps, mapDispatchToProps)(ListenerFilter);
+interface IListenerFilterProps{
+	settings: ISettings
+	selectedTargetReference: TTargetReference
+	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
+	activeTargetReference: ITargetReference | null;
+}
+
+const mapStateToProps = (state: IRootState): IListenerFilterProps => ({
+	settings: getInspectorSettings(state),
+	selectedTargetReference: getSelectedTargetReference(state),		
+	activeTargetReferenceListenerCategory: getActiveTargetReferenceListenerCategory(state) as IContentWrapper<TListenerCategoryReference>,
+	activeTargetReference: getActiveTargetReference(state),
+});
+
+interface IListenerFilterDispatch {
+	setFilterEventsType(type: TFilterEvents): void
+	setInclude(arr:string[]):void
+	setExclude(arr: string[]): void
+	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
+	onSetTargetReference: (arg: ITargetReference) => void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<IListenerFilterDispatch, Record<string, unknown>> = (dispatch):IListenerFilterDispatch => ({
+	setExclude: (arr) => dispatch(setExcludeAction(arr)),
+	setFilterEventsType: (type) => dispatch(setFilterTypeAction(type)),
+	setInclude: (arr) => dispatch(setIncludeAction(arr)),
+	onSetFilter: (type, subType, state) => dispatch(setFilterStateAction(type, subType, state)),
+	onSetTargetReference:(arg) => dispatch(setTargetReferenceAction(arg)),
+});
+
+export const ListenerFilterContainer = connect(mapStateToProps, mapDispatchToProps)(ListenerFilter);

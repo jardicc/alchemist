@@ -1,4 +1,4 @@
-import { MapDispatchToPropsFunction, connect } from "react-redux";
+import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setDispatcherValueAction, addDescriptorAction } from "../../actions/inspectorActions";
 import { getDispatcherSnippet } from "../../selectors/dispatcherSelectors";
@@ -14,22 +14,9 @@ import { getInitialState } from "../../store/initialState";
 import { str as crc } from "crc-32";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import Sval from "sval";
+import { Dispatch } from "redux";
 
-export interface IDispatcherProps{
-	snippet: string
-	settings:ISettings
-}
-
-export interface IDispatcherDispatch {
-	setDispatcherValue: (value: string) => void
-	onAddDescriptor: (descriptor: IDescriptor) => void
-}
-
-
-type TDispatcher = IDispatcherProps & IDispatcherDispatch
-
-
-class Dispatcher extends React.Component<TDispatcher, any> {
+class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 
 	constructor(props: TDispatcher) {
 		super(props);
@@ -119,18 +106,27 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 	}
 }
 
-const mapStateToProps = (state: IRootState): IDispatcherProps => {
-	return {
-		snippet: getDispatcherSnippet(state),
-		settings: getInspectorSettings(state),
-	};
-};
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IDispatcherDispatch, Record<string, unknown>> = (dispatch):IDispatcherDispatch => {
-	return {
-		setDispatcherValue: (value) => dispatch(setDispatcherValueAction(value)),
-		onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
-	};
-};
+type TDispatcher = IDispatcherProps & IDispatcherDispatch
 
-export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch>(mapStateToProps, mapDispatchToProps)(Dispatcher);
+interface IDispatcherProps{
+	snippet: string
+	settings:ISettings
+}
+
+const mapStateToProps = (state: IRootState): IDispatcherProps => ({
+	snippet: getDispatcherSnippet(state),
+	settings: getInspectorSettings(state),
+});
+
+interface IDispatcherDispatch {
+	setDispatcherValue: (value: string) => void
+	onAddDescriptor: (descriptor: IDescriptor) => void
+}
+
+const mapDispatchToProps = (dispatch:Dispatch):IDispatcherDispatch => ({
+	setDispatcherValue: (value) => dispatch(setDispatcherValueAction(value)),
+	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
+});
+
+export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch, Record<string,unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Dispatcher);

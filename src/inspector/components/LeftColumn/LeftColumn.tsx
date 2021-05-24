@@ -17,84 +17,14 @@ import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
 import { Descriptor } from "photoshop/dist/types/UXP";
+import { str as crc } from "crc-32";
 
 import { Main } from "../../../shared/classes/Main";
-
-export interface IProperty<T>{
-	label: string
-	value:T
-}
-
-export interface ILeftColumnProps{
-	targetReference: ITargetReference[]
-	autoUpdate: boolean
-	addAllowed:boolean
-	selectedDescriptorsUUIDs: string[]
-	selectedDescriptors: IDescriptor[]
-	propertySettings: IPropertySettings[]
-	lockedSelection: boolean
-	pinnedSelection: boolean
-	removableSelection: boolean
-	replayEnabled:boolean
-	allDescriptors: IDescriptor[]
-
-	activeTargetReferenceForAM: ITargetReference | null;
-	activeTargetReference: ITargetReference | null;
-	selectedTargetReference: TTargetReference
-	filterBySelectedReferenceType: TState
-	
-	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
-	activeTargetReferenceDocument: IContentWrapper<TDocumentReference>
-	activeTargetLayerReference: IContentWrapper<TLayerReference>
-	activeReferenceGuide: IContentWrapper<TGuideReference>
-	activeReferencePath: IContentWrapper<TPathReference>
-	activeReferenceChannel: IContentWrapper<TChannelReference>
-	activeReferenceHistory: IContentWrapper<THistoryReference>
-	activeReferenceSnapshot: IContentWrapper<TSnapshotReference>
-	activeReferenceActionSet:IContentWrapper<TActionSet>
-	activeReferenceActionItem:IContentWrapper<TActionItem>
-	activeReferenceCommand: IContentWrapper<TActionCommand>
-	activeReferenceProperty: IContentWrapper<TBaseProperty>
-
-	settings:ISettings	
-	hasAutoActiveDescriptor:boolean
-}
-
-export interface ILeftColumnDispatch {
-	onSetTargetReference: (arg: ITargetReference) => void
-	onAddDescriptor: (descriptor: IDescriptor) => void
-	onSetSelectedReferenceType: (type: TTargetReference) => void
-	onSelect: (operation: TSelectDescriptorOperation,uuid?: string) => void
-	
-	onClear: () => void
-	onPin: (pin: boolean, uuids: string[]) => void
-	onRemove: (uuids: string[]) => void
-	onLock: (lock: boolean, uuids: string[]) => void
-
-	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
-	
-	setListener:(enabled:boolean)=>void
-	setAutoInspector: (enabled: boolean) => void
-	setSearchTerm:(str: string)=> void
-	setRenameMode: (uuid: string, on: boolean) => void
-	
-	onSetDontShowMarketplaceInfo: (enabled: boolean) => void
-}
-
-export interface IState{
-	layersList: IProperty<TLayerReference>[]
-	documentsList: IProperty<TDocumentReference>[]
-	channelsList: IProperty<TChannelReference>[]
-	pathsList: IProperty<TPathReference>[]
-	guidesList: IProperty<TGuideReference>[]
-	actionSetsList: IProperty<TActionSet>[]
-	actionItemsList: IProperty<TActionItem>[]
-	actionCommandsList: IProperty<TActionCommand>[]
-	historyList: IProperty<THistoryReference>[]
-	snapshotsList: IProperty<TSnapshotReference>[]
-}
-
-export type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
+import { MapDispatchToPropsFunction, connect } from "react-redux";
+import { IRootState } from "../../../shared/store";
+import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction } from "../../actions/inspectorActions";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
+import { Dispatch } from "redux";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
@@ -495,6 +425,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			startTime: startTime,
 			id: Helpers.uuidv4(),
 			locked: false,
+			crc: crc(JSON.stringify(playResult)),
 			originalData: RawDataConverter.replaceArrayBuffer(playResult),
 			originalReference,
 			pinned: false,
@@ -536,12 +467,16 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			...descriptor,
 		};
 
+		const descCrc = crc(JSON.stringify(descWithEvent));
+		const originalData = RawDataConverter.replaceArrayBuffer(descWithEvent);
+
 		const result: IDescriptor = {
 			endTime: 0,
 			startTime: 0,
+			crc: descCrc,
 			id: Helpers.uuidv4(),
 			locked: false,
-			originalData: RawDataConverter.replaceArrayBuffer(descWithEvent),
+			originalData,
 			originalReference,
 			pinned: false,
 			selected: false,
@@ -619,7 +554,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return (
 			allDescriptors.map((d, index) => (
 				<div className="DescriptorItem" key={index} ref={index===allDescriptors.length-1 ? this.lastDescRef as any : null}>
-					<DescriptorItemContainer descriptor={d} key={d.id} />
+					<DescriptorItemContainer descriptor={d} key={d.id}  />
 				</div>
 			))
 		);
@@ -665,6 +600,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				startTime,
 				id: Helpers.uuidv4(),
 				locked: false,
+				crc: crc(JSON.stringify(descriptors)),
 				originalData: RawDataConverter.replaceArrayBuffer(descriptors),
 				originalReference,
 				pinned: false,
@@ -685,6 +621,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		if (selectedDescriptorsUUIDs.length) {
 			setRenameMode(selectedDescriptorsUUIDs[0], true);			
 		}
+	}
+
+	private toggleDescGrouping = () => {
+		//
 	}
 
 	private renderMarketplaceDialog = () => {
@@ -715,6 +655,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						{this.renderFilters()}
 					</div>
 
+					<div className="buttonIcon" onClick={this.toggleDescGrouping}>Group same</div>
 					<div className="search">
 						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
 					</div>
@@ -750,3 +691,134 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		);
 	}
 }
+
+export interface IProperty<T>{
+	label: string
+	value:T
+}
+
+interface IState{
+	layersList: IProperty<TLayerReference>[]
+	documentsList: IProperty<TDocumentReference>[]
+	channelsList: IProperty<TChannelReference>[]
+	pathsList: IProperty<TPathReference>[]
+	guidesList: IProperty<TGuideReference>[]
+	actionSetsList: IProperty<TActionSet>[]
+	actionItemsList: IProperty<TActionItem>[]
+	actionCommandsList: IProperty<TActionCommand>[]
+	historyList: IProperty<THistoryReference>[]
+	snapshotsList: IProperty<TSnapshotReference>[]
+}
+
+type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
+
+export interface ILeftColumnProps{
+	targetReference: ITargetReference[]
+	autoUpdate: boolean
+	addAllowed:boolean
+	selectedDescriptorsUUIDs: string[]
+	selectedDescriptors: IDescriptor[]
+	propertySettings: IPropertySettings[]
+	lockedSelection: boolean
+	pinnedSelection: boolean
+	removableSelection: boolean
+	replayEnabled:boolean
+	allDescriptors: IDescriptor[]
+
+	activeTargetReferenceForAM: ITargetReference | null;
+	activeTargetReference: ITargetReference | null;
+	selectedTargetReference: TTargetReference
+	filterBySelectedReferenceType: TState
+	
+	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
+	activeTargetReferenceDocument: IContentWrapper<TDocumentReference>
+	activeTargetLayerReference: IContentWrapper<TLayerReference>
+	activeReferenceGuide: IContentWrapper<TGuideReference>
+	activeReferencePath: IContentWrapper<TPathReference>
+	activeReferenceChannel: IContentWrapper<TChannelReference>
+	activeReferenceHistory: IContentWrapper<THistoryReference>
+	activeReferenceSnapshot: IContentWrapper<TSnapshotReference>
+	activeReferenceActionSet:IContentWrapper<TActionSet>
+	activeReferenceActionItem:IContentWrapper<TActionItem>
+	activeReferenceCommand: IContentWrapper<TActionCommand>
+	activeReferenceProperty: IContentWrapper<TBaseProperty>
+
+	settings:ISettings	
+	hasAutoActiveDescriptor:boolean
+}
+
+const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
+	targetReference: getTargetReference(state),
+	autoUpdate: getAutoUpdate(state),
+	addAllowed: getAddAllowed(state),
+	selectedDescriptorsUUIDs: getSelectedDescriptorsUUID(state),
+	propertySettings: getPropertySettings(state),
+	lockedSelection: getLockedSelection(state),
+	pinnedSelection: getPinnedSelection(state),
+	removableSelection: getRemovableSelection(state),
+	allDescriptors: getDescriptorsListView(state),
+	selectedTargetReference: getSelectedTargetReference(state),
+	activeTargetReference: getActiveTargetReference(state),
+	activeTargetReferenceDocument: getActiveTargetDocument(state) as IContentWrapper<TDocumentReference>,
+	activeTargetLayerReference: getActiveTargetLayer(state) as IContentWrapper<TLayerReference>,
+	activeReferenceChannel:getActiveReferenceChannel(state)  as IContentWrapper<TChannelReference>,
+	activeReferenceGuide: getActiveReferenceGuide(state) as IContentWrapper<TGuideReference>,
+	activeReferencePath: getActiveReferencePath(state) as IContentWrapper<TPathReference>,
+	activeReferenceActionSet:getActiveReferenceActionSet(state) as IContentWrapper<TActionSet>,
+	activeReferenceActionItem:getActiveReferenceActionItem(state) as IContentWrapper<TActionItem>,
+	activeReferenceCommand: getActiveReferenceCommand(state) as IContentWrapper<TActionCommand>,
+	activeReferenceProperty: getActiveReferenceProperty(state) as IContentWrapper<TBaseProperty>,
+	activeReferenceHistory: getActiveReferenceHistory(state) as  IContentWrapper<THistoryReference>,
+	activeReferenceSnapshot: getActiveReferenceSnapshot(state) as IContentWrapper<TSnapshotReference>,
+	activeTargetReferenceListenerCategory: getActiveTargetReferenceListenerCategory(state) as IContentWrapper<TListenerCategoryReference>,
+	hasAutoActiveDescriptor: getHasAutoActiveDescriptor(state),
+	activeTargetReferenceForAM: getActiveTargetReferenceForAM(state),
+	settings: getInspectorSettings(state),
+	selectedDescriptors: getSelectedDescriptors(state),
+	replayEnabled: getReplayEnabled(state),
+	
+	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),		
+});
+
+interface ILeftColumnDispatch {
+	onSetTargetReference: (arg: ITargetReference) => void
+	onAddDescriptor: (descriptor: IDescriptor) => void
+	onSetSelectedReferenceType: (type: TTargetReference) => void
+	onSelect: (operation: TSelectDescriptorOperation,uuid?: string) => void
+	
+	onClear: () => void
+	onPin: (pin: boolean, uuids: string[]) => void
+	onRemove: (uuids: string[]) => void
+	onLock: (lock: boolean, uuids: string[]) => void
+
+	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
+	
+	setListener:(enabled:boolean)=>void
+	setAutoInspector: (enabled: boolean) => void
+	setSearchTerm:(str: string)=> void
+	setRenameMode: (uuid: string, on: boolean) => void
+	
+	onSetDontShowMarketplaceInfo: (enabled: boolean) => void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record<string, unknown>> = (dispatch: Dispatch): ILeftColumnDispatch => ({
+	onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
+	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
+	onSetSelectedReferenceType: (type) => dispatch(setSelectedReferenceTypeAction(type)),
+	
+	onClear: () => dispatch(clearAction()),
+	onPin: (pin, arg) => dispatch(pinDescAction(pin, arg)),
+	onRemove: (arg) => dispatch(removeDescAction(arg)),
+	onLock: (lock, arg) => dispatch(lockDescAction(lock, arg)),
+
+	onSetFilter: (type, subType, state) => dispatch(setFilterStateAction(type, subType, state)),
+	setListener: (enabled) => dispatch(setListenerAction(enabled)),
+	setAutoInspector: (enabled) => dispatch(setAutoInspectorAction(enabled)),
+	setSearchTerm: (str) => dispatch(setSearchTermAction(str)),
+	setRenameMode: (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid, on)),
+	onSelect: (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptorAction(operation, uuid)),
+	
+	onSetDontShowMarketplaceInfo: (enabled: boolean) => dispatch(setDontShowMarketplaceInfoAction(enabled)),
+});
+
+export const LeftColumnContainer = connect<ILeftColumnProps, ILeftColumnDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(LeftColumn);

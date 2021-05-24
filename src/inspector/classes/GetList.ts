@@ -1,8 +1,9 @@
 import photoshop from "photoshop";
 import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference, THistoryReference } from "../model/types";
-import { IProperty } from "../components/LeftColumn/LeftColumn";
+
 import { DocumentExtra } from "./DocumentExtra";
 import { GetInfo } from "./GetInfo";
+import {IProperty } from "../components/LeftColumn/LeftColumn";
 
 const PS = photoshop.app;
 

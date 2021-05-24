@@ -10,28 +10,9 @@ import { IDescriptor, IDescriptorSettings, TCodeViewType } from "../../model/typ
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import "./GeneratedCode.less";
+import { Dispatch } from "redux";
 
-export interface IGeneratedCodeProps{
-	originalReference: string
-	autoSelectedUUIDs: string[]
-	selected: IDescriptor[]
-	descriptorSettings: IDescriptorSettings
-	viewType: TCodeViewType
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IGeneratedCodeDispatch {
-	onSetOptions: (uuids: string[] | "default", options: CommandOptions) => void
-	onSetView: (viewType: TCodeViewType) => void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IGeneratedCodeState{
-}
-
-export type TGeneratedCode = IGeneratedCodeProps & IGeneratedCodeDispatch
-
-class GeneratedCode extends Component<TGeneratedCode, IGeneratedCodeState> {
+class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 
 	constructor(props: TGeneratedCode) {
 		super(props);
@@ -146,22 +127,33 @@ class GeneratedCode extends Component<TGeneratedCode, IGeneratedCodeState> {
 	}
 }
 
-const mapStateToProps = (state: IRootState): IGeneratedCodeProps => {
-	return {
-		originalReference: getActiveDescriptorCalculatedReference(state),
-		selected: getActiveDescriptors(state),
-		autoSelectedUUIDs: getAutoSelectedUUIDs(state),
-		descriptorSettings: getDescriptorOptions(state),
-		viewType: getCodeActiveView(state),
-	};
-};
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IGeneratedCodeDispatch, Record<string, unknown>> = (dispatch):IGeneratedCodeDispatch => {
-	return {
-		onSetOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
-		onSetView:(viewType) => dispatch(setInspectorViewAction("code",viewType)),
-	};
-};
+type TGeneratedCode = IGeneratedCodeProps & IGeneratedCodeDispatch
 
-export const GeneratedCodeContainer = connect<IGeneratedCodeProps, IGeneratedCodeDispatch>(mapStateToProps, mapDispatchToProps)(GeneratedCode);
+interface IGeneratedCodeProps{
+	originalReference: string
+	autoSelectedUUIDs: string[]
+	selected: IDescriptor[]
+	descriptorSettings: IDescriptorSettings
+	viewType: TCodeViewType
+}
 
+const mapStateToProps = (state: IRootState): IGeneratedCodeProps => ({
+	originalReference: getActiveDescriptorCalculatedReference(state),
+	selected: getActiveDescriptors(state),
+	autoSelectedUUIDs: getAutoSelectedUUIDs(state),
+	descriptorSettings: getDescriptorOptions(state),
+	viewType: getCodeActiveView(state),
+});
+
+interface IGeneratedCodeDispatch {
+	onSetOptions: (uuids: string[] | "default", options: CommandOptions) => void
+	onSetView: (viewType: TCodeViewType) => void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<IGeneratedCodeDispatch, Record<string, unknown>> = (dispatch:Dispatch):IGeneratedCodeDispatch => ({
+	onSetOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
+	onSetView:(viewType) => dispatch(setInspectorViewAction("code",viewType)),
+});
+
+export const GeneratedCodeContainer = connect<IGeneratedCodeProps, IGeneratedCodeDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(GeneratedCode);

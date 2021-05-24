@@ -15,6 +15,7 @@ import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import { VisualDiffTab } from "../VisualDiff/VisualDiff";
 import { TreePath } from "../TreePath/TreePath";
+import { Dispatch } from "redux";
 
 function stringifyAndShrink(val:any, isWideLayout=false) {
 	if (val === null) { return "null"; }
@@ -47,34 +48,6 @@ function prepareDelta(value:any) {
 
 	return value;
 }
-
-export interface ITreeDiffProps{
-	left: any
-	right: any
-	path: string[]
-	expandedKeys: TPath[]
-	invertTheme:boolean,
-	isWideLayout: boolean,
-	leftRawDiff:IDescriptor | null
-	rightRawDiff: IDescriptor | null
-	viewType: TGenericViewType
-	autoExpandLevels:number
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ITreeDiffDispatch {
-	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
-	onSetView: (viewType: TGenericViewType) => void
-	onSetAutoExpandLevel: (level: number) => void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ITreeDiffState{
-	data: any
-}
-
-export type TTreeDiff = ITreeDiffProps & ITreeDiffDispatch
 
 class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 	
@@ -216,28 +189,51 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 	}
 }
 
-const mapStateToProps = (state: IRootState): ITreeDiffProps => {
-	return {
-		left: getLeftTreeDiff(state),
-		right: getRightTreeDiff(state),
-		path: getDiffPath(state),
-		invertTheme: false,
-		isWideLayout: true,
-		expandedKeys: getDiffExpandedNodes(state),
-		rightRawDiff: getRightRawDiff(state),
-		leftRawDiff: getLeftRawDiff(state),
-		viewType: getDiffActiveView(state),
-		autoExpandLevels: getDiffExpandLevel(state)
-	};
-};
 
-const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDiffDispatch, Record<string, unknown>> = (dispatch):ITreeDiffDispatch => {
-	return {
-		onInspectPath: (path, mode) => dispatch(setInspectorPathDiffAction(path, mode)),
-		onSetExpandedPath: (path, expand, recursive,data) => dispatch(setExpandedPathAction("difference",path, expand, recursive,data)),
-		onSetView: (viewType) => dispatch(setInspectorViewAction("diff", viewType)),
-		onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("diff", level))
-	};
-};
+type TTreeDiff = ITreeDiffProps & ITreeDiffDispatch
 
-export const TreeDiffContainer = connect<ITreeDiffProps, ITreeDiffDispatch>(mapStateToProps, mapDispatchToProps)(TreeDiff);
+interface ITreeDiffState{
+	data: any
+}
+
+interface ITreeDiffProps{
+	left: any
+	right: any
+	path: string[]
+	expandedKeys: TPath[]
+	invertTheme:boolean,
+	isWideLayout: boolean,
+	leftRawDiff:IDescriptor | null
+	rightRawDiff: IDescriptor | null
+	viewType: TGenericViewType
+	autoExpandLevels:number
+}
+
+const mapStateToProps = (state: IRootState): ITreeDiffProps => ({
+	left: getLeftTreeDiff(state),
+	right: getRightTreeDiff(state),
+	path: getDiffPath(state),
+	invertTheme: false,
+	isWideLayout: true,
+	expandedKeys: getDiffExpandedNodes(state),
+	rightRawDiff: getRightRawDiff(state),
+	leftRawDiff: getLeftRawDiff(state),
+	viewType: getDiffActiveView(state),
+	autoExpandLevels: getDiffExpandLevel(state),
+});
+
+interface ITreeDiffDispatch {
+	onInspectPath: (path: string[], mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onSetView: (viewType: TGenericViewType) => void
+	onSetAutoExpandLevel: (level: number) => void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDiffDispatch, Record<string, unknown>> = (dispatch:Dispatch):ITreeDiffDispatch => ({
+	onInspectPath: (path, mode) => dispatch(setInspectorPathDiffAction(path, mode)),
+	onSetExpandedPath: (path, expand, recursive,data) => dispatch(setExpandedPathAction("difference",path, expand, recursive,data)),
+	onSetView: (viewType) => dispatch(setInspectorViewAction("diff", viewType)),
+	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("diff", level)),
+});
+
+export const TreeDiffContainer = connect<ITreeDiffProps, ITreeDiffDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(TreeDiff);

@@ -1,4 +1,4 @@
-import { connect, MapDispatchToPropsFunction } from "react-redux";
+import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { getInspectorSettings } from "../../selectors/inspectorSelectors";
 import { setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction } from "../../actions/inspectorActions";
@@ -6,6 +6,7 @@ import { setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, se
 import React, { Component } from "react";
 import { ISettings, TFontSizeSettings } from "../../model/types";
 import "./Settings.less";
+import { Dispatch } from "redux";
 
 class Settings extends Component<TSettings, ISettingsState> {
 
@@ -122,11 +123,11 @@ interface ISettingsDispatch {
 	onNeverRecordActionNamesChanged:(value:string)=>void
 }
 
-const mapDispatchToProps: MapDispatchToPropsFunction<ISettingsDispatch, Record<string, unknown>> = (dispatch): ISettingsDispatch => ({
+const mapDispatchToProps = (dispatch:Dispatch): ISettingsDispatch => ({
 	onSetRecordRaw: (value) => dispatch(setRecordRawAction(value)),
 	onSetMaximumItems: (value) => dispatch(setMaximumItems(value)),
 	onSetFontSize: (value) => dispatch(setFontSizeAction(value)),
 	onNeverRecordActionNamesChanged:(value)=>dispatch(setNeverRecordActionNamesAction(value)),
 });
 
-export const SettingsContainer = connect<ISettingsProps, ISettingsDispatch>(mapStateToProps, mapDispatchToProps)(Settings);
+export const SettingsContainer = connect<ISettingsProps, ISettingsDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Settings);

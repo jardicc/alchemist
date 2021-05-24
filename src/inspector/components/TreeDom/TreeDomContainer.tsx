@@ -12,39 +12,10 @@ import { labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
 import { cloneDeep } from "lodash";
 import { TreePath } from "../TreePath/TreePath";
 
-export interface ITreeDomProps{
-	/*content: {
-		ref: TReference[]|null
-		path: string[]
-	}*/
-	path:TPath
-	content: any
-	expandedKeys: TPath[]
-	protoMode: TProtoMode
-	autoExpandLevels:number
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ITreeDomDispatch {
-	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
-	onSetAutoExpandLevel:(level:number)=>void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ITreeDomState{
-	
-}
-
-export type TTreeDom = ITreeDomProps & ITreeDomDispatch
-
-export class TreeDom extends Component<TTreeDom, ITreeDomState> {
+export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 
 	constructor(props: TTreeDom) {
 		super(props);
-
-		this.state = {
-		};
 	}
 	
 	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
@@ -111,26 +82,35 @@ export class TreeDom extends Component<TTreeDom, ITreeDomState> {
 }
 
 
+type TTreeDom = ITreeDomProps & ITreeDomDispatch
 
-const mapStateToProps = (state: IRootState): ITreeDomProps => {
-	const props:ITreeDomProps = {
-		//content: getTreeDom(state),		
-		content: getTreeDomInstance(state),		
-		path: getDomPath(state),
-		protoMode: "uxp",
-		expandedKeys: getDomExpandedNodes(state),
-		autoExpandLevels: getDOMExpandLevel(state)
-	};
-	return props;
-};
+interface ITreeDomProps{
+	path:TPath
+	content: any
+	expandedKeys: TPath[]
+	protoMode: TProtoMode
+	autoExpandLevels:number
+}
 
-const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDomDispatch, Record<string, unknown>> = (dispatch):ITreeDomDispatch => {
-	return {
-		onInspectPath: (path, mode) => dispatch(setInspectorPathDomAction(path, mode)),
-		onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("dom", path, expand, recursive, data)),
-		onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("DOM", level))
-	};
-};
+const mapStateToProps = (state: IRootState): ITreeDomProps => ({	
+	content: getTreeDomInstance(state),		
+	path: getDomPath(state),
+	protoMode: "uxp",
+	expandedKeys: getDomExpandedNodes(state),
+	autoExpandLevels: getDOMExpandLevel(state),	
+});
 
-export const TreeDomContainer = connect<ITreeDomProps, ITreeDomDispatch>(mapStateToProps, mapDispatchToProps)(TreeDom);
+interface ITreeDomDispatch {
+	onInspectPath: (path: string[], mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onSetAutoExpandLevel:(level:number)=>void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDomDispatch, Record<string, unknown>> = (dispatch):ITreeDomDispatch => ({
+	onInspectPath: (path, mode) => dispatch(setInspectorPathDomAction(path, mode)),
+	onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("dom", path, expand, recursive, data)),
+	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("DOM", level)),
+});
+
+export const TreeDomContainer = connect<ITreeDomProps, ITreeDomDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(TreeDom);
 
