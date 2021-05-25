@@ -4,6 +4,6 @@ const common = require("./webpack.config.common.js");
 
 module.exports = {
 	mode: "development",
-	devtool: "source-map",
+	devtool: "eval-source-map",
 	...common,
 };
