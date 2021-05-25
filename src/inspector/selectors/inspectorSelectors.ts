@@ -77,25 +77,33 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		reordered = reordered.filter(item => (item.title.toLowerCase().includes(searchTerm.toLowerCase())));
 	} 
 
-	// add one search here... perhaps generate name and store it in redux store so it can be used in search
-
+	/*
 	if (rootFilter === "off" && activeRefFilter?.type !== "listener") {
 		// handle this!!
 		return reordered;
 	}
+	*/
 
+	//let filtered: IDescriptor[] = reordered;
+
+	
 	let filtered = reordered.filter((desc: IDescriptor) => {
-		if (rootFilter === "off") { return true;}
+		if (rootFilter === "off") {
+			return true;
+		}
+	
 		const origRefFilter = desc.originalReference;
 		if (activeRefFilter?.type !== origRefFilter.type) {
 			return false;
 		}
-		for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
-			if (activeRefFilter.data[i].content.filterBy === "off") {
-				return true;
-			}
-			if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
-				return false;
+		if (activeRefFilter?.type !== "listener") {
+			for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
+				if (activeRefFilter.data[i].content.filterBy === "off") {
+					return true;
+				}
+				if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -114,20 +122,23 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 
 	console.log("!!!");
 
-	filtered = cloneDeep(filtered);
-
-	// group (remove) duplicates
-	for (let i = 0; i < filtered.length-1; i++) {
-		const element = filtered[i];
-		for (let j = i+1; j < filtered.length; j++) {
-			const next = filtered[j];
-			if (next.crc === element.crc) {
-				filtered.splice(j, 1);
-				j -= 1;
-				element.groupCount = (!element.groupCount) ? 2 : element.groupCount+1;
+	if (settings.groupDescriptors === "strict") {
+		filtered = cloneDeep(filtered);
+	
+		// group (remove) duplicates
+		for (let i = 0; i < filtered.length-1; i++) {
+			const element = filtered[i];
+			for (let j = i+1; j < filtered.length; j++) {
+				const next = filtered[j];
+				if (next.crc === element.crc) {
+					filtered.splice(j, 1);
+					j -= 1;
+					element.groupCount = (!element.groupCount) ? 2 : element.groupCount+1;
+				}
 			}
-		}
+		}		
 	}
+
 
 	return filtered;
 });

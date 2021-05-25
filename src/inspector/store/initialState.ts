@@ -205,7 +205,7 @@ export function getInitialState(): IInspectorState {
 			listenerInclude: [],
 			lastHistoryID:-1,
 			autoUpdateInspector: false,
-			groupDescriptors: "none",
+			groupDescriptors: "strict",
 			autoUpdateListener: false,
 			lastSelectedItem: null,
 			dontShowMarketplaceInfo:false,

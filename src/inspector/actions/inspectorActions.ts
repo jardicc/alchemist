@@ -164,12 +164,12 @@ export interface ISetExcludeAction{
 	type: "SET_EXCLUDE_ACTION",
 	payload: string[]
 }
-
+/*
 export interface IGroupSameAction{	
 	type: "GROUP_SAME_ACTION",
 	payload: boolean
 }
-
+*/
 export interface IFilterEventNameAction{
 	type: "FILTER_EVENT_NAME_ACTION",
 	payload: {
@@ -264,7 +264,19 @@ export interface ISetNeverRecordActionNamesAction{
 	payload: string[]
 }
 
-export function setNeverRecordActionNamesAction(value: string):ISetNeverRecordActionNamesAction {
+export interface IToggleDescriptorsGroupingAction{
+	type: "TOGGLE_DESCRIPTORS_GROUPING",
+	payload:null
+}
+
+export function toggleDescriptorsGroupingAction():IToggleDescriptorsGroupingAction {
+	return {
+		type: "TOGGLE_DESCRIPTORS_GROUPING",
+		payload: null,
+	};
+}
+
+export function setNeverRecordActionNamesAction(value: string): ISetNeverRecordActionNamesAction {
 	return {
 		type: "SET_NEVER_RECORD_ACTION_NAMES_ACTION",
 		payload: value.split(/[\n\r]/g).map(v => v.trim()),
@@ -578,13 +590,13 @@ export function setExcludeAction(arr:string[]):ISetExcludeAction{
 		payload:arr,
 	};
 }
-
+/*
 export function groupSameAction(enabled: boolean):IGroupSameAction {
 	return {
 		type: "GROUP_SAME_ACTION",
 		payload: enabled,
 	};
-}
+}*/
 
 export function filterEventNameAction(eventName:string, kind:"include"|"exclude", operation: "add"|"remove"):IFilterEventNameAction {
 	return {
@@ -624,7 +636,7 @@ export type TActions = ISetMainTab |
 	ISetFilterType |
 	ISetIncludeAction |
 	ISetExcludeAction |
-	IGroupSameAction |
+	//IGroupSameAction |
 	IFilterEventNameAction |
 	IReplaceWholeState |
 	ISetDispatcherValueAction |
@@ -639,4 +651,5 @@ export type TActions = ISetMainTab |
 	IDontShowMarketplaceInfoAction |
 	ISetConverterInfoAction |
 	ISetFontSizeAction |
-	ISetNeverRecordActionNamesAction
+	ISetNeverRecordActionNamesAction |
+	IToggleDescriptorsGroupingAction

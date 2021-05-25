@@ -391,12 +391,6 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			});
 			break;
 		}
-		case "GROUP_SAME_ACTION": {
-			state = produce(state, draft => {
-				draft.settings.groupDescriptors = action.payload ? "strict":"none";
-			});
-			break;
-		}
 		case "REPLACE_WHOLE_STATE": {
 			if (action.payload &&
 				getInitialState().version[0] === action.payload.version[0] // load only compatible version
@@ -540,6 +534,12 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		case "SET_NEVER_RECORD_ACTION_NAMES_ACTION": {
 			state = produce(state, draft => {
 				draft.settings.neverRecordActionNames = action.payload;
+			});
+			break;
+		}
+		case "TOGGLE_DESCRIPTORS_GROUPING": {
+			state = produce(state, draft => {
+				draft.settings.groupDescriptors = state.settings.groupDescriptors === "strict" ? "none" : "strict";
 			});
 			break;
 		}

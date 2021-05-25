@@ -22,7 +22,7 @@ import { str as crc } from "crc-32";
 import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction } from "../../actions/inspectorActions";
+import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction } from "../../actions/inspectorActions";
 import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
 
@@ -623,10 +623,6 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		}
 	}
 
-	private toggleDescGrouping = () => {
-		//
-	}
-
 	private renderMarketplaceDialog = () => {
 		const { onSetDontShowMarketplaceInfo } = this.props;
 
@@ -647,7 +643,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	public render(): JSX.Element {
-		const { addAllowed,replayEnabled,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm} } = this.props;
+		const { addAllowed,replayEnabled,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm,groupDescriptors} } = this.props;
 		return (
 			<div className="LeftColumn">
 				<div className="oneMore">
@@ -655,9 +651,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						{this.renderFilters()}
 					</div>
 
-					<div className="buttonIcon" onClick={this.toggleDescGrouping}>Group same</div>
+
 					<div className="search">
 						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
+						<sp-checkbox className="check" onClick={this.props.toggleDescGrouping} checked={groupDescriptors === "strict" ? "checked" : undefined}>Group</sp-checkbox>
 					</div>
 					<div className="descriptorsWrapper" onClick={()=>this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}
@@ -799,6 +796,7 @@ interface ILeftColumnDispatch {
 	setRenameMode: (uuid: string, on: boolean) => void
 	
 	onSetDontShowMarketplaceInfo: (enabled: boolean) => void
+	toggleDescGrouping:()=>void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record<string, unknown>> = (dispatch: Dispatch): ILeftColumnDispatch => ({
@@ -819,6 +817,7 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record
 	onSelect: (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptorAction(operation, uuid)),
 	
 	onSetDontShowMarketplaceInfo: (enabled: boolean) => dispatch(setDontShowMarketplaceInfoAction(enabled)),
+	toggleDescGrouping:()=>dispatch(toggleDescriptorsGroupingAction()),
 });
 
 export const LeftColumnContainer = connect<ILeftColumnProps, ILeftColumnDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(LeftColumn);
