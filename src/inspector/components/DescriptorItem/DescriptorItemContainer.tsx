@@ -33,7 +33,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				operation = "add";				
 			}
 		} 
-		this.props.onSelect(this.props.descriptor.id, operation);
+		this.props.onSelect(this.props.descriptor.id, operation, this.props.descriptor.crc);
 	}
 
 	private get autoSelected():boolean {
@@ -141,13 +141,13 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProp
 });
 
 interface IDescriptorItemDispatch {
-	onSelect: (uuid: string, operation: TSelectDescriptorOperation) => void
+	onSelect: (uuid: string, operation: TSelectDescriptorOperation, crc?:number) => void
 	onChangeName: (uuid: string, name: string) => void
 	setRenameMode: (uuid: string, on: boolean) => void
 }
 
 const mapDispatchToProps = (dispatch:Dispatch):IDescriptorItemDispatch => ({
-	onSelect: (uuid: string, operation: TSelectDescriptorOperation) => dispatch(selectDescriptorAction(operation, uuid)),
+	onSelect: (uuid: string, operation: TSelectDescriptorOperation,crc?:number) => dispatch(selectDescriptorAction(operation, uuid,crc)),
 	onChangeName: (uuid: string, name: string) => dispatch(renameDescriptorAction(uuid,name)),
 	setRenameMode: (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid,on)),
 });

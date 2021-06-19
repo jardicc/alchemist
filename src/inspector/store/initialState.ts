@@ -5,7 +5,7 @@ import { IInspectorState } from "../model/types";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [4, 0, 0],
+		version: [5, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",

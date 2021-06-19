@@ -32,7 +32,8 @@ export interface ISelectDescriptor {
 	type: "SELECT_DESCRIPTOR"
 	payload: {
 		operation:TSelectDescriptorOperation
-		uuid?:string
+		uuid?: string
+		crc?:number
 	}
 }
 
@@ -470,10 +471,10 @@ export function addDescriptorAction(arg:IDescriptor):IAddDescriptorAction{
 		payload: arg,
 	};
 }
-export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string): ISelectDescriptor {
+export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string,crc?:number): ISelectDescriptor {
 	return {
 		type: "SELECT_DESCRIPTOR",
-		payload: {operation,uuid},
+		payload: {operation,uuid,crc},
 	};
 }
 export function setSelectedReferenceTypeAction(type: TTargetReference): ISetSelectedReferenceTypeAction {

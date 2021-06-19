@@ -266,6 +266,14 @@ export const getReplayEnabled = createSelector([getActiveDescriptors], (selected
 	return true;
 });
 
+export const getRanameEnabled = createSelector([getDescriptorsListView], (all) => {
+	const selected = all.filter(d => d.selected);
+	if (selected?.length !== 1) {
+		return false;
+	}
+	return (!selected[0].groupCount || selected[0].groupCount === 1);
+});
+
 /*export const getColumnSizesPercentage = createSelector([getInspectorSettings], (s) => {
 	debugger;
 	const leftColumnPerc = Helpers.pxToPanelWidthPercentage("inspector", s.leftColumnWidthPx);

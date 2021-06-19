@@ -23,7 +23,7 @@ import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction } from "../../actions/inspectorActions";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType, getRanameEnabled } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
@@ -643,7 +643,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	public render(): JSX.Element {
-		const { addAllowed,replayEnabled,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection,settings:{autoUpdateListener,autoUpdateInspector,searchTerm,groupDescriptors} } = this.props;
+		const { addAllowed,replayEnabled,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection, renameEnabled,settings:{autoUpdateListener,autoUpdateInspector,searchTerm,groupDescriptors} } = this.props;
 		return (
 			<div className="LeftColumn">
 				<div className="oneMore">
@@ -667,7 +667,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 							<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
 							<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
 						*/}
-						<div className={"rename buttonIcon " + ((selectedDescriptors?.length !== 1) ? "disallowed" : "")} onClick={this.rename}><IconPencil /></div>
+						<div className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={this.rename}><IconPencil /></div>
 						<div className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
 						<div className={"lock buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
 							{selectedDescriptors.some(desc=>desc.locked) ? <IconLockUnlocked />:<IconLockLocked />}
@@ -719,7 +719,8 @@ export interface ILeftColumnProps{
 	lockedSelection: boolean
 	pinnedSelection: boolean
 	removableSelection: boolean
-	replayEnabled:boolean
+	replayEnabled: boolean
+	renameEnabled:boolean
 	allDescriptors: IDescriptor[]
 
 	activeTargetReferenceForAM: ITargetReference | null;
@@ -773,6 +774,7 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
 	settings: getInspectorSettings(state),
 	selectedDescriptors: getSelectedDescriptors(state),
 	replayEnabled: getReplayEnabled(state),
+	renameEnabled: getRanameEnabled(state),
 	
 	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),		
 });

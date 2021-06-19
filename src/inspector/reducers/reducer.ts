@@ -7,7 +7,7 @@ import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGe
 import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
-import { getDescriptorsListView } from "../selectors/inspectorSelectors";
+import { getDescriptorsListView, getInspectorSettings } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
 import { cloneDeep } from "lodash";
 
@@ -57,7 +57,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 			state = produce(state, draft => {
 				const { operation, uuid } = action.payload;
 				if (operation === "none") {
-					draft.descriptors.forEach(desc => desc.selected = false);
+					draft.descriptors.forEach(d => d.selected = false);
 				} else if (operation === "replace") {
 					draft.descriptors.forEach(d => d.selected = false);
 				}
@@ -131,19 +131,43 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		*/
 		case "LOCK_DESC": {
 			state = produce(state, draft => {
-				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.locked = action.payload.lock);
+				if (state.settings.groupDescriptors === "strict") {
+					const selectedByID = state.descriptors.filter(d => (action.payload.uuids.includes(d.id)));
+					const crcs = Array.from(new Set(selectedByID.map(d => d.crc)));
+					
+					draft.descriptors.filter(d => crcs.includes(d.crc)).forEach(d => d.locked = action.payload.lock);
+				} else if (state.settings.groupDescriptors === "none") {
+					draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.locked = action.payload.lock);
+				}
 			});
 			break;
 		}
 		case "PIN_DESC": {
 			state = produce(state, draft => {
-				draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.pinned = action.payload.pin);
+
+				if (state.settings.groupDescriptors === "strict") {
+					const selectedByID = state.descriptors.filter(d => (action.payload.uuids.includes(d.id)));
+					const crcs = Array.from(new Set(selectedByID.map(d => d.crc)));
+					
+					draft.descriptors.filter(d => crcs.includes(d.crc)).forEach(d => d.pinned = action.payload.pin);
+				} else if (state.settings.groupDescriptors === "none") {
+					draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.pinned = action.payload.pin);
+				}
 			});
 			break;
 		}
 		case "REMOVE_DESC": {
 			state = produce(state, draft => {
-				draft.descriptors = draft.descriptors.filter(d => (action.payload.includes(d.id) === false || d.locked));
+
+				if (state.settings.groupDescriptors === "strict") {
+					const selectedByID = state.descriptors.filter(d => (action.payload.includes(d.id) && !d.locked));
+					// remove by crc instead of ID. 
+					const crcs = Array.from(new Set(selectedByID.map(d => d.crc)));
+					draft.descriptors = state.descriptors.filter(d => (crcs.includes(d.crc) === false || d.locked));
+
+				} else if (state.settings.groupDescriptors === "none") {
+					draft.descriptors = state.descriptors.filter(d => (action.payload.includes(d.id) === false || d.locked));
+				}
 			});
 			break;
 		}
