@@ -124,6 +124,7 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 
 	if (settings.groupDescriptors === "strict") {
 		filtered = cloneDeep(filtered);
+		filtered.reverse();
 	
 		// group (remove) duplicates
 		for (let i = 0; i < filtered.length-1; i++) {
@@ -136,7 +137,9 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 					element.groupCount = (!element.groupCount) ? 2 : element.groupCount+1;
 				}
 			}
-		}		
+		}
+		
+		filtered.reverse();
 	}
 
 
@@ -222,16 +225,16 @@ export const getPlayableReference = createSelector([getActiveDescriptorCalculate
 	}	
 });*/
 
-export const getActiveDescriptorOriginalReference =createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
+export const getActiveDescriptorOriginalReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
 	if (selected.length > 1) {
 		return "Select 1 descriptor";
 	} else if (selected.length === 1) {
-		return JSON.stringify(selected[0].originalReference, null, 3);		
+		return JSON.stringify(selected[0].originalReference, null, 3);
 	} else if (autoActive) {
 		return JSON.stringify(autoActive.originalReference, null, 3);
 	} else {
 		return "Add some descriptor";
-	}	
+	}
 });
 
 export const getActiveTargetReferenceListenerCategory = createSelector([getActiveTargetReference], (t) => {
