@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
 	entry: "./src/shared/classes/Main.ts",
@@ -52,8 +52,10 @@ module.exports = {
 	},
 	plugins: [
 		new CleanWebpackPlugin(),
-		new CopyPlugin(["uxp"], {
-			copyUnmodified: true,
-		}), // Copy everything in UXP to dist
+		new CopyPlugin({
+			patterns: [
+				{ from: "uxp", to: "./"},				
+			],
+		}),
 	],
 };
