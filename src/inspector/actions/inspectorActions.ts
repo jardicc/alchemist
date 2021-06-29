@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings, IDescriptorSettings } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 import { CommandOptions } from "photoshop/dist/types/UXP";
@@ -210,7 +210,7 @@ export interface ISetDescriptorOptionsAction {
 	type: "SET_DESCRIPTOR_OPTIONS",
 	payload: {
 		uuids: string[] | "default"
-		options: CommandOptions
+		options: Partial<IDescriptorSettings>
 	}
 }
 
@@ -347,7 +347,7 @@ export function setInspectorViewAction(inspectorType:"content" | "diff" | "code"
 	};
 }
 
-export function setDescriptorOptionsAction(uuids:string[]|"default",options: CommandOptions): ISetDescriptorOptionsAction{
+export function setDescriptorOptionsAction(uuids:string[]|"default",options: Partial<IDescriptorSettings>): ISetDescriptorOptionsAction{
 	return {
 		type: "SET_DESCRIPTOR_OPTIONS",
 		payload: {

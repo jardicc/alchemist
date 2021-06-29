@@ -501,7 +501,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		}
 		case "SET_RECORD_RAW": {
 			state = produce(state, draft => {
-				draft.settings.recordRawData = action.payload;
+				draft.settings.makeRawDataEasyToInspect = action.payload;
 			});
 			break;
 		}

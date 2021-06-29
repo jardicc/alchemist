@@ -33,7 +33,7 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 		}
 	}
 
-	private common = (options: CommandOptions) => {
+	private common = (options: Partial<IDescriptorSettings>) => {
 		const { autoSelectedUUIDs, selected, onSetOptions } = this.props;
 		if (autoSelectedUUIDs?.length) {
 			onSetOptions("default", options);			
@@ -62,9 +62,16 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 		this.common({ modalBehavior: (value === "default" ? null : value) });
 	}
 	
+	private onSetSupportRawDataType = (e: any) => {
+		const value = e.target.checked;
+		this.common({ supportRawDataType: !!value });
+	}
+
+
+	
 	public render(): React.ReactNode {
 
-		const { dialogOptions, modalBehavior, synchronousExecution } = this.props.descriptorSettings;
+		const { dialogOptions, modalBehavior, synchronousExecution,supportRawDataType } = this.props.descriptorSettings;
 		return (
 			<div className="GeneratedCode">
 				<TabList className="tabsView" activeKey={this.props.viewType} onChange={this.props.onSetView}>
@@ -120,6 +127,9 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 								</sp-menu>
 							</sp-dropdown>
 						</div>
+						<div className="row">
+							<sp-checkbox className="check" onClick={this.onSetSupportRawDataType} checked={supportRawDataType === true ? "checked" : undefined} indeterminate={supportRawDataType === "mixed" ? true : undefined}>Support raw data type</sp-checkbox>
+						</div>
 					</TabPanel>
 				</TabList>
 			</div>
@@ -147,7 +157,7 @@ const mapStateToProps = (state: IRootState): IGeneratedCodeProps => ({
 });
 
 interface IGeneratedCodeDispatch {
-	onSetOptions: (uuids: string[] | "default", options: CommandOptions) => void
+	onSetOptions: (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => void
 	onSetView: (viewType: TCodeViewType) => void
 }
 

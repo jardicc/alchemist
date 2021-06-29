@@ -155,7 +155,7 @@ export type TAllReferenceSubtypes = ICategory|IProperty | ICustomDescriptor | IH
 
 export interface ISettings {
 	fontSize: TFontSizeSettings
-	recordRawData: boolean
+	makeRawDataEasyToInspect: boolean
 	selectReferenceBeforeGet: boolean
 	autoUpdateInspector: boolean
 	groupDescriptors: "none" | "strict"
@@ -176,9 +176,10 @@ export interface ISettings {
 }
 
 export interface IDescriptorSettings {
-	dialogOptions: "mixed"|TDialogOptions | null,
-	modalBehavior: "mixed"|TModalBehavior | null,
-	synchronousExecution: "mixed"|boolean | null
+	supportRawDataType: "mixed" | boolean
+	dialogOptions: "mixed" | TDialogOptions | null,
+	modalBehavior: "mixed" | TModalBehavior | null,
+	synchronousExecution: "mixed" | boolean | null
 }
 
 export interface IPropertySettings {

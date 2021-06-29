@@ -2,12 +2,13 @@ import { Descriptor } from "photoshop/dist/types/UXP";
 import { Store, CombinedState, AnyAction } from "redux";
 import { IInspectorState } from "../model/types";
 import { getInspectorSettings } from "../selectors/inspectorSelectors";
+require("./Base64.js");
 
 export class RawDataConverter{
 	public static replaceArrayBuffer(obj: Descriptor): Descriptor {
 		const store:Store<CombinedState<{inspector: IInspectorState;}>, AnyAction> = (window as any)._rootStore;
 		const settings = getInspectorSettings(store.getState());
-		if (!settings.recordRawData) {
+		if (!settings.makeRawDataEasyToInspect) {
 			return obj;
 		}
 		rec(obj);
@@ -25,7 +26,7 @@ export class RawDataConverter{
 						const uint = new Uint8Array(data[key]);
 						const arr: number[] = Array.from(uint);
 
-						if (settings.recordRawData) {
+						if (settings.makeRawDataEasyToInspect) {
 							data[key] = {
 								"_data": arr,
 								"_rawData": "alchemistFakeType",
@@ -55,7 +56,13 @@ export class RawDataConverter{
 							rec(item);
 						}
 					}
-					else if (typeof data[key] === "object") {
+					else if (data[key] instanceof ArrayBuffer) {
+						console.log("Buf Buf!!!");
+						data[key] = {
+							"_rawData": "base64",
+							"_data": btoa(String.fromCharCode(...new Uint8Array(data[key]))),
+						};
+					} else if (typeof data[key] === "object") {
 						if ("_rawData" in data[key] && data[key]._rawData === "alchemistFakeType") {
 							// $$$ adds marker so we can find them later and remove left and right quotes from string
 							data[key] = `$$$Left_new Uint8Array(${JSON.stringify(data[key]._data)})_Right$$$`;

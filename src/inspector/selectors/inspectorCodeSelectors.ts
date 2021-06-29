@@ -114,6 +114,7 @@ export const getDescriptorOptions = createSelector([getActiveDescriptors, getAut
 
 	const desc:IDescriptor[] = selected;
 	const res: IDescriptorSettings = {
+		supportRawDataType: getValue(desc.map(item=>item.descriptorSettings.supportRawDataType)),
 		dialogOptions: getValue(desc.map(item=>item.descriptorSettings.dialogOptions)),
 		modalBehavior: getValue(desc.map(item=>item.descriptorSettings.modalBehavior)),
 		synchronousExecution: getValue(desc.map(item=>item.descriptorSettings.synchronousExecution)),

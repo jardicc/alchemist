@@ -28,7 +28,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 	}
 	
 	public render(): React.ReactNode {
-		const { settings: { recordRawData: ignoreRawData, maximumItems,fontSize,neverRecordActionNames }, onSetRecordRaw,onSetFontSize, onNeverRecordActionNamesChanged } = this.props;
+		const { settings: { makeRawDataEasyToInspect: ignoreRawData, maximumItems,fontSize,neverRecordActionNames }, onSetRecordRaw,onSetFontSize, onNeverRecordActionNamesChanged } = this.props;
 		const items: { val: TFontSizeSettings, label: string }[] = [
 			{ label: "Tiny", val: "size-tiny" },
 			{ label: "Small", val: "size-small" },
