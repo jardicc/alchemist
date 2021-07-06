@@ -3,6 +3,7 @@ import { IRootState } from "../../shared/store";
 import { IDescriptor, IInspectorState } from "../model/types";
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { Helpers } from "../classes/Helpers";
+import { cloneDeep } from "lodash";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
  
@@ -33,6 +34,8 @@ export const getInspectorSettings = createSelector([all], (s) => {
 export const getFontSizeSettings = createSelector([getInspectorSettings], (s) => {
 	return s.fontSize;
 });
+
+export const getNeverRecordActionNames = createSelector([getInspectorSettings], s => s.neverRecordActionNames);
 
 // will exclude undefined objects in array
 export const getActiveTargetReferenceForAM = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
@@ -65,7 +68,6 @@ export const getAddAllowed = createSelector([getActiveTargetReference], s => {
 });
 
 export const getDescriptorsListView = createSelector([getAllDescriptors, getActiveTargetReference, getFilterBySelectedReferenceType,getInspectorSettings], (allDesc, activeRefFilter, rootFilter,settings) => {	
-	
 	const pinned = allDesc.filter(i => i.pinned);
 	const notPinned = allDesc.filter(i => !i.pinned);
 	let reordered = [...notPinned, ...pinned];
@@ -75,24 +77,33 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		reordered = reordered.filter(item => (item.title.toLowerCase().includes(searchTerm.toLowerCase())));
 	} 
 
-	// add one search here... perhaps generate name and store it in redux store so it can be used in search
-
+	/*
 	if (rootFilter === "off" && activeRefFilter?.type !== "listener") {
+		// handle this!!
 		return reordered;
 	}
+	*/
 
+	//let filtered: IDescriptor[] = reordered;
+
+	
 	let filtered = reordered.filter((desc: IDescriptor) => {
-		if (rootFilter === "off") { return true;}
+		if (rootFilter === "off") {
+			return true;
+		}
+	
 		const origRefFilter = desc.originalReference;
 		if (activeRefFilter?.type !== origRefFilter.type) {
 			return false;
 		}
-		for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
-			if (activeRefFilter.data[i].content.filterBy === "off") {
-				return true;
-			}
-			if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
-				return false;
+		if (activeRefFilter?.type !== "listener") {
+			for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
+				if (activeRefFilter.data[i].content.filterBy === "off") {
+					return true;
+				}
+				if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -108,6 +119,29 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 			);
 		}
 	}
+
+	console.log("!!!");
+
+	if (settings.groupDescriptors === "strict") {
+		filtered = cloneDeep(filtered);
+		filtered.reverse();
+	
+		// group (remove) duplicates
+		for (let i = 0; i < filtered.length-1; i++) {
+			const element = filtered[i];
+			for (let j = i+1; j < filtered.length; j++) {
+				const next = filtered[j];
+				if (next.crc === element.crc) {
+					filtered.splice(j, 1);
+					j -= 1;
+					element.groupCount = (!element.groupCount) ? 2 : element.groupCount+1;
+				}
+			}
+		}
+		
+		filtered.reverse();
+	}
+
 
 	return filtered;
 });
@@ -191,16 +225,16 @@ export const getPlayableReference = createSelector([getActiveDescriptorCalculate
 	}	
 });*/
 
-export const getActiveDescriptorOriginalReference =createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
+export const getActiveDescriptorOriginalReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
 	if (selected.length > 1) {
 		return "Select 1 descriptor";
 	} else if (selected.length === 1) {
-		return JSON.stringify(selected[0].originalReference, null, 3);		
+		return JSON.stringify(selected[0].originalReference, null, 3);
 	} else if (autoActive) {
 		return JSON.stringify(autoActive.originalReference, null, 3);
 	} else {
 		return "Add some descriptor";
-	}	
+	}
 });
 
 export const getActiveTargetReferenceListenerCategory = createSelector([getActiveTargetReference], (t) => {
@@ -233,6 +267,14 @@ export const getReplayEnabled = createSelector([getActiveDescriptors], (selected
 		return false;
 	}
 	return true;
+});
+
+export const getRanameEnabled = createSelector([getDescriptorsListView], (all) => {
+	const selected = all.filter(d => d.selected);
+	if (selected?.length !== 1) {
+		return false;
+	}
+	return (!selected[0].groupCount || selected[0].groupCount === 1);
 });
 
 /*export const getColumnSizesPercentage = createSelector([getInspectorSettings], (s) => {

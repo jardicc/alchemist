@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TPropertyClass, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings, IDescriptorSettings } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 import { CommandOptions } from "photoshop/dist/types/UXP";
@@ -32,7 +32,8 @@ export interface ISelectDescriptor {
 	type: "SELECT_DESCRIPTOR"
 	payload: {
 		operation:TSelectDescriptorOperation
-		uuid?:string
+		uuid?: string
+		crc?:number
 	}
 }
 
@@ -164,12 +165,12 @@ export interface ISetExcludeAction{
 	type: "SET_EXCLUDE_ACTION",
 	payload: string[]
 }
-
+/*
 export interface IGroupSameAction{	
 	type: "GROUP_SAME_ACTION",
 	payload: boolean
 }
-
+*/
 export interface IFilterEventNameAction{
 	type: "FILTER_EVENT_NAME_ACTION",
 	payload: {
@@ -209,7 +210,7 @@ export interface ISetDescriptorOptionsAction {
 	type: "SET_DESCRIPTOR_OPTIONS",
 	payload: {
 		uuids: string[] | "default"
-		options: CommandOptions
+		options: Partial<IDescriptorSettings>
 	}
 }
 
@@ -257,6 +258,30 @@ export interface ISetConverterInfoAction{
 export interface ISetFontSizeAction{
 	type: "SET_FONT_SIZE",
 	payload: TFontSizeSettings
+}
+
+export interface ISetNeverRecordActionNamesAction{
+	type: "SET_NEVER_RECORD_ACTION_NAMES_ACTION",
+	payload: string[]
+}
+
+export interface IToggleDescriptorsGroupingAction{
+	type: "TOGGLE_DESCRIPTORS_GROUPING",
+	payload:null
+}
+
+export function toggleDescriptorsGroupingAction():IToggleDescriptorsGroupingAction {
+	return {
+		type: "TOGGLE_DESCRIPTORS_GROUPING",
+		payload: null,
+	};
+}
+
+export function setNeverRecordActionNamesAction(value: string): ISetNeverRecordActionNamesAction {
+	return {
+		type: "SET_NEVER_RECORD_ACTION_NAMES_ACTION",
+		payload: value.split(/[\n\r]/g).map(v => v.trim()),
+	};
 }
 
 export function setFontSizeAction(size: TFontSizeSettings):ISetFontSizeAction {
@@ -322,7 +347,7 @@ export function setInspectorViewAction(inspectorType:"content" | "diff" | "code"
 	};
 }
 
-export function setDescriptorOptionsAction(uuids:string[]|"default",options: CommandOptions): ISetDescriptorOptionsAction{
+export function setDescriptorOptionsAction(uuids:string[]|"default",options: Partial<IDescriptorSettings>): ISetDescriptorOptionsAction{
 	return {
 		type: "SET_DESCRIPTOR_OPTIONS",
 		payload: {
@@ -396,7 +421,7 @@ export function setInspectorPathDomAction(path:string[],mode:"replace"|"add"):IS
 		},
 	};
 }
-export function setInspectorPathDiffAction(path:string[],mode:"replace"|"add"):ISetInspectorPathDiffAction{
+export function setInspectorPathDiffAction(path:TPath,mode:"replace"|"add"):ISetInspectorPathDiffAction{
 	return {
 		type: "SET_INSPECTOR_PATH_DIFF",
 		payload: {
@@ -446,10 +471,10 @@ export function addDescriptorAction(arg:IDescriptor):IAddDescriptorAction{
 		payload: arg,
 	};
 }
-export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string): ISelectDescriptor {
+export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string,crc?:number): ISelectDescriptor {
 	return {
 		type: "SELECT_DESCRIPTOR",
-		payload: {operation,uuid},
+		payload: {operation,uuid,crc},
 	};
 }
 export function setSelectedReferenceTypeAction(type: TTargetReference): ISetSelectedReferenceTypeAction {
@@ -566,13 +591,13 @@ export function setExcludeAction(arr:string[]):ISetExcludeAction{
 		payload:arr,
 	};
 }
-
+/*
 export function groupSameAction(enabled: boolean):IGroupSameAction {
 	return {
 		type: "GROUP_SAME_ACTION",
 		payload: enabled,
 	};
-}
+}*/
 
 export function filterEventNameAction(eventName:string, kind:"include"|"exclude", operation: "add"|"remove"):IFilterEventNameAction {
 	return {
@@ -612,7 +637,7 @@ export type TActions = ISetMainTab |
 	ISetFilterType |
 	ISetIncludeAction |
 	ISetExcludeAction |
-	IGroupSameAction |
+	//IGroupSameAction |
 	IFilterEventNameAction |
 	IReplaceWholeState |
 	ISetDispatcherValueAction |
@@ -626,4 +651,6 @@ export type TActions = ISetMainTab |
 	ISetMaximumItemsAction |
 	IDontShowMarketplaceInfoAction |
 	ISetConverterInfoAction |
-	ISetFontSizeAction
+	ISetFontSizeAction |
+	ISetNeverRecordActionNamesAction |
+	IToggleDescriptorsGroupingAction

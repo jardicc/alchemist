@@ -9,7 +9,6 @@ import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import "./../../../shared/ThemeVars.css";
 import "./Inspector.less";
-import { LeftColumnContainer } from "../LeftColumn/LeftColumnContainer";
 import { TActiveSection, TActiveInspectorTab, TFontSizeSettings } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
@@ -21,33 +20,10 @@ import { GeneratedCodeContainer } from "../GeneratedCode/GeneratedCodeContainer"
 import { SettingsContainer } from "../Settings/SettingsContainer";
 import { AMConverterContainer } from "../AMConverter/AMConverter";
 import { IconX} from "../../../shared/components/icons";
+import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
 
 
-export interface IInspectorProps{
-	mainTab: TActiveSection
-	modeTab: TActiveInspectorTab	
-	calculatedReference: string
-	columnSizesPercentage: [number, number]
-	fontSizeSettings:TFontSizeSettings
-}
-
-export interface IInspectorDispatch {
-	setMainTab(name: TActiveSection): void
-	setModeTab(mode: TActiveInspectorTab): void
-	setWholeState(): void
-	setColumnSize(px:number):void
-}
-
-
-type TInspector = IInspectorProps & IInspectorDispatch
-
-interface IState{
-	showMessage: boolean
-	message: string
-	link:string
-}
-
-class Inspector extends React.Component<TInspector, IState> { 
+class Inspector extends React.Component<TInspector, IInspectorState> { 
 	constructor(props: TInspector) {
 		super(props);
 
@@ -132,7 +108,7 @@ class Inspector extends React.Component<TInspector, IState> {
 						<DispatcherContainer />
 					</TabPanel>
 					<TabPanel id="settings" title="Settings">
-						<SettingsContainer />
+						<SettingsContainer  />
 					</TabPanel>
 					<TabPanel id="amConverter" title="AM Converter" showScrollbars={true}>
 						<AMConverterContainer />
@@ -145,26 +121,45 @@ class Inspector extends React.Component<TInspector, IState> {
 	}
 }
 
-const mapStateToProps = (state: IRootState): IInspectorProps => {
-	return {
-		mainTab: getMainTabID(state),
-		modeTab: getModeTabID(state),
-		calculatedReference: getActiveDescriptorOriginalReference(state),
-		columnSizesPercentage: [0, 0], //getColumnSizesPercentage(state),
-		fontSizeSettings: getFontSizeSettings(state),
-	};
-};
+type TInspector = IInspectorProps & IInspectorDispatch
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IInspectorDispatch, Record<string, unknown>> = (dispatch):IInspectorDispatch => {
-	return {
-		setMainTab: (key) => dispatch(setMainTabAction(key)),
-		setModeTab: (key) => dispatch(setModeTabAction(key)),
-		setWholeState: async () => {
-			dispatch(replaceWholeStateAction(await Settings.importState()));
-			Settings.loaded = true;
-		},
-		setColumnSize:(px)=>dispatch(setColumnSizeAction(px)),
-	};
-};
+interface IInspectorState{
+	showMessage: boolean
+	message: string
+	link:string
+}
 
-export const InspectorContainer = connect<IInspectorProps, IInspectorDispatch>(mapStateToProps, mapDispatchToProps)(Inspector);
+interface IInspectorProps{
+	mainTab: TActiveSection
+	modeTab: TActiveInspectorTab	
+	calculatedReference: string
+	columnSizesPercentage: [number, number]
+	fontSizeSettings:TFontSizeSettings
+}
+
+const mapStateToProps = (state: any): IInspectorProps => (state = state as IRootState,{
+	mainTab: getMainTabID(state),
+	modeTab: getModeTabID(state),
+	calculatedReference: getActiveDescriptorOriginalReference(state),
+	columnSizesPercentage: [0, 0], //getColumnSizesPercentage(state),
+	fontSizeSettings: getFontSizeSettings(state),
+});
+
+interface IInspectorDispatch {
+	setMainTab(name:TActiveSection): void
+	setModeTab(mode: TActiveInspectorTab): void
+	setWholeState(): void
+	setColumnSize(px:number):void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<IInspectorDispatch, Record<string, unknown>> = (dispatch):IInspectorDispatch => ({
+	setMainTab: (key) => dispatch(setMainTabAction(key)),
+	setModeTab: (key) => dispatch(setModeTabAction(key)),
+	setWholeState: async () => {
+		dispatch(replaceWholeStateAction(await Settings.importState()));
+		Settings.loaded = true;
+	},
+	setColumnSize:(px)=>dispatch(setColumnSizeAction(px)),
+});
+
+export const InspectorContainer = connect<IInspectorProps, IInspectorDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Inspector);

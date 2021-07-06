@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
 	entry: "./src/shared/classes/Main.ts",
@@ -13,14 +13,15 @@ module.exports = {
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions.
 		extensions: [".ts", ".tsx", ".js"],
+		fallback: { "os": false },
 	},
 	externals: {
 		"photoshop": "commonjs2 photoshop",
-		"uxp": "commonjs2 uxp"
+		"uxp": "commonjs2 uxp",
 	},
 	performance: {
 		maxEntrypointSize: Infinity,
-		maxAssetSize: Infinity
+		maxAssetSize: Infinity,
 	},
 	module: {
 		rules: [
@@ -51,8 +52,10 @@ module.exports = {
 	},
 	plugins: [
 		new CleanWebpackPlugin(),
-		new CopyPlugin(["uxp"], {
-			copyUnmodified: true,
-		}), // Copy everything in UXP to dist
+		new CopyPlugin({
+			patterns: [
+				{ from: "uxp", to: "./"},				
+			],
+		}),
 	],
 };

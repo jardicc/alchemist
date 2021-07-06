@@ -11,17 +11,14 @@ module.exports = {
 		minimizer: [new TerserPlugin(
 			{
 				extractComments: true,
-				cache: true,
 				parallel: true,
-				sourceMap: false,
 				terserOptions: {
-					extractComments: "all",
 					compress: {
 						drop_console: true,
 					},
-				}
-			}
+				},
+			},
 		)],
 	},
-	...common
+	...common,
 };

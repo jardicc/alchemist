@@ -1,28 +1,15 @@
 import React, { Component } from "react";
-import { IAMCoverter, ISettings } from "../../model/types";
+import { IAMCoverter } from "../../model/types";
 import "./AMConverter.less";
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { getInspectorSettings } from "../../selectors/inspectorSelectors";
-import { setConverterInfoAction, setMaximumItems, setRecordRawAction } from "../../actions/inspectorActions";
+import { setConverterInfoAction } from "../../actions/inspectorActions";
 import { AMHackFileFactory } from "../../classes/AMHackFileFactory";
+import semver from "semver";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const psVersion = require("uxp").host.version;
 
-export interface IAMConverterProps{
-	codeSnippet: string
-	isFileInstalled:boolean
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IAMConverterDispatch {
-	setConverterInfoAction: (value: Partial<IAMCoverter>) => void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ISettingsState { }
-
-export type TAMConverter = IAMConverterProps & IAMConverterDispatch
-
-class AMConverter extends Component<TAMConverter, ISettingsState> {
+class AMConverter extends Component<TAMConverter, Record<string,unknown>> {
 
 	constructor(props: TAMConverter) {
 		super(props);
@@ -46,6 +33,7 @@ class AMConverter extends Component<TAMConverter, ISettingsState> {
 				<div>
 					<div>
 						<h3>AM Converter</h3>
+						{!semver.satisfies(psVersion, " 22.2.0 || 22.3.0 || 22.3.1 ") && <div className="warning"><h4>Warning!</h4> <span>This works only in PS versions 22.2.0, 22.3.0, 22.3.1 due to removal of feature called universal listener. Consider downgrade if you want to use this converter.</span></div> }
 						<p>
 							This tool will help you to convert Action Manager code from ExtendScript into UXP batchPlay. Once everything is set please click &quot;Listener&quot; button in &quot;Descriptors&quot; tab and action descriptors will appear here and in code tab you will see generated code.
 						</p>
@@ -64,7 +52,7 @@ class AMConverter extends Component<TAMConverter, ISettingsState> {
 							<span>Status: </span><span className={(isFileInstalled?"isInstalled":"isNotInstalled")+" status"}>{isFileInstalled ? "File is installed" : "File is NOT installed"}</span>
 						</p>
 						
-						<span>If script file is not installed please create this file: </span><pre>[rootFolderOfPhotoshop]/Scripts/Presets/Alchemist-Listener.jsx</pre>
+						<span>If script file is not installed please create this file: </span><pre>[rootFolderOfPhotoshop]/Presets/Scripts/Alchemist-Listener.jsx</pre>
 						
 						
 					</div>
@@ -81,19 +69,25 @@ class AMConverter extends Component<TAMConverter, ISettingsState> {
 }
 
 
+type TAMConverter = IAMConverterProps & IAMConverterDispatch
 
-const mapStateToProps = (state: IRootState): IAMConverterProps => {
-	return {
-		codeSnippet: state.inspector.amConvertor.snippet,
-		isFileInstalled: state.inspector.amConvertor.isPresetFileInstalled,
-	};
-};
+interface IAMConverterProps{
+	codeSnippet: string
+	isFileInstalled:boolean
+}
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IAMConverterDispatch, Record<string, unknown>> = (dispatch):IAMConverterDispatch => {
-	return {
-		setConverterInfoAction: (value) => dispatch(setConverterInfoAction(value)),
-	};
-};
+const mapStateToProps = (state: IRootState): IAMConverterProps => ({
+	codeSnippet: state.inspector.amConvertor.snippet,
+	isFileInstalled: state.inspector.amConvertor.isPresetFileInstalled,	
+});
 
-export const AMConverterContainer = connect<IAMConverterProps, IAMConverterDispatch>(mapStateToProps, mapDispatchToProps)(AMConverter);
+interface IAMConverterDispatch {
+	setConverterInfoAction: (value: Partial<IAMCoverter>) => void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<IAMConverterDispatch, Record<string, unknown>> = (dispatch):IAMConverterDispatch => ({	
+	setConverterInfoAction: (value) => dispatch(setConverterInfoAction(value)),	
+});
+
+export const AMConverterContainer = connect<IAMConverterProps, IAMConverterDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(AMConverter);
 

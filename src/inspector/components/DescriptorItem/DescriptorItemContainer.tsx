@@ -1,4 +1,4 @@
-import { connect, MapDispatchToPropsFunction } from "react-redux";
+import { connect} from "react-redux";
 import cloneDeep from "lodash/cloneDeep";
 import { IRootState } from "../../../shared/store";
 import { selectDescriptorAction, renameDescriptorAction, setRenameModeAction } from "../../actions/inspectorActions";
@@ -8,30 +8,7 @@ import React from "react";
 import "./DescriptorItem.less";
 import { IconLockLocked, IconPinDown } from "../../../shared/components/icons";
 import { TState } from "../FilterButton/FilterButton";
-interface IOwn{
-	descriptor: IDescriptor
-}
-
-export interface IDescriptorItemProps {
-	descriptor: IDescriptor
-	autoSelected: string[]
-	activeTargetReference: ITargetReference | null;
-	filterBySelectedReferenceType:TState
-}
-
-export interface IDescriptorItemDispatch {
-	onSelect: (uuid: string, operation: TSelectDescriptorOperation) => void
-	onChangeName: (uuid: string, name: string) => void
-	setRenameMode: (uuid: string, on: boolean) => void
-}
-
-interface IState{
-	tempName:string
-}
-
-
-export type TDescriptorItem = IDescriptorItemProps & IDescriptorItemDispatch
-export type TDescriptorItemComponent = React.Component<TDescriptorItem>
+import { Dispatch } from "redux";
 
 class DescriptorItem extends React.Component<TDescriptorItem,IState> { 
 	constructor(props: TDescriptorItem) {
@@ -56,7 +33,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				operation = "add";				
 			}
 		} 
-		this.props.onSelect(this.props.descriptor.id, operation);
+		this.props.onSelect(this.props.descriptor.id, operation, this.props.descriptor.crc);
 	}
 
 	private get autoSelected():boolean {
@@ -115,11 +92,12 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 	private renderNormalState = () => {
 		const { descriptor } = this.props;
 		
-		const {descriptor:{locked,pinned} } = this.props;
+		const {descriptor:{locked,pinned,groupCount} } = this.props;
 		return (
 			<div className={"normalMode " + this.generateClassName()} onClick={this.select}>
 				<div className="name">{descriptor.title}</div>
 				<div className="spread"></div>
+				{(groupCount && groupCount > 1) && <div>{groupCount}×</div>}
 				{locked && <div className="icon"><IconLockLocked/></div> }
 				{pinned && <div className="icon"><IconPinDown/></div>}
 				{descriptor.startTime===0 ? <div className="time">Event</div> : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
@@ -137,22 +115,41 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 	}
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProps => {
-	
-	return {
-		descriptor: cloneDeep(ownProps.descriptor),
-		autoSelected: getAutoSelectedUUIDs(state),
-		activeTargetReference: getActiveTargetReference(state),
-		filterBySelectedReferenceType:getFilterBySelectedReferenceType(state),
-	};
-};
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IDescriptorItemDispatch, IOwn> = (dispatch):IDescriptorItemDispatch => {
-	return {
-		onSelect: (uuid: string, operation: TSelectDescriptorOperation) => dispatch(selectDescriptorAction(operation, uuid)),
-		onChangeName: (uuid: string, name: string) => dispatch(renameDescriptorAction(uuid,name)),
-		setRenameMode: (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid,on)),
-	};
-};
+type TDescriptorItem = IDescriptorItemProps & IDescriptorItemDispatch
 
-export const DescriptorItemContainer = connect<IDescriptorItemProps, IDescriptorItemDispatch, IOwn>(mapStateToProps, mapDispatchToProps)(DescriptorItem);
+interface IOwn{
+	descriptor: IDescriptor
+}
+
+interface IState{
+	tempName:string
+}
+
+interface IDescriptorItemProps {
+	descriptor: IDescriptor
+	autoSelected: string[]
+	activeTargetReference: ITargetReference | null;
+	filterBySelectedReferenceType:TState
+}
+
+const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProps => ({
+	descriptor: cloneDeep(ownProps.descriptor),
+	autoSelected: getAutoSelectedUUIDs(state),
+	activeTargetReference: getActiveTargetReference(state),
+	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),
+});
+
+interface IDescriptorItemDispatch {
+	onSelect: (uuid: string, operation: TSelectDescriptorOperation, crc?:number) => void
+	onChangeName: (uuid: string, name: string) => void
+	setRenameMode: (uuid: string, on: boolean) => void
+}
+
+const mapDispatchToProps = (dispatch:Dispatch):IDescriptorItemDispatch => ({
+	onSelect: (uuid: string, operation: TSelectDescriptorOperation,crc?:number) => dispatch(selectDescriptorAction(operation, uuid,crc)),
+	onChangeName: (uuid: string, name: string) => dispatch(renameDescriptorAction(uuid,name)),
+	setRenameMode: (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid,on)),
+});
+
+export const DescriptorItemContainer = connect<IDescriptorItemProps, IDescriptorItemDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(DescriptorItem);

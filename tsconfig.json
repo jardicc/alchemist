@@ -3,22 +3,16 @@
 	  "allowSyntheticDefaultImports": true,
 	  "lib": ["DOM","ES6"],
 	  "moduleResolution": "node",
+	  "strict": true,
+	  
 	  "noImplicitReturns": true,
-	  "strictBindCallApply": true,
-	  "strictNullChecks": true,	  
         "esModuleInterop": true,
         "jsx": "react",
         "module": "esnext",
-        "noImplicitAny": true,
         "outDir": "./dist/",
         "sourceMap": true,
 	  "target": "ES2018",
-	  
-	  "noImplicitThis": true,
-	  "strictFunctionTypes": false,
-	  "alwaysStrict": true,
 	  "disableSizeLimit": false,
-	  "strictPropertyInitialization": true,
 	  "typeRoots": [
 		"./src/inspector/model",
 		"./node_modules/@types"

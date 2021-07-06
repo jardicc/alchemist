@@ -22,9 +22,11 @@ export type TActiveSection = "descriptors" | "settings";
 export type TExportItems = "selected" | "all";
 export type TImportItems = "append" | "replace";
 
+//export type TAllTabs = TActiveSection|TActiveInspectorTab
+
 //export type TActiveTargetReference = null|Record<string, unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
 
-export type TPath = (number | string)[];
+export type TPath = (string)[];
 export type TCustomDescriptorReference = "notSpecified" | "anySpecified";
 export type TBaseProperty = "notSpecified" | "anySpecified";
 export type TCategoryReference = "notSpecified" | "anySpecified";
@@ -46,6 +48,7 @@ export type TFilterEvents = "none" | "include" | "exclude";
 export type TSelectDescriptorOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
 
 export type TProtoMode = "none" | "uxp" | "advanced" | "all";
+export type TDescriptorsGrouping = "none"|"eventName"
 
 
 export interface IInspectorState {
@@ -53,6 +56,7 @@ export interface IInspectorState {
 	activeSection: TActiveSection
 	selectedReferenceType: TTargetReference
 	filterBySelectedReferenceType: TState
+	descriptorsGrouping: TDescriptorsGrouping
 	targetReference: ITargetReference[]
 	settings:ISettings
 	inspector:IInspector
@@ -149,31 +153,33 @@ export type TAllReferenceSubtypes = ICategory|IProperty | ICustomDescriptor | IH
 
 /////
 
-export interface ISettings{
-	fontSize:TFontSizeSettings
-	recordRawData:boolean
+export interface ISettings {
+	fontSize: TFontSizeSettings
+	makeRawDataEasyToInspect: boolean
 	selectReferenceBeforeGet: boolean
 	autoUpdateInspector: boolean
-	groupDescriptors: "none"|"strict"
-	searchTerm:string|null
-	listenerFilterType:TFilterEvents
-	listenerExclude:string[]
-	listenerInclude:string[]
-	lastHistoryID:number
+	groupDescriptors: "none" | "strict"
+	searchTerm: string | null
+	listenerFilterType: TFilterEvents
+	listenerExclude: string[]
+	listenerInclude: string[]
+	lastHistoryID: number
 	autoUpdateListener: boolean
 	lastSelectedItem: string | null
-	dontShowMarketplaceInfo:boolean
-	activeDescriptors:string[]
-	properties:IPropertySettings[]
+	dontShowMarketplaceInfo: boolean
+	activeDescriptors: string[]
+	properties: IPropertySettings[]
 	maximumItems: number
 	leftColumnWidthPx: number
-	initialDescriptorSettings:IDescriptorSettings
+	initialDescriptorSettings: IDescriptorSettings
+	neverRecordActionNames:string[]
 }
 
 export interface IDescriptorSettings {
-	dialogOptions: "mixed"|TDialogOptions | null,
-	modalBehavior: "mixed"|TModalBehavior | null,
-	synchronousExecution: "mixed"|boolean | null
+	supportRawDataType: "mixed" | boolean
+	dialogOptions: "mixed" | TDialogOptions | null,
+	modalBehavior: "mixed" | TModalBehavior | null,
+	synchronousExecution: "mixed" | boolean | null
 }
 
 export interface IPropertySettings {
@@ -232,6 +238,7 @@ export interface IReference {
 export interface IDescriptor{
 	id: string
 	selected: boolean
+	crc:number
 	startTime: number
 	endTime: number
 	pinned: boolean,
@@ -244,7 +251,8 @@ export interface IDescriptor{
 	calculatedReference: ITargetReferenceAM|Descriptor,
 	/** content */
 	originalData: Descriptor[] | Descriptor,
-	descriptorSettings:IDescriptorSettings
+	descriptorSettings: IDescriptorSettings
+	groupCount?:number
 }
 
 export interface IGetNameOutput{

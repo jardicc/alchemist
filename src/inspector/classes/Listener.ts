@@ -57,10 +57,10 @@ export class ListenerClass{
 			const eventName = descriptor._isReference ? "_ref" : descriptor._alchemistAMHack._obj;
 			this.listenerCb(eventName, descriptor._alchemistAMHack);
 		};
-		action.addNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66", universal: true }],ListenerClass.listenerAMHackCb);
+		action.addNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66"}],ListenerClass.listenerAMHackCb);
 	}
 
 	public static removeAMConverterHack() {
-		action.removeNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66", universal: true }], ListenerClass.listenerAMHackCb);
+		action.removeNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66"}], ListenerClass.listenerAMHackCb);
 	}
 }

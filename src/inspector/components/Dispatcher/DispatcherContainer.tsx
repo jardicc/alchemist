@@ -1,4 +1,4 @@
-import { MapDispatchToPropsFunction, connect } from "react-redux";
+import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setDispatcherValueAction, addDescriptorAction } from "../../actions/inspectorActions";
 import { getDispatcherSnippet } from "../../selectors/dispatcherSelectors";
@@ -11,23 +11,12 @@ import { Helpers } from "../../classes/Helpers";
 import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import { getInitialState } from "../../store/initialState";
+import { str as crc } from "crc-32";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+import Sval from "sval";
+import { Dispatch } from "redux";
 
-
-export interface IDispatcherProps{
-	snippet: string
-	settings:ISettings
-}
-
-export interface IDispatcherDispatch {
-	setDispatcherValue: (value: string) => void
-	onAddDescriptor: (descriptor: IDescriptor) => void
-}
-
-
-type TDispatcher = IDispatcherProps & IDispatcherDispatch
-
-
-class Dispatcher extends React.Component<TDispatcher, any> {
+class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 
 	constructor(props: TDispatcher) {
 		super(props);
@@ -39,13 +28,30 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 		this.props.setDispatcherValue(e.currentTarget.value);
 	}
 
-	private send = () => {
+	private send = async () => {
 		try {
 			const snippet = this.props.snippet;
 			const startTime = Date.now();			
 			let data: any;
 			try {
-				data = (function () { return eval(snippet); })();
+				data = await (async function  () {
+					const interpreter = new Sval({
+						ecmaVer: 9,
+						sandBox: false,
+					});
+					// eslint-disable-next-line @typescript-eslint/no-var-requires
+					interpreter.import("uxp", require("uxp"));
+					// eslint-disable-next-line @typescript-eslint/no-var-requires
+					interpreter.import("os", require("os"));
+
+					interpreter.run(`
+						"use strict";
+						async function userCode(){${snippet}};
+						exports.returnValue = userCode();
+					`);
+					const res = await interpreter.exports.returnValue;
+					return res;
+				})();
 			} catch (e) {
 				data = {error:e.stack};
 			}
@@ -61,12 +67,13 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 					},
 				}],
 			};
-
 			const result: IDescriptor = {
 				endTime,
 				startTime,
 				id: Helpers.uuidv4(),
 				locked: false,
+				//crc:Date.now()+Math.random(),
+				crc:crc(JSON.stringify(data||"__empty__")),
 				originalData: RawDataConverter.replaceArrayBuffer(data),
 				originalReference,
 				pinned: false,
@@ -88,7 +95,7 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 	public render(): JSX.Element {
 		return (
 			<div className="Dispatcher">				
-				<div className="help">Content of variable or value itself at the last line will be recorded. Use <code>{`batchPlay([{_obj:"invert"}])`}</code> instead of <code>{`const result = batchPlay([{_obj:"invert"}])`}</code><br /></div>
+				<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
 				<div className="textareaWrap">
 					<span className="placeholder">{this.props.snippet}</span>
 					<textarea defaultValue={this.props.snippet} onChange={this.change} maxLength={Number.MAX_SAFE_INTEGER} placeholder={getInitialState().dispatcher.snippets[0].content} />
@@ -99,18 +106,27 @@ class Dispatcher extends React.Component<TDispatcher, any> {
 	}
 }
 
-const mapStateToProps = (state: IRootState): IDispatcherProps => {
-	return {
-		snippet: getDispatcherSnippet(state),
-		settings: getInspectorSettings(state),
-	};
-};
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IDispatcherDispatch, Record<string, unknown>> = (dispatch):IDispatcherDispatch => {
-	return {
-		setDispatcherValue: (value) => dispatch(setDispatcherValueAction(value)),
-		onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
-	};
-};
+type TDispatcher = IDispatcherProps & IDispatcherDispatch
 
-export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch>(mapStateToProps, mapDispatchToProps)(Dispatcher);
+interface IDispatcherProps{
+	snippet: string
+	settings:ISettings
+}
+
+const mapStateToProps = (state: IRootState): IDispatcherProps => ({
+	snippet: getDispatcherSnippet(state),
+	settings: getInspectorSettings(state),
+});
+
+interface IDispatcherDispatch {
+	setDispatcherValue: (value: string) => void
+	onAddDescriptor: (descriptor: IDescriptor) => void
+}
+
+const mapDispatchToProps = (dispatch:Dispatch):IDispatcherDispatch => ({
+	setDispatcherValue: (value) => dispatch(setDispatcherValueAction(value)),
+	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
+});
+
+export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch, Record<string,unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Dispatcher);

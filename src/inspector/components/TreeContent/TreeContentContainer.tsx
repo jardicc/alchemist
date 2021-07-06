@@ -13,32 +13,7 @@ import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import { TreePath } from "../TreePath/TreePath";
 
-export interface ITreeContentProps{
-	content: any
-	path: string[]
-	expandedKeys: TPath[]
-	protoMode: TProtoMode
-	descriptorContent: string
-	viewType: TGenericViewType
-	autoExpandLevels:number
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ITreeContentDispatch {
-	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
-	onSetView: (viewType: TGenericViewType) => void
-	onSetAutoExpandLevel:(level:number)=>void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ITreeContentState{
-	
-}
-
-export type TTreeContent = ITreeContentProps & ITreeContentDispatch
-
-class TreeContent extends Component<TTreeContent, ITreeContentState> {
+class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 
 	constructor(props: TTreeContent) {
 		super(props);
@@ -104,26 +79,41 @@ class TreeContent extends Component<TTreeContent, ITreeContentState> {
 	}
 }
 
-const mapStateToProps = (state: IRootState): ITreeContentProps => {
-	return {
-		content: getTreeContent(state),		
-		path: getContentPath(state),
-		protoMode: "none",
-		expandedKeys: getContentExpandedNodes(state),
-		descriptorContent: getActiveDescriptorContent(state),
-		viewType: getContentActiveView(state),
-		autoExpandLevels: getContentExpandLevel(state),
-	};
-};
+type TTreeContent = ITreeContentProps & ITreeContentDispatch
 
-const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Record<string, unknown>> = (dispatch):ITreeContentDispatch => {
-	return {
-		onInspectPath: (path, mode) => dispatch(setInspectorPathContentAction(path, mode)),
-		onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("content", path, expand, recursive, data)),
-		onSetView: (viewType) => dispatch(setInspectorViewAction("content", viewType)),
-		onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("content", level)),
-	};
-};
+interface ITreeContentProps{
+	content: any
+	path: string[]
+	expandedKeys: TPath[]
+	protoMode: TProtoMode
+	descriptorContent: string
+	viewType: TGenericViewType
+	autoExpandLevels:number
+}
 
-export const TreeContentContainer = connect<ITreeContentProps, ITreeContentDispatch>(mapStateToProps, mapDispatchToProps)(TreeContent);
+const mapStateToProps = (state: IRootState): ITreeContentProps => ({
+	content: getTreeContent(state),		
+	path: getContentPath(state),
+	protoMode: "none",
+	expandedKeys: getContentExpandedNodes(state),
+	descriptorContent: getActiveDescriptorContent(state),
+	viewType: getContentActiveView(state),
+	autoExpandLevels: getContentExpandLevel(state),
+});
+
+interface ITreeContentDispatch {
+	onInspectPath: (path: string[], mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onSetView: (viewType: TGenericViewType) => void
+	onSetAutoExpandLevel:(level:number)=>void
+}
+
+const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Record<string, unknown>> = (dispatch):ITreeContentDispatch => ({
+	onInspectPath: (path, mode) => dispatch(setInspectorPathContentAction(path, mode)),
+	onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("content", path, expand, recursive, data)),
+	onSetView: (viewType) => dispatch(setInspectorViewAction("content", viewType)),
+	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("content", level)),
+});
+
+export const TreeContentContainer = connect(mapStateToProps, mapDispatchToProps)(TreeContent);
 

@@ -7,6 +7,7 @@ import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { getName } from "./GetName";
 import { getInitialState } from "../store/initialState";
 import { RawDataConverter } from "./RawDataConverter";
+import { str as crc } from "crc-32";
 const PS = photoshop.app;
 
 
@@ -266,6 +267,7 @@ export class GetInfo {
 			endTime: Date.now(),
 			id: this.uuidv4(),
 			locked: false,
+			crc: crc(JSON.stringify(playResult)),
 			originalData: RawDataConverter.replaceArrayBuffer(playResult),
 			originalReference: originalRef,
 			pinned: false,

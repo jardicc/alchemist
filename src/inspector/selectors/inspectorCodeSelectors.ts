@@ -6,7 +6,36 @@ import { IDescriptor, IDescriptorSettings } from "../model/types";
 import { getContentPath } from "./inspectorContentSelectors";
 import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
 
-export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath, getReplayEnabled], (selected, autoActive, treePath, replayEnabled) => {
+
+
+export const getDescriptorOptions = createSelector([getActiveDescriptors, getAutoActiveDescriptor,getInspectorSettings], (selected, autoActive,settings) => {
+
+	function getValue<T>(arr: T[]): T | "mixed" {
+		const first = arr[0];
+		const res = arr.every(item => item === first);
+		if (res) {
+			return first;
+		} else {
+			return "mixed";
+		}
+	}
+
+	if (autoActive) {
+		return settings.initialDescriptorSettings;
+	}
+
+	const desc:IDescriptor[] = selected;
+	const res: IDescriptorSettings = {
+		supportRawDataType: getValue(desc.map(item=>item.descriptorSettings.supportRawDataType)),
+		dialogOptions: getValue(desc.map(item=>item.descriptorSettings.dialogOptions)),
+		modalBehavior: getValue(desc.map(item=>item.descriptorSettings.modalBehavior)),
+		synchronousExecution: getValue(desc.map(item=>item.descriptorSettings.synchronousExecution)),
+	};
+
+	return res;
+});
+
+export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath, getReplayEnabled, getDescriptorOptions], (selected, autoActive, treePath, replayEnabled,descOptions) => {
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
@@ -71,7 +100,11 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 		data = iDesc.map(item => addPerItemOptions(item));
 		// adds raw data type support
 		data = cloneDeep(data);
-		data.forEach(item => RawDataConverter.convertFakeRawInCode(item));
+		
+		for (let i = 0; i < data.length; i++) {
+			const item = data[i];
+			RawDataConverter.convertFakeRawInCode(item,descOptions);
+		}
 		
 		let str = JSON.stringify(data, null, 3);
 		const commandOptions = addCommonOptions(iDesc);
@@ -94,32 +127,6 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 	} else {
 		return "Add some descriptor";
 	}
-});
-
-export const getDescriptorOptions = createSelector([getActiveDescriptors, getAutoActiveDescriptor,getInspectorSettings], (selected, autoActive,settings) => {
-
-	function getValue<T>(arr: T[]): T | "mixed" {
-		const first = arr[0];
-		const res = arr.every(item => item === first);
-		if (res) {
-			return first;
-		} else {
-			return "mixed";
-		}
-	}
-
-	if (autoActive) {
-		return settings.initialDescriptorSettings;
-	}
-
-	const desc:IDescriptor[] = selected;
-	const res: IDescriptorSettings = {
-		dialogOptions: getValue(desc.map(item=>item.descriptorSettings.dialogOptions)),
-		modalBehavior: getValue(desc.map(item=>item.descriptorSettings.modalBehavior)),
-		synchronousExecution: getValue(desc.map(item=>item.descriptorSettings.synchronousExecution)),
-	};
-
-	return res;
 });
 
 export const getCodeContentTab = createSelector([all], t => {

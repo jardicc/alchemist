@@ -8,7 +8,7 @@ export type TNonNullish = Record<string, unknown>;
 export type TData= TNonNullish;
 export type THideRoot= boolean;
 export type TInvertTheme=  boolean;
-export type TKeyPath= (string | number)[];
+export type TKeyPath= (string)[];
 export type TValue=any
 export type TCircularCache=any
 export type TIsCircular= boolean 
@@ -101,7 +101,7 @@ export interface IDefSimpleNodeProps extends ISimpleNodeProps{
 
 export interface ISimpleNodeProps{
 	getItemString: TGetItemString;
-	key: string | number;
+	key: string;
 	keyPath: TKeyPath;
 	labelRenderer: TLabelRenderer;
 	nodeType: TNodeType;
@@ -126,7 +126,7 @@ export interface INestedNodePropsDef extends INestedNodeProps{
 	createItemString: any,
 	expandable: boolean,
 	isCircular: boolean,
-	key: string|number
+	key: string
 	level: number,
 	nodeType:TNodeType
 	nodeTypeIndicator:any,

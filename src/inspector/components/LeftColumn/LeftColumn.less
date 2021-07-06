@@ -27,11 +27,17 @@
 	.search {
 		background-color: var(--divider);
 		padding: 0.3em;
+		display: flex;
+		position: relative;
+		max-width: 100%;
+		flex-grow: 0;
 
 		input{
+			flex-grow: 1;
 			box-sizing: border-box;
 			margin: 0;
-			width: 100%;
+			width: 0;
+			//width: 100%;
 			appearance: none;
 			background-color: var(--divider);
 			color: var(--text);
@@ -39,6 +45,14 @@
 			&:hover{
 				color: var(--hover);
 			}
+		}
+
+		sp-checkbox{
+			padding:0;
+			margin:0;
+			flex-grow: 0;
+			height:1em;
+			align-self: center;
 		}
 	}
 

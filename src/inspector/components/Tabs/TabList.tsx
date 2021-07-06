@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React from "react";
-import { TTabPanelComponent } from "./TabPanel";
 import "./TabList.less";
-import { iteratorSymbol } from "immer/dist/internal";
 
 export interface ITabListProps{
 	activeKey: string
 	className: string
-	children: React.ReactNode
-	onChange:(id:string)=>void
+	children: React.ReactElement[]
+	onChange:(id:any)=>void
 }
 
 export interface ITabListDispatch {
@@ -34,7 +32,7 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 		if (Array.isArray(this.props.children)) {
 			return (
 				<div className="tabRow">
-					{this.props.children.map((item: TTabPanelComponent) => (
+					{this.props.children.map(item => (
 						<div className={"tabHeader" + ((item.props.id === activeKey) ? " active" : "")} key={item.props.id} onClick={() => {
 							console.log(item.props.id);
 							this.props.onChange(item.props.id);
@@ -52,7 +50,7 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 		let clsName = "tabContent "; 
 
 		if (Array.isArray(children)) {
-			const found = children.find((item: TTabPanelComponent) => item.props.id === activeKey);
+			const found = children.find(item => item.props.id === activeKey);
 			if (!found) {
 				return <div className={clsName}>No content</div>;
 			}

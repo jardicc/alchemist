@@ -1,30 +1,12 @@
-import { connect, MapDispatchToPropsFunction } from "react-redux";
+import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { getInspectorSettings } from "../../selectors/inspectorSelectors";
-import { setFontSizeAction, setMaximumItems, setRecordRawAction } from "../../actions/inspectorActions";
+import { setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction } from "../../actions/inspectorActions";
 
 import React, { Component } from "react";
 import { ISettings, TFontSizeSettings } from "../../model/types";
 import "./Settings.less";
-
-export interface ISettingsProps{
-	settings: ISettings
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ISettingsDispatch {
-	onSetRecordRaw: (value: boolean) => void
-	onSetMaximumItems: (value: string) => void
-	onSetFontSize:(value:TFontSizeSettings)=>void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ISettingsState{
-	maxItemsTempValue: string
-	maxItemsFocus: boolean
-}
-
-export type TSettings = ISettingsProps & ISettingsDispatch
+import { Dispatch } from "redux";
 
 class Settings extends Component<TSettings, ISettingsState> {
 
@@ -46,7 +28,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 	}
 	
 	public render(): React.ReactNode {
-		const { settings: { recordRawData: ignoreRawData, maximumItems,fontSize }, onSetRecordRaw,onSetFontSize } = this.props;
+		const { settings: { makeRawDataEasyToInspect: ignoreRawData, maximumItems,fontSize,neverRecordActionNames }, onSetRecordRaw,onSetFontSize, onNeverRecordActionNamesChanged } = this.props;
 		const items: { val: TFontSizeSettings, label: string }[] = [
 			{ label: "Tiny", val: "size-tiny" },
 			{ label: "Small", val: "size-small" },
@@ -84,10 +66,10 @@ class Settings extends Component<TSettings, ISettingsState> {
 				</div>
 				<div className="row">
 					<span className="fontSizeLabel">
-						Font size: 
+						Font size:
 					</span>
 					<sp-dropdown class="fontSizeDropdown">
-						<sp-menu slot="options" onClick={(e:any)=>onSetFontSize(e.target.value)}>
+						<sp-menu slot="options" onClick={(e: any) => onSetFontSize(e.target.value)}>
 							{
 								items.map(item => (
 									<sp-menu-item
@@ -100,24 +82,52 @@ class Settings extends Component<TSettings, ISettingsState> {
 						</sp-menu>
 					</sp-dropdown>
 				</div>
+				<div className="row">
+					<div>
+						<h3>Hard ignore action names</h3>
+						<span>
+							Events that never will be recorded. No matter what you will set in include/exclude filter. One per line, no quotes, no commas or semicolons. Will Not affect already recorded items.
+						</span>
+						<div>
+							<textarea className="neverRecordActionNamesArea" onChange={e=>onNeverRecordActionNamesChanged(e.currentTarget.value)} defaultValue={neverRecordActionNames.join("\n")} />
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}
 }
 
-const mapStateToProps = (state: IRootState): ISettingsProps => {
-	return {
-		settings: getInspectorSettings(state),
-	};
-};
 
-const mapDispatchToProps: MapDispatchToPropsFunction<ISettingsDispatch, Record<string, unknown>> = (dispatch):ISettingsDispatch => {
-	return {
-		onSetRecordRaw: (value) => dispatch(setRecordRawAction(value)),
-		onSetMaximumItems: (value) => dispatch(setMaximumItems(value)),
-		onSetFontSize:(value)=>dispatch(setFontSizeAction(value)),
-	};
-};
 
-export const SettingsContainer = connect<ISettingsProps, ISettingsDispatch>(mapStateToProps, mapDispatchToProps)(Settings);
 
+type TSettings = ISettingsProps & ISettingsDispatch
+
+interface ISettingsState{
+	maxItemsTempValue: string
+	maxItemsFocus: boolean
+}
+
+interface ISettingsProps{
+	settings: ISettings
+}
+
+const mapStateToProps = (state: IRootState): ISettingsProps => ({	
+	settings: getInspectorSettings(state),	
+});
+
+interface ISettingsDispatch {
+	onSetRecordRaw: (value: boolean) => void
+	onSetMaximumItems: (value: string) => void
+	onSetFontSize: (value: TFontSizeSettings) => void
+	onNeverRecordActionNamesChanged:(value:string)=>void
+}
+
+const mapDispatchToProps = (dispatch:Dispatch): ISettingsDispatch => ({
+	onSetRecordRaw: (value) => dispatch(setRecordRawAction(value)),
+	onSetMaximumItems: (value) => dispatch(setMaximumItems(value)),
+	onSetFontSize: (value) => dispatch(setFontSizeAction(value)),
+	onNeverRecordActionNamesChanged:(value)=>dispatch(setNeverRecordActionNamesAction(value)),
+});
+
+export const SettingsContainer = connect<ISettingsProps, ISettingsDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Settings);

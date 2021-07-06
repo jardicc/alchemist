@@ -5,10 +5,11 @@ import { IInspectorState } from "../model/types";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [4, 0, 0],
+		version: [5, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
+		descriptorsGrouping: "eventName",
 
 		targetReference: [
 			{
@@ -190,7 +191,7 @@ export function getInitialState(): IInspectorState {
 		settings: {
 			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
 			fontSize:"size-default",
-			recordRawData:false,
+			makeRawDataEasyToInspect:false,
 			selectReferenceBeforeGet: true,
 			searchTerm: null,
 			listenerFilterType: "exclude",
@@ -204,11 +205,12 @@ export function getInitialState(): IInspectorState {
 			listenerInclude: [],
 			lastHistoryID:-1,
 			autoUpdateInspector: false,
-			groupDescriptors: "none",
+			groupDescriptors: "strict",
 			autoUpdateListener: false,
 			lastSelectedItem: null,
 			dontShowMarketplaceInfo:false,
-			activeDescriptors: [],			
+			activeDescriptors: [],
+			neverRecordActionNames:["idle"],
 			properties: [
 				{
 					type: "application",
@@ -557,6 +559,7 @@ export function getInitialState(): IInspectorState {
 			maximumItems: 150,
 			leftColumnWidthPx: 200, // todo
 			initialDescriptorSettings: {
+				supportRawDataType: false,
 				dialogOptions:"dontDisplay",
 				modalBehavior: "fail",
 				synchronousExecution: false,
@@ -595,7 +598,7 @@ export function getInitialState(): IInspectorState {
 		descriptors: [
 		],
 		dispatcher: {
-			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nbatchPlay([{"_obj": "invert"}],{});`}],
+			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nreturn await batchPlay([{"_obj": "invert"}],{});`}],
 		},
 	};
 }
