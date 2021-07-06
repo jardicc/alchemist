@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0
+- adds raw data type support (needs to be enabled in Code > Options)
+- adds grouping of items with same content
+- adds "hard ignore" feature into settings (event names that never will be recorded in any way)
+- fixes dispatcher (now it requires `return` keyword if you want inspect result)
+- fixes error with `eval`
+- shows compatible PS versions for AM converter
+- internal - updates node modules and upgrades to Webpack 5
+
 ## 1.2.1
 - min. required PS version hotfix
 - code cleanup
