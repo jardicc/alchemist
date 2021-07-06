@@ -1,30 +1,24 @@
-(function (f) {
 
-	"use strict";
-
-	var base64 = f();
-	if (typeof window.btoa !== "function") window.btoa = base64.btoa;
-	if (typeof window.atob !== "function") window.atob = base64.atob;
-    
-}(function () {
-    
-	"use strict";
-    
-	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    
-	function InvalidCharacterError(message) {
+class InvalidCharacterError extends Error{
+	constructor(message:string) {
+		super();
 		this.message = message;
 	}
-	InvalidCharacterError.prototype = new Error();
-	InvalidCharacterError.prototype.name = "InvalidCharacterError";
+
+	public name =  "InvalidCharacterError";
+}
+
+export class Base64 {
+	public static chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     
 	// encoder
 	// [https://gist.github.com/999166] by [https://github.com/nignag]
-	function btoa(input) {
-		var str = String(input);
+	public static btoa(input:string):string {
+		const str = String(input);
+		let output = "";
 		for (
 			// initialize result and counter
-			var block, charCode, idx = 0, map = chars, output = "";
+			let block=0, charCode, idx = 0, map = Base64.chars;
 			// if the next str index does not exist:
 			//   change the mapping table to "="
 			//   check if d has no fractional digits
@@ -43,14 +37,15 @@
     
 	// decoder
 	// [https://gist.github.com/1020396] by [https://github.com/atk]
-	function atob(input) {
-		var str = (String(input)).replace(/[=]+$/, ""); // #31: ExtendScript bad parse of /=
+	public static atob(input:string):string {
+		const str = (String(input)).replace(/[=]+$/, ""); // #31: ExtendScript bad parse of /=
+		let output  = "";
 		if (str.length % 4 === 1) {
 			throw new InvalidCharacterError("'atob' failed: The string to be decoded is not correctly encoded.");
 		}
 		for (
 			// initialize result and counters
-			var bc = 0, bs, buffer, idx = 0, output = "";
+			let bc = 0, bs = 0, buffer, idx = 0;
 			// get next character
 			buffer = str.charAt(idx++); // eslint-disable-line no-cond-assign
 			// character found in table? initialize bit storage and add its ascii value;
@@ -60,11 +55,9 @@
 			bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
 		) {
 			// try to find character in table (0-63, not found => -1)
-			buffer = chars.indexOf(buffer);
+			buffer = Base64.chars.indexOf(buffer);
 		}
 		return output;
 	}
-    
-	return { btoa: btoa, atob: atob };
-    
-}));
+}
+
