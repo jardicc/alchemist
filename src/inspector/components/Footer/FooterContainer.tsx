@@ -76,7 +76,7 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 					<span className="version">{psVersionString}</span>
 				</div>
 				<div className="spread"></div>
-				<div className="copy">Copyright © 2020 <a href="https://bereza.cz">Bereza.cz</a></div>
+				<div className="copy">Copyright © 2021 <a href="https://bereza.cz">Bereza.cz</a></div>
 				<div className="spread"></div>
 				<ButtonMenu
 					key="import"
