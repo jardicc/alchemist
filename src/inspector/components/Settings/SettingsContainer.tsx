@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { getInspectorSettings } from "../../selectors/inspectorSelectors";
 import { setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction } from "../../actions/inspectorActions";
-
+import SP from "react-uxp-spectrum";
 import React, { Component } from "react";
 import { ISettings, TFontSizeSettings } from "../../model/types";
 import "./Settings.less";
@@ -41,7 +41,8 @@ class Settings extends Component<TSettings, ISettingsState> {
 			<div className="Settings">
 				<div><span className="title">Descriptor settings: </span></div>
 				<div className="row">
-					<sp-checkbox quiet={true} checked={ignoreRawData ? true : null} onClick={(e: any) => onSetRecordRaw(e.target.checked)} />
+
+					<SP.Checkbox size="s" checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} />
 					<div className="label">Support raw data type (might slow down panel when turned on)</div>
 				</div>
 
@@ -68,19 +69,18 @@ class Settings extends Component<TSettings, ISettingsState> {
 					<span className="fontSizeLabel">
 						Font size:
 					</span>
-					<sp-dropdown class="fontSizeDropdown">
-						<sp-menu slot="options" onClick={(e: any) => onSetFontSize(e.target.value)}>
+					<SP.Dropdown className="fontSizeDropdown" >
+						<SP.Menu slot="options" onChange={e => onSetFontSize(items[e.target?.selectedIndex ?? 0].val)}>
 							{
 								items.map(item => (
-									<sp-menu-item
+									<SP.MenuItem
 										key={item.val}
-										value={item.val}
-										selected={fontSize === item.val ? "selected" : null}
-									>{item.label}</sp-menu-item>
+										selected={fontSize === item.val ? true : undefined}
+									>{item.label}</SP.MenuItem>
 								))
 							}
-						</sp-menu>
-					</sp-dropdown>
+						</SP.Menu>
+					</SP.Dropdown>
 				</div>
 				<div className="row">
 					<div>

@@ -71,14 +71,14 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
-				<sp-dropdown quiet="true">
+				<sp-dropdown quiet={true}>
 					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>) => this.onSetSubType("listenerCategory", e)}>
 						{
 							items.map(item => (
 								<sp-menu-item
 									key={item.value}
 									value={item.value}
-									selected={content.value === item.value ? "selected" : null}
+									selected={content.value === item.value ? true : null}
 								>{item.label}</sp-menu-item>
 							))
 						}
@@ -98,7 +98,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 				</div>
 				<div className="filter excludeIncludeDropdownRow">
 					<div className="label">Filter:</div>
-					<sp-dropdown quiet="true">
+					<sp-dropdown quiet={true}>
 						<sp-menu slot="options" onClick={this.onSetFilterEventsType}>
 							{
 								[{ value: "none", label: "None" }, { value: "include", label: "Include" }, { value: "exclude", label: "Exclude" }]
@@ -106,7 +106,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 										<sp-menu-item
 											key={item.value}
 											value={item.value}
-											selected={listenerFilterType === item.value ? "selected" : null}
+											selected={listenerFilterType === item.value ? true : null}
 										>{item.label}</sp-menu-item>
 									))
 							}

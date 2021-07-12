@@ -34,7 +34,7 @@ export class Settings{
 
 	public static async saveSettings(object: any): Promise<void> {
 		clearTimeout(Settings.saveTimeout);
-		Settings.saveTimeout = setTimeout(async () => {
+		Settings.saveTimeout = window.setTimeout(async () => {
 			const folder = await Settings.settingsFolder();
 			console.log(folder);
 			await Settings._saveSettings(object, folder);

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./TreePath.less";
 import { renderPath } from "../shared/sharedTreeView";
 import { TPath } from "../../model/types";
+import SP from "react-uxp-spectrum";
 
 export interface ITreePathProps{
 	autoExpandLevels: number
@@ -40,7 +41,7 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 		}
 		const value = e.target.value;
 
-		this.levelDelay = setTimeout(() => {
+		this.levelDelay = window.setTimeout(() => {
 			this.props.onSetAutoExpandLevel(value);
 		}, 50);
 	}
@@ -55,12 +56,10 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 				</div>
 				<div className="levelSlider">
 					<span className="levelLabel">Expand: {((autoExpandLevels === 10 && allowInfinityLevels) ? "All" : autoExpandLevels) || "Off"}</span>
-					<sp-slider
-						label="Slider Label"
+					<SP.Slider
 						variant="filled"
 						min={0}
 						max={10}
-						tickStep={5}
 						onInput={this.throttleSlider}
 						//onChange={(e: any) => onSetAutoExpandLevel(e.target.value)}
 						value={autoExpandLevels}

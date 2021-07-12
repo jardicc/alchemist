@@ -4,7 +4,6 @@ import { getActiveDescriptorCalculatedReference, getCodeActiveView, getDescripto
 import { getActiveDescriptors, getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
 import { setDescriptorOptionsAction, setInspectorViewAction } from "../../actions/inspectorActions";
 
-import { CommandOptions } from "photoshop/dist/types/UXP";
 import React, { Component } from "react";
 import { IDescriptor, IDescriptorSettings, TCodeViewType } from "../../model/types";
 import { TabList } from "../Tabs/TabList";
@@ -97,38 +96,38 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 						<div><span className="scope">{this.renderOptionsScope()}</span></div>
 						<div className="row">
 							<div className="label">synchronousExecution</div>
-							<sp-dropdown quiet="true">
+							<sp-dropdown quiet={true}>
 								<sp-menu slot="options" onClick={this.onSynchronousExecution}>
-									<sp-menu-item key={"true"} value={"true"} selected={(synchronousExecution === true) ? "selected" : null}>true</sp-menu-item>
-									<sp-menu-item key={"false"} value={"false"} selected={(synchronousExecution === false) ? "selected" : null}>false</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(synchronousExecution === null) ? "selected" : null}>Default</sp-menu-item>
+									<sp-menu-item key={"true"} value={"true"} selected={(synchronousExecution === true) ? true : null}>true</sp-menu-item>
+									<sp-menu-item key={"false"} value={"false"} selected={(synchronousExecution === false) ? true : null}>false</sp-menu-item>
+									<sp-menu-item key={"default"} value={"default"} selected={(synchronousExecution === null) ? true : null}>Default</sp-menu-item>
 								</sp-menu>
 							</sp-dropdown>
 						</div>
 						<div className="row">
 							<div className="label">dialogOptions</div>
-							<sp-dropdown quiet="true">
+							<sp-dropdown quiet={true}>
 								<sp-menu slot="options" onClick={this.onSetDialogOptions}>
-									<sp-menu-item key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? "selected" : null}>silent (DialogModes.NO)</sp-menu-item>
-									<sp-menu-item key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? "selected" : null}>dontDisplay (DialogModes.ERROR)</sp-menu-item>
-									<sp-menu-item key={"display"} value={"display"} selected={(dialogOptions === "display") ? "selected" : null}>display (DialogModes.ALL)</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(dialogOptions === null) ? "selected" : null}>Default</sp-menu-item>
+									<sp-menu-item key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? true : null}>silent (DialogModes.NO)</sp-menu-item>
+									<sp-menu-item key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? true : null}>dontDisplay (DialogModes.ERROR)</sp-menu-item>
+									<sp-menu-item key={"display"} value={"display"} selected={(dialogOptions === "display") ? true : null}>display (DialogModes.ALL)</sp-menu-item>
+									<sp-menu-item key={"default"} value={"default"} selected={(dialogOptions === null) ? true : null}>Default</sp-menu-item>
 								</sp-menu>
 							</sp-dropdown>
 						</div>
 						<div className="row">
 							<div className="label">modalBehavior</div>
-							<sp-dropdown quiet="false">
+							<sp-dropdown quiet={false}>
 								<sp-menu slot="options" onClick={this.onSetModalBehavior}>
-									<sp-menu-item key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? "selected" : null}>wait</sp-menu-item>
-									<sp-menu-item key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? "selected" : null}>execute</sp-menu-item>
-									<sp-menu-item key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? "selected" : null}>fail</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(modalBehavior === null) ? "selected" : null}>Default</sp-menu-item>
+									<sp-menu-item key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? true : null}>wait</sp-menu-item>
+									<sp-menu-item key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? true : null}>execute</sp-menu-item>
+									<sp-menu-item key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? true : null}>fail</sp-menu-item>
+									<sp-menu-item key={"default"} value={"default"} selected={(modalBehavior === null) ? true : null}>Default</sp-menu-item>
 								</sp-menu>
 							</sp-dropdown>
 						</div>
 						<div className="row">
-							<sp-checkbox className="check" onClick={this.onSetSupportRawDataType} checked={supportRawDataType === true ? "checked" : undefined} indeterminate={supportRawDataType === "mixed" ? true : undefined}>Support raw data type</sp-checkbox>
+							<sp-checkbox onClick={this.onSetSupportRawDataType} checked={supportRawDataType === true ? true : undefined} indeterminate={supportRawDataType === "mixed" ? true : undefined}>Support raw data type</sp-checkbox>
 						</div>
 					</TabPanel>
 				</TabList>
