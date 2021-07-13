@@ -53,7 +53,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	/** refactor into reducer? */
-	private onSetSubType = (subType: TSubTypes | "main", value: React.ChangeEvent<HTMLSelectElement>) => {
+	private onSetSubType = (subType: TSubTypes | "main", value: any) => {
 		if (subType === "main") {
 			this.onSetMainClass(value);
 			return;
@@ -213,7 +213,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			<div className="filter">
 				<div className="label">Category:</div>
 				<SP.Dropdown quiet={true}>
-					<sp-menu slot="options" onClick={(e) => { console.log(e); }}>
+					<SP.Menu slot="options" onChange={(e) => { console.log(e); }}>
 						{
 							list.map(item => (
 								<SP.MenuItem
@@ -223,7 +223,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 								>{item.label}</SP.MenuItem>
 							))
 						}
-					</sp-menu>
+					</SP.Menu>
 				</SP.Dropdown>
 			</div>
 		);
@@ -259,7 +259,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const hidden = hiddenList.length === 0 ? null : (
 			<>
 				<SP.Divider />
-				<sp-menu-group>
+				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
 					<span slot="header">Hidden</span>
 					{hiddenList.map(mapFc)}
 				</sp-menu-group>
@@ -269,7 +269,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const optional = optionalList.length === 0 ? null : (
 			<>
 				<SP.Divider />
-				<sp-menu-group>
+				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
 					<span slot="header">Optional</span>
 					{optionalList.map(mapFc)}
 				</sp-menu-group>
@@ -278,7 +278,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const defaultEl = defaultList.length === 0 ? null : (
 			<>
 				<SP.Divider />
-				<sp-menu-group>
+				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
 					<span slot="header">Default</span>
 					{defaultList.map(mapFc)}
 				</sp-menu-group>
@@ -290,7 +290,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				<div className="label">Property:</div>
 				<div className="dropdownWrap">
 					<SP.Dropdown quiet={true}>
-						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType("property",e)}>
+						<SP.Menu slot="options" onChange={(e)=>this.onSetSubType("property",e)}>
 							{
 								baseItemsProperty.map(item => (
 									<SP.MenuItem
@@ -303,7 +303,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 							{defaultEl}
 							{optional}
 							{hidden}
-						</sp-menu>
+						</SP.Menu>
 					</SP.Dropdown>
 					<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
 				</div>
@@ -369,8 +369,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			<div className="filter">
 				<div className="label">{label}</div>
 				<div className="dropdownWrap">
-					<sp-dropdown quiet={true} onMouseDown={()=>this.dropdownClick(subType)}>
-						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType(subType,e)}>
+					<sp-dropdown size={SP.SpectrumComponetDefaults.defaultSize} quiet={true} onMouseDown={()=>this.dropdownClick(subType)}>
+						<SP.Menu slot="options" onChange={(e)=>this.onSetSubType(subType,e)}>
 							{
 								items.map(item => (
 									<SP.MenuItem
@@ -380,7 +380,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 									>{item.label}</SP.MenuItem>
 								))
 							}
-						</sp-menu>
+						</SP.Menu>
 					</sp-dropdown>
 					<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
 				</div>
