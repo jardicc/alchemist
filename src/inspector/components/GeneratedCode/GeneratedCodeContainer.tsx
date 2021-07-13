@@ -10,6 +10,7 @@ import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import "./GeneratedCode.less";
 import { Dispatch } from "redux";
+import SP from "react-uxp-spectrum";
 
 class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 
@@ -96,38 +97,38 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 						<div><span className="scope">{this.renderOptionsScope()}</span></div>
 						<div className="row">
 							<div className="label">synchronousExecution</div>
-							<sp-dropdown quiet={true}>
-								<sp-menu slot="options" onClick={this.onSynchronousExecution}>
-									<sp-menu-item key={"true"} value={"true"} selected={(synchronousExecution === true) ? true : null}>true</sp-menu-item>
-									<sp-menu-item key={"false"} value={"false"} selected={(synchronousExecution === false) ? true : null}>false</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(synchronousExecution === null) ? true : null}>Default</sp-menu-item>
-								</sp-menu>
-							</sp-dropdown>
+							<SP.Dropdown quiet={true}>
+								<SP.Menu slot="options" onChange={this.onSynchronousExecution}>
+									<SP.MenuItem key={"true"} value={"true"} selected={(synchronousExecution === true) ? true : null}>true</SP.MenuItem>
+									<SP.MenuItem key={"false"} value={"false"} selected={(synchronousExecution === false) ? true : null}>false</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(synchronousExecution === null) ? true : null}>Default</SP.MenuItem>
+								</SP.Menu>
+							</SP.Dropdown>
 						</div>
 						<div className="row">
 							<div className="label">dialogOptions</div>
-							<sp-dropdown quiet={true}>
-								<sp-menu slot="options" onClick={this.onSetDialogOptions}>
-									<sp-menu-item key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? true : null}>silent (DialogModes.NO)</sp-menu-item>
-									<sp-menu-item key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? true : null}>dontDisplay (DialogModes.ERROR)</sp-menu-item>
-									<sp-menu-item key={"display"} value={"display"} selected={(dialogOptions === "display") ? true : null}>display (DialogModes.ALL)</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(dialogOptions === null) ? true : null}>Default</sp-menu-item>
-								</sp-menu>
-							</sp-dropdown>
+							<SP.Dropdown quiet={true}>
+								<SP.Menu slot="options" onChange={this.onSetDialogOptions}>
+									<SP.MenuItem key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? true : null}>silent (DialogModes.NO)</SP.MenuItem>
+									<SP.MenuItem key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? true : null}>dontDisplay (DialogModes.ERROR)</SP.MenuItem>
+									<SP.MenuItem key={"display"} value={"display"} selected={(dialogOptions === "display") ? true : null}>display (DialogModes.ALL)</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(dialogOptions === null) ? true : null}>Default</SP.MenuItem>
+								</SP.Menu>
+							</SP.Dropdown>
 						</div>
 						<div className="row">
 							<div className="label">modalBehavior</div>
-							<sp-dropdown quiet={false}>
-								<sp-menu slot="options" onClick={this.onSetModalBehavior}>
-									<sp-menu-item key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? true : null}>wait</sp-menu-item>
-									<sp-menu-item key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? true : null}>execute</sp-menu-item>
-									<sp-menu-item key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? true : null}>fail</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(modalBehavior === null) ? true : null}>Default</sp-menu-item>
-								</sp-menu>
-							</sp-dropdown>
+							<SP.Dropdown quiet={true}>
+								<SP.Menu slot="options" onChange={this.onSetModalBehavior}>
+									<SP.MenuItem key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? true : null}>wait</SP.MenuItem>
+									<SP.MenuItem key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? true : null}>execute</SP.MenuItem>
+									<SP.MenuItem key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? true : null}>fail</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(modalBehavior === null) ? true : null}>Default</SP.MenuItem>
+								</SP.Menu>
+							</SP.Dropdown>
 						</div>
 						<div className="row">
-							<sp-checkbox onClick={this.onSetSupportRawDataType} checked={supportRawDataType === true ? true : undefined} indeterminate={supportRawDataType === "mixed" ? true : undefined}>Support raw data type</sp-checkbox>
+							<SP.Checkbox onChange={this.onSetSupportRawDataType} checked={supportRawDataType === true ? true : undefined} indeterminate={supportRawDataType === "mixed" ? true : undefined}>Support raw data type</SP.Checkbox>
 						</div>
 					</TabPanel>
 				</TabList>

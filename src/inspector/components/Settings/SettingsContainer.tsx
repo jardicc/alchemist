@@ -7,6 +7,7 @@ import React, { Component } from "react";
 import { ISettings, TFontSizeSettings } from "../../model/types";
 import "./Settings.less";
 import { Dispatch } from "redux";
+import { SpectrumComponetDefaults} from "react-uxp-spectrum";
 
 class Settings extends Component<TSettings, ISettingsState> {
 
@@ -37,12 +38,29 @@ class Settings extends Component<TSettings, ISettingsState> {
 			{ label: "Big", val: "size-big" },
 			{ label: "You must be joking", val: "size-youMustBeJoking" },
 		];
+
+		switch (fontSize) {
+			case "size-tiny":SpectrumComponetDefaults.defaultSize = "s";
+				break;
+			case "size-small":SpectrumComponetDefaults.defaultSize = "s";
+				break;
+			case "size-default":SpectrumComponetDefaults.defaultSize = "s";
+				break;
+			case "size-bigger":SpectrumComponetDefaults.defaultSize = "m";
+				break;
+			case "size-big":SpectrumComponetDefaults.defaultSize = "m";
+				break;
+			case "size-youMustBeJoking":SpectrumComponetDefaults.defaultSize = "xl";
+				break;
+				
+		}
+
 		return (
 			<div className="Settings">
 				<div><span className="title">Descriptor settings: </span></div>
 				<div className="row">
 
-					<SP.Checkbox size="s" checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} />
+					<SP.Checkbox checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} />
 					<div className="label">Support raw data type (might slow down panel when turned on)</div>
 				</div>
 

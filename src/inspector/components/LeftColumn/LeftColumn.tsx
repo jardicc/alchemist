@@ -18,6 +18,7 @@ import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { str as crc } from "crc-32";
+import SP from "react-uxp-spectrum";
 
 import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
@@ -211,19 +212,19 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return (
 			<div className="filter">
 				<div className="label">Category:</div>
-				<sp-dropdown quiet={true}>
+				<SP.Dropdown quiet={true}>
 					<sp-menu slot="options" onClick={(e) => { console.log(e); }}>
 						{
 							list.map(item => (
-								<sp-menu-item
+								<SP.MenuItem
 									key={item.value}
 									value={item.value}
 									selected={this.props.selectedTargetReference === item.value ? true : null}
-								>{item.label}</sp-menu-item>
+								>{item.label}</SP.MenuItem>
 							))
 						}
 					</sp-menu>
-				</sp-dropdown>
+				</SP.Dropdown>
 			</div>
 		);
 	}
@@ -248,16 +249,16 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const optionalList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "optional").map(f => ({ label: f.title, value: f.stringID }));
 
 		const mapFc = (item: IProperty<string>) => (
-			<sp-menu-item
+			<SP.MenuItem
 				key={item.value}
 				value={item.value}
 				selected={activeReferenceProperty.value === item.value ? true : null}
-			>{item.label}</sp-menu-item>
+			>{item.label}</SP.MenuItem>
 		);
 
 		const hidden = hiddenList.length === 0 ? null : (
 			<>
-				<sp-menu-divider />
+				<SP.Divider />
 				<sp-menu-group>
 					<span slot="header">Hidden</span>
 					{hiddenList.map(mapFc)}
@@ -267,7 +268,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 		const optional = optionalList.length === 0 ? null : (
 			<>
-				<sp-menu-divider />
+				<SP.Divider />
 				<sp-menu-group>
 					<span slot="header">Optional</span>
 					{optionalList.map(mapFc)}
@@ -276,7 +277,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		);
 		const defaultEl = defaultList.length === 0 ? null : (
 			<>
-				<sp-menu-divider />
+				<SP.Divider />
 				<sp-menu-group>
 					<span slot="header">Default</span>
 					{defaultList.map(mapFc)}
@@ -288,22 +289,22 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			<div className="filter">
 				<div className="label">Property:</div>
 				<div className="dropdownWrap">
-					<sp-dropdown quiet={true}>
+					<SP.Dropdown quiet={true}>
 						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType("property",e)}>
 							{
 								baseItemsProperty.map(item => (
-									<sp-menu-item
+									<SP.MenuItem
 										key={item.value}
 										value={item.value}
 										selected={activeReferenceProperty.value === item.value ? true : null}
-									>{item.label}</sp-menu-item>
+									>{item.label}</SP.MenuItem>
 								))
 							}
 							{defaultEl}
 							{optional}
 							{hidden}
 						</sp-menu>
-					</sp-dropdown>
+					</SP.Dropdown>
 					<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
 				</div>
 			</div>
@@ -372,11 +373,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType(subType,e)}>
 							{
 								items.map(item => (
-									<sp-menu-item
+									<SP.MenuItem
 										key={item.value}
 										value={item.value}
 										selected={content.value === item.value ? true: null}
-									>{item.label}</sp-menu-item>
+									>{item.label}</SP.MenuItem>
 								))
 							}
 						</sp-menu>
@@ -654,7 +655,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 					<div className="search">
 						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
-						<sp-checkbox onClick={this.props.toggleDescGrouping} checked={groupDescriptors === "strict" ? true : undefined}>Group</sp-checkbox>
+						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict" ? true : undefined}>Group</SP.Checkbox>
 					</div>
 					<div className="descriptorsWrapper" onClick={()=>this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}
