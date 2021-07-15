@@ -69,7 +69,8 @@ In "Adobe UXP Developer Tool" click actions triple dot and click debug.
 ## Supporters
 The Alchemist plugin for Photoshop was developed with support from the **Adobe Fund for Design**.
 
-Also big thanks to other supporters and developers who decided to donate. 
+Also big thanks to other supporters and developers who decided to donate.
+Visit this site if you want to donate: https://bereza.gumroad.com/l/alchemist
 
 ## Credits
 
