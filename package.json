@@ -55,7 +55,7 @@
         "react-json-tree": "^0.11.2",
         "react-notifications": "^1.7.2",
         "react-redux": "^7.2.0",
-        "react-split": "^2.0.9",
+        "react-split-pane": "^0.1.92",
         "react-uxp-spectrum": "github:jardicc/react-uxp-spectrum",
         "redux": "^4.0.5",
         "redux-devtools-extension": "^2.13.8",

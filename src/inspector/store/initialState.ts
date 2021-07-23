@@ -557,7 +557,7 @@ export function getInitialState(): IInspectorState {
 				},
 			],
 			maximumItems: 150,
-			leftColumnWidthPx: 200, // todo
+			leftColumnWidthPx: 300,
 			initialDescriptorSettings: {
 				supportRawDataType: false,
 				dialogOptions:"dontDisplay",
