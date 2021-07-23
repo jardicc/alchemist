@@ -1,6 +1,7 @@
-import { IDescriptor } from "../model/types";
+import { IDescriptor, TFontSizeSettings } from "../model/types";
 import { alert } from "./Helpers";
 import type {uxp} from "../types/uxp";
+import { SpectrumComponetDefaults } from "react-uxp-spectrum";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
@@ -106,6 +107,8 @@ export class Settings{
 			}
 			const data: string = await entry.read();
 			const result = JSON.parse(data);
+			Settings.setSpectrumComponentSize(result.settings.fontSize);
+
 			return result;
 		} catch (e) {
 			console.log("Error - with reading of settings!");
@@ -113,6 +116,24 @@ export class Settings{
 				overwrite: true,
 			});
 			return null;
+		}
+	}
+
+	public static setSpectrumComponentSize(fontSize:TFontSizeSettings):void {
+		switch (fontSize) {
+			case "size-tiny":SpectrumComponetDefaults.defaultSize = "s";
+				break;
+			case "size-small":SpectrumComponetDefaults.defaultSize = "s";
+				break;
+			case "size-default":SpectrumComponetDefaults.defaultSize = "s";
+				break;
+			case "size-bigger":SpectrumComponetDefaults.defaultSize = "m";
+				break;
+			case "size-big":SpectrumComponetDefaults.defaultSize = "m";
+				break;
+			case "size-youMustBeJoking":SpectrumComponetDefaults.defaultSize = "xl";
+				break;
+				
 		}
 	}
 
