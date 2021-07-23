@@ -194,7 +194,7 @@
 
 		&:hover{
 			color:var(--hover);
-			border:1px solid var(--hover);
+			border-color: var(--hover);
 			svg{
 				fill:var(--hover);
 			}
@@ -202,7 +202,7 @@
 		
 		&.disallowed{
 			pointer-events: none;
-			border:1px dashed var(--textFade);;
+			border:1px dashed var(--textFade);
 			color:var(--textFade) !important;
 			cursor: not-allowed;
 			svg{
@@ -211,12 +211,11 @@
 		}
 
 		&.activated{
-			color: var(--active);
-			border-color: transparent;
-			//border-width: 2px;
-			outline: 2px solid var(--active);
+			color: var(--divider);
+			fill: var(--divider);
+			background: var(--active);
 			svg{
-				fill:var(--active);
+				fill:var(--divider);
 			}
 		}
 		&.deactivated{

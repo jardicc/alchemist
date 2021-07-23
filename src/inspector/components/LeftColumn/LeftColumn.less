@@ -14,8 +14,9 @@
 	}
 
 	.add{
-		flex-grow: 10;
+		flex-grow: 2;
 		justify-content: center;
+		border-left: none;
 	}
 
 	.listenerSwitch,
@@ -85,7 +86,28 @@
 		
 
 		.button{
-			margin: 1px;
+			margin: 0;
+			border-radius: 0;
+			border-color: var(--divider);
+			border-bottom: none;
+			border-right: none;
+			font-weight: bold;
+
+			> svg{
+				width: 1em;
+				height: 1em;
+				margin-right: 0.5em;
+			}
+
+			&:hover{
+				color:var(--divider);
+				fill:var(--divider);
+				background: var(--hover);
+
+				> svg{
+					fill:var(--divider);
+				}
+			}
 		}
 	}
 	
