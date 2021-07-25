@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.4.0
+- feature: adds indentation option into generated code
+- feature: adds single quotes option into generated code
+- feature: adds options to hide useless properties
+- change: property names in generated code are now without quotes where possible
+- adds types to the components
+- fix: UI crash in DOM (live) when object is proxy (e.g. array of layers in document)
+- improvement: adds history states and snapshots into DOM (live)
+- improvement: left column adjustable width is now expressed in pixels instead of percentage and it is remembered after panel reload
+
+
 ## 1.3.0
 - adds raw data type support (needs to be enabled in Code > Options)
 - adds grouping of items with same content
@@ -32,7 +43,7 @@
 - change: button menus in footer are now using dropdown so those can be shown out of panel boundary
 
 ## 0.27.0
-- improvement: shows error dialog when something failes outside of react error component
+- improvement: shows error dialog when something fails outside of react error component
 - workaround: allows to make production version of plugin. See: https://forums.adobeprerelease.com/photoshop/discussion/2138/severe-issue-with-listener-in-production-use#latest
 - improvement: adds info in footer whether this is production or development version of plugin. Also adds copyright.
 - improvement: generates "await" keyword for async batchplay
@@ -46,7 +57,7 @@
 
 ## 0.26.0
 - feature: adds partial support for raw data type (fake structure in views and attempt to generate code in code tab)
-- feature: adds posibility to enable/disable raw data type support
+- feature: adds possibility to enable/disable raw data type support
 - feature: add expand slider into tree views
 - improvement: breadcrumb in tree view is now at fixed position when scrolling
 
@@ -55,7 +66,7 @@
 - improvement: adds new icon (made by Petr Štefek https://www.behance.net/phob )
 - improvement: removes right bottom artifact
 - improvement: cleaner path to the pinned property in generated source code
-- improvement: now it shows autoselected descriptor underline for only autocative items. 2 for difference 1 for others
+- improvement: now it shows autoselected descriptor underline for only autoactive items. 2 for difference 1 for others
 - fix: initial text flash from black to theme color
 
 
