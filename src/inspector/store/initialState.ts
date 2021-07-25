@@ -5,7 +5,7 @@ import { IInspectorState } from "../model/types";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [5, 0, 0],
+		version: [6, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
@@ -564,6 +564,11 @@ export function getInitialState(): IInspectorState {
 				modalBehavior: "fail",
 				synchronousExecution: false,
 			},
+			indent: "space3",
+			singleQuotes: false,
+			hide_isCommand: true,
+			hideDontRecord: true,
+			hideForceNotify:true,
 		},
 		inspector: {
 			activeTab: "content",

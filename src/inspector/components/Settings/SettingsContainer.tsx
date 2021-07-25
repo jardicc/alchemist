@@ -8,7 +8,6 @@ import { ISettings, TFontSizeSettings } from "../../model/types";
 import "./Settings.less";
 import { Dispatch } from "redux";
 import { Settings as SettingsClass } from "../../../inspector/classes/Settings";
-import { SpectrumComponetDefaults} from "react-uxp-spectrum";
 
 class Settings extends Component<TSettings, ISettingsState> {
 
@@ -44,9 +43,9 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 		return (
 			<div className="Settings">
-				<div><span className="title">Descriptor settings: </span></div>
+				<h3>Descriptor settings</h3>
 				<div className="row">
-					<SP.Checkbox checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} >Support raw data type (might slow down panel when turned on)</SP.Checkbox>
+					<SP.Checkbox checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} >Record raw data type as an array of number to make it easily readable (might slow down panel when turned on)</SP.Checkbox>
 				</div>
 
 				<div className="row">
@@ -68,6 +67,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 						/>
 					</label>
 				</div>
+				<h3>User interface</h3>
 				<div className="row">
 					<span className="fontSizeLabel">
 						Font size:

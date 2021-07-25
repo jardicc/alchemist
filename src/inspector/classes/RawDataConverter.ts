@@ -63,14 +63,12 @@ export class RawDataConverter{
 	}
 
 	public static convertFakeRawInCode(obj: Descriptor,descSettings:IDescriptorSettings): void{
-		//const store:Store<CombinedState<{inspector: IInspectorState;}>, AnyAction> = (window as any)._rootStore;
 		rec(obj);
 
 		function rec(data:Descriptor) {
 			for (const key in data) {
 				if (Object.prototype.hasOwnProperty.call(data, key)) {
 					const itemInData = data[key];
-					//if (key === "profile") debugger;
 					if (Array.isArray(itemInData)) {
 						for (let i = 0; i < itemInData.length; i++) {
 							const element = itemInData[i];
@@ -78,7 +76,6 @@ export class RawDataConverter{
 						}
 					}
 					else if (itemInData instanceof ArrayBuffer && descSettings.supportRawDataType === true) {
-						console.log("Buf Buf!!!");
 						const str = RawDataConverter.arrayBufferToString(itemInData);
 						data[key] = {
 							"_rawData": "base64",
@@ -86,8 +83,6 @@ export class RawDataConverter{
 						};
 					} else if (typeof itemInData === "object") {
 						if ("_rawData" in itemInData && itemInData._rawData === "alchemistFakeType") {
-							// $$$ adds marker so we can find them later and remove left and right quotes from string
-							//itemInData = `$$$Left_new Uint8Array(${JSON.stringify(itemInData._data)})_Right$$$`;
 							const str = RawDataConverter.arrayCodeToString(itemInData._data);
 							data[key] = {
 								"_rawData": "base64",
