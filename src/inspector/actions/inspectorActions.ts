@@ -1,7 +1,6 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings, IDescriptorSettings } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings, IDescriptorSettings, ISettings } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
-import { CommandOptions } from "photoshop/dist/types/UXP";
 
 export interface ISetMainTab {
 	type: "SET_MAIN_TAB"
@@ -268,6 +267,18 @@ export interface ISetNeverRecordActionNamesAction{
 export interface IToggleDescriptorsGroupingAction{
 	type: "TOGGLE_DESCRIPTORS_GROUPING",
 	payload:null
+}
+
+export interface ISetSettingsAction{
+	type: "SET_SETTINGS",
+	payload: Partial<ISettings>
+}
+
+export function setSettingsAction(settings:Partial<ISettings>): ISetSettingsAction{
+	return {
+		type: "SET_SETTINGS",
+		payload: settings,
+	};
 }
 
 export function toggleDescriptorsGroupingAction():IToggleDescriptorsGroupingAction {
@@ -653,4 +664,5 @@ export type TActions = ISetMainTab |
 	ISetConverterInfoAction |
 	ISetFontSizeAction |
 	ISetNeverRecordActionNamesAction |
-	IToggleDescriptorsGroupingAction
+	IToggleDescriptorsGroupingAction |
+	ISetSettingsAction
