@@ -26,16 +26,18 @@ export class ListenerClass{
 		this.listenerCb = cb;
 		ListenerClass.addAMConverterHack();
 		if (Main.devMode) {
-			app.eventNotifier = this.listenerCb;
+			//app.eventNotifier = this.listenerCb;
+			action.addNotificationListener(["$All "] as any, this.listenerCb);
 		} else {
-			action.addNotificationListener(this.allEventsArray, this.listenerCb);			
+			action.addNotificationListener(this.allEventsArray, this.listenerCb);
 		}
 	}
 
 	public static stopListener(): void{
 		this.removeAMConverterHack();
 		if (Main.devMode) {
-			app.eventNotifier = () => { };
+			//app.eventNotifier = () => { };
+			action.removeNotificationListener(["$All "] as any, this.listenerCb);
 		} else {
 			action.removeNotificationListener(this.allEventsArray, this.listenerCb);			
 		}
