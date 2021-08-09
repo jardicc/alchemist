@@ -1,0 +1,11 @@
+{
+	"compileOnSave": true,	
+	"compilerOptions": {		
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"module": "es6",
+		"target":"esnext",
+		"lib":[ "esnext"],
+		"esModuleInterop": true
+	}
+}
