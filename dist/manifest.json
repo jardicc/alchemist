@@ -2,8 +2,8 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "1.3.0",
-	"manifestVersion": 4,
+	"version": "1.4.0",
+	"manifestVersion": 5,
 	"host": [{
 		"app": "PS",
 		"minVersion": "22.5.0",
@@ -11,6 +11,10 @@
 			"apiVersion": 2
 		}
 	}],
+	"requiredPermissions": {
+		"clipboard": "readAndWrite",
+		"allowCodeGenerationFromStrings": true
+	},
 	"entrypoints": [{
 			"type": "panel",
 			"id": "inspector",
