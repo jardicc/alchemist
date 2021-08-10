@@ -19,13 +19,16 @@ export function parse(d: DataView):IActionSet {
 	res.version = version;
 	res.actionSetName = data.getUtf16String();
 	res.expanded = data.getBoolean();
-
+	
 	const actionsCount = data.getUint32();
+	if (actionsCount) {
+		res.actionItems = [];		
+	}
 
 	for (let i = 0; i < actionsCount; i++) {
 
 		const item: Partial<IActionItem> = {
-			indexOfAction: data.getUint16(),
+			fKeyIndex: data.getUint16(),
 			shiftKey: data.getBoolean(),
 			commandKey: data.getBoolean(),
 			colorIndex: data.getUint16(),
@@ -34,6 +37,10 @@ export function parse(d: DataView):IActionSet {
 		};
 
 		const commandsCount = data.getUint32();
+		if (commandsCount) {
+			item.commands = [];
+		}
+
 
 		for (let j = 0; j < commandsCount; j++) {
 			let command: Partial<ICommand> = {
@@ -57,6 +64,8 @@ export function parse(d: DataView):IActionSet {
 			if (isDescriptorFollowing) {
 				parseActionDescriptor(data, desc);
 			}
+
+			item.commands.push(command as ICommand);
 		}
 
 		res.actionItems.push(item as IActionItem);
@@ -77,7 +86,8 @@ export function parseDescriptor(data: DataViewCustom, desc: any): void{
 
 export function parseActionDescriptor(data: DataViewCustom, desc: any): void {
 	const fromClassID = data.getUtf16String();
-	desc._obj = data.getStringID();
+	const objKey = data.getStringID();
+	desc._obj = desc._obj || objKey;
 	const count = data.getUint32();
 
 	for (let i = 0; i < count; i++) {
@@ -95,7 +105,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 		// Descriptor
 		case "GlbO":
 		case "Objc": {
-			const subDesc: IDescriptor = { _obj: "null" };
+			const subDesc: IDescriptor = { _obj: null };
 			parseActionDescriptor(data, subDesc);
 			desc[propertyName] = subDesc;
 			return;

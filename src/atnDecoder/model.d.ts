@@ -6,7 +6,7 @@ export interface IActionSet{
 }
 
 export interface IActionItem{
-	indexOfAction:number
+	fKeyIndex:number
 	shiftKey: boolean
 	commandKey: boolean
 	colorIndex: number

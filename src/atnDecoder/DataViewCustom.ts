@@ -19,7 +19,7 @@ export class DataViewCustom extends DataView{
 
 	public getBoolean(byteOffset: number = this.offset):boolean {
 		const res = this.getUint8(byteOffset);
-		this.offset += 1;
+		//this.offset += 1;
 		if (res !== 1 && res !== 0) {
 			throw new Error("Wrong value for boolean in ATN parser. Got: " + res + " instead of 0 or 1");
 		}
