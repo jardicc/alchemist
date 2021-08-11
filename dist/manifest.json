@@ -15,11 +15,48 @@
 		"clipboard": "readAndWrite",
 		"allowCodeGenerationFromStrings": true
 	},
-	"entrypoints": [{
+	"entrypoints": [
+		{
 			"type": "panel",
 			"id": "inspector",
 			"label": {
 				"default": "Alchemist"
+			},
+			"minimumSize": {
+				"width": 450,
+				"height": 360
+			},
+			"maximumSize": {
+				"width": 2000,
+				"height": 2000
+			},
+			"preferredDockedSize": {
+				"width": 600,
+				"height": 540
+			},
+			"preferredFloatingSize": {
+				"width": 600,
+				"height": 540
+			},
+			"icons": [{
+				"width": 23,
+				"height": 23,
+				"path": "icons/light.png",
+				"scale": [1, 2],
+				"theme": ["darkest", "dark", "medium"]
+			}, {
+				"width": 23,
+				"height": 23,
+				"path": "icons/dark.png",
+				"scale": [1, 2],
+				"theme": ["lightest", "light"]
+			}]
+		},
+		{
+			"type": "panel",
+			"id": "occultist",
+			"label": {
+				"default": "Occultist"
 			},
 			"minimumSize": {
 				"width": 450,
