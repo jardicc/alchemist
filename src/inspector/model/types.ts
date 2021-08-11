@@ -48,7 +48,11 @@ export type TFilterEvents = "none" | "include" | "exclude";
 export type TSelectDescriptorOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
 
 export type TProtoMode = "none" | "uxp" | "advanced" | "all";
-export type TDescriptorsGrouping = "none"|"eventName"
+export type TDescriptorsGrouping = "none" | "eventName"
+
+export interface IATNConverterState{
+	data:string
+}
 
 
 export interface IInspectorState {
@@ -63,6 +67,7 @@ export interface IInspectorState {
 	descriptors: IDescriptor[]
 	amConvertor: IAMCoverter
 	dispatcher: IDispatcher
+	atnConverter:IATNConverterState
 }
 
 export interface ITargetReference {

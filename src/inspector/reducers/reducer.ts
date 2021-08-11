@@ -10,11 +10,18 @@ import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
 import { cloneDeep } from "lodash";
+import { TAtnActions } from "../../atnDecoder/actions/atnActions";
 
 
-export const inspectorReducer = (state = getInitialState(), action: TActions): IInspectorState => {
+export const inspectorReducer = (state = getInitialState(), action: TActions | TAtnActions): IInspectorState => {
 	console.log(JSON.stringify(action, null, "\t"));
 	switch (action.type) {
+		case "SET_DATA": {
+			state = produce(state, draft => {
+				draft.atnConverter.data = action.payload;
+			});
+			break;
+		}
 		case "SET_MAIN_TAB": {
 			state = produce(state, draft => {
 				draft.activeSection = action.payload;

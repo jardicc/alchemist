@@ -1,11 +1,43 @@
 import { decode } from "iconv-lite";
-import { Base64 } from "../inspector/classes/Base64";
-import { RawDataConverter } from "../inspector/classes/RawDataConverter";
+import { Base64 } from "../../inspector/classes/Base64";
+import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
+import { uxp } from "../../inspector/types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
-import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner } from "./model";
+import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner } from "../types/model";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const formats = require("uxp").storage.formats;
 
+export async function doIt():Promise<string> {
+	const dataView = await loadFile();
+	const parsed = parse(dataView);
+	console.log(parsed);
+	const res = JSON.stringify(parsed, null, 3);
+
+	return res;
+}
+
+export async function loadFile():Promise<DataView|null> {
+	const file = await localFileSystem.getFileForOpening({
+		types: ["atn"],
+		allowMultiple: false,
+		//initialLocation: await Settings.settingsFolder()
+	});
+	if (!file) {
+		return null;
+	}
+	const data:ArrayBuffer = await file.read({format: formats.binary});
+	try {
+		const result = new DataView(data);
+		return result;
+	} catch (e) {
+		console.log("Error - with reading of settings!");
+		return null;
+	}
+}
 
 export function parse(d: DataView):IActionSet {
 	const res:Partial<IActionSet> = {};

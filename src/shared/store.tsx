@@ -10,6 +10,7 @@ import { IInspectorState } from "../inspector/model/types";
 
 export interface IRootState{
 	inspector: IInspectorState;
+
  }
 
 const composeEnhancers = composeWithDevTools({
@@ -18,7 +19,7 @@ const composeEnhancers = composeWithDevTools({
 
 const rootReducer = combineReducers<IRootState>({
 	inspector:inspectorReducer,
-	//listener: listenerReducer
+	//atnConverter: atnConverterReducer
 });
 export const rootStore = createStore(rootReducer, /* preloadedState, */ composeEnhancers(
 	applyMiddleware(),

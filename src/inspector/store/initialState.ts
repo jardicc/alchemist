@@ -605,5 +605,8 @@ export function getInitialState(): IInspectorState {
 		dispatcher: {
 			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nreturn await batchPlay([{"_obj": "invert"}],{});`}],
 		},
+		atnConverter: {
+			data:"",
+		},
 	};
 }

@@ -43,13 +43,13 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 
 
 	public render(): React.ReactNode{
-		const { onClear, onClearView, allItems, onClearNonExistent } = this.props;
-		const psVersionSegments = GetInfo.getBuildString()//.split(" ");
+		const { onClear, onClearView, allItems, onClearNonExistent, parentPanel } = this.props;
+		const isInspector = parentPanel === "inspector";
+		const psVersionSegments = GetInfo.getBuildString();//.split(" ");
 		//const psVersionString = psVersionSegments[0] + " " + psVersionSegments[1].replace("(","");
 		return (
 			<div className="Footer">
-				{/*<div className="button" onClick={e=>location.reload()}>Reload</div>*/}
-				<ButtonMenu
+				{isInspector && <ButtonMenu
 					key="clear"
 					className="abc"
 					placementVertical="top"
@@ -59,15 +59,14 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 							<div className="button" onMouseDown={() => { onClear(); }}>All</div>
 							<div className="button" onMouseDown={() => { onClearView(false); }}>In view</div>
 							<div className="button" onMouseDown={() => { onClearView(true); }}>Not in view</div>
-							<div className="button" onMouseDown={() => { onClearNonExistent(filterNonExistent(allItems));}}>Non-existent</div>
+							<div className="button" onMouseDown={() => { onClearNonExistent(filterNonExistent(allItems)); }}>Non-existent</div>
 						</div>
 					}>
 					<div className="button">Clear...</div>
-				</ButtonMenu>
-				{
-					//<div className="button">Group same</div>
+				</ButtonMenu>}
+				{isInspector && 
+					<div className="spread"></div>
 				}
-				<div className="spread"></div>
 				<div className="versionBar">
 					<span className="version">v. {versions.plugin} {Main.devMode ? "DEV":"PROD"}</span>
 					<span> / </span>
@@ -77,8 +76,8 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 				</div>
 				<div className="spread"></div>
 				<div className="copy">Copyright © 2021 <a href="https://bereza.cz">Bereza.cz</a></div>
-				<div className="spread"></div>
-				<ButtonMenu
+				{isInspector && <div className="spread"></div>}
+				{isInspector && <ButtonMenu
 					key="import"
 					className="abc"
 					placementVertical="top"
@@ -91,8 +90,8 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 						</div>
 					}>
 					<div className="button">Import...</div>
-				</ButtonMenu>
-				<ButtonMenu
+				</ButtonMenu>}
+				{isInspector && <ButtonMenu
 					key="export"
 					className="abc"
 					placementVertical="top"
@@ -105,14 +104,14 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 						</div>
 					}>
 					<div className="button">Export...</div>
-				</ButtonMenu>
+				</ButtonMenu>}
 			</div>
 		);
 	}
 }
 
 
-type TFooter = IFooterProps & IDispatcherDispatch
+type TFooter = IFooterProps & IDispatcherDispatch & IOwnProps
 
 interface IFooterProps{
 	wholeState: IRootState
@@ -121,7 +120,11 @@ interface IFooterProps{
 	selectedItems:IDescriptor[]
 }
 
-const mapStateToProps = (state: IRootState): IFooterProps => ({
+interface IOwnProps{
+	parentPanel: "inspector" | "atnConverter"
+}
+
+const mapStateToProps = (state: IRootState, ownProps: IOwnProps): IFooterProps => ({
 	wholeState: state,
 	viewItems: getDescriptorsListView(state),
 	allItems: getAllDescriptors(state),
@@ -144,4 +147,4 @@ const mapDispatchToProps= (dispatch:Dispatch): IDispatcherDispatch => ({
 	onClearNonExistent:(items)=>dispatch(importItemsAction(items,"replace")),
 });
 
-export const FooterContainer = connect<IFooterProps, IDispatcherDispatch, Record<string,unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Footer);
+export const FooterContainer = connect(mapStateToProps, mapDispatchToProps)(Footer);

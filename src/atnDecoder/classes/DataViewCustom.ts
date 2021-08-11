@@ -154,7 +154,7 @@ export class DataViewCustom extends DataView{
 		const length = this.getUint32();
 		
 		if (length === 0) { // long
-			console.log(Array.from(new Uint8Array(this.buffer)));
+			//console.log(Array.from(new Uint8Array(this.buffer)));
 			const sub = new Uint8Array(this.buffer.slice(this.offset, this.offset + 4));
 			this.offset += 4;
 			const id = String.fromCharCode.apply(null, sub as any);

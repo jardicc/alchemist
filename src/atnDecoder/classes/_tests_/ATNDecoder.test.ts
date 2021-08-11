@@ -1,4 +1,4 @@
-import { IDescriptor } from "../../inspector/model/types";
+import { IDescriptor } from "../../../inspector/model/types";
 import { parse, parseActionDescriptor, parseDescriptor } from "../ATNDecoder";
 import { DataViewCustom } from "../DataViewCustom";
 import { s2b } from "./helpers";
