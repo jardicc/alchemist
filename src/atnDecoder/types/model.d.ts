@@ -1,3 +1,29 @@
+export interface IActionSetUUID extends IActionSet{
+	__uuid__:string
+	actionItems:IActionItemUUID[]
+}
+
+export interface IActionItemUUID extends IActionItem{
+	__uuid__:string
+	commands:IActionCommandUUID[]
+}
+
+export interface IActionCommandUUID extends ICommand{
+	__uuid__:string
+}
+
+export type TSelectActionOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
+
+export type TSelectedItem = [string] | [string, string] | [string, string, string]
+export type TExpandedItem = [string] | [string, string]
+
+export interface IATNConverterState{
+	data: IActionSetUUID[]
+	lastSelected:TSelectedItem|null
+	selectedItems: TSelectedItem[]
+	expandedItems:  TExpandedItem[]
+}
+
 export interface IActionSet{
 	version: number
 	actionSetName: string

@@ -11,8 +11,10 @@ import { doIt } from "../../../atnDecoder/classes/ATNDecoder";
 import { FooterContainer } from "../../../inspector/components/Footer/FooterContainer";
 import { TFontSizeSettings } from "../../../inspector/model/types";
 import { getFontSizeSettings } from "../../../inspector/selectors/inspectorSelectors";
-import { getData } from "../../selectors/atnSelectors";
+import { getData, getTextData } from "../../selectors/atnSelectors";
 import { setDataAction } from "../../actions/atnActions";
+import { IActionSetUUID } from "../../types/model";
+import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
 
 
 class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> { 
@@ -20,19 +22,31 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		super(props);
 	}
 
+	private renderSet() {
+		const {data } = this.props;
+		return (
+			data.map((set,i) => (
+				<ActionSetContainer actionSet={set} key={i} />
+			))
+		);
+	}
+
 
 	public render(): JSX.Element {
 
-		const { fontSizeSettings, data,setData } = this.props;
+		const { fontSizeSettings, data, setData, textData } = this.props;
+
+
 
 		return (
 			<div className={`ATNDecoderContainer ${fontSizeSettings}`}>
 				<div className="info spread flex">
+					<div>{this.renderSet()}</div>
 					<div className="noShrink">
 						<textarea
 							maxLength={Number.MAX_SAFE_INTEGER}
 							className="infoBlock"
-							defaultValue={data}
+							defaultValue={textData}
 						/>
 					</div>
 				</div>
@@ -59,16 +73,18 @@ interface IATNDecoderState{
 
 interface IATNDecoderProps{
 	fontSizeSettings: TFontSizeSettings
-	data: string
+	data: IActionSetUUID[]
+	textData:string
 }
 
 const mapStateToProps = (state: any): IATNDecoderProps => (state = state as IRootState,{
 	fontSizeSettings: getFontSizeSettings(state),
 	data: getData(state),
+	textData:getTextData(state),
 });
 
 interface IATNDecoderDispatch {
-	setData(data:string):void
+	setData(data:IActionSetUUID):void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IATNDecoderDispatch, Record<string, unknown>> = (dispatch):IATNDecoderDispatch => ({

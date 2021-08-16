@@ -47,7 +47,3 @@ if (Main.devMode) {
 		});
 	}
 }
-const a = [
-	"a",
-	"b",
-];

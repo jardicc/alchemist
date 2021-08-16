@@ -4,20 +4,35 @@ import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
 import { uxp } from "../../inspector/types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
-import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner } from "../types/model";
+import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../types/model";
+import { Helpers } from "../../inspector/classes/Helpers";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const formats = require("uxp").storage.formats;
 
-export async function doIt():Promise<string> {
-	const dataView = await loadFile();
-	const parsed = parse(dataView);
-	console.log(parsed);
-	const res = JSON.stringify(parsed, null, 3);
+function addUUIDs(arg:IActionSet) :IActionSetUUID{
+	const data: IActionSetUUID = arg as IActionSetUUID;
+	data.__uuid__ = Helpers.uuidv4();
 
-	return res;
+	data.actionItems.forEach(item => {
+		item.__uuid__ = Helpers.uuidv4();
+		item.commands.forEach(command =>
+			command.__uuid__ = Helpers.uuidv4(),
+		);
+	});
+
+	return data;
+}
+
+export async function doIt():Promise<IActionSetUUID> {
+	const dataView = await loadFile();
+	const parsed = addUUIDs(parse(dataView));
+	//console.log(parsed);
+	//const res = JSON.stringify(parsed, null, 3);
+
+	return parsed;
 }
 
 export async function loadFile():Promise<DataView|null> {
