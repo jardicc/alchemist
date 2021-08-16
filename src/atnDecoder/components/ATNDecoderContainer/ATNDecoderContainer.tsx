@@ -41,7 +41,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		return (
 			<div className={`ATNDecoderContainer ${fontSizeSettings}`}>
 				<div className="info spread flex">
-					<div>{this.renderSet()}</div>
+					<div className="tree">{this.renderSet()}</div>
 					<div className="noShrink">
 						<textarea
 							maxLength={Number.MAX_SAFE_INTEGER}

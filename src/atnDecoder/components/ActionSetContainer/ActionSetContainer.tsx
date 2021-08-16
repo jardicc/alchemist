@@ -8,7 +8,8 @@ import { setExpandActionAction, setSelectActionAction } from "../../actions/atnA
 import { getExpandedItemsSet, getSelectedItemsSet } from "../../selectors/atnSelectors";
 import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
 import { ActionItemContainer } from "../ActionItemContainer/ActionItemContainer";
-import { IconArrowBottom, IconArrowRight } from "../../../shared/components/icons";
+import { IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconFolder } from "../../../shared/components/icons";
+import PS from "photoshop";
 
 export class ActionSet extends React.Component<TActionSet, IActionSetState> { 
 	constructor(props: TActionSet) {
@@ -34,9 +35,13 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 		return (
 			<div className="ActionSet">
 				<div className="wrap" onClick={this.onExpand}>
-					{this.isExpanded ? <IconArrowBottom /> : <IconArrowRight />}
-					<span>
-						{actionSet.actionSetName}
+					<div className="checkmark">
+						{actionSet.actionItems.every(aItem=>aItem.commands.every(item=>item.enabled)) ? <IconCheck />:null}
+					</div>
+					{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
+					<IconFolder />
+					<span className="title">
+						{(PS.core as any).translateUIString(actionSet.actionSetName)}
 					</span>
 				</div>
 				{this.isExpanded && actionSet.actionItems.map((item,key)=><ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}

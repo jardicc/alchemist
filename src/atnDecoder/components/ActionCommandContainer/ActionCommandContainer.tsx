@@ -7,7 +7,8 @@ import { IRootState } from "../../../shared/store";
 import { setSelectActionAction } from "../../actions/atnActions";
 import { getSelectedItemsCommand } from "../../selectors/atnSelectors";
 import { IActionCommandUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
-import { IconArrowBottom, IconArrowRight } from "../../../shared/components/icons";
+import { IconArrowBottom, IconArrowRight, IconCheck, IconCircleCheck } from "../../../shared/components/icons";
+import PS from "photoshop";
 
 export class ActionCommand extends React.Component<TActionCommand, IActionCommandState> { 
 	constructor(props: TActionCommand) {
@@ -19,7 +20,14 @@ export class ActionCommand extends React.Component<TActionCommand, IActionComman
 
 		return (
 			<div className="ActionCommandContainer">
-				{actionCommand.commandName}
+				<div className="wrap">
+					<div className="checkmark">
+						{actionCommand.enabled ? <IconCheck />:null}
+					</div>
+					<span className="title">
+						{(PS.core as any).translateUIString(actionCommand.commandName)}
+					</span>
+				</div>
 			</div>
 		);
 	}
