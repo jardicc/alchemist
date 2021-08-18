@@ -10,6 +10,13 @@ Videos on how to use it from Davide Barranca series about UXP:
 
 ![alt Plugin screenshot](md_images/screen.png)
 
+## Versions
+Alchemist 1.4.0 requires Photoshop 22.5 or higher.
+
+Alchemsit 1.3.0 works best with Photoshop 22.4.x and lower.
+
+Show all versions here: https://github.com/jardicc/alchemist/releases
+
 ## Disclaimer
 You are using this software at your own risk. It is possible that Photoshop could crash if you ask Photoshop to do something unusual via Alchemist. So just save your work if you are concerned. 
 
