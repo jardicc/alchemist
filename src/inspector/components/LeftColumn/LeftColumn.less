@@ -1,10 +1,6 @@
 .LeftColumn{
 	display: flex;
-	//position: absolute;
-	//top: 0;
-	//bottom: 0;
-	//left: 0;
-	//width:200px;
+	width: 100%;
 	flex-direction: column;
 
 	.descriptorsWrapper{
@@ -14,8 +10,9 @@
 	}
 
 	.add{
-		flex-grow: 10;
+		flex-grow: 2;
 		justify-content: center;
+		border-left: none;
 	}
 
 	.listenerSwitch,
@@ -82,10 +79,31 @@
 		flex-shrink: 0;
 		display: flex;
 		flex-wrap: wrap;
-		padding: 0.3em;;
+		
 
 		.button{
-			margin: 1px;
+			margin: 0;
+			border-radius: 0;
+			border-color: var(--divider);
+			border-bottom: none;
+			border-right: none;
+			font-weight: bold;
+
+			> svg{
+				width: 1em;
+				height: 1em;
+				margin-right: 0.5em;
+			}
+
+			&:hover{
+				color:var(--divider);
+				fill:var(--divider);
+				background: var(--hover);
+
+				> svg{
+					fill:var(--divider);
+				}
+			}
 		}
 	}
 	
@@ -133,7 +151,8 @@
 	
 	.filter .label{
 		width: 0;
-		min-width: 60px;
+		min-width: 5em;
+		margin-right: 0.7em;
 	}
 	
 	.descriptorsWrapper{

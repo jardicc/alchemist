@@ -5,6 +5,7 @@ import { RawDataConverter } from "../classes/RawDataConverter";
 import { IDescriptor, IDescriptorSettings } from "../model/types";
 import { getContentPath } from "./inspectorContentSelectors";
 import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
+import stringifyObject from "stringify-object";
 
 
 
@@ -35,7 +36,7 @@ export const getDescriptorOptions = createSelector([getActiveDescriptors, getAut
 	return res;
 });
 
-export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath, getReplayEnabled, getDescriptorOptions], (selected, autoActive, treePath, replayEnabled,descOptions) => {
+export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath, getReplayEnabled, getDescriptorOptions, getInspectorSettings], (selected, autoActive, treePath, replayEnabled,descOptions,settings) => {
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
@@ -67,6 +68,7 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 	}
 
 	function addCommonOptions(data: IDescriptor[]): CommandOptions {
+
 		const hasAnyAsync = data.some(item => item.descriptorSettings.synchronousExecution === false);
 		const hasAnySync = data.some(item => item.descriptorSettings.synchronousExecution === true);
 
@@ -87,7 +89,16 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 	}
 
 	if (selected.length >= 1 || autoActive) {
-		let data = null, iDesc: IDescriptor[] = [];
+		let data:any = null, iDesc: IDescriptor[] = [];
+
+		const stringifyOptions = {
+			singleQuotes: settings.singleQuotes,
+			indent: "\t",
+		};
+
+		if (settings.indent !== "tab") {
+			stringifyOptions.indent = " ".repeat(parseInt(settings.indent.charAt(settings.indent.length - 1)));
+		}
 
 		if (selected.length >= 1) {
 			iDesc = selected;
@@ -100,24 +111,36 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 		data = iDesc.map(item => addPerItemOptions(item));
 		// adds raw data type support
 		data = cloneDeep(data);
+
+		if (Array.isArray(data)) {
+			data.forEach(d => {
+				if (settings.hideDontRecord) {
+					delete d.dontRecord;				
+				}
+				if (settings.hideForceNotify) {
+					delete d.forceNotify;				
+				}
+				if (settings.hide_isCommand) {
+					delete d._isCommand;
+				}				
+			});
+		}
 		
 		for (let i = 0; i < data.length; i++) {
 			const item = data[i];
 			RawDataConverter.convertFakeRawInCode(item,descOptions);
 		}
 		
-		let str = JSON.stringify(data, null, 3);
+		let str = stringifyObject(data, stringifyOptions);
 		const commandOptions = addCommonOptions(iDesc);
 		
-		str = str.replace(/"\$\$\$Left_/gm, "");
-		str = str.replace(/_Right\$\$\$"/gm, "");
 		str =
 			"const batchPlay = require(\"photoshop\").action.batchPlay;\n" +
 				"\n" +
 				"const result =" + (commandOptions.synchronousExecution ? "" : " await") + " batchPlay(\n" +
 				str +
 
-				"," + JSON.stringify(commandOptions, null, 3) + ");\n";
+				"," + stringifyObject(commandOptions, stringifyOptions) + ");\n";
 	
 		if (treePath.length) {
 			// eslint-disable-next-line quotes

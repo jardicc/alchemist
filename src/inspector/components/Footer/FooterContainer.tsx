@@ -44,8 +44,8 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 
 	public render(): React.ReactNode{
 		const { onClear, onClearView, allItems, onClearNonExistent } = this.props;
-		const psVersionSegments = GetInfo.getBuildString().split(" ");
-		const psVersionString = psVersionSegments[0] + " " + psVersionSegments[1].replace("(","");
+		const psVersionSegments = GetInfo.getBuildString()//.split(" ");
+		//const psVersionString = psVersionSegments[0] + " " + psVersionSegments[1].replace("(","");
 		return (
 			<div className="Footer">
 				{/*<div className="button" onClick={e=>location.reload()}>Reload</div>*/}
@@ -73,7 +73,7 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 					<span> / </span>
 					<span className="version">{versions.uxp}</span>
 					<span> / PS: </span>
-					<span className="version">{psVersionString}</span>
+					<span className="version">{psVersionSegments}</span>
 				</div>
 				<div className="spread"></div>
 				<div className="copy">Copyright © 2021 <a href="https://bereza.cz">Bereza.cz</a></div>

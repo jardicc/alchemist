@@ -2,11 +2,18 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "1.3.0",
-	"manifestVersion": 4,
-	"host": {
+	"version": "1.4.0",
+	"manifestVersion": 5,
+	"host": [{
 		"app": "PS",
-		"minVersion": "22.2.0"
+		"minVersion": "22.5.0",
+		"data": {
+			"apiVersion": 2
+		}
+	}],
+	"requiredPermissions": {
+		"clipboard": "readAndWrite",
+		"allowCodeGenerationFromStrings": true
 	},
 	"entrypoints": [{
 			"type": "panel",
@@ -58,13 +65,13 @@
 		"path": "icons/lightPlugin.png",
 		"scale": [1, 2],
 		"theme": ["darkest", "dark", "medium"],
-		"species": [ "pluginList" ]
+		"species": ["pluginList"]
 	}, {
 		"width": 48,
 		"height": 48,
 		"path": "icons/darkPlugin.png",
 		"scale": [1, 2],
 		"theme": ["lightest", "light"],
-		"species": [ "pluginList" ]
+		"species": ["pluginList"]
 	}]
 }

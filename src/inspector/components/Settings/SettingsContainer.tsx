@@ -2,11 +2,12 @@ import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { getInspectorSettings } from "../../selectors/inspectorSelectors";
 import { setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction } from "../../actions/inspectorActions";
-
+import SP from "react-uxp-spectrum";
 import React, { Component } from "react";
 import { ISettings, TFontSizeSettings } from "../../model/types";
 import "./Settings.less";
 import { Dispatch } from "redux";
+import { Settings as SettingsClass } from "../../../inspector/classes/Settings";
 
 class Settings extends Component<TSettings, ISettingsState> {
 
@@ -37,12 +38,14 @@ class Settings extends Component<TSettings, ISettingsState> {
 			{ label: "Big", val: "size-big" },
 			{ label: "You must be joking", val: "size-youMustBeJoking" },
 		];
+
+		SettingsClass.setSpectrumComponentSize(fontSize);
+
 		return (
 			<div className="Settings">
-				<div><span className="title">Descriptor settings: </span></div>
+				<h3>Descriptor settings</h3>
 				<div className="row">
-					<sp-checkbox quiet={true} checked={ignoreRawData ? true : null} onClick={(e: any) => onSetRecordRaw(e.target.checked)} />
-					<div className="label">Support raw data type (might slow down panel when turned on)</div>
+					<SP.Checkbox checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} >Record raw data type as an array of number to make it easily readable (might slow down panel when turned on)</SP.Checkbox>
 				</div>
 
 				<div className="row">
@@ -64,23 +67,23 @@ class Settings extends Component<TSettings, ISettingsState> {
 						/>
 					</label>
 				</div>
+				<h3>User interface</h3>
 				<div className="row">
 					<span className="fontSizeLabel">
 						Font size:
 					</span>
-					<sp-dropdown class="fontSizeDropdown">
-						<sp-menu slot="options" onClick={(e: any) => onSetFontSize(e.target.value)}>
+					<SP.Dropdown className="fontSizeDropdown" >
+						<SP.Menu slot="options" onChange={e => onSetFontSize(items[e.target?.selectedIndex ?? 0].val)}>
 							{
 								items.map(item => (
-									<sp-menu-item
+									<SP.MenuItem
 										key={item.val}
-										value={item.val}
-										selected={fontSize === item.val ? "selected" : null}
-									>{item.label}</sp-menu-item>
+										selected={fontSize === item.val ? true : undefined}
+									>{item.label}</SP.MenuItem>
 								))
 							}
-						</sp-menu>
-					</sp-dropdown>
+						</SP.Menu>
+					</SP.Dropdown>
 				</div>
 				<div className="row">
 					<div>

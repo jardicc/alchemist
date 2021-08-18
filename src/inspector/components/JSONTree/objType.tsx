@@ -3,8 +3,14 @@
 import { TNodeType } from "./types";
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-export function objType(obj:any):TNodeType {
-	const type = Object.prototype.toString.call(obj).slice(8, -1) as TNodeType;
+export function objType(obj: any): TNodeType {
+	let type: TNodeType;
+	try {
+		type = Object.prototype.toString.call(obj).slice(8, -1) as TNodeType;
+		
+	} catch (e) {
+		return "Proxy";
+	}
 	if (type === "Object" && typeof obj[Symbol.iterator] === "function") {
 		return "Iterable";
 	}

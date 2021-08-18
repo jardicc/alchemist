@@ -28,7 +28,7 @@ export type TPostprocessValue = (displayValue: string | number, rawValue?: strin
 export type TIsCustomNode = (arg?: any) => boolean;
 export type TValueGetter = (value: any) => any;
 
-export type TNodeType = "Object" | "Error" | "WeakMap" | "WeakSet" | "Array" | "Iterable" | "Map" | "Set" | "String" | "Number" | "Boolean" | "Date" | "Null" | "Undefined" | "Function" | "Symbol" | "Custom";
+export type TNodeType = "Object" | "Error" | "WeakMap" | "WeakSet" | "Array" | "Iterable" | "Map" | "Set" | "String" | "Number" | "Boolean" | "Date" | "Null" | "Undefined" | "Function" | "Symbol" | "Custom" | "Proxy";
 
 /*
 export interface ISettings{

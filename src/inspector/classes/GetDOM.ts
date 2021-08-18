@@ -14,6 +14,10 @@ export class GetDOM{
 			return null;
 		}
 
+		if (res[0]._ref === "historyState" || res[0]._ref === "snapshot") {
+			return GetDOM.getHistoryDom(res[0]._id, res[1]?._id);
+		}
+
 		if (res[0]._ref === "application") {
 			return GetDOM.getAppDom();
 		}
@@ -39,16 +43,35 @@ export class GetDOM{
 		return null;
 	}
 
+	private static sanitizeDocId(docId?: number) {
+		if (typeof docId !== "number") {
+			if (!photoshop.app.activeDocument) {
+				return null;
+			}
+			docId = photoshop.app.activeDocument._id;
+		}
+		return docId;
+	}
+
 	private static getAppDom():Photoshop {
 		const appDom = new photoshop.app.Photoshop();
 		return appDom;
 	}
 
-	private static getLayerDom(layer: number, doc?: number): Layer|null {
-		if (doc === undefined) {
-			doc = photoshop.app.activeDocument._id;
+	private static getDocumentDom(doc: number):Document|null {
+		const docDom = new photoshop.app.Document(doc);
+		if (!docDom) { return null;}
+		const extraDom = new DocumentExtra(docDom);
+		if (!extraDom.exists) {
+			return null;
 		}
-		const layerDom = new photoshop.app.Layer(layer, doc);
+		return docDom;
+	}
+
+	private static getLayerDom(layer: number, docId?: number): Layer|null {
+		docId = GetDOM.sanitizeDocId(docId);
+		if (!docId) { return null;}
+		const layerDom = new photoshop.app.Layer(layer, docId);
 		const layerExtra = new LayerExtra(layerDom);
 		if (!layerExtra.exists) {
 			return null;
@@ -56,13 +79,12 @@ export class GetDOM{
 		return layerDom;
 	}
 
-	private static getDocumentDom(doc: number):Document|null {
-		const docDom = new photoshop.app.Document(doc);
-		const extraDom = new DocumentExtra(docDom);
-		if (!extraDom.exists) {
-			return null;
-		}
-		return docDom;
+	private static getHistoryDom(historyId: number, docId?: number) {
+		docId = GetDOM.sanitizeDocId(docId);
+		if (!docId) { return null;}
+		const doc = GetDOM.getDocumentDom(docId);
+		const found = (doc as any).historyStates.find((h: any) => historyId === h.id) || null;
+		return found;
 	}
 
 	private static actionSetDom(actionSetID: number):ActionSet {

@@ -28,6 +28,36 @@
 		font-size: 24px;
 	}
 	
+	.Resizer.vertical {
+		flex-shrink: 0;
+		width: 4px;
+		background: var(--divider);
+		border: 1px solid var(--divider);
+		cursor: ew-resize;
+
+		&:hover{
+			border: 1px solid var(--divider);
+			background: var(--hover);
+		}
+	}
+
+	.leftPane{
+		position: absolute !important;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		display: flex;
+	}
+
+	.rightPane{
+		position: absolute !important;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		display: flex;
+	}
 
 	.messageStrip{
 		border-top:1px solid var(--divider);
@@ -74,27 +104,13 @@
 			overflow: scroll;
 		}
 	}
-
-	.gutter{
-		background: var(--divider);
-		border: 1px solid var(--divider);
-		cursor: ew-resize;
-
-		&:hover{
-			border: 1px solid var(--divider);
-			background: var(--hover);
-		}
-	}
-
-
-	
 	
 	.descriptorsColumns{
 		display: flex;
 		flex-grow: 1;
 		position: relative;
 
-		>div{
+		> .SplitPane{
 			display: flex;
 			position: absolute;
 			top:0;
@@ -104,26 +120,12 @@
 		}
 	}
 	
-	.descriptorsColumns > .TabList{
-		//left: 200px;
-		//top: 0;
-		//right: 0;
-		//bottom: 0;
-		//position: absolute;
-	}
 	
 	> .TabList{
 		flex-grow: 1;
 	}
 
 	.tabsDescriptor{
-		/*
-		position: absolute;
-		top:0;
-		bottom: 0;
-		right: 0;
-		left: 0;
-		*/
 
 		> .tabContent{
 			position: relative;
@@ -194,7 +196,7 @@
 
 		&:hover{
 			color:var(--hover);
-			border:1px solid var(--hover);
+			border-color: var(--hover);
 			svg{
 				fill:var(--hover);
 			}
@@ -202,7 +204,7 @@
 		
 		&.disallowed{
 			pointer-events: none;
-			border:1px dashed var(--textFade);;
+			border:1px dashed var(--textFade);
 			color:var(--textFade) !important;
 			cursor: not-allowed;
 			svg{
@@ -211,12 +213,11 @@
 		}
 
 		&.activated{
-			color: var(--active);
-			border-color: transparent;
-			//border-width: 2px;
-			outline: 2px solid var(--active);
+			color: var(--divider);
+			fill: var(--divider);
+			background: var(--active);
 			svg{
-				fill:var(--active);
+				fill:var(--divider);
 			}
 		}
 		&.deactivated{

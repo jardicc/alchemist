@@ -2,7 +2,7 @@ import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { setMainTabAction, setModeTabAction, replaceWholeStateAction, setColumnSizeAction } from "../../actions/inspectorActions";
 import { IRootState } from "../../../shared/store";
 import { Settings } from "../../classes/Settings";
-import { getMainTabID, getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings } from "../../selectors/inspectorSelectors";
+import { getMainTabID, getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth } from "../../selectors/inspectorSelectors";
 
 import React from "react";
 import { TabList } from "../Tabs/TabList";
@@ -21,6 +21,8 @@ import { SettingsContainer } from "../Settings/SettingsContainer";
 import { AMConverterContainer } from "../AMConverter/AMConverter";
 import { IconX} from "../../../shared/components/icons";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
+import {Pane} from "react-split-pane";
+import SplitPane from "react-split-pane";
 
 
 class Inspector extends React.Component<TInspector, IInspectorState> { 
@@ -60,48 +62,33 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 	}
 
 	public render(): JSX.Element {
-		const { fontSizeSettings} = this.props;
+		const { fontSizeSettings,leftColumnWidthPx,setColumnSize} = this.props;
 		return (
 			<div className={`Inspector ${fontSizeSettings}`}>
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
 					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
-							<Split
-								sizes={/*Inspector.loaded ? columnSizesPercentage:*/[35, 65]}
-								gutterSize={3}
-							//onDragEnd={this.onSplitChange as any}
-							//onDrag={(e)=>console.log(e)}
-							>
-								<LeftColumnContainer />
-								<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
-									<TabPanel id="content" title="Content" noPadding={true}>
-										<TreeContentContainer />
-									</TabPanel>
-									<TabPanel id="difference" title="Difference" noPadding={true}>
-										<TreeDiffContainer />
-									</TabPanel>
-									<TabPanel id="dom" title="DOM (live)" noPadding={true} >
-										<TreeDomContainer />
-									</TabPanel>
-									<TabPanel id="reference" title="Code" >
-										<GeneratedCodeContainer />
-									</TabPanel>
-									{/*<TabPanel id="info" title="Used filter" >
-										<div className="info code">
-											<div className="noShrink">
-												Filter:
-												<textarea
-													maxLength={Number.MAX_SAFE_INTEGER}
-													className="infoBlock"
-													defaultValue={
-														this.props.calculatedReference
-													}
-												/>
-											</div>
-										</div>
-												</TabPanel>*/}
-								</TabList>
-							</Split>
+							<SplitPane className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={setColumnSize}>
+								<Pane className="leftPane">
+									<LeftColumnContainer />
+								</Pane>
+								<Pane className="rightPane">
+									<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
+										<TabPanel id="content" title="Content" noPadding={true}>
+											<TreeContentContainer />
+										</TabPanel>
+										<TabPanel id="difference" title="Difference" noPadding={true}>
+											<TreeDiffContainer />
+										</TabPanel>
+										<TabPanel id="dom" title="DOM (live)" noPadding={true} >
+											<TreeDomContainer />
+										</TabPanel>
+										<TabPanel id="reference" title="Code" >
+											<GeneratedCodeContainer />
+										</TabPanel>
+									</TabList>
+								</Pane>
+							</SplitPane>
 						</div>
 					</TabPanel>
 					<TabPanel id="dispatcher" title="Dispatch">
@@ -133,7 +120,7 @@ interface IInspectorProps{
 	mainTab: TActiveSection
 	modeTab: TActiveInspectorTab	
 	calculatedReference: string
-	columnSizesPercentage: [number, number]
+	leftColumnWidthPx: number
 	fontSizeSettings:TFontSizeSettings
 }
 
@@ -141,7 +128,7 @@ const mapStateToProps = (state: any): IInspectorProps => (state = state as IRoot
 	mainTab: getMainTabID(state),
 	modeTab: getModeTabID(state),
 	calculatedReference: getActiveDescriptorOriginalReference(state),
-	columnSizesPercentage: [0, 0], //getColumnSizesPercentage(state),
+	leftColumnWidthPx: getLeftColumnWidth(state),
 	fontSizeSettings: getFontSizeSettings(state),
 });
 

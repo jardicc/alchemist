@@ -7,6 +7,7 @@ import { TSubTypes, ISettings, TFilterEvents, TTargetReference, ITargetReference
 import { TBaseItems, baseItemsListener } from "../../model/properties";
 import { TState, FilterButton } from "../FilterButton/FilterButton";
 import cloneDeep from "lodash/cloneDeep";
+import SP from "react-uxp-spectrum";
 
 class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> { 
 	constructor(props: TListenerFilter) {
@@ -48,7 +49,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 		this.props.setFilterEventsType(e.target.value);
 	}
 
-	private onSetSubType = (subType: TSubTypes, value: React.ChangeEvent<HTMLSelectElement>) => {
+	private onSetSubType = (subType: TSubTypes, value: any) => {
 
 		const { onSetTargetReference, activeTargetReference} = this.props;
 		const found = cloneDeep(activeTargetReference);
@@ -71,19 +72,19 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
-				<sp-dropdown quiet="true">
-					<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>) => this.onSetSubType("listenerCategory", e)}>
+				<SP.Dropdown quiet={true}>
+					<SP.Menu slot="options" onChange={(e) => this.onSetSubType("listenerCategory", e)}>
 						{
 							items.map(item => (
-								<sp-menu-item
+								<SP.MenuItem
 									key={item.value}
 									value={item.value}
-									selected={content.value === item.value ? "selected" : null}
-								>{item.label}</sp-menu-item>
+									selected={content.value === item.value ? true : null}
+								>{item.label}</SP.MenuItem>
 							))
 						}
-					</sp-menu>
-				</sp-dropdown>
+					</SP.Menu>
+				</SP.Dropdown>
 				<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype, state) => this.props.onSetFilter(this.props.selectedTargetReference, subtype, state)} />
 			</div>
 		);
@@ -98,20 +99,20 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 				</div>
 				<div className="filter excludeIncludeDropdownRow">
 					<div className="label">Filter:</div>
-					<sp-dropdown quiet="true">
-						<sp-menu slot="options" onClick={this.onSetFilterEventsType}>
+					<SP.Dropdown quiet={true}>
+						<SP.Menu slot="options" onChange={this.onSetFilterEventsType}>
 							{
 								[{ value: "none", label: "None" }, { value: "include", label: "Include" }, { value: "exclude", label: "Exclude" }]
 									.map(item => (
-										<sp-menu-item
+										<SP.MenuItem
 											key={item.value}
 											value={item.value}
-											selected={listenerFilterType === item.value ? "selected" : null}
-										>{item.label}</sp-menu-item>
+											selected={listenerFilterType === item.value ? true : null}
+										>{item.label}</SP.MenuItem>
 									))
 							}
-						</sp-menu>
-					</sp-dropdown>
+						</SP.Menu>
+					</SP.Dropdown>
 				</div>
 				<div className="excludeIncludeInput">
 					{this.renderFilterFields()}

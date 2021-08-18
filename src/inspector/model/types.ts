@@ -24,7 +24,7 @@ export type TImportItems = "append" | "replace";
 
 //export type TAllTabs = TActiveSection|TActiveInspectorTab
 
-//export type TActiveTargetReference = null|Record<string, unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
+//export type TActiveTargetReference = null|Record<string unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
 
 export type TPath = (string)[];
 export type TCustomDescriptorReference = "notSpecified" | "anySpecified";
@@ -66,7 +66,7 @@ export interface IInspectorState {
 }
 
 export interface ITargetReference {
-	type: TTargetReference,
+	type: TTargetReference
 	data: TAllReferenceSubtypes[]
 }
 
@@ -82,68 +82,68 @@ export interface IDispatcher{
 //////
 
 export interface IContentWrapper<T>{
-	value: T,
+	value: T
 	filterBy: TState
 }
 
 export interface ICategory{
-	subType:"category",
+	subType:"category"
 	content: IContentWrapper<TCategoryReference>
 }
 export interface IProperty{
-	subType:"property",
+	subType:"property"
 	content: IContentWrapper<TBaseProperty>
 }
 export interface ICustomDescriptor{
-	subType:"customDescriptor",
+	subType:"customDescriptor"
 	content: IContentWrapper<TCustomDescriptorReference>
 }
 export interface IHistory{
-	subType:"history",
+	subType:"history"
 	content: IContentWrapper<THistoryReference>
 }
 export interface ISnapshot{
-	subType:"snapshot",
+	subType:"snapshot"
 	content: IContentWrapper<TSnapshotReference>
 }
 export interface ILayer{
-	subType:"layer",
+	subType:"layer"
 	content: IContentWrapper<TLayerReference>
 }
 export interface IPath{
-	subType:"path",
+	subType:"path"
 	content: IContentWrapper<TPathReference>
 }
 export interface IChannel{
-	subType:"channel",
+	subType:"channel"
 	content: IContentWrapper<TChannelReference>
 }
 export interface IDocument{
-	subType:"document",
+	subType:"document"
 	content: IContentWrapper<TDocumentReference>
 }
 export interface IGuide{
-	subType:"guide",
+	subType:"guide"
 	content: IContentWrapper<TGuideReference>
 }
 export interface IActionSet{
-	subType:"actionset",
+	subType:"actionset"
 	content: IContentWrapper<TActionSet>
 }
 export interface IActionItem{
-	subType:"action",
+	subType:"action"
 	content: IContentWrapper<TActionItem>
 }
 export interface IActionCommand{
-	subType:"command",
+	subType:"command"
 	content: IContentWrapper<TActionCommand>
 }
 export interface IGenerator{
-	subType:"generator",
+	subType:"generator"
 	content: IContentWrapper<TGeneratorReference>
 }
 export interface IListenerCategory{
-	subType:"listenerCategory",
+	subType:"listenerCategory"
 	content: IContentWrapper<TListenerCategoryReference>
 }
 
@@ -172,13 +172,20 @@ export interface ISettings {
 	maximumItems: number
 	leftColumnWidthPx: number
 	initialDescriptorSettings: IDescriptorSettings
-	neverRecordActionNames:string[]
+	neverRecordActionNames: string[]
+	
+	singleQuotes: boolean
+	indent: "tab" | "space1" | "space2" | "space3" | "space4" | "space5" | "space6" | "space7" | "space8"
+	
+	hide_isCommand: boolean
+	hideDontRecord: boolean
+	hideForceNotify: boolean
 }
 
 export interface IDescriptorSettings {
 	supportRawDataType: "mixed" | boolean
-	dialogOptions: "mixed" | TDialogOptions | null,
-	modalBehavior: "mixed" | TModalBehavior | null,
+	dialogOptions: "mixed" | TDialogOptions | null
+	modalBehavior: "mixed" | TModalBehavior | null
 	synchronousExecution: "mixed" | boolean | null
 }
 
@@ -188,8 +195,8 @@ export interface IPropertySettings {
 }
 
 export interface IPropertyItem {
-	title: string,
-	stringID: string,
+	title: string
+	stringID: string
 	type: TPropertyType
 }
 
@@ -199,7 +206,7 @@ export interface IAMCoverter{
 }
 
 export interface IInspector{
-	activeTab: TActiveInspectorTab,
+	activeTab: TActiveInspectorTab
 	dom: IDOM
 	content: IContent
 	difference: IDifference
@@ -241,16 +248,16 @@ export interface IDescriptor{
 	crc:number
 	startTime: number
 	endTime: number
-	pinned: boolean,
-	locked: boolean,
-	renameMode:boolean,
-	title:string,
+	pinned: boolean
+	locked: boolean
+	renameMode:boolean
+	title:string
 	/** filter settings */
-	originalReference: ITargetReference,
+	originalReference: ITargetReference
 	/** used for AM */
-	calculatedReference: ITargetReferenceAM|Descriptor,
+	calculatedReference: ITargetReferenceAM|Descriptor
 	/** content */
-	originalData: Descriptor[] | Descriptor,
+	originalData: Descriptor[] | Descriptor
 	descriptorSettings: IDescriptorSettings
 	groupCount?:number
 }

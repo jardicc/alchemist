@@ -18,6 +18,7 @@ import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
 import { Descriptor } from "photoshop/dist/types/UXP";
 import { str as crc } from "crc-32";
+import SP from "react-uxp-spectrum";
 
 import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
@@ -52,7 +53,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	/** refactor into reducer? */
-	private onSetSubType = (subType: TSubTypes | "main", value: React.ChangeEvent<HTMLSelectElement>) => {
+	private onSetSubType = (subType: TSubTypes | "main", value: any) => {
 		if (subType === "main") {
 			this.onSetMainClass(value);
 			return;
@@ -81,7 +82,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		});
 	}
 	
-	private renderDocument = (): React.ReactNode => {
+	private renderDocument = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		
 		switch (selectedTargetReference) {
@@ -102,7 +103,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
 	}
 	
-	private renderLayer = (): React.ReactNode => {
+	private renderLayer = (): React.ReactNode|void => {
 		const { activeReferenceChannel, activeReferencePath } = this.props;
 		const { selectedTargetReference } = this.props;
 		
@@ -125,7 +126,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Layer:","layer", list, activeTargetLayerReference);
 	}
 
-	private renderChannel = (): React.ReactNode => {
+	private renderChannel = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "channel") { return; }
 		const list = [...baseItemsChannel,...this.state.channelsList];
@@ -134,7 +135,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Channel:","channel", list, activeReferenceChannel);
 	}
 	
-	private renderPath = (): React.ReactNode => {
+	private renderPath = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "path") { return; }
 		const list = [...baseItemsPath,...this.state.pathsList];
@@ -144,7 +145,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Path:","path", list, activeReferencePath);
 	}
 
-	private renderActionSet = (): React.ReactNode => {
+	private renderActionSet = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionSet } = this.props;
@@ -154,7 +155,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Action set:","actionset", list, activeReferenceActionSet);
 	}
 
-	private renderActionItem = (): React.ReactNode => {
+	private renderActionItem = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceActionItem, activeReferenceActionSet } = this.props;
@@ -164,7 +165,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Action:","action", list, activeReferenceActionItem);
 	}
 
-	private renderCommand = (): React.ReactNode => {
+	private renderCommand = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "action") { return; }
 		const { activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet } = this.props;
@@ -174,7 +175,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Command:","command", list, activeReferenceCommand);
 	}
 
-	private renderGuide = (): React.ReactNode => {
+	private renderGuide = ():React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "guide") { return; }
 		const list = [...baseItemsGuide,...this.state.guidesList];
@@ -183,7 +184,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide);
 	}
 
-	private renderHistory = (): React.ReactNode => {
+	private renderHistory = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "history") { return; }
 		const list = [...baseItemsDocument,...this.state.historyList];
@@ -192,7 +193,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("History:","history", list, activeReferenceHistory);
 	}
 
-	private renderSnapshots = (): React.ReactNode => {
+	private renderSnapshots = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		if (selectedTargetReference !== "snapshot") { return; }
 		const list = [...baseItemsDocument,...this.state.snapshotsList];
@@ -201,7 +202,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return this.buildFilterRow("Snapshots:","snapshot", list, activeReferenceSnapshot);
 	}
 
-	private renderCustomDescriptorCategory = (): React.ReactNode => {
+	private renderCustomDescriptorCategory = (): React.ReactNode|void => {
 		if (this.props.selectedTargetReference !== "customDescriptor") {
 			return null;
 		}
@@ -211,24 +212,24 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return (
 			<div className="filter">
 				<div className="label">Category:</div>
-				<sp-dropdown quiet="true">
-					<sp-menu slot="options" onClick={(e: string) => { console.log(e); }}>
+				<SP.Dropdown quiet={true}>
+					<SP.Menu slot="options" onChange={(e) => { console.log(e); }}>
 						{
 							list.map(item => (
-								<sp-menu-item
+								<SP.MenuItem
 									key={item.value}
 									value={item.value}
-									selected={this.props.selectedTargetReference === item.value ? "selected" : null}
-								>{item.label}</sp-menu-item>
+									selected={this.props.selectedTargetReference === item.value ? true : null}
+								>{item.label}</SP.MenuItem>
 							))
 						}
-					</sp-menu>
-				</sp-dropdown>
+					</SP.Menu>
+				</SP.Dropdown>
 			</div>
 		);
 	}
 	
-	private renderProperty = (): React.ReactNode => {
+	private renderProperty = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		const { propertySettings, activeReferenceProperty } = this.props;
 		
@@ -248,62 +249,62 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const optionalList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "optional").map(f => ({ label: f.title, value: f.stringID }));
 
 		const mapFc = (item: IProperty<string>) => (
-			<sp-menu-item
+			<SP.MenuItem
 				key={item.value}
 				value={item.value}
-				selected={activeReferenceProperty.value === item.value ? "selected" : null}
-			>{item.label}</sp-menu-item>
+				selected={activeReferenceProperty.value === item.value ? true : null}
+			>{item.label}</SP.MenuItem>
 		);
 
 		const hidden = hiddenList.length === 0 ? null : (
-			<React.Fragment>
-				<sp-menu-divider />
-				<sp-menu-group>
+			<>
+				<SP.Divider />
+				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
 					<span slot="header">Hidden</span>
 					{hiddenList.map(mapFc)}
 				</sp-menu-group>
-			</React.Fragment>
+			</>
 		);
 
 		const optional = optionalList.length === 0 ? null : (
-			<React.Fragment>
-				<sp-menu-divider />
-				<sp-menu-group>
+			<>
+				<SP.Divider />
+				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
 					<span slot="header">Optional</span>
 					{optionalList.map(mapFc)}
 				</sp-menu-group>
-			</React.Fragment>
+			</>
 		);
 		const defaultEl = defaultList.length === 0 ? null : (
-			<React.Fragment>
-				<sp-menu-divider />
-				<sp-menu-group>
+			<>
+				<SP.Divider />
+				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
 					<span slot="header">Default</span>
 					{defaultList.map(mapFc)}
 				</sp-menu-group>
-			</React.Fragment>
+			</>
 		);
 
 		return (
 			<div className="filter">
 				<div className="label">Property:</div>
 				<div className="dropdownWrap">
-					<sp-dropdown quiet="true">
-						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType("property",e)}>
+					<SP.Dropdown quiet={true}>
+						<SP.Menu slot="options" onChange={(e)=>this.onSetSubType("property",e)}>
 							{
 								baseItemsProperty.map(item => (
-									<sp-menu-item
+									<SP.MenuItem
 										key={item.value}
 										value={item.value}
-										selected={activeReferenceProperty.value === item.value ? "selected" : null}
-									>{item.label}</sp-menu-item>
+										selected={activeReferenceProperty.value === item.value ? true : null}
+									>{item.label}</SP.MenuItem>
 								))
 							}
 							{defaultEl}
 							{optional}
 							{hidden}
-						</sp-menu>
-					</sp-dropdown>
+						</SP.Menu>
+					</SP.Dropdown>
 					<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
 				</div>
 			</div>
@@ -368,18 +369,18 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			<div className="filter">
 				<div className="label">{label}</div>
 				<div className="dropdownWrap">
-					<sp-dropdown quiet="true" onMouseDown={()=>this.dropdownClick(subType)}>
-						<sp-menu slot="options" onClick={(e: React.ChangeEvent<HTMLSelectElement>)=>this.onSetSubType(subType,e)}>
+					<sp-dropdown size={SP.SpectrumComponetDefaults.defaultSize} quiet={true} onMouseDown={()=>this.dropdownClick(subType)}>
+						<SP.Menu slot="options" onChange={(e)=>this.onSetSubType(subType,e)}>
 							{
 								items.map(item => (
-									<sp-menu-item
+									<SP.MenuItem
 										key={item.value}
 										value={item.value}
-										selected={content.value === item.value ? "selected" : null}
-									>{item.label}</sp-menu-item>
+										selected={content.value === item.value ? true: null}
+									>{item.label}</SP.MenuItem>
 								))
 							}
-						</sp-menu>
+						</SP.Menu>
 					</sp-dropdown>
 					<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
 				</div>
@@ -635,7 +636,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				</sp-body>
 				<footer>
 					<label className="dontShowLabel"><input onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSetDontShowMarketplaceInfo(e.currentTarget.checked)} type="checkbox" />{"Don't show again"}</label>
-					{/*<sp-button quiet="true" variant="secondary">Cancel</sp-button>*/}
+					{/*<sp-button quiet={true} variant="secondary">Cancel</sp-button>*/}
 					<sp-button variant="cta" onClick={() => { this.marketplaceDialogRef.current.close("true"); }}>Continue</sp-button>
 				</footer>
 			</form>
@@ -654,7 +655,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 					<div className="search">
 						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
-						<sp-checkbox className="check" onClick={this.props.toggleDescGrouping} checked={groupDescriptors === "strict" ? "checked" : undefined}>Group</sp-checkbox>
+						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict" ? true : undefined}>Group</SP.Checkbox>
 					</div>
 					<div className="descriptorsWrapper" onClick={()=>this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}

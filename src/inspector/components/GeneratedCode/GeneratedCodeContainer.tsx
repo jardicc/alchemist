@@ -1,16 +1,16 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { getActiveDescriptorCalculatedReference, getCodeActiveView, getDescriptorOptions } from "../../selectors/inspectorCodeSelectors";
-import { getActiveDescriptors, getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
-import { setDescriptorOptionsAction, setInspectorViewAction } from "../../actions/inspectorActions";
+import { getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings } from "../../selectors/inspectorSelectors";
+import { setDescriptorOptionsAction, setInspectorViewAction, setSettingsAction } from "../../actions/inspectorActions";
 
-import { CommandOptions } from "photoshop/dist/types/UXP";
 import React, { Component } from "react";
-import { IDescriptor, IDescriptorSettings, TCodeViewType } from "../../model/types";
+import { IDescriptor, IDescriptorSettings, ISettings, TCodeViewType } from "../../model/types";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import "./GeneratedCode.less";
 import { Dispatch } from "redux";
+import SP from "react-uxp-spectrum";
 
 class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 
@@ -34,7 +34,7 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 	}
 
 	private common = (options: Partial<IDescriptorSettings>) => {
-		const { autoSelectedUUIDs, selected, onSetOptions } = this.props;
+		const { autoSelectedUUIDs, selected, onSetDescriptorOptions: onSetOptions } = this.props;
 		if (autoSelectedUUIDs?.length) {
 			onSetOptions("default", options);			
 		} else {
@@ -67,11 +67,16 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 		this.common({ supportRawDataType: !!value });
 	}
 
-
+	private onSetIndent = (e: any) => {
+		const value = e.currentTarget.value;
+		this.props.onSetGlobalOptions({ indent:  value });
+	}
 	
 	public render(): React.ReactNode {
 
+		const { onSetGlobalOptions} = this.props;
 		const { dialogOptions, modalBehavior, synchronousExecution,supportRawDataType } = this.props.descriptorSettings;
+		const {indent,singleQuotes,hideDontRecord,hideForceNotify,hide_isCommand } = this.props.globalSettings;
 		return (
 			<div className="GeneratedCode">
 				<TabList className="tabsView" activeKey={this.props.viewType} onChange={this.props.onSetView}>
@@ -93,43 +98,91 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 						</div>
 					</TabPanel>
 					<TabPanel id="options" title="Options" >
-						<div><span className="title">Batch play options</span></div>
-						<div><span className="scope">{this.renderOptionsScope()}</span></div>
+						<h3>Batch play options</h3>
+						<span className="scope">{this.renderOptionsScope()}</span>
 						<div className="row">
 							<div className="label">synchronousExecution</div>
-							<sp-dropdown quiet="true">
-								<sp-menu slot="options" onClick={this.onSynchronousExecution}>
-									<sp-menu-item key={"true"} value={"true"} selected={(synchronousExecution === true) ? "selected" : null}>true</sp-menu-item>
-									<sp-menu-item key={"false"} value={"false"} selected={(synchronousExecution === false) ? "selected" : null}>false</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(synchronousExecution === null) ? "selected" : null}>Default</sp-menu-item>
-								</sp-menu>
-							</sp-dropdown>
+							<SP.Dropdown quiet={false}>
+								<SP.Menu slot="options" onChange={this.onSynchronousExecution}>
+									<SP.MenuItem key={"true"} value={"true"} selected={(synchronousExecution === true) ? true : null}>true</SP.MenuItem>
+									<SP.MenuItem key={"false"} value={"false"} selected={(synchronousExecution === false) ? true : null}>false</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(synchronousExecution === null) ? true : null}>Default</SP.MenuItem>
+								</SP.Menu>
+							</SP.Dropdown>
 						</div>
 						<div className="row">
 							<div className="label">dialogOptions</div>
-							<sp-dropdown quiet="true">
-								<sp-menu slot="options" onClick={this.onSetDialogOptions}>
-									<sp-menu-item key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? "selected" : null}>silent (DialogModes.NO)</sp-menu-item>
-									<sp-menu-item key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? "selected" : null}>dontDisplay (DialogModes.ERROR)</sp-menu-item>
-									<sp-menu-item key={"display"} value={"display"} selected={(dialogOptions === "display") ? "selected" : null}>display (DialogModes.ALL)</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(dialogOptions === null) ? "selected" : null}>Default</sp-menu-item>
-								</sp-menu>
-							</sp-dropdown>
+							<SP.Dropdown quiet={false}>
+								<SP.Menu slot="options" onChange={this.onSetDialogOptions}>
+									<SP.MenuItem key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? true : null}>silent (DialogModes.NO)</SP.MenuItem>
+									<SP.MenuItem key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? true : null}>dontDisplay (DialogModes.ERROR)</SP.MenuItem>
+									<SP.MenuItem key={"display"} value={"display"} selected={(dialogOptions === "display") ? true : null}>display (DialogModes.ALL)</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(dialogOptions === null) ? true : null}>Default</SP.MenuItem>
+								</SP.Menu>
+							</SP.Dropdown>
 						</div>
 						<div className="row">
 							<div className="label">modalBehavior</div>
-							<sp-dropdown quiet="false">
-								<sp-menu slot="options" onClick={this.onSetModalBehavior}>
-									<sp-menu-item key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? "selected" : null}>wait</sp-menu-item>
-									<sp-menu-item key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? "selected" : null}>execute</sp-menu-item>
-									<sp-menu-item key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? "selected" : null}>fail</sp-menu-item>
-									<sp-menu-item key={"default"} value={"default"} selected={(modalBehavior === null) ? "selected" : null}>Default</sp-menu-item>
-								</sp-menu>
-							</sp-dropdown>
+							<SP.Dropdown quiet={false}>
+								<SP.Menu slot="options" onChange={this.onSetModalBehavior}>
+									<SP.MenuItem key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? true : null}>wait</SP.MenuItem>
+									<SP.MenuItem key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? true : null}>execute</SP.MenuItem>
+									<SP.MenuItem key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? true : null}>fail</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(modalBehavior === null) ? true : null}>Default</SP.MenuItem>
+								</SP.Menu>
+							</SP.Dropdown>
 						</div>
 						<div className="row">
-							<sp-checkbox className="check" onClick={this.onSetSupportRawDataType} checked={supportRawDataType === true ? "checked" : undefined} indeterminate={supportRawDataType === "mixed" ? true : undefined}>Support raw data type</sp-checkbox>
+							<SP.Checkbox onChange={this.onSetSupportRawDataType} checked={!!supportRawDataType || undefined} indeterminate={supportRawDataType === "mixed" ? true : undefined}>Generate raw data type into source code. (might slow down panel when turned on)</SP.Checkbox>
 						</div>
+						<SP.Divider />
+						<h3>Generated code options</h3>
+						<span className="scope">Global options for all items including already recorded</span>
+						<div className="row">
+							<div className="label">
+								Indent using:
+							</div>
+							<SP.Dropdown quiet={false}>
+								<SP.Menu slot="options" onChange={this.onSetIndent}>
+									<SP.MenuItem key={"tab"} value={"tab"} selected={(indent === "tab") ? true : null}>1 tab</SP.MenuItem>
+
+									<SP.MenuItem key={"space1"} value={"space1"} selected={(indent === "space1") ? true : null}>1 space</SP.MenuItem>
+									<SP.MenuItem key={"space2"} value={"space2"} selected={(indent === "space2") ? true : null}>2 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space3"} value={"space3"} selected={(indent === "space3") ? true : null}>3 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space4"} value={"space4"} selected={(indent === "space4") ? true : null}>4 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space5"} value={"space5"} selected={(indent === "space5") ? true : null}>5 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space6"} value={"space6"} selected={(indent === "space6") ? true : null}>6 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space7"} value={"space7"} selected={(indent === "space7") ? true : null}>7 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space8"} value={"space8"} selected={(indent === "space8") ? true : null}>8 spaces</SP.MenuItem>
+								</SP.Menu>
+							</SP.Dropdown>
+						</div>
+						<div className="row">
+							<SP.Checkbox
+								onChange={(e) => onSetGlobalOptions({singleQuotes: !!e.target?.checked})}
+								checked={singleQuotes || undefined}
+							>Use single quotes</SP.Checkbox>
+						</div>
+
+						<div className="row">
+							<SP.Checkbox
+								onChange={(e) => onSetGlobalOptions({hide_isCommand: !!e.target?.checked})}
+								checked={hide_isCommand || undefined}
+							>Hide property &quot;_isCommand&quot;</SP.Checkbox>
+						</div>
+						<div className="row">
+							<SP.Checkbox
+								onChange={(e) => onSetGlobalOptions({hideDontRecord: !!e.target?.checked})}
+								checked={hideDontRecord || undefined}
+							>Hide property &quot;dontRecord&quot;</SP.Checkbox>
+						</div>
+						<div className="row">
+							<SP.Checkbox
+								onChange={(e) => onSetGlobalOptions({hideForceNotify: !!e.target?.checked})}
+								checked={hideForceNotify || undefined}
+							>Hide property &quot;forceNotify&quot;</SP.Checkbox>
+						</div>
+
 					</TabPanel>
 				</TabList>
 			</div>
@@ -146,6 +199,7 @@ interface IGeneratedCodeProps{
 	selected: IDescriptor[]
 	descriptorSettings: IDescriptorSettings
 	viewType: TCodeViewType
+	globalSettings:ISettings
 }
 
 const mapStateToProps = (state: IRootState): IGeneratedCodeProps => ({
@@ -153,16 +207,19 @@ const mapStateToProps = (state: IRootState): IGeneratedCodeProps => ({
 	selected: getActiveDescriptors(state),
 	autoSelectedUUIDs: getAutoSelectedUUIDs(state),
 	descriptorSettings: getDescriptorOptions(state),
+	globalSettings:getInspectorSettings(state),
 	viewType: getCodeActiveView(state),
 });
 
 interface IGeneratedCodeDispatch {
-	onSetOptions: (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => void
+	onSetGlobalOptions:(options: Partial<ISettings>)=>void
+	onSetDescriptorOptions: (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => void
 	onSetView: (viewType: TCodeViewType) => void
 }
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IGeneratedCodeDispatch, Record<string, unknown>> = (dispatch:Dispatch):IGeneratedCodeDispatch => ({
-	onSetOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
+const mapDispatchToProps: MapDispatchToPropsFunction<IGeneratedCodeDispatch, Record<string, unknown>> = (dispatch: Dispatch): IGeneratedCodeDispatch => ({
+	onSetGlobalOptions: (options)=>dispatch(setSettingsAction(options)),
+	onSetDescriptorOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
 	onSetView:(viewType) => dispatch(setInspectorViewAction("code",viewType)),
 });
 

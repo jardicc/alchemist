@@ -100,8 +100,8 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 	};
 
 	static defaultProps = {
-		data: [],
-		circularCache: [],
+		data: [] as any[],
+		circularCache: [] as any[],
 		level: 0,
 		expandable: true,
 		protoMode: "none",

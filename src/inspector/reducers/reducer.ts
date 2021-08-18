@@ -7,7 +7,7 @@ import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGe
 import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
-import { getDescriptorsListView, getInspectorSettings } from "../selectors/inspectorSelectors";
+import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
 import { cloneDeep } from "lodash";
 
@@ -564,6 +564,15 @@ export const inspectorReducer = (state = getInitialState(), action: TActions): I
 		case "TOGGLE_DESCRIPTORS_GROUPING": {
 			state = produce(state, draft => {
 				draft.settings.groupDescriptors = state.settings.groupDescriptors === "strict" ? "none" : "strict";
+			});
+			break;
+		}
+		case "SET_SETTINGS": {
+			state = produce(state, draft => {
+				draft.settings = {
+					...state.settings,
+					...action.payload,
+				};
 			});
 			break;
 		}

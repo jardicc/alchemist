@@ -27,12 +27,18 @@ export const getActiveTargetReference = createSelector([getTargetReference, getS
 	return (result || null);
 });
 
+
+
 export const getInspectorSettings = createSelector([all], (s) => {
 	return s.settings;
 });
 
 export const getFontSizeSettings = createSelector([getInspectorSettings], (s) => {
 	return s.fontSize;
+});
+
+export const getLeftColumnWidth = createSelector([getInspectorSettings], (s) => {
+	return s.leftColumnWidthPx;
 });
 
 export const getNeverRecordActionNames = createSelector([getInspectorSettings], s => s.neverRecordActionNames);
