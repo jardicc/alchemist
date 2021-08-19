@@ -135,15 +135,9 @@ export class DataViewCustom extends DataView{
 		if (type === 1413830740) { // TEXT
 			const res = this.readASCII();
 			return res;
-		} else if (type === 1819242087 && length === 0) { // long
-			const length = this.getUint32();
-			if (length !== 0) {
-				throw new Error(`Length in stringID where type is "long" must be 0 but got ${length} instead.`);
-			}
-			const sub = new Uint8Array(this.buffer.slice(this.byteOffset, this.byteOffset + 4));
-			this.offset += 4;
-			const res = String.fromCharCode.apply(null, sub as any);
-			return res;
+		} else if (type === 1819242087) { // long
+			const legacyCharID = "$" + this.readASCII(undefined, 4);
+			return legacyCharID;
 		} else {
 			throw new Error("Unkown stringID type: " + type);
 		}

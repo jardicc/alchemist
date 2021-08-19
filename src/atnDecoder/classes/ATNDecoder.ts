@@ -272,6 +272,8 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 					),
 				),
 			};
+
+			data.offset += length;
 			return;
 		}
 		

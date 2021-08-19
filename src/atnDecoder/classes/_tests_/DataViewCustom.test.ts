@@ -55,4 +55,11 @@ describe("unicode string", () => {
 		expect(res).toBe("üg");
 	});
 
+	it("can decode commandStringID with CharID", () => {
+		const data = new DataViewCustom([108, 111, 110, 103, 70, 98, 114, 115, 0, 0, 0, 6, 70, 105, 98, 101, 114, 115], false);
+		const res = data.getCommandStringID();
+
+		expect(res).toBe("$Fbrs");
+	});
+
 });
