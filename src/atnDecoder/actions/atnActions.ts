@@ -26,6 +26,18 @@ export interface IClearAllAction {
 	payload: null
 }
 
+export interface IPassSelectedAction {
+	type: "[ATN] PASS_SELECTED"
+	payload: null
+}
+
+export function passSelectedAction(): IPassSelectedAction{
+	return {
+		type: "[ATN] PASS_SELECTED",
+		payload: null,
+	};
+}
+
 export function clearAllAction(): IClearAllAction{
 	return {
 		type: "[ATN] CLEAR_ALL",
@@ -55,4 +67,4 @@ export function setExpandActionAction(uuid: TExpandedItem, expand:boolean): IExp
 }
 
 
-export type TAtnActions = ISetDataAction|ISelectAction|IExpandAction|IClearAllAction
+export type TAtnActions = ISetDataAction | ISelectAction | IExpandAction | IClearAllAction | IPassSelectedAction

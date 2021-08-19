@@ -328,6 +328,9 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: string): void {
 	const count = data.getUint32();
 	const ref: any[] = [];
+	if (propertyName === "null") {
+		propertyName = "_target";
+	}
 	desc[propertyName] = ref;
 	
 	for (let i = 0; i < count; i++) {

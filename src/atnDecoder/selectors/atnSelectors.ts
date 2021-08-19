@@ -32,13 +32,11 @@ export const getSelectedItemsCommand = createSelector([all], s => {
 
 });
 
-export const selected = createSelector([
+export const selectedSets = createSelector([
 	all,
 	getSelectedItemsSet,
-	getSelectedItemsAction,
-	getSelectedItemsCommand,
-], (s,sets,actions,commands) => {
-	const res: (IActionSetUUID | IActionItemUUID | IActionCommandUUID)[] = [];
+], (s,sets) => {
+	const res: (IActionSetUUID)[] = [];
 	
 	sets.forEach(set => {
 		const found = s.data.find((r => r.__uuid__ === set[0]));
@@ -46,6 +44,15 @@ export const selected = createSelector([
 			res.push(found);			
 		}
 	});
+
+	return res;
+});
+
+export const selectedActions = createSelector([
+	all,
+	getSelectedItemsAction,
+], (s,actions) => {
+	const res: (IActionItemUUID)[] = [];
 	
 	actions.forEach(item => {
 		const found = s.data.find((r => r.__uuid__ === item[0]));
@@ -54,6 +61,15 @@ export const selected = createSelector([
 			res.push(found2);			
 		}
 	});
+
+	return res;
+});
+
+export const selectedCommands = createSelector([
+	all,
+	getSelectedItemsCommand,
+], (s,commands) => {
+	const res: (IActionCommandUUID)[] = [];
 	
 	commands.forEach(item => {
 		const found = s.data.find((r => r.__uuid__ === item[0]));
@@ -64,6 +80,15 @@ export const selected = createSelector([
 		}
 	});
 
+	return res;
+});
+
+export const selected = createSelector([
+	selectedSets,
+	selectedActions,
+	selectedCommands,
+], (sets,actions,commands) => {
+	const res: (IActionSetUUID | IActionItemUUID | IActionCommandUUID)[] = [...sets,...actions,...commands];
 	return res;
 });
 

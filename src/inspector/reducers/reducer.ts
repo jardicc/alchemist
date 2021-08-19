@@ -11,6 +11,7 @@ import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
 import { cloneDeep } from "lodash";
 import { TAtnActions } from "../../atnDecoder/actions/atnActions";
+import { selectedCommands } from "../../atnDecoder/selectors/atnSelectors";
 
 
 export const inspectorReducer = (state = getInitialState(), action: TActions | TAtnActions): IInspectorState => {
@@ -93,7 +94,16 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 			});
 			break;
 		}
-			
+		/*
+		case "[ATN] PASS_SELECTED": {
+			state = produce(state, draft => {
+				const commands = selectedCommands({ inspector: state });
+				
+
+			});
+			break;
+		}
+			*/
 		// ALCHEMIST
 		case "SET_MAIN_TAB": {
 			state = produce(state, draft => {
