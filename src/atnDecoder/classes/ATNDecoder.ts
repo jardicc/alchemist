@@ -16,9 +16,9 @@ function addUUIDs(arg:IActionSet) :IActionSetUUID{
 	const data: IActionSetUUID = arg as IActionSetUUID;
 	data.__uuid__ = Helpers.uuidv4();
 
-	data.actionItems.forEach(item => {
+	data.actionItems?.forEach(item => {
 		item.__uuid__ = Helpers.uuidv4();
-		item.commands.forEach(command =>
+		item.commands?.forEach(command =>
 			command.__uuid__ = Helpers.uuidv4(),
 		);
 	});

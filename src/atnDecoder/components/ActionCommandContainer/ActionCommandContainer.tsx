@@ -6,8 +6,8 @@ import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
 import { setSelectActionAction } from "../../actions/atnActions";
 import { getSelectedItemsCommand } from "../../selectors/atnSelectors";
-import { IActionCommandUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
-import { IconArrowBottom, IconArrowRight, IconCheck, IconCircleCheck } from "../../../shared/components/icons";
+import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
+import { IconArrowBottom, IconArrowRight, IconCheck, IconCircleCheck, IconEmpty } from "../../../shared/components/icons";
 import PS from "photoshop";
 
 export class ActionCommand extends React.Component<TActionCommand, IActionCommandState> { 
@@ -15,14 +15,50 @@ export class ActionCommand extends React.Component<TActionCommand, IActionComman
 		super(props);
 	}
 
+	private get combinedUUID():[string,string,string] {
+		const { parentSet, parentAction, actionCommand } = this.props;
+		const res:[string,string,string] = [parentSet.__uuid__, parentAction.__uuid__, actionCommand.__uuid__];
+		return res;
+	}
+
+	private get isSelected(): boolean{
+		const { selectedItems } = this.props;
+		const uuids = this.combinedUUID;
+		const found = selectedItems.find(item =>
+			item[0] === uuids[0] &&
+			item[1] === uuids[1] &&
+			item[2] === uuids[2]);
+		
+		return !!found;
+	}
+
+	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		e.stopPropagation();
+		
+		let operation: TSelectActionOperation = "replace";
+		
+		if (e.shiftKey && (e.ctrlKey || e.metaKey)) {
+			operation = "subtractContinuous";
+		} else if (e.shiftKey) {
+			operation = "addContinuous";
+		} else if (e.ctrlKey || e.metaKey) {
+			if (this.isSelected) {
+				operation = "subtract";				
+			} else {
+				operation = "add";				
+			}
+		} 
+		this.props.setSelectedItem(this.combinedUUID, operation);
+	}
+
 	public render():React.ReactNode {
 		const {actionCommand } = this.props;
 
 		return (
 			<div className="ActionCommandContainer">
-				<div className="wrap">
+				<div className={"wrap " + (this.isSelected ? "selected" : "")}  onClick={this.select}>
 					<div className="checkmark">
-						{actionCommand.enabled ? <IconCheck />:null}
+						{actionCommand.enabled ? <IconCheck /> : <IconEmpty />}
 					</div>
 					<span className="title">
 						{(PS.core as any).translateUIString(actionCommand.commandName)}
@@ -40,10 +76,14 @@ interface IActionCommandState{
 }
 
 interface IOwn{
-	actionCommand:IActionCommandUUID
+	actionCommand: IActionCommandUUID
+	parentSet:IActionSetUUID
+	parentAction:IActionItemUUID
 }
 
 interface IActionCommandProps{
+	parentSet:IActionSetUUID
+	parentAction:IActionItemUUID
 	selectedItems: TSelectedItem[]
 	actionCommand:IActionCommandUUID
 }
@@ -51,7 +91,8 @@ interface IActionCommandProps{
 const mapStateToProps = (state: IRootState, ownProps: IOwn): IActionCommandProps => (state = state as IRootState,{
 	actionCommand: ownProps.actionCommand,
 	selectedItems: getSelectedItemsCommand(state),
-	
+	parentSet: ownProps.parentSet,
+	parentAction: ownProps.parentAction,
 });
 
 interface IActionCommandDispatch {

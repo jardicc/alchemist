@@ -8,12 +8,46 @@ import { setExpandActionAction, setSelectActionAction } from "../../actions/atnA
 import { getExpandedItemsSet, getSelectedItemsSet } from "../../selectors/atnSelectors";
 import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
 import { ActionItemContainer } from "../ActionItemContainer/ActionItemContainer";
-import { IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconFolder } from "../../../shared/components/icons";
+import { IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty, IconFolder } from "../../../shared/components/icons";
 import PS from "photoshop";
 
 export class ActionSet extends React.Component<TActionSet, IActionSetState> { 
 	constructor(props: TActionSet) {
 		super(props);
+	}
+
+	private get combinedUUID():[string] {
+		const { actionSet } = this.props;
+		const res:[string] = [actionSet.__uuid__];
+		return res;
+	}
+
+	private get isSelected(): boolean{
+		const { selectedItems } = this.props;
+		const uuids = this.combinedUUID;
+		const found = selectedItems.find(item =>
+			item[0] === uuids[0]);
+		
+		return !!found;
+	}
+
+	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		e.stopPropagation();
+		
+		let operation: TSelectActionOperation = "replace";
+		
+		if (e.shiftKey && (e.ctrlKey || e.metaKey)) {
+			operation = "subtractContinuous";
+		} else if (e.shiftKey) {
+			operation = "addContinuous";
+		} else if (e.ctrlKey || e.metaKey) {
+			if (this.isSelected) {
+				operation = "subtract";				
+			} else {
+				operation = "add";				
+			}
+		} 
+		this.props.setSelectedItem(this.combinedUUID, operation);
 	}
 
 	private get isExpanded() {
@@ -22,23 +56,26 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 		return expanded;
 	}
 
-	private onExpand = () => {
-		const {expandedItems,setExpandedItem,actionSet } = this.props;
-		this.props.setExpandedItem([actionSet.__uuid__],!this.isExpanded)
+	private onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		e.stopPropagation();
+		const { actionSet } = this.props;
+		this.props.setExpandedItem([actionSet.__uuid__], !this.isExpanded);
 	}
 
 	public render(): React.ReactNode {
 		
-		const { actionSet, expandedItems } = this.props;
+		const { actionSet } = this.props;
 		
 
 		return (
 			<div className="ActionSet">
-				<div className="wrap" onClick={this.onExpand}>
+				<div className={"wrap " + (this.isSelected ? "selected" : "")} onClick={this.select}>
 					<div className="checkmark">
-						{actionSet.actionItems.every(aItem=>aItem.commands.every(item=>item.enabled)) ? <IconCheck />:null}
+						{(actionSet.actionItems?.every(aItem=>aItem.commands?.every(item=>item.enabled) ?? true) ?? true) ? <IconCheck />:<IconEmpty />}
 					</div>
-					{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
+					<div  onClick={this.onExpand}>
+						{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
+					</div>
 					<IconFolder />
 					<span className="title">
 						{(PS.core as any).translateUIString(actionSet.actionSetName)}

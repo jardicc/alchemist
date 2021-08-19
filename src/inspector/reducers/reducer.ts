@@ -31,9 +31,9 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 					if (item.length !== action.payload.uuid.length) {
 						return false;
 					}
-					const res = (item[0] === action.payload.uuid[0] && item[1] === action.payload.uuid[1])
+					const res = (item[0] === action.payload.uuid[0] && item[1] === action.payload.uuid[1]);
 					return res;
-				})
+				});
 
 				if (action.payload.expand) {
 					if (indexOf === -1) {
@@ -44,6 +44,46 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 						draft.atnConverter.expandedItems.splice(indexOf, 1);
 					}
 				}
+			});
+			break;
+		}
+			
+		case "SELECT_ACTION": {
+			state = produce(state, draft => {
+				const { operation, uuid } = action.payload;
+				if (operation === "none") {
+					draft.atnConverter.selectedItems = [];
+				} else if (operation === "replace") {
+					draft.atnConverter.selectedItems = [action.payload.uuid];
+				}
+
+				/*
+
+				const found = draft.descriptors.find(d => d.id === uuid);
+				if (found && operation !== "none") {					
+					if (operation === "add" || operation === "replace") {
+						found.selected = true;
+					} else if (operation === "subtract") {
+						found.selected = false;
+					} else if (operation === "addContinuous" || operation === "subtractContinuous") {
+						const view = getDescriptorsListView({inspector:state});
+						const lastSelectedItemIndex = view.map(item => item.id).indexOf(state.settings.lastSelectedItem ?? "n/a");
+						const thisItemIndex = view.map(item => item.id).indexOf(uuid as string);
+						if (lastSelectedItemIndex !== -1 && thisItemIndex !== -1) {
+							const ids:string[] = [];
+							for (let i = Math.min(lastSelectedItemIndex, thisItemIndex), end = Math.max(lastSelectedItemIndex, thisItemIndex); i <= end; i++){
+								ids.push(view[i].id);
+							}
+							ids.forEach(id => {
+								const f = draft.descriptors.find(item => item.id === id);
+								if (f) { f.selected = operation === "addContinuous";}
+							});
+						}
+					}
+				}
+				*/
+				//
+				draft.atnConverter.lastSelected = uuid || getInitialState().atnConverter.lastSelected;
 			});
 			break;
 		}
