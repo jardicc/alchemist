@@ -17,14 +17,20 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 	console.log(JSON.stringify(action, null, "\t"));
 	switch (action.type) {
 		// OCCULTIST
-		case "SET_DATA": {
+		case "[ATN] CLEAR_ALL": {
+			state = produce(state, draft => {
+				draft.atnConverter.data = [];
+			});
+			break;
+		}
+		case "[ATN] SET_DATA": {
 			state = produce(state, draft => {
 				draft.atnConverter.data.push(action.payload);
 			});
 			break;
 		}
 			
-		case "EXPAND_ACTION": {
+		case "[ATN] EXPAND_ACTION": {
 			state = produce(state, draft => {
 
 				const indexOf = draft.atnConverter.expandedItems.findIndex(item => {
@@ -48,7 +54,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 			break;
 		}
 			
-		case "SELECT_ACTION": {
+		case "[ATN] SELECT_ACTION": {
 			state = produce(state, draft => {
 				const { operation, uuid } = action.payload;
 				if (operation === "none") {

@@ -12,7 +12,7 @@ import { FooterContainer } from "../../../inspector/components/Footer/FooterCont
 import { TFontSizeSettings } from "../../../inspector/model/types";
 import { getFontSizeSettings } from "../../../inspector/selectors/inspectorSelectors";
 import { getData, getTextData } from "../../selectors/atnSelectors";
-import { setDataAction } from "../../actions/atnActions";
+import { clearAllAction, setDataAction } from "../../actions/atnActions";
 import { IActionSetUUID } from "../../types/model";
 import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
 
@@ -32,9 +32,11 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 	}
 
 
+
+
 	public render(): JSX.Element {
 
-		const { fontSizeSettings, data, setData, textData } = this.props;
+		const { fontSizeSettings, data, setData, textData, onClearAll } = this.props;
 
 
 
@@ -50,11 +52,14 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 						/>
 					</div>
 				</div>
-				<div className="button" onClick={async () => {
-					const res = await doIt();
-					setData(res);
-				}}>
-					Read .ATN file
+				<div className="buttonBar">
+					<div className="button" onClick={onClearAll}>Clear all</div>
+					<div className="button" onClick={async () => {
+						const res = await doIt();
+						setData(res);
+					}}>
+						Read .ATN file
+					</div>
 				</div>
 
 				<FooterContainer parentPanel="atnConverter" />
@@ -84,11 +89,13 @@ const mapStateToProps = (state: any): IATNDecoderProps => (state = state as IRoo
 });
 
 interface IATNDecoderDispatch {
-	setData(data:IActionSetUUID):void
+	setData(data: IActionSetUUID): void
+	onClearAll():void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IATNDecoderDispatch, Record<string, unknown>> = (dispatch):IATNDecoderDispatch => ({
 	setData: (data) => dispatch(setDataAction(data)),
+	onClearAll:()=>dispatch(clearAllAction()),
 });
 
 export const ATNDecoderContainer = connect<IATNDecoderProps, IATNDecoderDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(ATNDecoder);

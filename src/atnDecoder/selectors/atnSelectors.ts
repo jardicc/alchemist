@@ -42,20 +42,26 @@ export const selected = createSelector([
 	
 	sets.forEach(set => {
 		const found = s.data.find((r => r.__uuid__ === set[0]));
-		res.push(found);
+		if (found) {
+			res.push(found);			
+		}
 	});
 	
 	actions.forEach(item => {
 		const found = s.data.find((r => r.__uuid__ === item[0]));
-		const found2 = found.actionItems.find((r => r.__uuid__ === item[1]));
-		res.push(found2);
+		const found2 = found?.actionItems?.find((r => r.__uuid__ === item[1]));
+		if (found2) {
+			res.push(found2);			
+		}
 	});
 	
 	commands.forEach(item => {
 		const found = s.data.find((r => r.__uuid__ === item[0]));
-		const found2 = found.actionItems.find((r => r.__uuid__ === item[1]));
-		const found3 = found2.commands.find((r => r.__uuid__ === item[2]));
-		res.push(found3);
+		const found2 = found?.actionItems?.find((r => r.__uuid__ === item[1]));
+		const found3 = found2?.commands?.find((r => r.__uuid__ === item[2]));
+		if (found3) {
+			res.push(found3);			
+		}
 	});
 
 	return res;
@@ -66,6 +72,10 @@ export const getTextData = createSelector([
 	all,
 	selected,
 ], (all, selected) => {
+
+	if (all.data.length === 0) {
+		return "Please open some .atn file";
+	}
 
 	if (all.selectedItems.length > 1) {
 		return "This works only with 1 item selected";

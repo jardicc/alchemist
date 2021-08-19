@@ -1,4 +1,4 @@
-import "./ActionCommandContainer.less"
+import "./ActionCommandContainer.less";
 
 import React from "react";
 import { connect } from "react-redux";

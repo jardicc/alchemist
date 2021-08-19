@@ -10,7 +10,6 @@ describe("unicode string", () => {
 	});
 	
 	it("can decode unicode string r with accent", () => {
-		debugger;
 		const data = new DataViewCustom([0, 0, 0, 2, 1,89 , 0, 0], false);
 		const res = data.getUtf16String();
 
