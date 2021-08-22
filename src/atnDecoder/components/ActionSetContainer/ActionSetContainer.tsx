@@ -73,7 +73,7 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 					<div className="checkmark">
 						{(actionSet.actionItems?.every(aItem=>aItem.commands?.every(item=>item.enabled) ?? true) ?? true) ? <IconCheck />:<IconEmpty />}
 					</div>
-					<div  onClick={this.onExpand}>
+					<div className="expand"  onClick={this.onExpand}>
 						{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
 					</div>
 					<IconFolder />

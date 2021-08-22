@@ -97,9 +97,14 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 					<TabPanel id="settings" title="Settings">
 						<SettingsContainer  />
 					</TabPanel>
+
+					{
+					/*
 					<TabPanel id="amConverter" title="AM Converter" showScrollbars={true}>
 						<AMConverterContainer />
 					</TabPanel>
+					*/
+					}
 				</TabList>
 				<FooterContainer parentPanel="inspector" />
 				{this.state.showMessage && <div className="messageStrip"><a href={this.state.link} className="link">{this.state.message}</a><span className="close" onClick={this.closeMessage}><IconX /></span></div>}

@@ -804,7 +804,7 @@ interface ILeftColumnDispatch {
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record<string, unknown>> = (dispatch: Dispatch): ILeftColumnDispatch => ({
 	onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
-	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
+	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc,false)),
 	onSetSelectedReferenceType: (type) => dispatch(setSelectedReferenceTypeAction(type)),
 	
 	onClear: () => dispatch(clearAction()),

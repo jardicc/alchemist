@@ -92,29 +92,49 @@ export const selected = createSelector([
 	return res;
 });
 
+export const getLastSelected = createSelector([
+	selectedSets,
+	selectedActions,
+	selectedCommands,
+	all,
+], (sets,actions,commands,all) => {
+	const len = all.lastSelected?.length;
+	if (len === 1) {
+		return sets.find(s => s.__uuid__ === all.lastSelected[0]) || null;
+	}
+	if (len === 2) {
+		return actions.find(s => s.__uuid__ === all.lastSelected[1]) || null;
+	}
+	if (len === 3) {
+		return commands.find(s => s.__uuid__ === all.lastSelected[2]) || null;		
+	}
+	return null;
+});
+
 
 export const getTextData = createSelector([
 	all,
-	selected,
-], (all, selected) => {
+	getLastSelected,
+], (all, lastOne) => {
 
 	if (all.data.length === 0) {
 		return "Please open some .atn file";
 	}
 
-	if (all.selectedItems.length > 1) {
-		return "This works only with 1 item selected";
+	if (!all.lastSelected) {
+		return "Please select some item";
 	} else if (all.selectedItems.length === 0) {
 		const res = stringifyObject(all.data, {
 			indent: "   ",
 			filter: ((input, prop) => !(prop === "__uuid__")), // get rid of  __uuid__ added by occultist
 		});
 		return res;
-	} else {
-		const res = stringifyObject(selected, {
+	} else if(all.lastSelected) {
+		const res = stringifyObject(lastOne, {
 			indent: "   ",
 			filter: ((input, prop) => !(prop === "__uuid__")), // get rid of  __uuid__ added by occultist
 		});
 		return res;
 	}
+	return "Error";
 });

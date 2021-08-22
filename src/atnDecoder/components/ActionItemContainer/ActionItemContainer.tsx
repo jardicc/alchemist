@@ -73,7 +73,7 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 					<div className="checkmark">
 						{(actionItem.commands?.every(item=>item.enabled) ?? true) ? <IconCheck />:<IconEmpty />}
 					</div>
-					<div  onClick={this.onExpand}>
+					<div className="expand"  onClick={this.onExpand}>
 						{this.isExpanded  ? <IconChevronBottom /> : <IconChevronRight />}
 					</div>
 					<span className="title">

@@ -126,7 +126,7 @@ interface IDispatcherDispatch {
 
 const mapDispatchToProps = (dispatch:Dispatch):IDispatcherDispatch => ({
 	setDispatcherValue: (value) => dispatch(setDispatcherValueAction(value)),
-	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
+	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc,false)),
 });
 
 export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch, Record<string,unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Dispatcher);

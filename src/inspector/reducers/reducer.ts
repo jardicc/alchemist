@@ -9,9 +9,10 @@ import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
-import { cloneDeep } from "lodash";
+import { cloneDeep, uniqBy } from "lodash";
 import { TAtnActions } from "../../atnDecoder/actions/atnActions";
-import { selectedCommands } from "../../atnDecoder/selectors/atnSelectors";
+import { selectedActions, selectedCommands, selectedSets } from "../../atnDecoder/selectors/atnSelectors";
+import { TSelectedItem } from "../../atnDecoder/types/model";
 
 
 export const inspectorReducer = (state = getInitialState(), action: TActions | TAtnActions): IInspectorState => {
@@ -58,10 +59,58 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 		case "[ATN] SELECT_ACTION": {
 			state = produce(state, draft => {
 				const { operation, uuid } = action.payload;
+				const {data } = state.atnConverter;
 				if (operation === "none") {
 					draft.atnConverter.selectedItems = [];
 				} else if (operation === "replace") {
-					draft.atnConverter.selectedItems = [action.payload.uuid];
+					draft.atnConverter.selectedItems = addChilds([action.payload.uuid]);
+				} else if (operation === "subtract") {
+					const all = addChilds([action.payload.uuid]).map(item => item.join("|"));
+
+					all.forEach((itemFromAll) => {
+						const foundIndex = draft.atnConverter.selectedItems.findIndex(itemFromDraft => (itemFromDraft.join("|") === itemFromAll));
+						if (foundIndex > -1) {
+							draft.atnConverter.selectedItems.splice(foundIndex, 1);
+						}
+					});
+				} else if (operation === "add") {
+					draft.atnConverter.selectedItems = [...state.atnConverter.selectedItems,...addChilds([action.payload.uuid])];
+				}
+
+				function addChilds(items:TSelectedItem[]):TSelectedItem[] {
+					//let sorted = items.sort((a, b) => a.length - b.length);
+
+					const sets = items.filter(i => i.length === 1);
+					const actions = items.filter(i => i.length === 2);
+					const commands = items.filter(i => i.length === 3);
+
+					sets.forEach(s => {
+						data.forEach(ss => {
+							if (ss.__uuid__ === s[0]) {
+								ss.actionItems.forEach(si => {
+									actions.push([ss.__uuid__, si.__uuid__]);
+									si.commands.forEach(sc => {
+										commands.push([ss.__uuid__, si.__uuid__, sc.__uuid__]);
+									});
+								});
+							}
+						});
+					});
+
+					actions.forEach(a => {
+						data.forEach(ss => ss.actionItems.forEach(si => {
+							if (si.__uuid__ === a[1]) {
+								si.commands.forEach(sc => {
+									commands.push([ss.__uuid__, si.__uuid__, sc.__uuid__]);
+								});
+							}
+						}));
+					});
+
+					const all = [...sets, ...actions, ...commands];
+					const allUnique = uniqBy(all, (i) => i.join("|"));
+
+					return allUnique;
 				}
 
 				/*
@@ -139,7 +188,11 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 						}
 					}
 				}
-				draft.descriptors.push(action.payload);
+				if (action.payload.replace) {
+					draft.descriptors = [action.payload.arg];
+				} else {
+					draft.descriptors.push(action.payload.arg);					
+				}
 			});
 			break;
 		}

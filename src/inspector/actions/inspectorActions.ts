@@ -19,7 +19,10 @@ export interface ISetTargetReference {
 
 export interface IAddDescriptorAction {
 	type: "ADD_DESCRIPTOR"
-	payload: IDescriptor
+	payload: {
+		arg:IDescriptor,
+		replace:boolean
+	}
 }
 
 export interface ISetSelectedReferenceTypeAction {
@@ -476,10 +479,13 @@ export function setTargetReferenceAction(arg:ITargetReference):ISetTargetReferen
 		payload: arg,
 	};
 }
-export function addDescriptorAction(arg:IDescriptor):IAddDescriptorAction{
+export function addDescriptorAction(arg:IDescriptor, replace:boolean):IAddDescriptorAction{
 	return {
 		type: "ADD_DESCRIPTOR",
-		payload: arg,
+		payload: {
+			arg,
+			replace,
+		},
 	};
 }
 export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string,crc?:number): ISelectDescriptor {

@@ -7,6 +7,7 @@
 
 	.wrap{
 		display: flex;
+		cursor: pointer;
 
 		> * {
 			padding:0.15em;
@@ -15,6 +16,13 @@
 		.checkmark{
 			border-right:1px solid var(--divider);
 			box-sizing: border-box;
+			
+		}
+
+		.expand:hover{
+			svg{
+				fill:var(--hover);
+			}
 		}
 
 		&.selected{
@@ -24,9 +32,7 @@
 		&:hover{
 			color:var(--hover);
 
-			svg{
-				fill:var(--hover);
-			}
+
 		}
 
 		svg{

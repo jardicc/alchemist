@@ -9,13 +9,13 @@ import "./ATNDecoderContainer.less";
 
 import { doIt } from "../../../atnDecoder/classes/ATNDecoder";
 import { FooterContainer } from "../../../inspector/components/Footer/FooterContainer";
-import { IDescriptor, TFontSizeSettings } from "../../../inspector/model/types";
+import { IDescriptor, TFontSizeSettings, TSelectDescriptorOperation } from "../../../inspector/model/types";
 import { getFontSizeSettings } from "../../../inspector/selectors/inspectorSelectors";
 import { getData, getTextData, selectedCommands } from "../../selectors/atnSelectors";
 import { clearAllAction, passSelectedAction, setDataAction } from "../../actions/atnActions";
 import { IActionCommandUUID, IActionSetUUID } from "../../types/model";
 import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
-import { addDescriptorAction } from "../../../inspector/actions/inspectorActions";
+import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setMainTabAction, setModeTabAction } from "../../../inspector/actions/inspectorActions";
 import { Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
 
@@ -34,10 +34,12 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		);
 	}
 
-	private pass = () => {
-		const { selectedCommands, onPassSelected } = this.props;
+	private pass = (replace=false) => {
+		const { selectedCommands, onPassSelected,onSelectAlchemistDescriptors } = this.props;
 
-		selectedCommands.forEach(command => {
+		onSelectAlchemistDescriptors("none");
+
+		selectedCommands.forEach((command,index) => {
 
 			const descCrc = crc(JSON.stringify(command.descriptor));
 
@@ -73,7 +75,8 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				title: command.commandName,
 			};
 
-			onPassSelected(desc);
+			const cleanOld = index === 0 && replace;
+			onPassSelected(desc, cleanOld);
 		});
 
 	}
@@ -91,9 +94,9 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 					<div className="tree">{this.renderSet()}</div>
 					<div className="noShrink">
 						<textarea
+							readOnly={true}
 							maxLength={Number.MAX_SAFE_INTEGER}
 							className="infoBlock"
-							defaultValue={textData}
 							value={textData}
 						/>
 					</div>
@@ -106,7 +109,8 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 					}}>
 						Read .ATN file
 					</div>
-					<div className="button" onClick={this.pass}>Pass selected to Alchemist</div>
+					<div className="button" onClick={()=>this.pass()}>Add selected to Alchemist</div>
+					<div className="button" onClick={()=>this.pass(true)}>Replace selected in Alchemist</div>
 				</div>
 
 				<FooterContainer parentPanel="atnConverter" />
@@ -140,13 +144,20 @@ const mapStateToProps = (state: IRootState): IATNDecoderProps => (state = state 
 interface IATNDecoderDispatch {
 	setData(data: IActionSetUUID): void
 	onClearAll(): void
-	onPassSelected(desc:IDescriptor):void
+	onPassSelected(desc: IDescriptor, replace:boolean): void
+	onSelectAlchemistDescriptors(operation: TSelectDescriptorOperation, uuid?: string):void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IATNDecoderDispatch, Record<string, unknown>> = (dispatch):IATNDecoderDispatch => ({
 	setData: (data) => dispatch(setDataAction(data)),
 	onClearAll: () => dispatch(clearAllAction()),
-	onPassSelected: (desc) => dispatch(addDescriptorAction(desc)),
+	onPassSelected: (desc, replace) => {
+		dispatch(setMainTabAction("descriptors"));
+		dispatch(setModeTabAction("reference"));
+		dispatch(setInspectorViewAction("code", "generated"));
+		dispatch(addDescriptorAction(desc, replace));
+	},
+	onSelectAlchemistDescriptors: (operation,uuid) => dispatch(selectDescriptorAction(operation,uuid)),
 });
 
 export const ATNDecoderContainer = connect<IATNDecoderProps, IATNDecoderDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(ATNDecoder);
