@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.0
+- feature: adds Occultist panel for generating source code from .ATN files and inspecting them
+
 ## 1.4.0
 - feature: adds indentation option into generated code
 - feature: adds single quotes option into generated code
