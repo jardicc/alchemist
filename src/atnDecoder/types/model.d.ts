@@ -4,18 +4,21 @@ export interface IActionSetUUID extends IActionSet{
 }
 
 export interface IActionItemUUID extends IActionItem{
-	__uuid__:string
+	__uuid__: string
+	__uuidParentSet__:string
 	commands:IActionCommandUUID[]
 }
 
 export interface IActionCommandUUID extends ICommand{
 	__uuid__:string
+	__uuidParentAction__:string
+	__uuidParentSet__:string
 }
 
 export type TSelectActionOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
 
-export type TSelectedItem = [string] | [string, string] | [string, string, string]
-export type TExpandedItem = [string] | [string, string]
+export type TSelectedItem = [string, string?, string?]
+export type TExpandedItem = [string, string?]
 
 export interface IATNConverterState{
 	data: IActionSetUUID[]

@@ -11,8 +11,8 @@ import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
 import { cloneDeep, uniqBy } from "lodash";
 import { TAtnActions } from "../../atnDecoder/actions/atnActions";
-import { selectedActions, selectedCommands, selectedSets } from "../../atnDecoder/selectors/atnSelectors";
-import { TSelectedItem } from "../../atnDecoder/types/model";
+import { getSetByUUID, getTreePartUniversal, selectedActions, selectedCommands, selectedSets } from "../../atnDecoder/selectors/atnSelectors";
+import { TExpandedItem, TSelectedItem } from "../../atnDecoder/types/model";
 
 
 export const inspectorReducer = (state = getInitialState(), action: TActions | TAtnActions): IInspectorState => {
@@ -34,7 +34,10 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 			
 		case "[ATN] EXPAND_ACTION": {
 			state = produce(state, draft => {
+				const { expand, recursive, uuid } = action.payload;
+				//const treePart = getTreePartUniversal(state, uuid);
 
+				
 				const indexOf = draft.atnConverter.expandedItems.findIndex(item => {
 					if (item.length !== action.payload.uuid.length) {
 						return false;
@@ -43,13 +46,28 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 					return res;
 				});
 
-				if (action.payload.expand) {
+				if (expand) {
 					if (indexOf === -1) {
-						draft.atnConverter.expandedItems.push(action.payload.uuid);
+						draft.atnConverter.expandedItems.push(uuid);
+						if (recursive && uuid.length === 1) {
+							const rest:TExpandedItem[] = getSetByUUID(state, uuid[0]).actionItems.map(item => [item.__uuidParentSet__, item.__uuid__]);
+							draft.atnConverter.expandedItems.push(...rest);
+						}
 					}
 				} else {
 					if (indexOf !== -1) {
 						draft.atnConverter.expandedItems.splice(indexOf, 1);
+						if (recursive && uuid.length === 1) {
+							const rest: string[] = getSetByUUID(state, uuid[0]).actionItems.map(item => [item.__uuidParentSet__, item.__uuid__].join("|"));
+
+
+							rest.forEach(itm => {
+								const index = draft.atnConverter.expandedItems.findIndex((a) => {
+									return a.join("|") === itm;
+								});
+								draft.atnConverter.expandedItems.splice(index, 1);
+							});
+						}
 					}
 				}
 			});

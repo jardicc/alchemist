@@ -7,26 +7,36 @@ import { DataViewCustom } from "./DataViewCustom";
 import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../types/model";
 import { Helpers } from "../../inspector/classes/Helpers";
 
+// IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const formats = require("uxp").storage.formats;
 
 function addUUIDs(arg:IActionSet) :IActionSetUUID{
+	
 	const data: IActionSetUUID = arg as IActionSetUUID;
 	data.__uuid__ = Helpers.uuidv4();
 
 	data.actionItems?.forEach(item => {
+		
 		item.__uuid__ = Helpers.uuidv4();
-		item.commands?.forEach(command =>
-			command.__uuid__ = Helpers.uuidv4(),
-		);
+		item.__uuidParentSet__ = data.__uuid__;
+
+		item.commands?.forEach(command => {
+			
+			command.__uuidParentAction__ = item.__uuid__;
+			command.__uuidParentSet__ = data.__uuid__;
+			command.__uuid__ = Helpers.uuidv4();
+
+		});
 	});
 
 	return data;
 }
 
-export async function doIt():Promise<IActionSetUUID> {
+export async function decodeATN():Promise<IActionSetUUID> {
 	const dataView = await loadFile();
 	const parsed = addUUIDs(parse(dataView));
 	//console.log(parsed);

@@ -22,7 +22,7 @@ import { IconX} from "../../../shared/components/icons";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
 import {Pane} from "react-split-pane";
 import SplitPane from "react-split-pane";
-import { doIt } from "../../../atnDecoder/classes/ATNDecoder";
+import { decodeATN } from "../../../atnDecoder/classes/ATNDecoder";
 
 
 class Inspector extends React.Component<TInspector, IInspectorState> { 

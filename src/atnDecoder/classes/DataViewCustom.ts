@@ -45,8 +45,7 @@ export class DataViewCustom extends DataView{
 	}
 
 	public getUint16(byteOffset: number = this.offset, isLittleEndian = this.littleEndian): number {
-		this.littleEndian = isLittleEndian;
-		const res = super.getUint16(byteOffset, this.littleEndian);
+		const res = super.getUint16(byteOffset, isLittleEndian);
 		this.offset += 2;
 		return res;
 	}

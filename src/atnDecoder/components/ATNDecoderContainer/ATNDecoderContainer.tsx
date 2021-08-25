@@ -1,5 +1,5 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
-import { IRootState } from "../../../shared/store";
+import { IRootState, rootStore } from "../../../shared/store";
 
 import React from "react";
 
@@ -7,17 +7,18 @@ import "./../../../shared/ThemeVars.css";
 import "./../../../shared/styles.less";
 import "./ATNDecoderContainer.less";
 
-import { doIt } from "../../../atnDecoder/classes/ATNDecoder";
+import { decodeATN } from "../../../atnDecoder/classes/ATNDecoder";
 import { FooterContainer } from "../../../inspector/components/Footer/FooterContainer";
 import { IDescriptor, TFontSizeSettings, TSelectDescriptorOperation } from "../../../inspector/model/types";
 import { getFontSizeSettings } from "../../../inspector/selectors/inspectorSelectors";
-import { getData, getTextData, selectedCommands } from "../../selectors/atnSelectors";
+import { getActionByUUID, getData, getTextData, selectedCommands } from "../../selectors/atnSelectors";
 import { clearAllAction, passSelectedAction, setDataAction } from "../../actions/atnActions";
 import { IActionCommandUUID, IActionSetUUID } from "../../types/model";
 import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
 import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setMainTabAction, setModeTabAction } from "../../../inspector/actions/inspectorActions";
 import { Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
+import PS from "photoshop";
 
 
 class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> { 
@@ -39,15 +40,17 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 
 		onSelectAlchemistDescriptors("none");
 
-		selectedCommands.forEach((command,index) => {
-
+		
+		selectedCommands.forEach((command, index) => {
+			
+			const commandParrent = getActionByUUID(rootStore.getState().inspector, command.__uuidParentSet__, command.__uuidParentAction__);
 			const descCrc = crc(JSON.stringify(command.descriptor));
 
 			const desc: IDescriptor = {
 				calculatedReference: command.descriptor,
 				crc: descCrc,
 				descriptorSettings: {
-					dialogOptions: "dontDisplay",
+					dialogOptions: command.showDialogs ? "display" : "dontDisplay",
 					modalBehavior: "wait",
 					supportRawDataType: true,
 					synchronousExecution: true,
@@ -72,7 +75,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				renameMode: false,
 				selected: true,
 				startTime: 0,
-				title: command.commandName,
+				title: (PS.core as any).translateUIString(commandParrent.actionItemName) + " / " + command.commandName,
 			};
 
 			const cleanOld = index === 0 && replace;
@@ -104,7 +107,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				<div className="buttonBar">
 					<div className="button" onClick={onClearAll}>Clear all</div>
 					<div className="button" onClick={async () => {
-						const res = await doIt();
+						const res = await decodeATN();
 						setData(res);
 					}}>
 						Read .ATN file

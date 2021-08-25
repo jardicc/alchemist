@@ -18,6 +18,7 @@ export interface IExpandAction {
 	payload: {
 		uuid: TExpandedItem
 		expand: boolean
+		recursive:boolean
 	}
 }
 
@@ -59,10 +60,11 @@ export function setSelectActionAction(operation: TSelectActionOperation, uuid?:T
 	};
 }
 
-export function setExpandActionAction(uuid: TExpandedItem, expand:boolean): IExpandAction {
+export function setExpandActionAction(uuid: TExpandedItem, expand:boolean, recursive=false): IExpandAction {
 	return {
 		type: "[ATN] EXPAND_ACTION",
-		payload: {uuid, expand},
+		payload: { uuid, expand,recursive },
+		
 	};
 }
 

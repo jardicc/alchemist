@@ -59,7 +59,8 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 	private onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
 		const { actionSet } = this.props;
-		this.props.setExpandedItem([actionSet.__uuid__], !this.isExpanded);
+		const recursive = (e.ctrlKey || e.metaKey);
+		this.props.setExpandedItem([actionSet.__uuid__], !this.isExpanded,recursive);
 	}
 
 	public render(): React.ReactNode {
@@ -112,11 +113,11 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): IActionSetProps => 
 
 interface IActionSetDispatch {
 	setSelectedItem(uuid:TSelectedItem,operation:TSelectActionOperation): void
-	setExpandedItem(uuid:TExpandedItem, expand:boolean): void
+	setExpandedItem(uuid:TExpandedItem, expand:boolean,recursive:boolean): void
 }
 
 const mapDispatchToProps = (dispatch:Dispatch):IActionSetDispatch => ({
-	setExpandedItem: (uuid, expand) => dispatch(setExpandActionAction(uuid, expand)),
+	setExpandedItem: (uuid, expand,recursive) => dispatch(setExpandActionAction(uuid, expand,recursive)),
 	setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
 });
 

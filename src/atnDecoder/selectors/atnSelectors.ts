@@ -2,12 +2,40 @@ import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
 
 import stringifyObject from "stringify-object";
-import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, IATNConverterState } from "../types/model";
+import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, IATNConverterState, TExpandedItem, TSelectedItem } from "../types/model";
+import { IInspectorState } from "../../inspector/model/types";
 
 export const all = (state:IRootState):IATNConverterState => state.inspector.atnConverter;
 export const getData = createSelector([all], s => s.data);
 
+export const getSetByUUID = (state: IInspectorState,uuidSet:string):IActionSetUUID => {
+	const res = state.atnConverter.data.find(set => set.__uuid__ === uuidSet) || null;
+	return res;
+};
 
+export const getActionByUUID = (state: IInspectorState, uuidSet: string, uuidAction:string): IActionItemUUID => {
+	const res = getSetByUUID(state,uuidSet)?.actionItems.find(item=>item.__uuid__ === uuidAction) || null;
+	return res;
+};
+
+export const getCommandByUUID = (state: IInspectorState, uuidSet: string, uuidAction: string, uuidCommand:string): IActionCommandUUID => {
+	const res = getActionByUUID(state,uuidSet,uuidAction)?.commands.find(item=>item.__uuid__ === uuidCommand) || null;
+	return res;
+};
+
+export function getTreePartUniversal (state: IInspectorState, path: [string]):IActionSetUUID
+export function getTreePartUniversal (state: IInspectorState, path: [string,string]):IActionItemUUID
+export function getTreePartUniversal (state: IInspectorState, path: [string,string,string]):IActionCommandUUID
+export function getTreePartUniversal(state: IInspectorState, path: [string, string?, string?]): IActionSetUUID | IActionItemUUID | IActionCommandUUID {
+	switch (path.length) {
+		case 1:
+			return getSetByUUID(state, path[0]);
+		case 2:
+			return getActionByUUID(state, path[0], path[1]);
+		case 3:
+			return getCommandByUUID(state, path[0], path[1], path[2]);
+	}
+}
 
 export const getExpandedItemsSet = createSelector([all],s=>{
 	return s.expandedItems.filter(item => item.length === 1);
@@ -126,13 +154,13 @@ export const getTextData = createSelector([
 	} else if (all.selectedItems.length === 0) {
 		const res = stringifyObject(all.data, {
 			indent: "   ",
-			filter: ((input, prop) => !(prop === "__uuid__")), // get rid of  __uuid__ added by occultist
+			filter: ((input, prop) => (!(prop === "__uuid__")) && !(prop === "__uuidParentSet__") && !(prop === "__uuidParentAction__")), // get rid of  __uuid__ added by occultist
 		});
 		return res;
 	} else if(all.lastSelected) {
 		const res = stringifyObject(lastOne, {
 			indent: "   ",
-			filter: ((input, prop) => !(prop === "__uuid__")), // get rid of  __uuid__ added by occultist
+			filter: ((input, prop) => (!(prop === "__uuid__")) && !(prop === "__uuidParentSet__") && !(prop === "__uuidParentAction__")), // get rid of  __uuid__ added by occultist
 		});
 		return res;
 	}
