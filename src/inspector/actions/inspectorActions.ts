@@ -269,7 +269,7 @@ export interface ISetNeverRecordActionNamesAction{
 
 export interface IToggleDescriptorsGroupingAction{
 	type: "TOGGLE_DESCRIPTORS_GROUPING",
-	payload:null
+	payload: "none" | "strict" | null
 }
 
 export interface ISetSettingsAction{
@@ -284,10 +284,10 @@ export function setSettingsAction(settings:Partial<ISettings>): ISetSettingsActi
 	};
 }
 
-export function toggleDescriptorsGroupingAction():IToggleDescriptorsGroupingAction {
+export function toggleDescriptorsGroupingAction(arg: "none" | "strict" | null = null): IToggleDescriptorsGroupingAction {
 	return {
 		type: "TOGGLE_DESCRIPTORS_GROUPING",
-		payload: null,
+		payload: arg,
 	};
 }
 

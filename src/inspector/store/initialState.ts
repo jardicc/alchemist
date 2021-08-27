@@ -49,7 +49,8 @@ export function getInitialState(): IInspectorState {
 			data: [],
 			expandedItems: [],
 			selectedItems: [],
-			lastSelected:null,
+			lastSelected: null,
+			dontSendDisabled:false,
 		},
 
 		targetReference: [

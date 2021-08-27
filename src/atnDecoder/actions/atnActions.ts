@@ -2,7 +2,7 @@ import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } 
 
 export interface ISetDataAction {
 	type: "[ATN] SET_DATA"
-	payload: IActionSetUUID
+	payload: IActionSetUUID[]
 }
 
 export interface ISelectAction {
@@ -32,6 +32,18 @@ export interface IPassSelectedAction {
 	payload: null
 }
 
+export interface ISetDontSendDisabledAction {
+	type: "[ATN] SET_DONT_SEND_DISABLED"
+	payload: boolean
+}
+
+export function setDontSendDisabledAction(value:boolean): ISetDontSendDisabledAction{
+	return {
+		type: "[ATN] SET_DONT_SEND_DISABLED",
+		payload: value,
+	};
+}
+
 export function passSelectedAction(): IPassSelectedAction{
 	return {
 		type: "[ATN] PASS_SELECTED",
@@ -46,7 +58,7 @@ export function clearAllAction(): IClearAllAction{
 	};
 }
 
-export function setDataAction(data:IActionSetUUID): ISetDataAction{
+export function setDataAction(data:IActionSetUUID[]): ISetDataAction{
 	return {
 		type: "[ATN] SET_DATA",
 		payload: data,
@@ -69,4 +81,4 @@ export function setExpandActionAction(uuid: TExpandedItem, expand:boolean, recur
 }
 
 
-export type TAtnActions = ISetDataAction | ISelectAction | IExpandAction | IClearAllAction | IPassSelectedAction
+export type TAtnActions = ISetDataAction | ISelectAction | IExpandAction | IClearAllAction | IPassSelectedAction | ISetDontSendDisabledAction

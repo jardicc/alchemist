@@ -27,7 +27,7 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 		}
 		case "[ATN] SET_DATA": {
 			state = produce(state, draft => {
-				draft.atnConverter.data.push(action.payload);
+				draft.atnConverter.data.push(...action.payload);
 			});
 			break;
 		}
@@ -70,6 +70,13 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 						}
 					}
 				}
+			});
+			break;
+		}
+			
+		case "[ATN] SET_DONT_SEND_DISABLED": {
+			state = produce(state, draft => {
+				draft.atnConverter.dontSendDisabled = action.payload;
 			});
 			break;
 		}
@@ -724,7 +731,11 @@ export const inspectorReducer = (state = getInitialState(), action: TActions | T
 		}
 		case "TOGGLE_DESCRIPTORS_GROUPING": {
 			state = produce(state, draft => {
-				draft.settings.groupDescriptors = state.settings.groupDescriptors === "strict" ? "none" : "strict";
+				if (action.payload === null) {
+					draft.settings.groupDescriptors = state.settings.groupDescriptors === "strict" ? "none" : "strict";					
+				} else {
+					draft.settings.groupDescriptors = action.payload;					
+				}
 			});
 			break;
 		}

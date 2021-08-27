@@ -60,6 +60,11 @@ export const getSelectedItemsCommand = createSelector([all], s => {
 
 });
 
+export const getDontSendDisabled = createSelector([all], s => {
+	return s.dontSendDisabled;
+
+});
+
 export const selectedSets = createSelector([
 	all,
 	getSelectedItemsSet,
@@ -146,7 +151,7 @@ export const getTextData = createSelector([
 ], (all, lastOne) => {
 
 	if (all.data.length === 0) {
-		return "Please open some .atn file";
+		return "The Occultist is bored. Give him some files to look into.";
 	}
 
 	if (!all.lastSelected) {

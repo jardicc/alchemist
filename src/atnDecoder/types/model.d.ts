@@ -24,7 +24,8 @@ export interface IATNConverterState{
 	data: IActionSetUUID[]
 	lastSelected:TSelectedItem|null
 	selectedItems: TSelectedItem[]
-	expandedItems:  TExpandedItem[]
+	expandedItems: TExpandedItem[]
+	dontSendDisabled:boolean
 }
 
 export interface IActionSet{

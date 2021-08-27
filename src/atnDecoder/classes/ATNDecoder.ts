@@ -36,32 +36,37 @@ function addUUIDs(arg:IActionSet) :IActionSetUUID{
 	return data;
 }
 
-export async function decodeATN():Promise<IActionSetUUID> {
-	const dataView = await loadFile();
-	const parsed = addUUIDs(parse(dataView));
-	//console.log(parsed);
-	//const res = JSON.stringify(parsed, null, 3);
-
+export async function decodeATN():Promise<IActionSetUUID[]> {
+	const dataViews = await loadFile();
+	const parsed = dataViews.map(dataView => addUUIDs(parse(dataView)));
 	return parsed;
 }
 
-export async function loadFile():Promise<DataView|null> {
-	const file = await localFileSystem.getFileForOpening({
+export async function loadFile():Promise<DataView[]|null> {
+	const files = await localFileSystem.getFileForOpening({
 		types: ["atn"],
-		allowMultiple: false,
+		allowMultiple: true,
 		//initialLocation: await Settings.settingsFolder()
 	});
-	if (!file) {
+	if (!files?.length) {
 		return null;
 	}
-	const data:ArrayBuffer = await file.read({format: formats.binary});
-	try {
-		const result = new DataView(data);
-		return result;
-	} catch (e) {
-		console.log("Error - with reading of settings!");
-		return null;
+
+	const result: DataView[] = [];
+
+	for (let i = 0; i < files.length; i++) {
+		const file = files[i];
+		
+		const data:ArrayBuffer = await file.read({format: formats.binary});
+		try {
+			result.push(new DataView(data));
+		} catch (e) {
+			console.log("Error - with reading of settings!");
+			//result.push( null);
+		}
 	}
+
+	return result;
 }
 
 export function parse(d: DataView):IActionSet {
