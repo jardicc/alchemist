@@ -10,6 +10,13 @@ Videos on how to use it from Davide Barranca series about UXP:
 
 ![alt Plugin screenshot](md_images/screen.png)
 
+## Versions
+Alchemist 1.4.0 requires Photoshop 22.5 or higher.
+
+Alchemsit 1.3.0 works best with Photoshop 22.4.x and lower.
+
+Show all versions here: https://github.com/jardicc/alchemist/releases
+
 ## Disclaimer
 You are using this software at your own risk. It is possible that Photoshop could crash if you ask Photoshop to do something unusual via Alchemist. So just save your work if you are concerned. 
 
@@ -69,7 +76,8 @@ In "Adobe UXP Developer Tool" click actions triple dot and click debug.
 ## Supporters
 The Alchemist plugin for Photoshop was developed with support from the **Adobe Fund for Design**.
 
-Also big thanks to other supporters and developers who decided to donate. 
+Also big thanks to other supporters and developers who decided to donate.
+Visit this site if you want to donate: https://bereza.gumroad.com/l/alchemist
 
 ## Credits
 
