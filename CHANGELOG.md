@@ -2,6 +2,7 @@
 
 ## 1.5.0
 - feature: adds Occultist panel for generating source code from .ATN files and inspecting them
+- fixes: permission issue in PS 23.0.0
 
 ## 1.4.0
 - feature: adds indentation option into generated code
