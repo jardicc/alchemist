@@ -26,6 +26,10 @@ export const IconActionUndo = (): JSX.Element => (
 		<path d="M4.5 0c-1.93 0-3.5 1.57-3.5 3.5v.5h-1l2 2 2-2h-1v-.5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5c0-1.93-1.57-3.5-3.5-3.5z" transform="translate(0 1)" />
 	</svg>
 );
+export const IconEmpty = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+	</svg>
+);
 export const IconAlignCenter = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M0 0v1h8v-1h-8zm1 2v1h6v-1h-6zm-1 2v1h8v-1h-8zm1 2v1h6v-1h-6z" />
@@ -203,12 +207,16 @@ export const IconCaretTop=():JSX.Element=>(
 		<path d="M4 0l-4 4h8l-4-4z" transform="translate(0 2)" />
 	</svg>
 );
-//export const IconCart=():JSX.Element=>(
-//
-//)
-//export const IconCircleCheck=():JSX.Element=>(
-//
-//)
+/*
+export const IconCart=():JSX.Element=>(
+
+)
+*/
+export const IconCircleCheck = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm2 1.78l.72.72-3.22 3.22-1.72-1.72.72-.72 1 1 2.5-2.5z" />
+	</svg>
+);
 //export const IconCircleX=():JSX.Element=>(
 //
 //)
@@ -366,9 +374,11 @@ export const IconEye = (): JSX.Element => (
 //export const IconFlash=():JSX.Element=>(
 //
 //)
-//export const IconFolder=():JSX.Element=>(
-//
-//)
+export const IconFolder = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v2h8v-1h-5v-1h-3zm0 3v4.5c0 .28.22.5.5.5h7c.28 0 .5-.22.5-.5v-4.5h-8z" />
+	</svg>
+);
 //export const IconFork=():JSX.Element=>(
 //
 //)
@@ -411,18 +421,24 @@ export const IconEye = (): JSX.Element => (
 //export const IconChat=():JSX.Element=>(
 //
 //)
-//export const IconCheck=():JSX.Element=>(
-//
-//)
-//export const IconChevronBottom=():JSX.Element=>(
-//
-//)
+export const IconCheck = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M6.41 0l-.69.72-2.78 2.78-.81-.78-.72-.72-1.41 1.41.72.72 1.5 1.5.69.72.72-.72 3.5-3.5.72-.72-1.44-1.41z" transform="translate(0 1)" />
+	</svg>
+);
+export const IconChevronBottom = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M1.5 0l-1.5 1.5 4 4 4-4-1.5-1.5-2.5 2.5-2.5-2.5z" transform="translate(0 1)" />
+	</svg>
+);
 //export const IconChevronLeft=():JSX.Element=>(
 //
 //)
-//export const IconChevronRight=():JSX.Element=>(
-//
-//)
+export const IconChevronRight = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z" transform="translate(1)" />
+	</svg>
+);
 //export const IconChevronTop=():JSX.Element=>(
 //
 //)

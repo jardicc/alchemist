@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
 	  "allowSyntheticDefaultImports": true,
-	  "lib": ["DOM","ES6"],
+	  "lib": ["DOM","ES6","ES2019","ES2020"],
 	  "moduleResolution": "node",
 	  "strict": true,
 	  "strictNullChecks": false,
@@ -11,7 +11,7 @@
         "module": "esnext",
         "outDir": "./dist/",
         "sourceMap": true,
-	  "target": "ES2018",
+	  "target": "ES2020",
 	  "disableSizeLimit": false,
 	  "typeRoots": [
 		"./src/inspector/model",

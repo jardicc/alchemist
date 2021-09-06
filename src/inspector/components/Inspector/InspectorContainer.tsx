@@ -12,7 +12,6 @@ import "./Inspector.less";
 import { TActiveSection, TActiveInspectorTab, TFontSizeSettings } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
 import { TreeContentContainer } from "../TreeContent/TreeContentContainer";
-import Split from "react-split";
 import { TreeDiffContainer } from "../TreeDiff/TreeDiffContainer";
 import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
 import { DispatcherContainer } from "../Dispatcher/DispatcherContainer";
@@ -23,6 +22,7 @@ import { IconX} from "../../../shared/components/icons";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
 import {Pane} from "react-split-pane";
 import SplitPane from "react-split-pane";
+import { decodeATN } from "../../../atnDecoder/classes/ATNDecoder";
 
 
 class Inspector extends React.Component<TInspector, IInspectorState> { 
@@ -97,11 +97,16 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 					<TabPanel id="settings" title="Settings">
 						<SettingsContainer  />
 					</TabPanel>
+
+					{
+					/*
 					<TabPanel id="amConverter" title="AM Converter" showScrollbars={true}>
 						<AMConverterContainer />
 					</TabPanel>
+					*/
+					}
 				</TabList>
-				<FooterContainer />
+				<FooterContainer parentPanel="inspector" />
 				{this.state.showMessage && <div className="messageStrip"><a href={this.state.link} className="link">{this.state.message}</a><span className="close" onClick={this.closeMessage}><IconX /></span></div>}
 			</div>
 		);

@@ -1,0 +1,46 @@
+.ActionSet{
+	padding-left: 0;
+	flex-shrink: 0;
+
+	> .wrap .checkmark{
+		margin-right: 1.25em;
+	}
+
+	.wrap{
+		display: flex;
+		cursor: pointer;
+
+		> * {
+			padding:0.15em;
+		}
+		
+		.checkmark{
+			border-right:1px solid var(--divider);
+			box-sizing: border-box;
+			
+		}
+
+		.expand:hover{
+			svg{
+				fill:var(--hover);
+			}
+		}
+
+		&.selected{
+			color:var(--active);
+		}
+
+		&:hover{
+			color:var(--hover);
+
+
+		}
+
+		svg{
+			fill:var(--text);
+			margin:0.3em;
+			width:0.8em;
+			height: 0.8em;
+		}
+	}
+}

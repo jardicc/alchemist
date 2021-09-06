@@ -5,11 +5,53 @@ import { IInspectorState } from "../model/types";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [6, 0, 0],
+		version: [7, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
 		descriptorsGrouping: "eventName",
+		inspector: {
+			activeTab: "content",
+			content: {
+				viewType: "tree",
+				treePath: [],
+				autoExpandLevels:0,
+				expandedTree:[],
+			},
+			difference: {
+				viewType: "tree",
+				treePath: [],
+				autoExpandLevels:0,
+				expandedTree:[],
+			},
+			dom: {
+				treePath: [],
+				autoExpandLevels:0,
+				expandedTree:[],
+			},
+			code: {
+				viewType: "generated",
+			},
+			info: {
+				showOptionalDocumentReference: true,
+			},
+		},
+		amConvertor: {
+			isPresetFileInstalled: false,
+			snippet:"n/a",
+		},
+		descriptors: [
+		],
+		dispatcher: {
+			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nreturn await batchPlay([{"_obj": "invert"}],{});`}],
+		},
+		atnConverter: {
+			data: [],
+			expandedItems: [],
+			selectedItems: [],
+			lastSelected: null,
+			dontSendDisabled:false,
+		},
 
 		targetReference: [
 			{
@@ -570,40 +612,6 @@ export function getInitialState(): IInspectorState {
 			hideDontRecord: true,
 			hideForceNotify:true,
 		},
-		inspector: {
-			activeTab: "content",
-			content: {
-				viewType: "tree",
-				treePath: [],
-				autoExpandLevels:0,
-				expandedTree:[],
-			},
-			difference: {
-				viewType: "tree",
-				treePath: [],
-				autoExpandLevels:0,
-				expandedTree:[],
-			},
-			dom: {
-				treePath: [],
-				autoExpandLevels:0,
-				expandedTree:[],
-			},
-			code: {
-				viewType: "generated",
-			},
-			info: {
-				showOptionalDocumentReference: true,
-			},
-		},
-		amConvertor: {
-			isPresetFileInstalled: false,
-			snippet:"n/a",
-		},
-		descriptors: [
-		],
-		dispatcher: {
-			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nreturn await batchPlay([{"_obj": "invert"}],{});`}],
-		},
+		
 	};
 }

@@ -1,6 +1,7 @@
 import type { ITargetReferenceAM } from "../classes/GetInfo";
 import type { Descriptor } from "photoshop/dist/types/UXP";
 import { TState } from "../components/FilterButton/FilterButton";
+import { IActionSetUUID, IATNConverterState } from "../../atnDecoder/types/model";
 
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
@@ -48,7 +49,8 @@ export type TFilterEvents = "none" | "include" | "exclude";
 export type TSelectDescriptorOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
 
 export type TProtoMode = "none" | "uxp" | "advanced" | "all";
-export type TDescriptorsGrouping = "none"|"eventName"
+export type TDescriptorsGrouping = "none" | "eventName"
+
 
 
 export interface IInspectorState {
@@ -63,6 +65,7 @@ export interface IInspectorState {
 	descriptors: IDescriptor[]
 	amConvertor: IAMCoverter
 	dispatcher: IDispatcher
+	atnConverter:IATNConverterState
 }
 
 export interface ITargetReference {

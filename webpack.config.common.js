@@ -13,7 +13,9 @@ module.exports = {
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions.
 		extensions: [".ts", ".tsx", ".js"],
-		fallback: { "os": false },
+		fallback: {
+			"os": false,
+		},
 	},
 	externals: {
 		"photoshop": "commonjs2 photoshop",

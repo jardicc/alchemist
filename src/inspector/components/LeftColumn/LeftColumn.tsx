@@ -11,7 +11,7 @@ import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
 import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
-import { Helpers } from "../../classes/Helpers";
+import { Helpers, replayDescriptor } from "../../classes/Helpers";
 import { guessOrinalReference } from "../../classes/guessOriginalReference";
 import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { RawDataConverter } from "../../classes/RawDataConverter";
@@ -571,13 +571,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			const startTime = Date.now();
 			let descriptors:Descriptor;
 			try {
-				descriptors = await photoshop.action.batchPlay(
-					[
-						item.calculatedReference as ActionDescriptor,
-					], {
-						synchronousExecution: false,
-					},
-				);				
+				descriptors = await replayDescriptor(item.calculatedReference as ActionDescriptor);				
 			} catch (e) {
 				NotificationManager.error(e.message,"Replay failed", 5000);
 				console.error("error");
@@ -804,7 +798,7 @@ interface ILeftColumnDispatch {
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record<string, unknown>> = (dispatch: Dispatch): ILeftColumnDispatch => ({
 	onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
-	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc)),
+	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc,false)),
 	onSetSelectedReferenceType: (type) => dispatch(setSelectedReferenceTypeAction(type)),
 	
 	onClear: () => dispatch(clearAction()),

@@ -19,7 +19,10 @@ export interface ISetTargetReference {
 
 export interface IAddDescriptorAction {
 	type: "ADD_DESCRIPTOR"
-	payload: IDescriptor
+	payload: {
+		arg:IDescriptor,
+		replace:boolean
+	}
 }
 
 export interface ISetSelectedReferenceTypeAction {
@@ -266,7 +269,7 @@ export interface ISetNeverRecordActionNamesAction{
 
 export interface IToggleDescriptorsGroupingAction{
 	type: "TOGGLE_DESCRIPTORS_GROUPING",
-	payload:null
+	payload: "none" | "strict" | null
 }
 
 export interface ISetSettingsAction{
@@ -281,10 +284,10 @@ export function setSettingsAction(settings:Partial<ISettings>): ISetSettingsActi
 	};
 }
 
-export function toggleDescriptorsGroupingAction():IToggleDescriptorsGroupingAction {
+export function toggleDescriptorsGroupingAction(arg: "none" | "strict" | null = null): IToggleDescriptorsGroupingAction {
 	return {
 		type: "TOGGLE_DESCRIPTORS_GROUPING",
-		payload: null,
+		payload: arg,
 	};
 }
 
@@ -476,10 +479,13 @@ export function setTargetReferenceAction(arg:ITargetReference):ISetTargetReferen
 		payload: arg,
 	};
 }
-export function addDescriptorAction(arg:IDescriptor):IAddDescriptorAction{
+export function addDescriptorAction(arg:IDescriptor, replace:boolean):IAddDescriptorAction{
 	return {
 		type: "ADD_DESCRIPTOR",
-		payload: arg,
+		payload: {
+			arg,
+			replace,
+		},
 	};
 }
 export function selectDescriptorAction(operation: TSelectDescriptorOperation, uuid?: string,crc?:number): ISelectDescriptor {

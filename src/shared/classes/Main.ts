@@ -5,6 +5,7 @@ import "./../index.less";
 import { Settings } from "../../inspector/classes/Settings";
 import photoshop from "photoshop";
 import { AMHackFileFactory } from "../../inspector/classes/AMHackFileFactory";
+import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
 
 export class Main{
 
@@ -12,8 +13,10 @@ export class Main{
 
 	public static start(): void {
 		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "inspector", "value": true });
+		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "occultist", "value": true });
 		AMHackFileFactory.createFileToInclude();
 		renderInspectorUI();
+		renderATNDecoderUI();
 		AMHackFileFactory.getHackCode();
 
 		
@@ -44,7 +47,3 @@ if (Main.devMode) {
 		});
 	}
 }
-const a = [
-	"a",
-	"b",
-];
