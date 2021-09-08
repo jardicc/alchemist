@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1
+- fixes: network and file access permission issues in PS 23.0.0
+- improvement: shows warning when Occulist passes more items than is limit in Alchemist settings
+
 ## 1.5.0
 - feature: adds Occultist panel for generating source code from .ATN files and inspecting them
 - fixes: permission issue in PS 23.0.0
