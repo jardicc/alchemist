@@ -14,7 +14,11 @@
 	"requiredPermissions": {
 		"clipboard": "readAndWrite",
 		"launchProcess": "request",
-		"allowCodeGenerationFromStrings": true
+		"allowCodeGenerationFromStrings": true,
+		"localFileSystem":"request",
+		"network": {
+			"domains": ["alchemist.bereza.cz"]
+		}
 	},
 	"entrypoints": [
 		{
