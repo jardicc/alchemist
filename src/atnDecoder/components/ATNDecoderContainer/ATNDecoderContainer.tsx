@@ -9,14 +9,14 @@ import "./ATNDecoderContainer.less";
 
 import { decodeATN } from "../../../atnDecoder/classes/ATNDecoder";
 import { FooterContainer } from "../../../inspector/components/Footer/FooterContainer";
-import { IDescriptor, TFontSizeSettings, TSelectDescriptorOperation } from "../../../inspector/model/types";
-import { getFontSizeSettings } from "../../../inspector/selectors/inspectorSelectors";
+import { IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation } from "../../../inspector/model/types";
+import { getAllDescriptors, getFontSizeSettings, getInspectorSettings } from "../../../inspector/selectors/inspectorSelectors";
 import { getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands } from "../../selectors/atnSelectors";
 import { clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction } from "../../actions/atnActions";
 import { IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem } from "../../types/model";
 import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
 import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setMainTabAction, setModeTabAction, toggleDescriptorsGroupingAction } from "../../../inspector/actions/inspectorActions";
-import { Helpers } from "../../../inspector/classes/Helpers";
+import { alert, Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
 import PS from "photoshop";
 import SP from "react-uxp-spectrum";
@@ -48,13 +48,18 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 
 	private pass = (replace=false) => {
 		// eslint-disable-next-line prefer-const
-		let { selectedCommands, onPassSelected,onSelectAlchemistDescriptors,dontSendDisabled } = this.props;
+		let { selectedCommands, onPassSelected,onSelectAlchemistDescriptors,dontSendDisabled, allAlchemistDescriptors,settingsAlchemist } = this.props;
 
 		onSelectAlchemistDescriptors("none");
 
 		if (dontSendDisabled) {
 			selectedCommands = selectedCommands.filter(c => c.enabled);
 		}
+
+		if (selectedCommands.length > settingsAlchemist.maximumItems) {
+			alert(`Alchemist can currently show only ${settingsAlchemist.maximumItems} items. Increase limit in Alchemist settings if you want to see ${selectedCommands.length - settingsAlchemist.maximumItems} additional items`);
+		}
+
 		selectedCommands.forEach((command, index) => {
 			
 			const commandParrent = getActionByUUID(rootStore.getState().inspector, command.__uuidParentSet__, command.__uuidParentAction__);
@@ -99,7 +104,8 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 	}
 
 	private renderAddButton = () => (
-		<div className="button" onClick={async () => {
+		<div className="button" onClick={async (e) => {
+			e.stopPropagation();
 			const res = await decodeATN();
 			this.props.setData(res);
 		}}>
@@ -155,7 +161,9 @@ interface IATNDecoderProps{
 	data: IActionSetUUID[]
 	textData: string
 	selectedCommands: IActionCommandUUID[]
-	dontSendDisabled:boolean
+	dontSendDisabled: boolean
+	allAlchemistDescriptors: IDescriptor[]
+	settingsAlchemist: ISettings
 }
 
 const mapStateToProps = (state: IRootState): IATNDecoderProps => (state = state as IRootState,{
@@ -163,7 +171,9 @@ const mapStateToProps = (state: IRootState): IATNDecoderProps => (state = state 
 	data: getData(state),
 	textData: getTextData(state),
 	selectedCommands: selectedCommands(state),
-	dontSendDisabled:getDontSendDisabled(state),
+	dontSendDisabled: getDontSendDisabled(state),
+	allAlchemistDescriptors: getAllDescriptors(state),
+	settingsAlchemist: getInspectorSettings(state),
 });
 
 interface IATNDecoderDispatch {
