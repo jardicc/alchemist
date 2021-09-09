@@ -2,7 +2,7 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "1.5.1",
+	"version": "1.5.2",
 	"manifestVersion": 5,
 	"host": [{
 		"app": "PS",
@@ -15,7 +15,7 @@
 		"clipboard": "readAndWrite",
 		"launchProcess": "request",
 		"allowCodeGenerationFromStrings": true,
-		"localFileSystem":"request",
+		"localFileSystem":"fullAccess",
 		"network": {
 			"domains": ["alchemist.bereza.cz"]
 		}
