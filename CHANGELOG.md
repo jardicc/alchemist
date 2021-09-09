@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.2
+- fixes: problem when permission worked in PS 23 but broke plugin in PS 22.5
+
 ## 1.5.1
 - fixes: network and file access permission issues in PS 23.0.0
 - improvement: shows warning when Occulist passes more items than is limit in Alchemist settings
