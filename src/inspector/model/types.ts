@@ -65,7 +65,9 @@ export interface IInspectorState {
 	descriptors: IDescriptor[]
 	amConvertor: IAMCoverter
 	dispatcher: IDispatcher
-	atnConverter:IATNConverterState
+
+	atnConverter: IATNConverterState
+	
 }
 
 export interface ITargetReference {
