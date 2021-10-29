@@ -10,9 +10,9 @@ import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
 import { cloneDeep, uniqBy } from "lodash";
-import { TAtnActions } from "../../atnDecoder/actions/atnActions";
-import { getSetByUUID, getTreePartUniversal, selectedActions, selectedCommands, selectedSets } from "../../atnDecoder/selectors/atnSelectors";
-import { TExpandedItem, TSelectedItem } from "../../atnDecoder/types/model";
+import { TAtnActions } from "../../atnDecoder/atnActions";
+import { getSetByUUID, getTreePartUniversal, selectedActions, selectedCommands, selectedSets } from "../../atnDecoder/atnSelectors";
+import { TExpandedItem, TSelectedItem } from "../../atnDecoder/atnModel";
 
 
 export const inspectorReducer = (state = getInitialState(), action: TActions | TAtnActions): IInspectorState => {

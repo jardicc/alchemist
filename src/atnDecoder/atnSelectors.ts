@@ -1,9 +1,9 @@
 import { createSelector } from "reselect";
-import { IRootState } from "../../shared/store";
+import { IRootState } from "../shared/store";
 
 import stringifyObject from "stringify-object";
-import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, IATNConverterState, TExpandedItem, TSelectedItem } from "../types/model";
-import { IInspectorState } from "../../inspector/model/types";
+import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, IATNConverterState, TExpandedItem, TSelectedItem } from "./atnModel";
+import { IInspectorState } from "../inspector/model/types";
 
 export const all = (state:IRootState):IATNConverterState => state.inspector.atnConverter;
 export const getData = createSelector([all], s => s.data);

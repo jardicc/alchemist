@@ -4,9 +4,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
-import { setSelectActionAction } from "../../actions/atnActions";
-import { getSelectedItemsCommand } from "../../selectors/atnSelectors";
-import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
+import { setSelectActionAction } from "../../atnActions";
+import { getSelectedItemsCommand } from "../../atnSelectors";
+import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../atnModel";
 import { IconArrowBottom, IconArrowRight, IconCheck, IconCircleCheck, IconEmpty } from "../../../shared/components/icons";
 import PS from "photoshop";
 

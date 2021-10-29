@@ -1,4 +1,5 @@
 /* eslint-disable quotes */
+import { getAtnInitialState } from "../../atnDecoder/atnInitialState";
 import { IInspectorState } from "../model/types";
 
 
@@ -45,13 +46,7 @@ export function getInitialState(): IInspectorState {
 		dispatcher: {
 			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nreturn await batchPlay([{"_obj": "invert"}],{});`}],
 		},
-		atnConverter: {
-			data: [],
-			expandedItems: [],
-			selectedItems: [],
-			lastSelected: null,
-			dontSendDisabled:false,
-		},
+		atnConverter: getAtnInitialState(),
 
 		targetReference: [
 			{

@@ -1,4 +1,4 @@
-import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../types/model";
+import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "./atnModel";
 
 export interface ISetDataAction {
 	type: "[ATN] SET_DATA"
