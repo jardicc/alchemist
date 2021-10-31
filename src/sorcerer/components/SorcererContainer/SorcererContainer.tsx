@@ -13,6 +13,9 @@ import { FooterContainer } from "../../../inspector/components/Footer/FooterCont
 import { getFontSizeSettings } from "../../../inspector/selectors/inspectorSelectors";
 import { setDataAction } from "../../sorActions";
 import { IActionSetUUID } from "../../../atnDecoder/atnModel";
+import { GeneralContainer } from "../GeneralContainer/GeneralContainer";
+import { SnippetContainer } from "../SnippetsContainer/SnippetContainer";
+import { Command, CommandContainer } from "../CommandsContainer/CommandContainer";
 
 
 class Sorcerer extends React.Component<TSorcerer, ISorcererState> { 
@@ -33,7 +36,9 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 						<div>third menu item</div>
 					</div>
 					<div className="noShrink">
-						options
+						<GeneralContainer />
+						<SnippetContainer />
+						<CommandContainer />
 					</div>
 				</div>
 				<div className="buttonBar">

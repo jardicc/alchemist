@@ -1,12 +1,13 @@
 /* eslint-disable quotes */
 import { getAtnInitialState } from "../../atnDecoder/atnInitialState";
 import { IInspectorState } from "../model/types";
+import { getSorInitialState } from "../../sorcerer/sorInitialState";
 
 
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [7, 0, 0],
+		version: [8, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
@@ -607,6 +608,6 @@ export function getInitialState(): IInspectorState {
 			hideDontRecord: true,
 			hideForceNotify:true,
 		},
-		
+		sorcerer:getSorInitialState(),
 	};
 }
