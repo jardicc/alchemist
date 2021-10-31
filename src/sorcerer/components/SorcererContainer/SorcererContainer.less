@@ -8,7 +8,36 @@
 	flex-shrink: 0;
 	background: var(--bg);
 
+	.menuItemHeader{
+		padding-left: 0.7em;
+		display: flex;
+		align-items: center;
+		font-size: var(--biggerText);
+		font-weight: bold;
 
+		> span{
+			margin-right:  auto;
+		}
+
+		> .button{
+			align-self: center;
+			justify-self: center;
+			padding: 0 0.2em;
+		}
+	}
+
+	.menuItem{
+		padding-left: 1.7em;
+		cursor: pointer;
+
+		&:hover{
+			color:var(--hover);
+		}
+
+		&.active{
+			color:var(--active);
+		}
+	}
 
 	.info{
 		overflow: auto;
@@ -16,6 +45,7 @@
 	}
 
 	.tree{
+
 		overflow: auto;
 		min-width: 20em;
 		display: flex;

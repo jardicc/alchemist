@@ -1,84 +1,58 @@
-import { IActionSetUUID, TSelectActionOperation, TSelectedItem, TExpandedItem } from "../atnDecoder/atnModel";
+import { TSelectActionOperation, TSelectedItem } from "../atnDecoder/atnModel";
 
-export interface ISetDataAction {
-	type: "[ATN] SET_DATA"
-	payload: IActionSetUUID[]
-}
 
 export interface ISelectAction {
-	type: "[ATN] SELECT_ACTION"
+	type: "[SOR] SELECT"
 	payload: {
-		operation:TSelectActionOperation
-		uuid?: TSelectedItem
+		operation: "replace"
+		type: "panel" | "command" | "snippet" | "general"
+		uuid?: string
 	}
 }
 
-export interface IExpandAction {
-	type: "[ATN] EXPAND_ACTION"
+export interface IMakeAction {
+	type: "[SOR] MAKE"
 	payload: {
-		uuid: TExpandedItem
-		expand: boolean
-		recursive:boolean
+		type: "panel" | "command" | "snippet"
 	}
 }
 
-export interface IClearAllAction {
-	type: "[ATN] CLEAR_ALL"
-	payload: null
+export interface IRemoveAction {
+	type: "[SOR] REMOVE"
+	payload: {
+		type: "panel" | "command" | "snippet"
+		uuid:string
+	}
 }
 
-export interface IPassSelectedAction {
-	type: "[ATN] PASS_SELECTED"
-	payload: null
-}
 
-export interface ISetDontSendDisabledAction {
-	type: "[ATN] SET_DONT_SEND_DISABLED"
-	payload: boolean
-}
-
-export function setDontSendDisabledAction(value:boolean): ISetDontSendDisabledAction{
+export function setSelectAction(type: "panel" | "command" | "snippet" | "general", uuid: null | string = null): ISelectAction {
 	return {
-		type: "[ATN] SET_DONT_SEND_DISABLED",
-		payload: value,
+		type: "[SOR] SELECT",
+		payload: {
+			operation: "replace",
+			uuid,
+			type,
+		},
 	};
 }
 
-export function passSelectedAction(): IPassSelectedAction{
-	return {
-		type: "[ATN] PASS_SELECTED",
-		payload: null,
+export function makeAction(type: "panel" | "command" | "snippet"):IMakeAction{
+	return{
+		type:"[SOR] MAKE",
+		payload:{
+			type,
+		},
+	};
+}
+export function removeAction(type: "panel" | "command" | "snippet", uuid:string):IRemoveAction{
+	return{
+		type:"[SOR] REMOVE",
+		payload:{
+			type,
+			uuid,
+		},
 	};
 }
 
-export function clearAllAction(): IClearAllAction{
-	return {
-		type: "[ATN] CLEAR_ALL",
-		payload: null,
-	};
-}
-
-export function setDataAction(data:IActionSetUUID[]): ISetDataAction{
-	return {
-		type: "[ATN] SET_DATA",
-		payload: data,
-	};
-}
-
-export function setSelectActionAction(operation: TSelectActionOperation, uuid?:TSelectedItem): ISelectAction {
-	return {
-		type: "[ATN] SELECT_ACTION",
-		payload: {operation,uuid},
-	};
-}
-
-export function setExpandActionAction(uuid: TExpandedItem, expand:boolean, recursive=false): IExpandAction {
-	return {
-		type: "[ATN] EXPAND_ACTION",
-		payload: { uuid, expand,recursive },
-		
-	};
-}
-
-
-export type TAtnActions = ISetDataAction | ISelectAction | IExpandAction | IClearAllAction | IPassSelectedAction | ISetDontSendDisabledAction
+export type TSorActions = ISelectAction|IMakeAction|IRemoveAction

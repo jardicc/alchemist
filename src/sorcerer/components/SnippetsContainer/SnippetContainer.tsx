@@ -6,7 +6,7 @@ import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
 import PS from "photoshop";
 import { TSelectedItem, TSelectActionOperation } from "../../../atnDecoder/atnModel";
-import { setSelectActionAction } from "../../sorActions";
+import { setSelectAction } from "../../sorActions";
 import { ISnippet } from "../../sorModel";
 import { getActiveSnippet } from "../../sorSelectors";
 
@@ -24,7 +24,7 @@ export class Snippet extends React.Component<TSnippetContainer, ISnippetContaine
 			<div className="SnippetContainerContainer">
 				<h3>Snippet</h3>
 				<div className="row">
-					Snippet name: <SP.Textfield value={activeSnippet.name}  />
+					Snippet name: <SP.Textfield value={activeSnippet.label.default}  />
 				</div>
 				<div className="row">
 					Version: <SP.Textfield value={activeSnippet.version}  />
@@ -59,11 +59,11 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): ISnippetContainerPr
 });
 
 interface ISnippetContainerDispatch {
-	setSelectedItem(uuid:TSelectedItem,operation:TSelectActionOperation): void
+	setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
 }
 
 const mapDispatchToProps = (dispatch:Dispatch):ISnippetContainerDispatch => ({
-	setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
+	//setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
 });
 
 export const SnippetContainer = connect<ISnippetContainerProps, ISnippetContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(Snippet);

@@ -1,8 +1,9 @@
 export interface ISorcererState {
 	manifestInfo: IManifestInfo
 	selectedItem: {
-		kind: "entryPoint"|"general"|"snippet"
-		index:number|null
+		kind: "command" | "panel" | "general" | "snippet"
+		uuid: string | null
+		
 	}
 	general: {
 		
@@ -14,11 +15,12 @@ export interface ISorcererState {
 }
 
 export interface ISnippet{
-	name: string
+	type: "snippet"
+	label:{default: string}
 	author: string
 	version: string
 	code: string
-	uuid: string
+	$$$uuid: string
 	
 }
 
@@ -96,6 +98,7 @@ export interface IEntrypointPanel {
 	preferredDockedSize: ISize;
 	preferredFloatingSize: ISize;
 	icons: IIcon[];
+	$$$uuid:string
 	$$$snippetUUIDs:string[]
 }
 
@@ -103,6 +106,7 @@ export interface IEntrypointCommand {
 	type: "command";
 	id: string;
 	label: ILabel;
+	$$$uuid:string
 	$$$snippetUUID:string
 }
 

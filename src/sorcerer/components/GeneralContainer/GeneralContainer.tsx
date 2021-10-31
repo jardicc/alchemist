@@ -6,8 +6,8 @@ import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
 import PS from "photoshop";
 import { TSelectedItem, TSelectActionOperation } from "../../../atnDecoder/atnModel";
-import { setSelectActionAction } from "../../sorActions";
-import { getManifestGeneric } from "../../sorSelectors";
+import { setSelectAction } from "../../sorActions";
+import { getManifestGeneric, isGenericModuleVisible } from "../../sorSelectors";
 import { IManifestInfo } from "../../sorModel";
 
 export class General extends React.Component<TGeneralContainer, IGeneralContainerState> { 
@@ -34,7 +34,11 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 	}
 
 	public render():React.ReactNode {
-		const {manifestGeneric } = this.props;
+		const { manifestGeneric, isGenericVisible } = this.props;
+		
+		if (!isGenericVisible) {
+			return null;
+		}
 
 		return (
 			<div className="GeneralContainerContainer">
@@ -73,20 +77,22 @@ interface IOwn{
 
 interface IGeneralContainerProps{
 	manifestGeneric: IManifestInfo
+	isGenericVisible:boolean
 	//general:any
 }
 
 const mapStateToProps = (state: IRootState, ownProps: IOwn): IGeneralContainerProps => (state = state as IRootState,{
 	//general: ownProps.general,
 	manifestGeneric: getManifestGeneric(state),
+	isGenericVisible: isGenericModuleVisible(state),
 });
 
 interface IGeneralContainerDispatch {
-	setSelectedItem(uuid:TSelectedItem,operation:TSelectActionOperation): void
+	setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
 }
 
 const mapDispatchToProps = (dispatch:Dispatch):IGeneralContainerDispatch => ({
-	setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
+	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
 });
 
 export const GeneralContainer = connect<IGeneralContainerProps, IGeneralContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(General);

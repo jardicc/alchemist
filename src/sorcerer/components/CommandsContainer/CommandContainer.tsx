@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { TSelectedItem, TSelectActionOperation } from "../../../atnDecoder/atnModel";
 import { IRootState } from "../../../shared/store";
-import { setSelectActionAction } from "../../sorActions";
+import { setSelectAction } from "../../sorActions";
 import { IEntrypointCommand } from "../../sorModel";
 import { getActiveCommand } from "../../sorSelectors";
 
@@ -53,11 +53,11 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): ICommandContainerPr
 });
 
 interface ICommandContainerDispatch {
-	setSelectedItem(uuid:TSelectedItem,operation:TSelectActionOperation): void
+	setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): ICommandContainerDispatch => ({
-	setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
+	//setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
 });
 
 export const CommandContainer = connect<ICommandContainerProps, ICommandContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(Command);
