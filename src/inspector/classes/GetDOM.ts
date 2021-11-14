@@ -1,11 +1,11 @@
 import photoshop from "photoshop";
-import type Document from "photoshop/dist/dom/Document";
-import Layer from "photoshop/dist/dom/Layer";
-import { Photoshop } from "photoshop/dist/dom/Photoshop";
-import { ActionSet, Action } from "photoshop/dist/dom/Actions";
 import { TReference, IDReference } from "./GetInfo";
 import { DocumentExtra } from "./DocumentExtra";
 import { LayerExtra } from "./LayerExtra";
+import { Action, ActionSet } from "photoshop/dom/Actions";
+import { Layer } from "photoshop/dom/Layer";
+import { Photoshop } from "photoshop/dom/Photoshop";
+import { Document } from "photoshop/dom/Document";
 
 export class GetDOM{
 	public static getDom(ref: TReference[]): Photoshop | Layer | Document | ActionSet | Action | null {
@@ -48,7 +48,7 @@ export class GetDOM{
 			if (!photoshop.app.activeDocument) {
 				return null;
 			}
-			docId = photoshop.app.activeDocument._id;
+			docId = photoshop.app.activeDocument.id;
 		}
 		return docId;
 	}

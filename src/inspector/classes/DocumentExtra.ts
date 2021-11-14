@@ -1,11 +1,11 @@
 //import photoshop from "photoshop";
 //import Document from "photoshop/dist/dom/Document";
-import type { Descriptor, PhotoshopAction } from "photoshop/dist/types/UXP";
 import { IDReference } from "./GetInfo";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
-import type Document from "photoshop/dist/dom/Document";
-import photoshop from "photoshop/dist/dom/Photoshop";
-import { action } from "../../shared/imports";
+//import { action } from "../../shared/imports";
+import { Document } from "photoshop/dom/Document";
+import { action} from "photoshop";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import { batchPlaySync, validateReference } from "../../shared/helpers";
 
 type TDocument = typeof Document;
 
@@ -15,11 +15,11 @@ const DocumentNative:TDocument  = require("photoshop").app.Document;
 export class DocumentExtra extends DocumentNative{
 
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	public action:PhotoshopAction = require("photoshop").action;
+	//public action:PhotoshopAction = require("photoshop").action;
 
 	constructor(doc: Document) {
-		super(doc._id);
-		if (typeof doc._id !== "number") {
+		super(doc.id);
+		if (typeof doc.id !== "number") {
 			throw new Error("number expected");
 		}
 	}
@@ -27,12 +27,12 @@ export class DocumentExtra extends DocumentNative{
 	public get amReference():IDReference {
 		return ({
 			"_ref": "document",
-			"_id": this._id,
+			"_id": this.id,
 		});
 	}
 
 	public get exists(): boolean{
-		return action.validateReference([this.amReference]);
+		return validateReference([this.amReference]);
 	}
 
 	public get colorMode(): number{
@@ -71,9 +71,7 @@ export class DocumentExtra extends DocumentNative{
 			});
 		}
 
-		const desResult = this.action.batchPlay(desc, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResult = batchPlaySync(desc);
 
 		const pairs = desResult.map((d) => ({
 			value: d.ID,
@@ -101,9 +99,7 @@ export class DocumentExtra extends DocumentNative{
 				],
 			});
 		}
-		const desResultIDs = this.action.batchPlay(descID, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResultIDs = batchPlaySync(descID);
 
 		const descName: ActionDescriptor[] = [];
 		for (let i = 1; i <= len; i++) {
@@ -121,9 +117,7 @@ export class DocumentExtra extends DocumentNative{
 				],
 			});
 		}
-		const desResultNames = this.action.batchPlay(descName, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResultNames = batchPlaySync(descName);
 
 		const pairs = desResultIDs.map((d, index) => ({
 			value: d.ID,
@@ -149,9 +143,7 @@ export class DocumentExtra extends DocumentNative{
 				],
 			});
 		}
-		const desResult = this.action.batchPlay(desc, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResult = batchPlaySync(desc);
 
 		let pairs = desResult.map((d) => ({
 			value: d.ID,
@@ -166,7 +158,7 @@ export class DocumentExtra extends DocumentNative{
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public getPropertySync(property: string):any {
-		const desc = this.action.batchPlay([
+		const desc = batchPlaySync([
 			{
 				_obj: "get",
 				_target: [
@@ -176,14 +168,12 @@ export class DocumentExtra extends DocumentNative{
 					this.amReference,
 				],
 			},
-		], {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		]);
 		return desc?.[0]?.[property];
 	}
 
 	public async getPropertyAsync(property: string): Promise<any> {
-		const desc = await this.action.batchPlay([
+		const desc = await action.batchPlay([
 			{
 				_obj: "get",
 				_target: [
@@ -193,9 +183,7 @@ export class DocumentExtra extends DocumentNative{
 					this.amReference,
 				],
 			},
-		], {
-			synchronousExecution: false,
-		});
+		], {});
 		return desc?.[0]?.[property];
 	}
 }

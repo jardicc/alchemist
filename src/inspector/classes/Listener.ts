@@ -5,26 +5,26 @@ import { action, app } from "../../shared/imports";
 import { stringIDs } from "./StringIDs";
 
 export type TNotificationListenerCb = (event: string, descriptor: any) => Promise<void>
-type eventsArray = {event: string}[];
+//type eventsArray = {event: string}[];
 
 export class ListenerClass{	
 
 	private static listenerCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
 	private static inspectorCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
-	private static listenerAMHackCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
+	//private static listenerAMHackCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
 
-	private static eventsArrayCache:eventsArray|null = null;
+	private static eventsArrayCache: string[] | null = null;
 
 	private static get allEventsArray() {
 		if (!this.eventsArrayCache) {
-			this.eventsArrayCache = stringIDs.map(id => ({ event: id }));
+			this.eventsArrayCache = stringIDs.map(id => (id));
 		}
 		return this.eventsArrayCache;
 	}
 
 	public static startListener(cb: TNotificationListenerCb): void{
 		this.listenerCb = cb;
-		ListenerClass.addAMConverterHack();
+		//ListenerClass.addAMConverterHack();
 		if (Main.devMode) {
 			//app.eventNotifier = this.listenerCb;
 			action.addNotificationListener(["$All "] as any, this.listenerCb);
@@ -34,7 +34,7 @@ export class ListenerClass{
 	}
 
 	public static stopListener(): void{
-		this.removeAMConverterHack();
+		//this.removeAMConverterHack();
 		if (Main.devMode) {
 			//app.eventNotifier = () => { };
 			action.removeNotificationListener(["$All "] as any, this.listenerCb);
@@ -45,15 +45,15 @@ export class ListenerClass{
 
 	public static startInspector(cb: TNotificationListenerCb): void{
 		this.inspectorCb = cb;
-		action.addNotificationListener([{ event: "select"}], this.inspectorCb);
+		action.addNotificationListener(["select"], this.inspectorCb);
 	}
 
 	public static stopInspector(): void{
-		action.removeNotificationListener([{ event: "select"}], this.inspectorCb);
+		action.removeNotificationListener(["select"], this.inspectorCb);
 	}
 
 	// AM coverter hack
-
+/*
 	public static addAMConverterHack() {
 		ListenerClass.listenerAMHackCb = async (event, descriptor) => {
 			const eventName = descriptor._isReference ? "_ref" : descriptor._alchemistAMHack._obj;
@@ -65,4 +65,6 @@ export class ListenerClass{
 	public static removeAMConverterHack() {
 		action.removeNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66"}], ListenerClass.listenerAMHackCb);
 	}
+
+*/
 }

@@ -11,7 +11,7 @@ export class GetList {
 	public static async getDocuments(): Promise<IProperty<TDocumentReference>[]> {
 		console.log("get docs");
 		const documents = PS.documents.map(d => new DocumentExtra(d));
-		const docs = documents.map(async d => ({ value: d._id.toString(), label: await d.$title() }));
+		const docs = documents.map(async d => ({ value: d.id.toString(), label: await d.$title() }));
 		const result = await Promise.all(docs);
 		return result;
 	}
@@ -19,7 +19,7 @@ export class GetList {
 	private static getDocumentExtra(arg: IContentWrapper<TDocumentReference>): DocumentExtra | null {
 		let docID: number;
 		if (arg.value === "active") {
-			docID = PS?.activeDocument?._id;
+			docID = PS?.activeDocument?.id;
 		} else {
 			docID = parseInt(arg.value);
 		}
@@ -31,7 +31,7 @@ export class GetList {
 	public static getLayers(arg: IContentWrapper<TDocumentReference>): IProperty<TLayerReference>[] {
 		const docE = this.getDocumentExtra(arg);
 		if (!docE) { return []; }
-		const layers = docE.layers.map(d => ({ value: d._id.toString(), label: d.name }));
+		const layers = docE.layers.map(d => ({ value: d.id.toString(), label: d.name }));
 		return layers;
 	}
 
@@ -68,13 +68,13 @@ export class GetList {
 	}
 
 	public static getActionSets(): IProperty<TActionSet>[] {
-		const actionSets: IProperty<TActionSet>[] = PS.actionTree.map(item => ({ value: item._id.toString(), label: item.name }));
+		const actionSets: IProperty<TActionSet>[] = PS.actionTree.map(item => ({ value: item.id.toString(), label: item.name }));
 		return actionSets;
 	}
 
 	public static getActionItem(actionSetID: number): IProperty<TActionItem>[] {
 		const actionSet = new PS.ActionSet(actionSetID);
-		const action: IProperty<TActionItem>[] = actionSet.actions.map(item => ({ value: item._id.toString(), label: item.name }));
+		const action: IProperty<TActionItem>[] = actionSet.actions.map(item => ({ value: item.id.toString(), label: item.name }));
 		return action;
 	}
 

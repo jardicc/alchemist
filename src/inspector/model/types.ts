@@ -1,8 +1,8 @@
 import type { ITargetReferenceAM } from "../classes/GetInfo";
-import type { Descriptor } from "photoshop/dist/types/UXP";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IActionSetUUID, IATNConverterState } from "../../atnDecoder/atnModel";
 import { ISorcererState } from "../../sorcerer/sorModel";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
@@ -261,9 +261,9 @@ export interface IDescriptor{
 	/** filter settings */
 	originalReference: ITargetReference
 	/** used for AM */
-	calculatedReference: ITargetReferenceAM|Descriptor
+	calculatedReference: ITargetReferenceAM|ActionDescriptor[]
 	/** content */
-	originalData: Descriptor[] | Descriptor
+	originalData: ActionDescriptor[] | ActionDescriptor
 	descriptorSettings: IDescriptorSettings
 	groupCount?:number
 }

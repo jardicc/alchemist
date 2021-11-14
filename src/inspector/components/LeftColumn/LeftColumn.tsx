@@ -13,10 +13,8 @@ import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
 import { Helpers, replayDescriptor } from "../../classes/Helpers";
 import { guessOrinalReference } from "../../classes/guessOriginalReference";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
-import { Descriptor } from "photoshop/dist/types/UXP";
 import { str as crc } from "crc-32";
 import SP from "react-uxp-spectrum";
 
@@ -26,6 +24,7 @@ import { IRootState } from "../../../shared/store";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction } from "../../actions/inspectorActions";
 import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType, getRanameEnabled } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
@@ -569,10 +568,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const toPlay = this.props.selectedDescriptors;
 		for await (const item of toPlay) {
 			const startTime = Date.now();
-			let descriptors:Descriptor;
+			let descriptors:ActionDescriptor[];
 			try {
 				descriptors = await replayDescriptor(item.calculatedReference as ActionDescriptor);				
-			} catch (e) {
+			} catch (e:any) {
 				NotificationManager.error(e.message,"Replay failed", 5000);
 				console.error("error");
 				return;

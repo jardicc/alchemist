@@ -4,8 +4,9 @@ import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
 import { uxp } from "../../inspector/types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
-import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../atnModel";
+import { IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../atnModel";
 import { Helpers } from "../../inspector/classes/Helpers";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 // IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html
 
@@ -112,7 +113,7 @@ export function parse(d: DataView):IActionSet {
 				dialogMode:data.getUint8(),
 			};
 
-			const desc: IDescriptor = {
+			const desc: ActionDescriptor = {
 				_obj: data.getCommandStringID(),
 			};
 
@@ -167,7 +168,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 		// Descriptor
 		case "GlbO":
 		case "Objc": {
-			const subDesc: IDescriptor = { _obj: null };
+			const subDesc: ActionDescriptor = { _obj: null };
 			parseActionDescriptor(data, subDesc);
 			desc[propertyName] = subDesc;
 			return;

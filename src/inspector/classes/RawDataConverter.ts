@@ -1,7 +1,7 @@
-import { Descriptor } from "photoshop/dist/types/UXP";
+
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { Store, CombinedState, AnyAction } from "redux";
 import { IDescriptorSettings, IInspectorState } from "../model/types";
-import { getDescriptorOptions } from "../selectors/inspectorCodeSelectors";
 import { getInspectorSettings } from "../selectors/inspectorSelectors";
 import { Base64} from "./Base64";
 
@@ -24,7 +24,7 @@ export class RawDataConverter{
 		return binary;
 	}
 
-	public static replaceArrayBuffer(obj: Descriptor): Descriptor {
+	public static replaceArrayBuffer(obj: ActionDescriptor[]|ActionDescriptor): ActionDescriptor[]|ActionDescriptor {
 		const store:Store<CombinedState<{inspector: IInspectorState;}>, AnyAction> = (window as any)._rootStore;
 		const settings = getInspectorSettings(store.getState());
 		if (!settings.makeRawDataEasyToInspect) {
@@ -33,7 +33,7 @@ export class RawDataConverter{
 		rec(obj);
 		return obj;
 
-		function rec(data:Descriptor) {
+		function rec(data:any) {
 			for (const key in data) {
 				if (Object.prototype.hasOwnProperty.call(data, key)) {
 					if (Array.isArray(data)) {
@@ -62,10 +62,10 @@ export class RawDataConverter{
 		}
 	}
 
-	public static convertFakeRawInCode(obj: Descriptor,descSettings:IDescriptorSettings): void{
+	public static convertFakeRawInCode(obj: ActionDescriptor,descSettings:IDescriptorSettings): void{
 		rec(obj);
 
-		function rec(data:Descriptor) {
+		function rec(data:ActionDescriptor) {
 			for (const key in data) {
 				if (Object.prototype.hasOwnProperty.call(data, key)) {
 					const itemInData = data[key];

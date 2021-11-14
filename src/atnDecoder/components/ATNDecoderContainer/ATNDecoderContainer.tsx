@@ -20,6 +20,7 @@ import { alert, Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
 import PS from "photoshop";
 import SP from "react-uxp-spectrum";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 
 class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> { 
@@ -66,7 +67,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 			const descCrc = crc(JSON.stringify(command.descriptor));
 
 			const desc: IDescriptor = {
-				calculatedReference: command.descriptor,
+				calculatedReference: command.descriptor as any,
 				crc: descCrc,
 				descriptorSettings: {
 					dialogOptions: command.showDialogs ? "display" : "dontDisplay",

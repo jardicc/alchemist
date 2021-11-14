@@ -1,9 +1,9 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
 import { IDescriptor, IInspectorState } from "../model/types";
-import { Descriptor } from "photoshop/dist/types/UXP";
 import { Helpers } from "../classes/Helpers";
 import { cloneDeep } from "lodash";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
  
@@ -117,11 +117,11 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 	if (activeRefFilter?.type === "listener") {
 		if (settings.listenerFilterType === "exclude" && settings.listenerExclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				!settings.listenerExclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim())),
+				!settings.listenerExclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		} else if (settings.listenerFilterType === "include" && settings.listenerInclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				settings.listenerInclude.some(str => (item.originalData as Descriptor)?._obj?.includes(str.trim())),
+				settings.listenerInclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		}
 	}

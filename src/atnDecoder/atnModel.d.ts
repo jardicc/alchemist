@@ -1,3 +1,5 @@
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
+
 export interface IActionSetUUID extends IActionSet{
 	__uuid__:string
 	actionItems:IActionItemUUID[]
@@ -52,13 +54,13 @@ export interface ICommand{
 	dialogMode: number
 	commandName: string
 	commandName2: string
-	descriptor:IDescriptor
+	descriptor:ActionDescriptor
 }
-
+/*
 interface IDescriptor{
 	_obj: string
 	[prop: string]: any;
-}
+}*/
 
 export interface IObjectArrayListInner{
 	_unit: string

@@ -1,13 +1,13 @@
 import photoshop from "photoshop";
 import { cloneDeep } from "lodash";
 import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
-import { Descriptor } from "photoshop/dist/types/UXP";
 import { DocumentExtra } from "./DocumentExtra";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { getName } from "./GetName";
 import { getInitialState } from "../store/initialState";
 import { RawDataConverter } from "./RawDataConverter";
 import { str as crc } from "crc-32";
+import { batchPlaySync } from "../../shared/helpers";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 const PS = photoshop.app;
 
 
@@ -261,7 +261,7 @@ export class GetInfo {
 		return names.join(" / ");
 	}
 
-	private static buildReply(startTime:number,playResult:Descriptor[],desc: ITargetReferenceAM, originalRef: ITargetReference):IDescriptor {
+	private static buildReply(startTime:number,playResult:ActionDescriptor[],desc: ITargetReferenceAM, originalRef: ITargetReference):IDescriptor {
 		return {
 			startTime,
 			endTime: Date.now(),
@@ -324,11 +324,9 @@ export class GetInfo {
 				},
 			],
 		};
-		const result = photoshop.action.batchPlay([
+		const result = batchPlaySync([
 			desc,
-		], {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		]);
 		return result[0].count;
 	}
 
@@ -347,9 +345,7 @@ export class GetInfo {
 			});
 		}
 
-		const desResult = photoshop.action.batchPlay(desc, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResult = batchPlaySync(desc);
 
 		const pairs = desResult.map((d) => ({
 			value: d.ID,
@@ -377,7 +373,7 @@ export class GetInfo {
 		return found.itemIndex;
 	}
 
-	public static getAllCommandsOfAction(actionItemID: number):Descriptor[] {
+	public static getAllCommandsOfAction(actionItemID: number):ActionDescriptor[] {
 		console.log("action command");
 		const action = new PS.Action(actionItemID);
 
@@ -386,19 +382,17 @@ export class GetInfo {
 			_target: [
 				{
 					"_ref": "action",
-					"_id": action._id,
+					"_id": action.id,
 				},
 				{
 					"_ref": "actionSet",
-					"_id": action.parent._id,
+					"_id": action.parent.id,
 				},
 			],
 		};
-		const result = photoshop.action.batchPlay([
+		const result = batchPlaySync([
 			desc,
-		], {
-			synchronousExecution:true,
-		}) as Descriptor[];
+		]);
 
 		
 		const childCount = result[0].numberOfChildren;
@@ -413,18 +407,16 @@ export class GetInfo {
 					},
 					{
 						"_ref": "action",
-						"_id": action._id,
+						"_id": action.id,
 					},
 					{
 						"_ref": "actionSet",
-						"_id": action.parent._id,
+						"_id": action.parent.id,
 					},
 				],
 			});
 		}
-		const result2 = photoshop.action.batchPlay(desc2, {
-			synchronousExecution:true,
-		}) as Descriptor[];
+		const result2 = batchPlaySync(desc2);
 		return result2;
 	}
 
@@ -510,7 +502,7 @@ export class GetInfo {
 
 	public static getBuildString(): string {
 
-		const result = photoshop.action.batchPlay([
+		const result = batchPlaySync([
 			{
 				"_obj": "get",
 				"_target": [
@@ -524,14 +516,12 @@ export class GetInfo {
 					},
 				],
 			},
-		], {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		]);
 
 		return result?.[0]?.["buildNumber"] ?? "n/a";
 	}
 
-	public static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path"):Promise<Descriptor> {
+	public static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path"):Promise<ActionDescriptor> {
 		const desc = {
 			_obj: "get",
 			_target: [
