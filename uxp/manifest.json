@@ -94,13 +94,6 @@
 			}]
 		},
 		{
-			"type": "command",
-			"id": "resetStateFn",
-			"label": {
-				"default": "Reset Alchemist state"
-			}
-		},
-		{
 			"type": "panel",
 			"id": "sorcerer",
 			"label": {
