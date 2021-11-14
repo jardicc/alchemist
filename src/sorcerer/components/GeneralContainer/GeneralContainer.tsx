@@ -78,7 +78,6 @@ interface IOwn{
 interface IGeneralContainerProps{
 	manifestGeneric: IManifestInfo
 	isGenericVisible:boolean
-	//general:any
 }
 
 const mapStateToProps = (state: IRootState, ownProps: IOwn): IGeneralContainerProps => (state = state as IRootState,{

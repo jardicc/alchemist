@@ -3,19 +3,11 @@
 import { IDReference } from "./GetInfo";
 //import { action } from "../../shared/imports";
 import { Document } from "photoshop/dom/Document";
-import { action} from "photoshop";
+import { action, app } from "photoshop";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { batchPlaySync, validateReference } from "../../shared/helpers";
 
-type TDocument = typeof Document;
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const DocumentNative:TDocument  = require("photoshop").app.Document;
-
-export class DocumentExtra extends DocumentNative{
-
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	//public action:PhotoshopAction = require("photoshop").action;
+export class DocumentExtra extends app.Document{
 
 	constructor(doc: Document) {
 		super(doc.id);

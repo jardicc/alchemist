@@ -1,8 +1,6 @@
 import photoshop,{core} from "photoshop";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-
 export class Helpers{
 
 	private static widthChecked = false;

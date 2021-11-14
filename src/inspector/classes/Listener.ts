@@ -1,16 +1,17 @@
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { Main } from "../../shared/classes/Main";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { action, app } from "../../shared/imports";
 import { stringIDs } from "./StringIDs";
 
-export type TNotificationListenerCb = (event: string, descriptor: any) => Promise<void>
+export type TNotificationListenerCb = (event: string, descriptor: ActionDescriptor) => Promise<void>
 //type eventsArray = {event: string}[];
 
 export class ListenerClass{	
 
-	private static listenerCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
-	private static inspectorCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
+	private static listenerCb:TNotificationListenerCb = async (event: string, descriptor: ActionDescriptor) => { };
+	private static inspectorCb:TNotificationListenerCb = async (event: string, descriptor: ActionDescriptor) => { };
 	//private static listenerAMHackCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
 
 	private static eventsArrayCache: string[] | null = null;
@@ -27,7 +28,7 @@ export class ListenerClass{
 		//ListenerClass.addAMConverterHack();
 		if (Main.devMode) {
 			//app.eventNotifier = this.listenerCb;
-			action.addNotificationListener(["$All "] as any, this.listenerCb);
+			action.addNotificationListener(["$All "], this.listenerCb);
 		} else {
 			action.addNotificationListener(this.allEventsArray, this.listenerCb);
 		}
@@ -37,7 +38,7 @@ export class ListenerClass{
 		//this.removeAMConverterHack();
 		if (Main.devMode) {
 			//app.eventNotifier = () => { };
-			action.removeNotificationListener(["$All "] as any, this.listenerCb);
+			action.removeNotificationListener(["$All "], this.listenerCb);
 		} else {
 			action.removeNotificationListener(this.allEventsArray, this.listenerCb);			
 		}

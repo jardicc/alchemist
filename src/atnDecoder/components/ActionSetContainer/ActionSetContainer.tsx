@@ -79,7 +79,7 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 					</div>
 					<IconFolder />
 					<span className="title">
-						{(PS.core as any).translateUIString(actionSet.actionSetName)}
+						{PS.core.translateUIString(actionSet.actionSetName)}
 					</span>
 				</div>
 				{this.isExpanded && actionSet.actionItems.map((item,key)=><ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}

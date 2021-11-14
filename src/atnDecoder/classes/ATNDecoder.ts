@@ -47,7 +47,6 @@ export async function loadFile():Promise<DataView[]|null> {
 	const files = await localFileSystem.getFileForOpening({
 		types: ["atn"],
 		allowMultiple: true,
-		//initialLocation: await Settings.settingsFolder()
 	});
 	if (!files?.length) {
 		return null;
@@ -63,7 +62,6 @@ export async function loadFile():Promise<DataView[]|null> {
 			result.push(new DataView(data));
 		} catch (e) {
 			console.log("Error - with reading of settings!");
-			//result.push( null);
 		}
 	}
 

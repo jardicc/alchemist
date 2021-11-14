@@ -77,7 +77,7 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 						{this.isExpanded  ? <IconChevronBottom /> : <IconChevronRight />}
 					</div>
 					<span className="title">
-						{(PS.core as any).translateUIString(actionItem.actionItemName)}
+						{PS.core.translateUIString(actionItem.actionItemName)}
 					</span>				
 				</div>
 				{this.isExpanded && actionItem.commands?.map((item, key) => <ActionCommandContainer parentAction={actionItem} parentSet={parentSet} actionCommand={item} key={key} />)}

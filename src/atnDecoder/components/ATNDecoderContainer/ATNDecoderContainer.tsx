@@ -95,7 +95,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				renameMode: false,
 				selected: true,
 				startTime: 0,
-				title: (PS.core as any).translateUIString(commandParrent.actionItemName) + " / " + command.commandName,
+				title: PS.core.translateUIString(commandParrent.actionItemName) + " / " + command.commandName,
 			};
 
 			const cleanOld = index === 0 && replace;

@@ -51,7 +51,7 @@ function getEntries(protoMode: TProtoMode = "none", type: TNodeType, collection:
 		res = {
 			entries: collection
 				.slice(from, to + 1)
-				.map((val:any, idx:any) => ({ key: idx + from, value: val })),
+				.map((val:any, idx:number) => ({ key: idx + from, value: val })),
 		};
 	} else {
 		let idx = 0;
