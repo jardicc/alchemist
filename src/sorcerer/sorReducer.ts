@@ -1,4 +1,5 @@
 import produce from "immer";
+import { Helpers } from "../inspector/classes/Helpers";
 import { IInspectorState } from "../inspector/model/types";
 import { TAllActions } from "../inspector/reducers/reducer";
 import { makeSorCommand, makeSorPanel, makeSorSnippet } from "./sorInitialState";
@@ -19,16 +20,19 @@ export const sorReducer = (state: IInspectorState, action: TAllActions): IInspec
 				switch (action.payload.type) {
 					case "command": {
 						const data = makeSorCommand();
+						data.$$$uuid = Helpers.uuidv4();
 						draft.sorcerer.manifestInfo.entrypoints.push(data);
 						break;
 					}
 					case "panel": {
 						const data = makeSorPanel();						
+						data.$$$uuid = Helpers.uuidv4();
 						draft.sorcerer.manifestInfo.entrypoints.push(data);
 						break;
 					}
 					case "snippet": {
 						const data = makeSorSnippet();						
+						data.$$$uuid = Helpers.uuidv4();
 						draft.sorcerer.snippets.list.push(data);
 						break;
 					}
@@ -56,6 +60,29 @@ export const sorReducer = (state: IInspectorState, action: TAllActions): IInspec
 					}
 				}
 			});
+			break;
+		}
+		case "[SOR] SET_MAIN":{
+			state = produce(state, draft => {
+				/*
+				draft.sorcerer.selectedItem = {
+					//kind: action.payload.type,
+					//uuid: action.payload.uuid,
+				};
+				*/
+			});
+			break;
+		}
+		case "[SOR] SET_PANEL":{
+
+			break;
+		}
+		case "[SOR] SET_SNIPPET":{
+
+			break;
+		}
+		case "[SOR] SET_COMMAND":{
+
 			break;
 		}
 	}
