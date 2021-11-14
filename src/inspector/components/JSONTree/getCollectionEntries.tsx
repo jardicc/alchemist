@@ -37,7 +37,15 @@ function getEntries(protoMode: TProtoMode = "none", type: TNodeType, collection:
 		keys = keys.slice(from, to + 1);
 
 		res = {
-			entries: keys.map(key => ({ key, value: collection[key] })),
+			entries: keys.map(key => {
+				let value;
+				try {
+					value = collection[key];
+				} catch (e:any) {
+					value = "!!! ERROR !!! " + e?.message || "";
+				}
+				return { key, value };
+			}),
 		};
 	} else if (type === "Array") {
 		res = {
