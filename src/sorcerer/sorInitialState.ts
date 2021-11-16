@@ -1,3 +1,4 @@
+import { Helpers } from "../inspector/classes/Helpers";
 import { IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState } from "./sorModel";
 
 export function getSorInitialState(): ISorcererState {
@@ -18,19 +19,19 @@ export function getSorInitialState(): ISorcererState {
 				type: "command",
 				id: "commandID",
 				label: { default: "Label text" },
-				$$$snippetUUID: "efgh",
-				$$$uuid:"abcd",
-			},{
+				$$$snippetUUID: Helpers.uuidv4(),
+				$$$uuid: Helpers.uuidv4(),
+			}, {
 				type: "panel",
 				id: "commandID",
 				label: { default: "Label text" },
 				icons: [],
-				minimumSize:{height:100,width:100},
-				maximumSize:{height:100,width:100},
-				preferredDockedSize:{height:100,width:100},
-				preferredFloatingSize:{height:100,width:100},
-				$$$snippetUUIDs: ["efgh"],
-				$$$uuid:"xyz0",
+				minimumSize: { height: 100, width: 100 },
+				maximumSize: { height: 100, width: 100 },
+				preferredDockedSize: { height: 100, width: 100 },
+				preferredFloatingSize: { height: 100, width: 100 },
+				$$$snippetUUIDs: [Helpers.uuidv4()],
+				$$$uuid: Helpers.uuidv4(),
 			}],
 			host: [{
 				app: "PS",
@@ -40,54 +41,54 @@ export function getSorInitialState(): ISorcererState {
 			icons: [],
 		},
 		selectedItem: {
-			kind: "command",
-			uuid: "abcd",
+			kind: "general",
+			uuid: null,
 		},
 		snippets: {
 			list: [{
-				type:"snippet",
-				label: {default:"makeLayer"},
+				type: "snippet",
+				label: { default: "makeLayer" },
 				author: "noName",
 				code: "console.log('abc');",
-				$$$uuid: "efgh",
+				$$$uuid: Helpers.uuidv4(),
 				version: "1.0.0",
 			}],
 		},
 	};
 }
 
-export function makeSorSnippet():ISnippet {
+export function makeSorSnippet(): ISnippet {
 	return {
-		type:"snippet",
-		label: {default:"makeLayer"},
+		type: "snippet",
+		label: { default: "New document" },
 		author: "noName",
 		code: "console.log('abc');",
-		$$$uuid: "efgh",
+		$$$uuid: Helpers.uuidv4(),
 		version: "1.0.0",
 	};
 }
 
-export function makeSorPanel():IEntrypointPanel {
+export function makeSorPanel(): IEntrypointPanel {
 	return {
 		type: "panel",
 		id: "commandID",
 		label: { default: "Label text" },
 		icons: [],
-		minimumSize:{height:100,width:100},
-		maximumSize:{height:100,width:100},
-		preferredDockedSize:{height:100,width:100},
-		preferredFloatingSize:{height:100,width:100},
-		$$$snippetUUIDs: ["efgh"],
-		$$$uuid:"xyz0",
+		minimumSize: { height: 100, width: 100 },
+		maximumSize: { height: 100, width: 100 },
+		preferredDockedSize: { height: 100, width: 100 },
+		preferredFloatingSize: { height: 100, width: 100 },
+		$$$snippetUUIDs: [Helpers.uuidv4()],
+		$$$uuid: Helpers.uuidv4(),
 	};
 }
 
-export function makeSorCommand(): IEntrypointCommand{
+export function makeSorCommand(): IEntrypointCommand {
 	return {
 		type: "command",
 		id: "commandID",
 		label: { default: "Label text" },
-		$$$snippetUUID: "efgh",
-		$$$uuid:"abcd",
+		$$$snippetUUID: Helpers.uuidv4(),
+		$$$uuid: Helpers.uuidv4(),
 	};
 }

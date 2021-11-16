@@ -36,7 +36,20 @@ export const getDescriptorOptions = createSelector([getActiveDescriptors, getAut
 	return res;
 });
 
-export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath, getReplayEnabled, getDescriptorOptions, getInspectorSettings], (selected, autoActive, treePath, replayEnabled,descOptions,settings) => {
+export const getIndentString = createSelector([getInspectorSettings], settings => {
+	let indent = "\t";
+
+	if (settings.indent !== "tab") {
+		indent = " ".repeat(parseInt(settings.indent.charAt(settings.indent.length - 1)));
+	}
+
+	return indent;
+});
+
+export const getActiveDescriptorCalculatedReference = createSelector([
+	getActiveDescriptors, getAutoActiveDescriptor, getContentPath,
+	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
+], (selected, autoActive, treePath, replayEnabled, descOptions, settings, indentString) => {
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
@@ -93,12 +106,8 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 
 		const stringifyOptions = {
 			singleQuotes: settings.singleQuotes,
-			indent: "\t",
+			indent: indentString,
 		};
-
-		if (settings.indent !== "tab") {
-			stringifyOptions.indent = " ".repeat(parseInt(settings.indent.charAt(settings.indent.length - 1)));
-		}
 
 		if (selected.length >= 1) {
 			iDesc = selected;

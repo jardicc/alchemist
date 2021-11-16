@@ -4,28 +4,32 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
-import PS from "photoshop";
-import { TSelectedItem, TSelectActionOperation } from "../../../atnDecoder/atnModel";
 import { IEntrypointPanel } from "../../sorModel";
 import { getActivePanel } from "../../sorSelectors";
+import { setPanelAction, TSetPanelActionPayload } from "../../sorActions";
 export class Panel extends React.Component<TPanelContainer, IPanelContainerState> { 
 	constructor(props: TPanelContainer) {
 		super(props);
 	}
 
-	public render():React.ReactNode {
-		const { activePanel } = this.props;
+	public render(): React.ReactNode {
+		const { activePanel, onSet } = this.props;
 		
-		if (!activePanel) { return null;}
+		if (!activePanel) { return null; }
 
 		return (
 			<div className="PanelContainerContainer">
-				<h3>Panel</h3>
 				<div className="row">
-					ID: <SP.Textfield value={activePanel.id}  />
+					Label: <SP.Textfield
+						value={activePanel.label.default}
+						onInput={e => onSet(activePanel.$$$uuid, { label: { default: e.target.value } })}
+					/>
 				</div>
 				<div className="row">
-					Label: <SP.Textfield value={activePanel.label.default}  />
+					ID: <SP.Textfield
+						value={activePanel.id}
+						onInput={e => onSet(activePanel.$$$uuid, { id: e.target.value })}
+					/>
 				</div>
 			</div>
 		);
@@ -51,11 +55,13 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): IPanelContainerProp
 });
 
 interface IPanelContainerDispatch {
-	setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
+	//setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
+	onSet: (uuid: string, value: TSetPanelActionPayload) => void
 }
 
-const mapDispatchToProps = (dispatch:Dispatch):IPanelContainerDispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch): IPanelContainerDispatch => ({
 	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
+	onSet: (uuid, value) => dispatch(setPanelAction(value, uuid)),
 });
 
 export const PanelContainer = connect<IPanelContainerProps, IPanelContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(Panel);

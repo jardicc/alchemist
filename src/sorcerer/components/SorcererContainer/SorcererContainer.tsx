@@ -16,7 +16,7 @@ import { GeneralContainer } from "../GeneralContainer/GeneralContainer";
 import { SnippetContainer } from "../SnippetsContainer/SnippetContainer";
 import { Command, CommandContainer } from "../CommandsContainer/CommandContainer";
 import { IEntrypointCommand, IEntrypointPanel, ISnippet } from "../../sorModel";
-import { getActiveItem, getAllCommands, getAllPanels, getAllSnippets } from "../../sorSelectors";
+import { getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode } from "../../sorSelectors";
 import { setSelectActionAction } from "../../../atnDecoder/atnActions";
 import { makeAction, removeAction, setSelectAction } from "../../sorActions";
 import { PanelContainer } from "../PanelsContainer/PanelContainer";
@@ -43,20 +43,20 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 		const { selectItem} = this.props;
 		const res = items.map((p, index) => (
 			<div key={index} className={"menuItem " + this.menuItemActiveClass(p)} onClick={()=>selectItem(p.type,p.$$$uuid)}>
-				{p.label.default}
+				{p.label.default || "(none)"}
 			</div>
 		));
 		return res;
 	}
 
 	public render(): JSX.Element {
-		const { fontSizeSettings,commands,snippets,panels,selectItem,make,remove,selectedItem } = this.props;
+		const { fontSizeSettings,commands,snippets,panels,selectItem,make,remove,selectedItem, manifestCode } = this.props;
 
 		return (
 			<div className={`SorcererContainer ${fontSizeSettings}`}>
 				<div className="info spread flex">
 					<div className="tree">
-						<div className={"menuItem " + (this.props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
+						<div className={"menuItem general " + (this.props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
 
 						<div className="menuItemHeader"><span> Snippets</span><div className="button" onClick={()=>make("snippet")}>+</div></div>
 						{this.renderItems(snippets)}
@@ -68,11 +68,14 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 						{this.renderItems(panels)}
 
 					</div>
-					<div className="noShrink">
+					<div className="noShrink details">
 						<GeneralContainer />
 						<SnippetContainer />
 						<CommandContainer />
 						<PanelContainer />
+					</div>
+					<div className="manifest">
+						<SP.Textarea className="manifestCode" value={manifestCode} />
 					</div>
 				</div>
 				<div className="buttonBar">
@@ -107,6 +110,7 @@ interface ISorcererProps{
 	commands: IEntrypointCommand[]
 	snippets: ISnippet[]
 	selectedItem: ISnippet | IEntrypointPanel | IEntrypointCommand | { type: "general" }
+	manifestCode:string
 }
 
 const mapStateToProps = (state: IRootState): ISorcererProps => (state = state as IRootState,{
@@ -115,13 +119,14 @@ const mapStateToProps = (state: IRootState): ISorcererProps => (state = state as
 	commands:getAllCommands(state),
 	snippets: getAllSnippets(state),
 	selectedItem: getActiveItem(state),
+	manifestCode: getManifestCode(state),
 });
 
 interface ISorcererDispatch {
 	setData?(data: IActionSetUUID[]): void
 	selectItem(type: "panel" | "command" | "snippet" | "general", uuid: null | string): void
 	make(type: "panel" | "command" | "snippet"): void
-	remove(type: "panel" | "command" | "snippet", uuid:string):void
+	remove(type: "panel" | "command" | "snippet", uuid: string): void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ISorcererDispatch, Record<string, unknown>> = (dispatch): ISorcererDispatch => ({

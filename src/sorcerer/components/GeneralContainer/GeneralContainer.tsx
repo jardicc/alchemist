@@ -6,7 +6,7 @@ import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
 import PS from "photoshop";
 import { TSelectedItem, TSelectActionOperation } from "../../../atnDecoder/atnModel";
-import { setSelectAction } from "../../sorActions";
+import { setMainAction, setSelectAction, TSetMainActionPayload } from "../../sorActions";
 import { getManifestGeneric, isGenericModuleVisible } from "../../sorSelectors";
 import { IManifestInfo } from "../../sorModel";
 
@@ -34,7 +34,7 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 	}
 
 	public render():React.ReactNode {
-		const { manifestGeneric, isGenericVisible } = this.props;
+		const { manifestGeneric, isGenericVisible,onSet: onSetMain } = this.props;
 		
 		if (!isGenericVisible) {
 			return null;
@@ -47,16 +47,16 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 					Manifest version: <SP.Textfield value={manifestGeneric.manifestVersion.toString()} disabled={true}   />
 				</div>
 				<div className="row">
-					Plugin name: <SP.Textfield value={manifestGeneric.name}  />
+					Plugin name: <SP.Textfield value={manifestGeneric.name} onInput={e=>onSetMain({name:e.target.value})}  />
 				</div>
 				<div className="row">
-					Plugin ID: <SP.Textfield value={manifestGeneric.id}  />
+					Plugin ID: <SP.Textfield value={manifestGeneric.id} onInput={e=>onSetMain({id:e.target.value})}  />
 				</div>
 				<div className="row">
-					Main file: <SP.Textfield value={manifestGeneric.main}  />
+					Main file: <SP.Textfield value={manifestGeneric.main} disabled={true} />
 				</div>
 				<div className="row">
-					Version: <SP.Textfield value={manifestGeneric.version}  />
+					Version: <SP.Textfield value={manifestGeneric.version} onInput={e=>onSetMain({version:e.target.value})}   />
 				</div>
 				<h3>Host app</h3>
 				{this.renderHostInfo()}
@@ -87,10 +87,12 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): IGeneralContainerPr
 });
 
 interface IGeneralContainerDispatch {
-	setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
+	//setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
+	onSet: (value: TSetMainActionPayload) => void
 }
 
-const mapDispatchToProps = (dispatch:Dispatch):IGeneralContainerDispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch): IGeneralContainerDispatch => ({
+	onSet:(value)=>dispatch(setMainAction(value)),
 	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
 });
 

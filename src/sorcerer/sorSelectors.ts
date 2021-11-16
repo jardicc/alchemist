@@ -1,4 +1,7 @@
+import { cloneDeep } from "lodash";
 import { createSelector } from "reselect";
+import { getIndentString } from "../inspector/selectors/inspectorCodeSelectors";
+import { getInspectorSettings } from "../inspector/selectors/inspectorSelectors";
 import { IRootState } from "../shared/store";
 
 import { IEntrypointCommand, IEntrypointPanel, ISorcererState } from "./sorModel";
@@ -60,4 +63,21 @@ export const isGenericModuleVisible = createSelector([all], s => {
 export const getActiveItem = createSelector([getActiveSnippet, getActiveCommand, getActiveCommand, getActivePanel, isGenericModuleVisible],(activeSnippet, activeEntryPoint, activeCommand, activePanel, genericModuleVisible) => {
 	const res = activeSnippet || activeEntryPoint || activeCommand || activePanel || (genericModuleVisible ? {type:"general"} : null);
 	return res;
+});
+
+export const getManifestCode = createSelector([all, getIndentString], (all, indent) => {
+
+	const clone = cloneDeep(all.manifestInfo);
+
+	clone.entrypoints.forEach(ep => {
+		delete ep.$$$uuid;
+		if (ep.type === "command") {
+			delete ep.$$$snippetUUID;
+		} else if (ep.type === "panel") {
+			delete ep.$$$snippetUUIDs;
+		}
+	});
+
+	const str = JSON.stringify(clone, null, indent);
+	return str;
 });

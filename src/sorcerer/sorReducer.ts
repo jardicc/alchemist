@@ -63,26 +63,48 @@ export const sorReducer = (state: IInspectorState, action: TAllActions): IInspec
 			break;
 		}
 		case "[SOR] SET_MAIN":{
-			state = produce(state, draft => {
-				/*
-				draft.sorcerer.selectedItem = {
-					//kind: action.payload.type,
-					//uuid: action.payload.uuid,
-				};
-				*/
+			state = produce(state, draft => {				
+				draft.sorcerer.manifestInfo = {
+					...state.sorcerer.manifestInfo,
+					...action.payload,
+				};				
 			});
 			break;
 		}
 		case "[SOR] SET_PANEL":{
-
+			state = produce(state, draft => {				
+				const index = draft.sorcerer.manifestInfo.entrypoints.findIndex(e => e.type === "panel" && e.$$$uuid === action.payload.uuid);
+				if (index!==-1) {
+					draft.sorcerer.manifestInfo.entrypoints[index] = {
+						...state.sorcerer.manifestInfo.entrypoints[index],
+						...action.payload.value,
+					};
+				}
+			});		
 			break;
 		}
 		case "[SOR] SET_SNIPPET":{
-
+			state = produce(state, draft => {				
+				const index = draft.sorcerer.snippets.list.findIndex(e => e.$$$uuid === action.payload.uuid);
+				if (index!==-1) {
+					draft.sorcerer.snippets.list[index] = {
+						...state.sorcerer.snippets.list[index],
+						...action.payload.value,
+					};
+				}
+			});		
 			break;
 		}
 		case "[SOR] SET_COMMAND":{
-
+			state = produce(state, draft => {				
+				const index = draft.sorcerer.manifestInfo.entrypoints.findIndex(e => e.type === "command" && e.$$$uuid === action.payload.uuid);
+				if (index!==-1) {
+					draft.sorcerer.manifestInfo.entrypoints[index] = {
+						...state.sorcerer.manifestInfo.entrypoints[index],
+						...action.payload.value,
+					};
+				}
+			});		
 			break;
 		}
 	}

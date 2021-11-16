@@ -8,6 +8,23 @@
 	flex-shrink: 0;
 	background: var(--bg);
 
+
+	h3{
+		margin:0;
+	}
+
+	.manifest{
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		width: 0;
+
+		.manifestCode{
+			flex-grow: 1;
+			width: 100%;
+		}
+	}
+
 	.menuItemHeader{
 		padding-left: 0.7em;
 		display: flex;
@@ -30,6 +47,10 @@
 		padding-left: 1.7em;
 		cursor: pointer;
 
+		&.general{
+			padding-left: 0.7em;
+		}
+
 		&:hover{
 			color:var(--hover);
 		}
@@ -44,10 +65,19 @@
 		overflow-y: auto;
 	}
 
-	.tree{
+	.details{
+		padding:0.7em;
+		width: 0;
 
+		sp-textfield{
+			margin-left: auto;
+		}
+	}
+
+	.tree{
+		padding-top: 1em;
 		overflow: auto;
-		min-width: 20em;
+		//min-width: 20em;
 		display: flex;
 		flex-direction: column;
 		border-right: 1px solid var(--divider);
