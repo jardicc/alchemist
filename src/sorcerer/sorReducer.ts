@@ -3,6 +3,7 @@ import { Helpers } from "../inspector/classes/Helpers";
 import { IInspectorState } from "../inspector/model/types";
 import { TAllActions } from "../inspector/reducers/reducer";
 import { makeSorCommand, makeSorPanel, makeSorSnippet } from "./sorInitialState";
+import { IEntrypointPanel } from "./sorModel";
 
 export const sorReducer = (state: IInspectorState, action: TAllActions): IInspectorState => {
 	switch (action.type) {
@@ -55,10 +56,12 @@ export const sorReducer = (state: IInspectorState, action: TAllActions): IInspec
 						const index = draft.sorcerer.snippets.list.findIndex(item => item.$$$uuid === action.payload.uuid);
 						if (index !== -1) {
 							draft.sorcerer.snippets.list.splice(index, 1);
-						}
+						}						
 						break;
 					}
 				}
+				draft.sorcerer.selectedItem.kind = "general";
+				draft.sorcerer.selectedItem.uuid = null;
 			});
 			break;
 		}
@@ -105,6 +108,40 @@ export const sorReducer = (state: IInspectorState, action: TAllActions): IInspec
 					};
 				}
 			});		
+			break;
+		}
+		case "[SOR] ASSIGN_SNIPPET_TO_PANEL": {
+			state = produce(state, draft => {
+				const { operation, uuid,snippetUuid } = action.payload;
+				//debugger;
+
+				const index = state.sorcerer.manifestInfo.entrypoints.findIndex(entryPoint => entryPoint.type === "panel" && entryPoint.$$$uuid === uuid);
+
+				if (index !== -1) {
+					const found: IEntrypointPanel = draft.sorcerer.manifestInfo.entrypoints[index] as IEntrypointPanel;
+					const foundState: IEntrypointPanel = state.sorcerer.manifestInfo.entrypoints[index] as IEntrypointPanel;
+
+					if (operation === "on") {
+						if (!foundState.$$$snippetUUIDs.includes(snippetUuid)) {
+							found.$$$snippetUUIDs.push(snippetUuid);
+						}
+					} else if (operation === "off") {
+						const index = foundState.$$$snippetUUIDs.indexOf(snippetUuid);
+						if (index !== -1) {
+							found.$$$snippetUUIDs.splice(index, 1);
+						}
+					}
+				}
+			});
+			break;
+		}
+		case "[SOR] SET_HOST_APP": {
+			state = produce(state, draft => {
+				const found = draft.sorcerer.manifestInfo.host.find(host => host.app === action.payload.app);
+				if (found) {
+					Object.assign(found, action.payload.arg);
+				}
+			});
 			break;
 		}
 	}

@@ -1,5 +1,5 @@
 import { TSelectActionOperation, TSelectedItem } from "../atnDecoder/atnModel";
-import { IEntrypointCommand, IEntrypointPanel, IManifestInfo, ISnippet } from "./sorModel";
+import { IEntrypointCommand, IEntrypointPanel, IHost, IManifestInfo, ISnippet } from "./sorModel";
 
 
 export interface ISelectAction {
@@ -61,7 +61,26 @@ export interface ISetCommandAction{
 	}
 }
 
-export type TSetCommandActionPayload = Partial<Pick<IEntrypointCommand,"id"|"label">>
+export type TSetCommandActionPayload = Partial<Pick<IEntrypointCommand, "id" | "label" | "$$$snippetUUID">>
+
+export interface IAssignSnippetToPanelAction {
+	type: "[SOR] ASSIGN_SNIPPET_TO_PANEL"
+	payload: {
+		operation: "on" | "off"
+		uuid: string
+		snippetUuid:string
+	}
+}
+
+export interface ISetPanelHostAction {
+	type: "[SOR] SET_HOST_APP"
+	payload: {
+		app: "PS"|"XD"
+		arg: TSetPanelHostActionPayload
+	}
+}
+
+export type TSetPanelHostActionPayload = Partial<Pick<IHost,"minVersion">>
 
 
 export function setSelectAction(type: "panel" | "command" | "snippet" | "general", uuid: null | string = null): ISelectAction {
@@ -126,4 +145,26 @@ export function setSnippetAction(arg: TSetSnippetActionPayload,uuid:string):ISet
 	};
 }
 
-export type TSorActions = ISelectAction | IMakeAction | IRemoveAction | ISetMainAction | ISetPanelAction | ISetCommandAction|ISetSnippetAction
+export function assignSnippetToPanelAction(operation:"on"|"off", uuid:string, snippetUuid:string): IAssignSnippetToPanelAction{
+	return {
+		type: "[SOR] ASSIGN_SNIPPET_TO_PANEL",
+		payload: {
+			operation,
+			uuid,
+			snippetUuid,
+		}
+	};
+}
+
+export function setHostApp(app: "PS"|"XD", arg: TSetPanelHostActionPayload):ISetPanelHostAction {
+	return {
+		type: "[SOR] SET_HOST_APP",
+		payload: {
+			app,
+			arg
+		}
+	}
+}
+
+export type TSorActions = ISelectAction | IMakeAction | IRemoveAction | ISetMainAction | ISetPanelAction |
+	ISetCommandAction | ISetSnippetAction | IAssignSnippetToPanelAction|ISetPanelHostAction

@@ -16,7 +16,7 @@ import { GeneralContainer } from "../GeneralContainer/GeneralContainer";
 import { SnippetContainer } from "../SnippetsContainer/SnippetContainer";
 import { Command, CommandContainer } from "../CommandsContainer/CommandContainer";
 import { IEntrypointCommand, IEntrypointPanel, ISnippet } from "../../sorModel";
-import { getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode } from "../../sorSelectors";
+import { getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove } from "../../sorSelectors";
 import { setSelectActionAction } from "../../../atnDecoder/atnActions";
 import { makeAction, removeAction, setSelectAction } from "../../sorActions";
 import { PanelContainer } from "../PanelsContainer/PanelContainer";
@@ -50,7 +50,7 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 	}
 
 	public render(): JSX.Element {
-		const { fontSizeSettings,commands,snippets,panels,selectItem,make,remove,selectedItem, manifestCode } = this.props;
+		const { fontSizeSettings,commands,snippets,panels,selectItem,make,remove,selectedItem, manifestCode, enableRemove } = this.props;
 
 		return (
 			<div className={`SorcererContainer ${fontSizeSettings}`}>
@@ -80,7 +80,8 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 				</div>
 				<div className="buttonBar">
 					<div className={"button"}>Build plugin</div>
-					<div className={"button"} onClick={() => {
+					<div className={"button "+(enableRemove ? "" : "disallowed")}
+						onClick={() => {
 						const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
 						remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
 					}}>Remove</div>
@@ -110,7 +111,8 @@ interface ISorcererProps{
 	commands: IEntrypointCommand[]
 	snippets: ISnippet[]
 	selectedItem: ISnippet | IEntrypointPanel | IEntrypointCommand | { type: "general" }
-	manifestCode:string
+	manifestCode: string
+	enableRemove:boolean
 }
 
 const mapStateToProps = (state: IRootState): ISorcererProps => (state = state as IRootState,{
@@ -120,6 +122,7 @@ const mapStateToProps = (state: IRootState): ISorcererProps => (state = state as
 	snippets: getAllSnippets(state),
 	selectedItem: getActiveItem(state),
 	manifestCode: getManifestCode(state),
+	enableRemove: shouldEnableRemove(state),
 });
 
 interface ISorcererDispatch {

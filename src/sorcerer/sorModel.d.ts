@@ -107,7 +107,7 @@ export interface IEntrypointCommand {
 	id: string;
 	label: ILabel;
 	$$$uuid:string
-	$$$snippetUUID:string
+	$$$snippetUUID:string|null
 }
 
 export interface IIcon {

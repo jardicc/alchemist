@@ -6,7 +6,7 @@ import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
 import PS from "photoshop";
 import { TSelectedItem, TSelectActionOperation } from "../../../atnDecoder/atnModel";
-import { setMainAction, setSelectAction, TSetMainActionPayload } from "../../sorActions";
+import { setHostApp, setMainAction, setSelectAction, TSetMainActionPayload, TSetPanelHostActionPayload } from "../../sorActions";
 import { getManifestGeneric, isGenericModuleVisible } from "../../sorSelectors";
 import { IManifestInfo } from "../../sorModel";
 
@@ -16,13 +16,13 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 	}
 
 	private renderHostInfo = () => {
-		const { manifestGeneric: { host } } = this.props;
+		const { manifestGeneric: { host },onSetHost } = this.props;
 		
 		const res = host.map((h, i) =>
 			<div key={i} className="host">
 				<h4>{h.app}</h4>
 				<div className="row">
-					Min. version: <SP.Textfield value={h.minVersion} />
+					Min. version: <SP.Textfield value={h.minVersion} onInput={e => onSetHost(h.app, { minVersion: e.target.value })} />
 				</div>
 				<div className="row">
 					API version: <SP.Textfield value={h.data.apiVersion.toString()} disabled={true} />
@@ -56,7 +56,7 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 					Main file: <SP.Textfield value={manifestGeneric.main} disabled={true} />
 				</div>
 				<div className="row">
-					Version: <SP.Textfield value={manifestGeneric.version} onInput={e=>onSetMain({version:e.target.value})}   />
+					Plugin version: <SP.Textfield value={manifestGeneric.version} onInput={e=>onSetMain({version:e.target.value})}   />
 				</div>
 				<h3>Host app</h3>
 				{this.renderHostInfo()}
@@ -89,10 +89,12 @@ const mapStateToProps = (state: IRootState, ownProps: IOwn): IGeneralContainerPr
 interface IGeneralContainerDispatch {
 	//setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
 	onSet: (value: TSetMainActionPayload) => void
+	onSetHost: (app: "PS"|"XD", arg: TSetPanelHostActionPayload) => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): IGeneralContainerDispatch => ({
-	onSet:(value)=>dispatch(setMainAction(value)),
+	onSet: (value) => dispatch(setMainAction(value)),
+	onSetHost:(app,arg)=>dispatch(setHostApp(app,arg)),
 	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
 });
 

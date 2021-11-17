@@ -19,7 +19,7 @@ export function getSorInitialState(): ISorcererState {
 				type: "command",
 				id: "commandID",
 				label: { default: "Label text" },
-				$$$snippetUUID: Helpers.uuidv4(),
+				$$$snippetUUID: null,
 				$$$uuid: Helpers.uuidv4(),
 			}, {
 				type: "panel",
@@ -30,7 +30,7 @@ export function getSorInitialState(): ISorcererState {
 				maximumSize: { height: 100, width: 100 },
 				preferredDockedSize: { height: 100, width: 100 },
 				preferredFloatingSize: { height: 100, width: 100 },
-				$$$snippetUUIDs: [Helpers.uuidv4()],
+				$$$snippetUUIDs: [],
 				$$$uuid: Helpers.uuidv4(),
 			}],
 			host: [{
@@ -78,7 +78,7 @@ export function makeSorPanel(): IEntrypointPanel {
 		maximumSize: { height: 100, width: 100 },
 		preferredDockedSize: { height: 100, width: 100 },
 		preferredFloatingSize: { height: 100, width: 100 },
-		$$$snippetUUIDs: [Helpers.uuidv4()],
+		$$$snippetUUIDs: [],
 		$$$uuid: Helpers.uuidv4(),
 	};
 }
@@ -88,7 +88,7 @@ export function makeSorCommand(): IEntrypointCommand {
 		type: "command",
 		id: "commandID",
 		label: { default: "Label text" },
-		$$$snippetUUID: Helpers.uuidv4(),
+		$$$snippetUUID: null,
 		$$$uuid: Helpers.uuidv4(),
 	};
 }

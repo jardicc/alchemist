@@ -81,3 +81,8 @@ export const getManifestCode = createSelector([all, getIndentString], (all, inde
 	const str = JSON.stringify(clone, null, indent);
 	return str;
 });
+
+export const shouldEnableRemove = createSelector([all], (all) => {
+	const res = all.selectedItem.kind !== "general";
+	return res;
+});
