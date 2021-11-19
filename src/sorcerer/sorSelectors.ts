@@ -86,3 +86,23 @@ export const shouldEnableRemove = createSelector([all], (all) => {
 	const res = all.selectedItem.kind !== "general";
 	return res;
 });
+
+export const generateScriptFileCode = createSelector([getAllCommands, getAllPanels,getAllSnippets], (commands, panels,snippets) => {
+	
+	const str=
+	`const { entrypoints } = require("uxp");
+
+	entrypoints.setup({
+		commands: {
+			${commands.map(c=>`${c.id}: () => ${c.id}(),\n\t\t\t`).join("")}
+		}
+	});
+
+	${commands.map(c =>
+	`async function ${c.id}(){
+		${snippets.find(s=>s.$$$uuid ===c.$$$snippetUUID)?.code ?? "" }
+	}\n\t`
+	).join("")}
+	`
+	return str;
+});

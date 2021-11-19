@@ -20,6 +20,7 @@ import { getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifes
 import { setSelectActionAction } from "../../../atnDecoder/atnActions";
 import { makeAction, removeAction, setSelectAction } from "../../sorActions";
 import { PanelContainer } from "../PanelsContainer/PanelContainer";
+import { SorcererBuilder } from "../../classes/Sorcerer";
 
 
 class Sorcerer extends React.Component<TSorcerer, ISorcererState> { 
@@ -58,13 +59,13 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 					<div className="tree">
 						<div className={"menuItem general " + (this.props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
 
-						<div className="menuItemHeader"><span> Snippets</span><div className="button" onClick={()=>make("snippet")}>+</div></div>
+						<div className="menuItemHeader"><span> Snippets</span><div className="button" onClick={() => make("snippet")}>+</div></div>
 						{this.renderItems(snippets)}
 
-						<div className="menuItemHeader"><span> Commands</span><div className="button" onClick={()=>make("command")}>+</div></div>
+						<div className="menuItemHeader"><span> Commands</span><div className="button" onClick={() => make("command")}>+</div></div>
 						{this.renderItems(commands)}
 
-						<div className="menuItemHeader"><span> Panels</span><div className="button"  onClick={()=>make("panel")}>+</div></div>
+						<div className="menuItemHeader"><span> Panels</span><div className="button" onClick={() => make("panel")}>+</div></div>
 						{this.renderItems(panels)}
 
 					</div>
@@ -79,12 +80,12 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 					</div>
 				</div>
 				<div className="buttonBar">
-					<div className={"button"}>Build plugin</div>
-					<div className={"button "+(enableRemove ? "" : "disallowed")}
+					<div className={"button"} onClick={() => SorcererBuilder.buildPlugin()}>Build plugin</div>
+					<div className={"button " + (enableRemove ? "" : "disallowed")}
 						onClick={() => {
-						const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
-						remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
-					}}>Remove</div>
+							const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
+							remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
+						}}>Remove</div>
 					<div className="spread"></div>
 					<div className={"button"}>Export as preset</div>
 					<div className={"button"}>Import preset</div>
