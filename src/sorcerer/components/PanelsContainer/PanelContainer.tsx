@@ -18,7 +18,7 @@ export class Panel extends React.Component<TPanelContainer, IPanelContainerState
 		if (!activePanel) { return null; }
 		//debugger;
 		return (
-			<div className="PanelContainerContainer">
+			<div className="PanelContainerContainer" key="panelPanel">
 				<div className="row">
 					Label: <SP.Textfield
 						value={activePanel.label.default}
@@ -35,8 +35,8 @@ export class Panel extends React.Component<TPanelContainer, IPanelContainerState
 					Assigned snippet(s):
 				</div>
 				<div className="column">
-					{snippets.map(checkboxItem => (
-						<div className="row">
+					{snippets.map((checkboxItem, index) => (
+						<div className="row" key={index}>
 							<SP.Checkbox
 								key={checkboxItem.$$$uuid}
 								checked={activePanel.$$$snippetUUIDs.includes(checkboxItem.$$$uuid) ? true : null}

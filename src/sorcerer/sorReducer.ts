@@ -21,19 +21,19 @@ export const sorReducer = (state: IInspectorState, action: TAllActions): IInspec
 				switch (action.payload.type) {
 					case "command": {
 						const data = makeSorCommand();
-						data.$$$uuid = Helpers.uuidv4();
+						//data.$$$uuid = Helpers.uuidv4();
 						draft.sorcerer.manifestInfo.entrypoints.push(data);
 						break;
 					}
 					case "panel": {
 						const data = makeSorPanel();						
-						data.$$$uuid = Helpers.uuidv4();
+						//data.$$$uuid = Helpers.uuidv4();
 						draft.sorcerer.manifestInfo.entrypoints.push(data);
 						break;
 					}
 					case "snippet": {
 						const data = makeSorSnippet();						
-						data.$$$uuid = Helpers.uuidv4();
+						//data.$$$uuid = Helpers.uuidCustom();
 						draft.sorcerer.snippets.list.push(data);
 						break;
 					}

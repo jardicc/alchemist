@@ -41,7 +41,7 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 		}
 
 		return (
-			<div className="GeneralContainerContainer">
+			<div className="GeneralContainerContainer" key="generalPanel">
 				<h3>Main</h3>
 				<div className="row">
 					Manifest version: <SP.Textfield value={manifestGeneric.manifestVersion.toString()} disabled={true}   />

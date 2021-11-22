@@ -74,9 +74,16 @@ export const getManifestCode = createSelector([all, getIndentString], (all, inde
 		if (ep.type === "command") {
 			delete ep.$$$snippetUUID;
 		} else if (ep.type === "panel") {
+			if (!ep.icons.length) {
+				delete ep.icons;
+			}
 			delete ep.$$$snippetUUIDs;
 		}
 	});
+
+	if (!clone.icons.length) {
+		delete clone.icons;
+	}
 
 	const str = JSON.stringify(clone, null, indent);
 	return str;
@@ -92,17 +99,83 @@ export const generateScriptFileCode = createSelector([getAllCommands, getAllPane
 	const str=
 	`const { entrypoints } = require("uxp");
 
+	// assign code the commands in Photoshop main menu
+
 	entrypoints.setup({
 		commands: {
-			${commands.map(c=>`${c.id}: () => ${c.id}(),\n\t\t\t`).join("")}
+			${commands.map(c=>`${c.id}: () => ${c.$$$snippetUUID}(),\n\t\t\t`).join("")}
 		}
 	});
 
-	${commands.map(c =>
-	`async function ${c.id}(){
-		${snippets.find(s=>s.$$$uuid ===c.$$$snippetUUID)?.code ?? "" }
+	// assign on click event for all buttons in all panels
+	document.onload=()=>{
+		${snippets.map(s => {
+			return `
+			// ${s.label.default}
+			[...document.body.querySelectorAll('[data-snippet="${s.$$$uuid}"]')].forEach(button => button.addEventListener("click",${s.$$$uuid}));`
+		}).join("\n")}
+	}
+
+	// your code snippets
+	${snippets.map(snippet =>
+	`/** ${snippet?.label.default ?? ""} */
+	async function ${snippet?.$$$uuid ?? ""}(){
+		${snippet?.code ?? "" }
 	}\n\t`
 	).join("")}
 	`
 	return str;
 });
+
+export const generateHtmlFileCode = createSelector([getAllPanels,getAllSnippets], (panels,snippets) => {
+
+	function generatePanel(panel:IEntrypointPanel):string {
+		const str = `
+		<uxp-panel panelid="${panel.id}">
+			${panel.$$$snippetUUIDs.map(snippetUUID => {
+				const found = snippets.find(s => s.$$$uuid === snippetUUID);
+				if (found) {
+					return `<sp-action-button data-snippet="${found.$$$uuid}">${found.label.default}</sp-action-button>`;
+				} else {
+					return "";
+				}
+			}).join("\n")}
+		</uxp-panel>
+		`
+
+		return str;
+	}
+
+	const html = `
+	<html>
+	<head>
+		<script src="index.js"></script>    
+		<style>
+			body {
+				color: white;
+				padding: 0 16px;
+			}
+
+			sp-action-button {
+				width:100%;
+			}
+
+			li:before {
+				content: '• ';
+				width: 3em;
+			}
+	
+			#layers {
+				border: 1px solid #808080;
+				border-radius: 4px;
+				padding: 16px;
+			}
+		</style>
+	</head>
+	<body>
+		${panels.map(p => generatePanel(p)).join("\n")}
+	</body>
+	</html>
+	`
+	return html;
+})

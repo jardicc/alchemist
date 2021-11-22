@@ -1,6 +1,7 @@
 import { uxp } from "../../inspector/types/uxp";
 import { rootStore,IRootState} from "../../shared/store"
-import { generateScriptFileCode, getManifestCode, getManifestGeneric } from "../sorSelectors";
+import { generateHtmlFileCode, generateScriptFileCode, getAllPanels, getManifestCode, getManifestGeneric } from "../sorSelectors";
+import Zip from "jszip";
 
 //const fs = require("storage");
 const fs:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
@@ -10,7 +11,7 @@ export class SorcererBuilder{
 		
 	}
 
-	public static async buildPlugin() {
+	public static async buildPlugin():Promise<void> {
 		
 		const state: IRootState = rootStore.getState()
 		
@@ -24,39 +25,38 @@ export class SorcererBuilder{
 		await manifestFile.write(manifestContent, { append: false, format: require("uxp").storage.formats.utf8 });
 
 		const indexFile = await targetFolder.createFile("index.html", { overwrite: true });
-		await indexFile.write(SorcererBuilder.indexContent, { append: false, format: require("uxp").storage.formats.utf8 });
+		const htmlContent = generateHtmlFileCode(state);
+		await indexFile.write(htmlContent, { append: false, format: require("uxp").storage.formats.utf8 });
 
 		const scriptFile = await targetFolder.createFile("index.js", { overwrite: true });
-		await scriptFile.write(generateScriptFileCode(state), { append: false, format: require("uxp").storage.formats.utf8 });
+		const scriptContent = generateScriptFileCode(state);
+		await scriptFile.write(scriptContent, { append: false, format: require("uxp").storage.formats.utf8 });
+/*
+		const zip = new Zip();
+		zip.file("manifest.json", manifestContent, {
+			unixPermissions: "0644",
+			dosPermissions: 0x0020,
+			compression:""
+		});
+		zip.file("index.html", htmlContent, {
+			unixPermissions: "0644",
+			dosPermissions: 0x0020
+		});
+		zip.file("index.js", scriptContent, {
+			unixPermissions: "0644",
+			dosPermissions: 0x0020
+		});
 
-		debugger;
+		const zipResult = await zip.generateAsync({
+			type: "arraybuffer",
+			compression: "DEFLATE",
+			platform: "UNIX",
+
+		});
+		const zipFile = await folder.createFile(pluginName + ".ccx", { overwrite: true });
+		zipFile.write(zipResult, { append: false, format: require("uxp").storage.formats.binary });
+*/
+//		debugger;
 	}
 
-	private static indexContent =
-`
-<html>
-<head>
-	<script src="index.js"></script>    
-	<style>
-		body {
-			color: white;
-			padding: 0 16px;
-		}
-		li:before {
-			content: '• ';
-			width: 3em;
-		}
-
-		#layers {
-			border: 1px solid #808080;
-			border-radius: 4px;
-			padding: 16px;
-		}
-	</style>
-</head>
-<body>
-
-</body>
-</html>
-`
 }

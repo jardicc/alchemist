@@ -21,7 +21,7 @@ export class Snippet extends React.Component<TSnippetContainer, ISnippetContaine
 		if (activeSnippet === null) { return null;}
 
 		return (
-			<div className="SnippetContainerContainer">
+			<div className="SnippetContainerContainer" key="snippetPanel">
 				<div className="row">
 					Name: <SP.Textfield value={activeSnippet.label.default} onInput={e => onSet(activeSnippet.$$$uuid, { label: { default: e.target.value } })} />
 				</div>

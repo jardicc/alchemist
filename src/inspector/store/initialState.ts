@@ -7,7 +7,7 @@ import { getSorInitialState } from "../../sorcerer/sorInitialState";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [8, 0, 0],
+		version: [9, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",

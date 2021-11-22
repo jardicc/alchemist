@@ -20,7 +20,7 @@ export class Command extends React.Component<TCommandContainer, ICommandContaine
 		if (!activeCommand) { return null; }
 		
 		return (
-			<div className="CommandContainerContainer">
+			<div className="CommandContainerContainer" key="commandPanel">
 				<div className="row">
 					Label: <SP.Textfield
 						value={activeCommand.label.default}

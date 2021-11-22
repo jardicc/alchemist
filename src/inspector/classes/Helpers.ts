@@ -12,6 +12,13 @@ export class Helpers{
 		});
 	}
 
+	public static uuidCustom():string {
+		return "s_xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+			const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		});
+	}
+
 /*	public static getPanelWidth(panelID: string): number{
 		Helpers.widthChecked = true;
 		const width = window.document.body.querySelector(`[panelid=${panelID}]`)?.clientWidth ?? 0;

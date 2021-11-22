@@ -15,44 +15,40 @@ export function getSorInitialState(): ISorcererState {
 			requiredPermissions: {
 				launchProcess: "request",
 			},
-			entrypoints: [{
-				type: "command",
-				id: "commandID",
-				label: { default: "Label text" },
-				$$$snippetUUID: null,
-				$$$uuid: Helpers.uuidv4(),
-			}, {
-				type: "panel",
-				id: "commandID",
-				label: { default: "Label text" },
-				icons: [],
-				minimumSize: { height: 100, width: 100 },
-				maximumSize: { height: 100, width: 100 },
-				preferredDockedSize: { height: 100, width: 100 },
-				preferredFloatingSize: { height: 100, width: 100 },
-				$$$snippetUUIDs: [],
-				$$$uuid: Helpers.uuidv4(),
-			}],
+			entrypoints: [
+				makeSorCommand(),
+				makeSorPanel()
+			],
 			host: [{
 				app: "PS",
 				minVersion: "23.0.0",
 				data: { apiVersion: 2 },
 			}],
-			icons: [],
+			icons: [{
+				"width": 48,
+				"height": 48,
+				"scale": [1,2],
+				"path": "CHANGE_THIS_relative_path_to_light_icon.png",
+				"theme": ["medium","lightest", "light"],
+				"species": ["pluginList"]
+			},
+			{
+				"width": 48,
+				"height": 48,
+				"scale": [1,2],
+				"path": "CHANGE_THIS_relative_path_to_dark_icon.png",
+				"theme": ["darkest", "dark"],
+				"species": ["pluginList"]
+			}],
 		},
 		selectedItem: {
 			kind: "general",
 			uuid: null,
 		},
 		snippets: {
-			list: [{
-				type: "snippet",
-				label: { default: "makeLayer" },
-				author: "noName",
-				code: "console.log('abc');",
-				$$$uuid: Helpers.uuidv4(),
-				version: "1.0.0",
-			}],
+			list: [
+				makeSorSnippet()
+			],
 		},
 	};
 }
@@ -63,7 +59,7 @@ export function makeSorSnippet(): ISnippet {
 		label: { default: "New document" },
 		author: "noName",
 		code: "console.log('abc');",
-		$$$uuid: Helpers.uuidv4(),
+		$$$uuid: Helpers.uuidCustom(),
 		version: "1.0.0",
 	};
 }
@@ -73,7 +69,21 @@ export function makeSorPanel(): IEntrypointPanel {
 		type: "panel",
 		id: "commandID",
 		label: { default: "Label text" },
-		icons: [],
+		icons: [
+			{
+				"width": 23,
+				"height": 23,
+				"scale": [1, 2],
+				"path": "CHANGE_THIS_relative_path_to_dark_panel_icon.png",
+				"theme": ["darkest", "dark", "medium"]
+			}, {
+				"width": 23,
+				"height": 23,
+				"scale": [1, 2],
+				"path": "CHANGE_THIS_relative_path_to_light_panel_icon.png",
+				"theme": ["lightest", "light"]
+			}
+		],
 		minimumSize: { height: 100, width: 100 },
 		maximumSize: { height: 100, width: 100 },
 		preferredDockedSize: { height: 100, width: 100 },
