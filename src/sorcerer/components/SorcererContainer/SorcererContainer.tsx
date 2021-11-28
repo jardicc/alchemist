@@ -15,10 +15,10 @@ import { IActionSetUUID } from "../../../atnDecoder/atnModel";
 import { GeneralContainer } from "../GeneralContainer/GeneralContainer";
 import { SnippetContainer } from "../SnippetsContainer/SnippetContainer";
 import { Command, CommandContainer } from "../CommandsContainer/CommandContainer";
-import { IEntrypointCommand, IEntrypointPanel, ISnippet } from "../../sorModel";
+import { IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState } from "../../sorModel";
 import { getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove } from "../../sorSelectors";
 import { setSelectActionAction } from "../../../atnDecoder/atnActions";
-import { makeAction, removeAction, setSelectAction } from "../../sorActions";
+import { makeAction, removeAction, setPresetAction, setSelectAction } from "../../sorActions";
 import { PanelContainer } from "../PanelsContainer/PanelContainer";
 import { SorcererBuilder } from "../../classes/Sorcerer";
 
@@ -48,6 +48,18 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 			</div>
 		));
 		return res;
+	}
+
+	private export = () => {
+		SorcererBuilder.exportPreset();
+	}
+
+	private import = async () => {
+		const data = await SorcererBuilder.importPreset();
+		if (!data) {
+			return
+		}
+		this.props.setPreset(data);
 	}
 
 	public render(): JSX.Element {
@@ -87,8 +99,8 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 							remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
 						}}>Remove</div>
 					<div className="spread"></div>
-					<div className={"button"}>Export as preset</div>
-					<div className={"button"}>Import preset</div>
+					<div className={"button"} onClick={this.export}>Export as preset</div>
+					<div className={"button"} onClick={this.import}>Import preset</div>
 				</div>
 
 				<FooterContainer parentPanel="atnConverter" />
@@ -101,10 +113,6 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 
 type TSorcerer = ISorcererProps & ISorcererDispatch
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ISorcererState{
-
-}
 
 interface ISorcererProps{
 	fontSizeSettings: TFontSizeSettings
@@ -131,13 +139,15 @@ interface ISorcererDispatch {
 	selectItem(type: "panel" | "command" | "snippet" | "general", uuid: null | string): void
 	make(type: "panel" | "command" | "snippet"): void
 	remove(type: "panel" | "command" | "snippet", uuid: string): void
+	setPreset(data:ISorcererState):void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ISorcererDispatch, Record<string, unknown>> = (dispatch): ISorcererDispatch => ({
 	//setData: (data) => dispatch(setDataAction(data)),
 	selectItem: (type, uuid) => dispatch(setSelectAction(type, uuid)),
-	make:(type)=>dispatch(makeAction(type)),
-	remove:(type,uuid)=>dispatch(removeAction(type,uuid)),
+	make: (type) => dispatch(makeAction(type)),
+	remove: (type, uuid) => dispatch(removeAction(type, uuid)),
+	setPreset: (data) => dispatch(setPresetAction(data)),
 });
 
 export const SorcererContainer = connect<ISorcererProps, ISorcererDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Sorcerer);

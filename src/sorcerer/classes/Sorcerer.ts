@@ -2,6 +2,7 @@ import { uxp } from "../../inspector/types/uxp";
 import { rootStore,IRootState} from "../../shared/store"
 import { generateHtmlFileCode, generateScriptFileCode, getAllPanels, getManifestCode, getManifestGeneric } from "../sorSelectors";
 import Zip from "jszip";
+import { ISorcererState } from "../sorModel";
 
 //const fs = require("storage");
 const fs:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
@@ -59,4 +60,39 @@ export class SorcererBuilder{
 //		debugger;
 	}
 
+	public static async exportPreset() {
+
+		const state = rootStore.getState();
+		const sor = state.inspector.sorcerer;
+
+		const file = await fs.getFileForSaving("Sorcerer preset - " + (sor.manifestInfo.name || "") + ".json", {
+			types: ["json"],
+		});
+		if (!file) {
+			await alert("There was a problem with file");
+			return;
+		}
+		const data = JSON.stringify(sor, null, "\t");
+		await file.write(data, {
+			append: false,
+		});
+	}
+
+	public static async importPreset():Promise<null|ISorcererState> {
+		const file = await fs.getFileForOpening({
+			types: ["json"],
+			allowMultiple: false,
+		});
+		if (!file) {
+			return null;
+		}
+		const data: string = await file.read();
+		try {
+			const result = JSON.parse(data);
+			return result;
+		} catch (e) {
+			console.log("Error - with reading of settings!");
+			return null;
+		}
+	}
 }

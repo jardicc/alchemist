@@ -1,5 +1,5 @@
 import { TSelectActionOperation, TSelectedItem } from "../atnDecoder/atnModel";
-import { IEntrypointCommand, IEntrypointPanel, IHost, IManifestInfo, ISnippet } from "./sorModel";
+import { IEntrypointCommand, IEntrypointPanel, IHost, IManifestInfo, ISnippet, ISorcererState } from "./sorModel";
 
 
 export interface ISelectAction {
@@ -80,8 +80,19 @@ export interface ISetPanelHostAction {
 	}
 }
 
-export type TSetPanelHostActionPayload = Partial<Pick<IHost,"minVersion">>
+export type TSetPanelHostActionPayload = Partial<Pick<IHost, "minVersion">>
 
+export interface ISetSorcererPresetAction{
+	type: "[SOR] SET_PRESET"
+	payload: ISorcererState
+}
+
+export function setPresetAction(data: ISorcererState): ISetSorcererPresetAction{
+	return {
+		type: "[SOR] SET_PRESET",
+		payload: data
+	}
+}
 
 export function setSelectAction(type: "panel" | "command" | "snippet" | "general", uuid: null | string = null): ISelectAction {
 	return {
@@ -167,4 +178,4 @@ export function setHostApp(app: "PS"|"XD", arg: TSetPanelHostActionPayload):ISet
 }
 
 export type TSorActions = ISelectAction | IMakeAction | IRemoveAction | ISetMainAction | ISetPanelAction |
-	ISetCommandAction | ISetSnippetAction | IAssignSnippetToPanelAction|ISetPanelHostAction
+	ISetCommandAction | ISetSnippetAction | IAssignSnippetToPanelAction|ISetPanelHostAction|ISetSorcererPresetAction

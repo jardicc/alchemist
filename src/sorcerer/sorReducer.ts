@@ -144,6 +144,12 @@ export const sorReducer = (state: IInspectorState, action: TAllActions): IInspec
 			});
 			break;
 		}
+		case "[SOR] SET_PRESET": {
+			state = produce(state, draft => {
+				draft.sorcerer = action.payload;
+			});
+			break;
+		}
 	}
 
 	return state;
