@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+- adds feature to export/import sorcerer preset
+
+## 2.0.0
+- feature: Adds new Sorcerer panel
+
 ## 1.5.2
 - fixes: problem when permission worked in PS 23 but broke plugin in PS 22.5
 
