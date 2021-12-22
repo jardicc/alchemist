@@ -131,9 +131,9 @@ export function makeSorPanel(): IEntrypointPanel {
                   }
             ],
             minimumSize: { height: 100, width: 100 },
-            maximumSize: { height: 100, width: 100 },
-            preferredDockedSize: { height: 100, width: 100 },
-            preferredFloatingSize: { height: 100, width: 100 },
+            maximumSize: { height: 3000, width: 3000 },
+            preferredDockedSize: { height: 300, width: 200 },
+            preferredFloatingSize: { height: 300, width: 200 },
             $$$snippetUUIDs: [],
             $$$uuid: Helpers.uuidv4(),
       };
