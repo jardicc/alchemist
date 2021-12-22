@@ -85,6 +85,10 @@ export const getManifestCode = createSelector([all, getIndentString], (all, inde
 		delete clone.icons;
 	}
 
+	if (Array.isArray(clone.host)) {
+		clone.host = clone.host[0] as any;
+	}
+
 	const str = JSON.stringify(clone, null, indent);
 	return str;
 });
