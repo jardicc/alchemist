@@ -2,6 +2,8 @@
 
 ## 2.0.2
 - improves: better default values in Sorcerer (suspendHistory and executeAsModal)
+- improves: less restrictive default values for panel sizes
+- improves: more flexible defaults for panel size
 - fixes: plugin files not generated properly
 - fixes: Creative Cloud Desktop does not recognize generated .ccx file as a valid plugin
 
