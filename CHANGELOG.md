@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.2
+- improves: better default values in Sorcerer (suspendHistory and executeAsModal)
+- fixes: plugin files not generated properly
+- fixes: Creative Cloud Desktop does not recognize generated .ccx file as a valid plugin
+
 ## 2.0.1
 - adds feature to export/import sorcerer preset
 
