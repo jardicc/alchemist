@@ -71,13 +71,13 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 					<div className="tree">
 						<div className={"menuItem general " + (this.props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
 
-						<div className="menuItemHeader"><span> Snippets</span><div className="button" onClick={() => make("snippet")}>+</div></div>
+						<div className="menuItemHeader"><span> Snippets</span><div className="button" title="Add new" onClick={() => make("snippet")}>+</div></div>
 						{this.renderItems(snippets)}
 
-						<div className="menuItemHeader"><span> Commands</span><div className="button" onClick={() => make("command")}>+</div></div>
+						<div className="menuItemHeader"><span> Commands</span><div className="button" title="Add new" onClick={() => make("command")}>+</div></div>
 						{this.renderItems(commands)}
 
-						<div className="menuItemHeader"><span> Panels</span><div className="button" onClick={() => make("panel")}>+</div></div>
+						<div className="menuItemHeader"><span> Panels</span><div className="button" title="Add new" onClick={() => make("panel")}>+</div></div>
 						{this.renderItems(panels)}
 
 					</div>
@@ -97,7 +97,7 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 						onClick={() => {
 							const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
 							remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
-						}}>Remove</div>
+						}}>Remove selected</div>
 					<div className="spread"></div>
 					<div className={"button"} onClick={this.export}>Export as preset</div>
 					<div className={"button"} onClick={this.import}>Import preset</div>
