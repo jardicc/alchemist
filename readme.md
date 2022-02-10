@@ -27,7 +27,9 @@ Feature to listen to all Photoshop events is available only in Development versi
 In Photoshop enable Developer Mode `PS > Edit > Preferences > Plugins > Enable Developer Mode`.
 
 Install "Adobe UXP Developer Tool" if not already installed. (Get it here: https://www.adobe.io/photoshop/uxp/devtool/#download ) 
-Click add plugin button. And open `dist\manifest.json` in dialog. Then click "load" in actions.
+Click add plugin button. And open `dist\manifest.json` in dialog. Then click "load" in actions. 
+
+Please make sure to use **`dist`** folder and NOT **`uxp`** folder.
 
 ## Even quicker usage - Marketplace version  (Not preferred)
 Download `installer/2bcdb900.ccx` installer file in https://github.com/jardicc/alchemist/raw/master/installer/2bcdb900.ccx And double click file in file explorer.
