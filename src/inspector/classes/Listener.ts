@@ -28,7 +28,7 @@ export class ListenerClass{
 		//ListenerClass.addAMConverterHack();
 		if (Main.devMode) {
 			//app.eventNotifier = this.listenerCb;
-			action.addNotificationListener(["$All "], this.listenerCb);
+			action.addNotificationListener(['all'], this.listenerCb);
 		} else {
 			action.addNotificationListener(this.allEventsArray, this.listenerCb);
 		}
@@ -38,7 +38,7 @@ export class ListenerClass{
 		//this.removeAMConverterHack();
 		if (Main.devMode) {
 			//app.eventNotifier = () => { };
-			action.removeNotificationListener(["$All "], this.listenerCb);
+			action.removeNotificationListener(['all'], this.listenerCb);
 		} else {
 			action.removeNotificationListener(this.allEventsArray, this.listenerCb);			
 		}
