@@ -21,7 +21,8 @@
         "eslint-plugin-react": "^7.20.0",
         "less-loader": "^6.2.0",
         "prettier": "^2.0.5",
-        "style-loader": "^1.2.1"
+        "style-loader": "^1.2.1",
+        "zip-webpack-plugin": "^4.0.1"
     },
     "dependencies": {
         "@babel/preset-typescript": "^7.10.4",

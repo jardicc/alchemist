@@ -4,13 +4,13 @@
 	"main": "index.html",
 	"version": "2.0.2",
 	"manifestVersion": 5,
-	"host": [{
+	"host": {
 		"app": "PS",
 		"minVersion": "22.5.0",
 		"data": {
 			"apiVersion": 2
 		}
-	}],
+	},
 	"requiredPermissions": {
 		"clipboard": "readAndWrite",
 		"launchProcess": "request",
