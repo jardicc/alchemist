@@ -1,10 +1,9 @@
 import { IDescriptor, TFontSizeSettings } from "../model/types";
 import { alert } from "./Helpers";
-import type {uxp} from "../types/uxp";
 import { SpectrumComponetDefaults } from "react-uxp-spectrum";
+import { storage } from "uxp";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
+const localFileSystem = storage.localFileSystem;
 
 export class Settings{
 
@@ -28,7 +27,7 @@ export class Settings{
 		}
 	}
 
-	public static async settingsFolder():Promise<uxp.storage.Folder> {
+	public static async settingsFolder():Promise<storage.Folder> {
 		const folder = await localFileSystem.getDataFolder();
 		return folder;
 	}
@@ -142,11 +141,11 @@ export class Settings{
 			types: ["json"],
 			allowMultiple: true,
 			//initialLocation: await Settings.settingsFolder()
-		});
+		}) as any as storage.File[];
 		if (!files || !files.length) {
 			return null;
 		}
-		const data: string = await files[0].read();
+		const data = await files[0].read() as string;
 		try {
 			const result = JSON.parse(data);
 			return result;

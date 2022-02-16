@@ -1,7 +1,7 @@
+import { action } from "photoshop";
 import { Main } from "../../shared/classes/Main";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { action, app } from "../../shared/imports";
 import { stringIDs } from "./StringIDs";
 
 export type TNotificationListenerCb = (event: string, descriptor: any) => Promise<void>

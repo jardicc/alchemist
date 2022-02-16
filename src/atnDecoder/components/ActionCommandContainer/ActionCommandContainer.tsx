@@ -8,7 +8,7 @@ import { setSelectActionAction } from "../../actions/atnActions";
 import { getSelectedItemsCommand } from "../../selectors/atnSelectors";
 import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
 import { IconArrowBottom, IconArrowRight, IconCheck, IconCircleCheck, IconEmpty } from "../../../shared/components/icons";
-import PS from "photoshop";
+import photoshop from "photoshop";
 
 export class ActionCommand extends React.Component<TActionCommand, IActionCommandState> { 
 	constructor(props: TActionCommand) {
@@ -61,7 +61,7 @@ export class ActionCommand extends React.Component<TActionCommand, IActionComman
 						{actionCommand.enabled ? <IconCheck /> : <IconEmpty />}
 					</div>
 					<span className="title">
-						{(PS.core as any).translateUIString(actionCommand.commandName)}
+						{(photoshop.core as any).translateUIString(actionCommand.commandName)}
 					</span>
 				</div>
 			</div>

@@ -1,21 +1,11 @@
 //import photoshop from "photoshop";
 //import Document from "photoshop/dist/dom/Document";
-import type { Descriptor, PhotoshopAction } from "photoshop/dist/types/UXP";
+import photoshop, { action, Document, ActionDescriptor } from "photoshop";
 import { IDReference } from "./GetInfo";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
-import type Document from "photoshop/dist/dom/Document";
-import photoshop from "photoshop/dist/dom/Photoshop";
-import { action } from "../../shared/imports";
+import { syncBatchPlay } from "../../photoshop-helpers";
 
-type TDocument = typeof Document;
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const DocumentNative:TDocument  = require("photoshop").app.Document;
-
-export class DocumentExtra extends DocumentNative{
-
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	public action:PhotoshopAction = require("photoshop").action;
+export class DocumentExtra extends photoshop.app.Document {
+	public action = photoshop.action;
 
 	constructor(doc: Document) {
 		super(doc._id);
@@ -71,9 +61,7 @@ export class DocumentExtra extends DocumentNative{
 			});
 		}
 
-		const desResult = this.action.batchPlay(desc, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResult = syncBatchPlay(desc);
 
 		const pairs = desResult.map((d) => ({
 			value: d.ID,
@@ -101,9 +89,7 @@ export class DocumentExtra extends DocumentNative{
 				],
 			});
 		}
-		const desResultIDs = this.action.batchPlay(descID, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResultIDs = syncBatchPlay(descID);
 
 		const descName: ActionDescriptor[] = [];
 		for (let i = 1; i <= len; i++) {
@@ -121,9 +107,7 @@ export class DocumentExtra extends DocumentNative{
 				],
 			});
 		}
-		const desResultNames = this.action.batchPlay(descName, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResultNames = syncBatchPlay(descName);
 
 		const pairs = desResultIDs.map((d, index) => ({
 			value: d.ID,
@@ -149,9 +133,7 @@ export class DocumentExtra extends DocumentNative{
 				],
 			});
 		}
-		const desResult = this.action.batchPlay(desc, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResult = syncBatchPlay(desc);
 
 		let pairs = desResult.map((d) => ({
 			value: d.ID,
@@ -166,7 +148,7 @@ export class DocumentExtra extends DocumentNative{
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public getPropertySync(property: string):any {
-		const desc = this.action.batchPlay([
+		const desc = syncBatchPlay([
 			{
 				_obj: "get",
 				_target: [
@@ -176,9 +158,7 @@ export class DocumentExtra extends DocumentNative{
 					this.amReference,
 				],
 			},
-		], {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		]);
 		return desc?.[0]?.[property];
 	}
 

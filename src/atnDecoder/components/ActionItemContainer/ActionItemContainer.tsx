@@ -9,7 +9,7 @@ import { setExpandActionAction,setSelectActionAction} from "../../actions/atnAct
 import { IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
 import { ActionCommandContainer } from "../ActionCommandContainer/ActionCommandContainer";
 import { IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty } from "../../../shared/components/icons";
-import PS from "photoshop";
+import photoshop from "photoshop";
 
 export class ActionItem extends React.Component<TActionItem, IActionItemState> { 
 	constructor(props: TActionItem) {
@@ -77,7 +77,7 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 						{this.isExpanded  ? <IconChevronBottom /> : <IconChevronRight />}
 					</div>
 					<span className="title">
-						{(PS.core as any).translateUIString(actionItem.actionItemName)}
+						{(photoshop.core as any).translateUIString(actionItem.actionItemName)}
 					</span>				
 				</div>
 				{this.isExpanded && actionItem.commands?.map((item, key) => <ActionCommandContainer parentAction={actionItem} parentSet={parentSet} actionCommand={item} key={key} />)}

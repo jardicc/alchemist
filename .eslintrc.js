@@ -23,19 +23,19 @@ module.exports = {
 	],
 	"rules": {
 		"no-unreachable-loop": [
-			"error",	
+			"error",
 		],
 		"no-promise-executor-return": [
-			"error",	
+			"error",
 		],
 		"indent": [
 			"error",
 			"tab",
-			{ "SwitchCase": 1},
+			{ "SwitchCase": 1 },
 		],
 		"linebreak-style": [
 			"error",
-			"windows",
+			"unix",
 		],
 		"quotes": [
 			"error",

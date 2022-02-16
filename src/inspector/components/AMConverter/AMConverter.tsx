@@ -6,8 +6,9 @@ import { IRootState } from "../../../shared/store";
 import { setConverterInfoAction } from "../../actions/inspectorActions";
 import { AMHackFileFactory } from "../../classes/AMHackFileFactory";
 import semver from "semver";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const psVersion = require("uxp").host.version;
+import { host } from "uxp";
+
+const psVersion = host.version;
 
 class AMConverter extends Component<TAMConverter, Record<string,unknown>> {
 

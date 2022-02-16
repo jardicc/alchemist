@@ -1,7 +1,7 @@
 import type { ITargetReferenceAM } from "../classes/GetInfo";
-import type { Descriptor } from "photoshop/dist/types/UXP";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IActionSetUUID, IATNConverterState } from "../../atnDecoder/types/model";
+import { Descriptor } from "photoshop";
 
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"

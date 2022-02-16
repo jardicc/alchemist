@@ -1,8 +1,7 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
 import { IDescriptor, IInspectorState } from "../model/types";
-import { Descriptor } from "photoshop/dist/types/UXP";
-import { Helpers } from "../classes/Helpers";
+import { Descriptor } from "photoshop";
 import { cloneDeep } from "lodash";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;

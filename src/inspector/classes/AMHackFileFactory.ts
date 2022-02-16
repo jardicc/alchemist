@@ -1,9 +1,9 @@
-import type { uxp } from "../types/uxp";
 import photoshop from "photoshop";
+import { storage } from "uxp";
 import { alert } from "./Helpers";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
+const localFileSystem = storage.localFileSystem;
 
 export class AMHackFileFactory {
 
@@ -75,7 +75,7 @@ app.playbackDisplayDialogs;`;
 		return code;
 	}
 
-	public static async settingsFolder(): Promise<uxp.storage.Folder> {
+	public static async settingsFolder(): Promise<storage.Folder> {
 		const folder = await localFileSystem.getDataFolder();
 		return folder;
 	}
@@ -103,7 +103,7 @@ app.playbackDisplayDialogs;`;
 		console.log("saved");
 	}
 
-	public static async pickScriptsPresetsFolder(): Promise<void | uxp.storage.Folder> {
+	public static async pickScriptsPresetsFolder(): Promise<void | storage.Folder> {
 		const scriptsFolder = await localFileSystem.getFolder();
 		const isValid = (new RegExp(/Presets(\\|\/)Scripts(\\|\/?)$/i).test(scriptsFolder.nativePath));
 		if (isValid) {

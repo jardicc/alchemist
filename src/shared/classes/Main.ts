@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
-import { ListenerClass } from "./../../inspector/classes/Listener";
 import "./../index.less";
 import { Settings } from "../../inspector/classes/Settings";
-import photoshop from "photoshop";
+import photoshop, { core } from "photoshop";
 import { AMHackFileFactory } from "../../inspector/classes/AMHackFileFactory";
 import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
 
@@ -40,9 +39,9 @@ if (Main.devMode) {
 } else {	
 	try {
 		run();
-	} catch (e) {
+	} catch (e: any) {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		require("photoshop").core.showAlert({
+		core.showAlert({
 			message: e.stack,
 		});
 	}

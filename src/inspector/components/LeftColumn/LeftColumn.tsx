@@ -10,13 +10,11 @@ import { IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconL
 import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
 import { ListenerClass } from "../../classes/Listener";
-import photoshop from "photoshop";
 import { Helpers, replayDescriptor } from "../../classes/Helpers";
 import { guessOrinalReference } from "../../classes/guessOriginalReference";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
-import { Descriptor } from "photoshop/dist/types/UXP";
+import photoshop, { ActionDescriptor, Descriptor } from "photoshop";
 import { str as crc } from "crc-32";
 import SP from "react-uxp-spectrum";
 
@@ -569,10 +567,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const toPlay = this.props.selectedDescriptors;
 		for await (const item of toPlay) {
 			const startTime = Date.now();
-			let descriptors:Descriptor;
+			let descriptors:Descriptor[];
 			try {
 				descriptors = await replayDescriptor(item.calculatedReference as ActionDescriptor);				
-			} catch (e) {
+			} catch (e: any) {
 				NotificationManager.error(e.message,"Replay failed", 5000);
 				console.error("error");
 				return;
@@ -601,7 +599,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				pinned: false,
 				selected: false,
 				renameMode: false,
-				calculatedReference: descriptors,
+				calculatedReference: descriptors as any,
 				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true),
 				descriptorSettings: this.props.settings.initialDescriptorSettings,
 			};

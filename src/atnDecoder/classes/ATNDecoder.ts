@@ -1,18 +1,16 @@
 import { decode } from "iconv-lite";
 import { Base64 } from "../../inspector/classes/Base64";
 import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
-import { uxp } from "../../inspector/types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
 import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../types/model";
 import { Helpers } from "../../inspector/classes/Helpers";
+import { storage } from "uxp";
 
 // IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const formats = require("uxp").storage.formats;
+const localFileSystem = storage.localFileSystem;
+const formats = storage.formats;
 
 function addUUIDs(arg:IActionSet) :IActionSetUUID{
 	
@@ -47,7 +45,7 @@ export async function loadFile():Promise<DataView[]|null> {
 		types: ["atn"],
 		allowMultiple: true,
 		//initialLocation: await Settings.settingsFolder()
-	});
+	}) as any as storage.File[];
 	if (!files?.length) {
 		return null;
 	}
@@ -57,7 +55,7 @@ export async function loadFile():Promise<DataView[]|null> {
 	for (let i = 0; i < files.length; i++) {
 		const file = files[i];
 		
-		const data:ArrayBuffer = await file.read({format: formats.binary});
+		const data: ArrayBuffer = await file.read({format: formats.binary}) as ArrayBuffer;
 		try {
 			result.push(new DataView(data));
 		} catch (e) {

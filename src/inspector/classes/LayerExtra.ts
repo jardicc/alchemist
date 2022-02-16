@@ -1,13 +1,7 @@
-import Layer from "photoshop/dist/dom/Layer";
+import photoshop, { action, Layer } from "photoshop";
 import { IDReference } from "./GetInfo";
-import { action } from "../../shared/imports";
 
-type TLayer = typeof Layer;
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const LayerNative:TLayer  = require("photoshop").app.Layer;
-
-export class LayerExtra extends LayerNative{
+export class LayerExtra extends photoshop.app.Layer {
 	constructor(layer: Layer) {
 		super(layer._id, layer._docId);
 	}

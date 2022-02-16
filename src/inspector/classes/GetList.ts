@@ -1,16 +1,14 @@
-import photoshop from "photoshop";
+import photoshop, { app } from "photoshop";
 import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference, THistoryReference } from "../model/types";
 
 import { DocumentExtra } from "./DocumentExtra";
 import { GetInfo } from "./GetInfo";
 import {IProperty } from "../components/LeftColumn/LeftColumn";
 
-const PS = photoshop.app;
-
 export class GetList {
 	public static async getDocuments(): Promise<IProperty<TDocumentReference>[]> {
 		console.log("get docs");
-		const documents = PS.documents.map(d => new DocumentExtra(d));
+		const documents = app.documents.map(d => new DocumentExtra(d));
 		const docs = documents.map(async d => ({ value: d._id.toString(), label: await d.$title() }));
 		const result = await Promise.all(docs);
 		return result;
@@ -19,12 +17,12 @@ export class GetList {
 	private static getDocumentExtra(arg: IContentWrapper<TDocumentReference>): DocumentExtra | null {
 		let docID: number;
 		if (arg.value === "active") {
-			docID = PS?.activeDocument?._id;
+			docID = app?.activeDocument?._id;
 		} else {
 			docID = parseInt(arg.value);
 		}
 		if (!docID) { return null; }
-		const docE = new DocumentExtra(new PS.Document(docID));
+		const docE = new DocumentExtra(new app.Document(docID));
 		return docE;
 	}
 
@@ -68,12 +66,12 @@ export class GetList {
 	}
 
 	public static getActionSets(): IProperty<TActionSet>[] {
-		const actionSets: IProperty<TActionSet>[] = PS.actionTree.map(item => ({ value: item._id.toString(), label: item.name }));
+		const actionSets: IProperty<TActionSet>[] = app.actionTree.map(item => ({ value: item._id.toString(), label: item.name }));
 		return actionSets;
 	}
 
 	public static getActionItem(actionSetID: number): IProperty<TActionItem>[] {
-		const actionSet = new PS.ActionSet(actionSetID);
+		const actionSet = new app.ActionSet(actionSetID);
 		const action: IProperty<TActionItem>[] = actionSet.actions.map(item => ({ value: item._id.toString(), label: item.name }));
 		return action;
 	}

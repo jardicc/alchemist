@@ -1,15 +1,12 @@
-import photoshop from "photoshop";
+import photoshop, { app, Descriptor, ActionDescriptor } from "photoshop";
 import { cloneDeep } from "lodash";
 import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
-import { Descriptor } from "photoshop/dist/types/UXP";
 import { DocumentExtra } from "./DocumentExtra";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { getName } from "./GetName";
 import { getInitialState } from "../store/initialState";
 import { RawDataConverter } from "./RawDataConverter";
 import { str as crc } from "crc-32";
-const PS = photoshop.app;
-
+import { syncBatchPlay } from "../../photoshop-helpers";
 
 export interface ITargetReferenceAM {
 	"_obj": string,
@@ -167,9 +164,9 @@ export class GetInfo {
 					let docInstance: DocumentExtra;
 					if (!doc?.content) { return null;}
 					if (doc.content.value === "active") {
-						docInstance = new DocumentExtra(PS.activeDocument);
+						docInstance = new DocumentExtra(app.activeDocument);
 					} else {
-						docInstance = new DocumentExtra(new PS.Document(parseInt(doc.content.value as string)));
+						docInstance = new DocumentExtra(new app.Document(parseInt(doc.content.value as string)));
 					}
 					const found = docInstance.userChannelIDsAndNames.find(item => item.value.toString() === channel.content.value);
 					if (!found) { return null;}
@@ -324,11 +321,7 @@ export class GetInfo {
 				},
 			],
 		};
-		const result = photoshop.action.batchPlay([
-			desc,
-		], {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const result = syncBatchPlay([desc]);
 		return result[0].count;
 	}
 
@@ -347,9 +340,7 @@ export class GetInfo {
 			});
 		}
 
-		const desResult = photoshop.action.batchPlay(desc, {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		const desResult = syncBatchPlay(desc);
 
 		const pairs = desResult.map((d) => ({
 			value: d.ID,
@@ -379,7 +370,7 @@ export class GetInfo {
 
 	public static getAllCommandsOfAction(actionItemID: number):Descriptor[] {
 		console.log("action command");
-		const action = new PS.Action(actionItemID);
+		const action = new photoshop.app.Action(actionItemID);
 
 		const desc = {
 			_obj: "get",
@@ -394,11 +385,7 @@ export class GetInfo {
 				},
 			],
 		};
-		const result = photoshop.action.batchPlay([
-			desc,
-		], {
-			synchronousExecution:true,
-		}) as Descriptor[];
+		const result = syncBatchPlay([desc]);
 
 		
 		const childCount = result[0].numberOfChildren;
@@ -422,9 +409,7 @@ export class GetInfo {
 				],
 			});
 		}
-		const result2 = photoshop.action.batchPlay(desc2, {
-			synchronousExecution:true,
-		}) as Descriptor[];
+		const result2 = syncBatchPlay(desc2);
 		return result2;
 	}
 
@@ -510,7 +495,7 @@ export class GetInfo {
 
 	public static getBuildString(): string {
 
-		const result = photoshop.action.batchPlay([
+		const result = syncBatchPlay([
 			{
 				"_obj": "get",
 				"_target": [
@@ -524,9 +509,7 @@ export class GetInfo {
 					},
 				],
 			},
-		], {
-			synchronousExecution: true,
-		}) as Descriptor[];
+		]);
 
 		return result?.[0]?.["buildNumber"] ?? "n/a";
 	}

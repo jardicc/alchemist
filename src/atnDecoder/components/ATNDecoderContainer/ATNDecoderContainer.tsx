@@ -18,7 +18,7 @@ import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
 import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setMainTabAction, setModeTabAction, toggleDescriptorsGroupingAction } from "../../../inspector/actions/inspectorActions";
 import { alert, Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
-import PS from "photoshop";
+import photoshop from "photoshop";
 import SP from "react-uxp-spectrum";
 
 
@@ -94,7 +94,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				renameMode: false,
 				selected: true,
 				startTime: 0,
-				title: (PS.core as any).translateUIString(commandParrent.actionItemName) + " / " + command.commandName,
+				title: (photoshop.core as any).translateUIString(commandParrent.actionItemName) + " / " + command.commandName,
 			};
 
 			const cleanOld = index === 0 && replace;

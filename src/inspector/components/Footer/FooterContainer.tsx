@@ -1,4 +1,4 @@
-import { connect, MapDispatchToPropsFunction } from "react-redux";
+import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { clearAction, clearViewAction, importItemsAction, importStateAction } from "../../actions/inspectorActions";
 import { getDescriptorsListView, getAllDescriptors, getSelectedDescriptors } from "../../selectors/inspectorSelectors";
@@ -11,8 +11,7 @@ import { GetInfo } from "../../classes/GetInfo";
 import { filterNonExistent } from "../../classes/filterNonExistent";
 import { Main } from "../../../shared/classes/Main";
 import { Dispatch } from "redux";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const versions = require("uxp").versions;
+import { versions } from "uxp";
 
 class Footer extends React.Component<TFooter,Record<string,unknown>> { 
 	constructor(props: TFooter) {

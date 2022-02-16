@@ -1,4 +1,4 @@
-import { ITargetReferenceAM, TReference } from "./GetInfo";
+import { TReference } from "./GetInfo";
 
 export class Reference {
 

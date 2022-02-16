@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { CommandOptions } from "photoshop/dist/types/UXP";
+import { BatchPlayCommandOptions } from "photoshop";
 import { createSelector } from "reselect";
 import { RawDataConverter } from "../classes/RawDataConverter";
 import { IDescriptor, IDescriptorSettings } from "../model/types";
@@ -67,7 +67,7 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 		return data.calculatedReference;
 	}
 
-	function addCommonOptions(data: IDescriptor[]): CommandOptions {
+	function addCommonOptions(data: IDescriptor[]): BatchPlayCommandOptions {
 
 		const hasAnyAsync = data.some(item => item.descriptorSettings.synchronousExecution === false);
 		const hasAnySync = data.some(item => item.descriptorSettings.synchronousExecution === true);
@@ -76,7 +76,7 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 		const modalIsWait = data.every(item => item.descriptorSettings.modalBehavior === "wait");
 		const modalIsDefault = data.every(item => !item.descriptorSettings.modalBehavior);
 
-		const res: CommandOptions = {};
+		const res: BatchPlayCommandOptions = {};
 
 		if (hasAnySync) { res.synchronousExecution = true; }
 		else if (hasAnyAsync) { res.synchronousExecution = false; }

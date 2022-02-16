@@ -1,8 +1,8 @@
 import { TReference, GetInfo } from "./GetInfo";
 import { cloneDeep } from "lodash";
-import photoshop from "photoshop";
+import photoshop, { Descriptor } from "photoshop";
 import { IGetNameOutput } from "../model/types";
-import { Descriptor } from "photoshop/dist/types/UXP";
+import { syncBatchPlay } from "../../photoshop-helpers";
 
 export function getName(refs: TReference[]): IGetNameOutput[] {
 	const copyRef = cloneDeep(refs);
@@ -86,11 +86,7 @@ function getNameProp(refs: TReference[]):string|null {
 			...refs,
 		],
 	};
-	const result = photoshop.action.batchPlay([
-		desc,
-	], {
-		synchronousExecution: true,
-	}) as Descriptor[];
+	const result = syncBatchPlay([desc]);
 	let name = result[0][propName];
 	if (name === undefined || name === null) {
 		name = "N/A";

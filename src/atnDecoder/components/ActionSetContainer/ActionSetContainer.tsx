@@ -9,7 +9,7 @@ import { getExpandedItemsSet, getSelectedItemsSet } from "../../selectors/atnSel
 import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
 import { ActionItemContainer } from "../ActionItemContainer/ActionItemContainer";
 import { IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty, IconFolder } from "../../../shared/components/icons";
-import PS from "photoshop";
+import photoshop from "photoshop";
 
 export class ActionSet extends React.Component<TActionSet, IActionSetState> { 
 	constructor(props: TActionSet) {
@@ -79,7 +79,7 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 					</div>
 					<IconFolder />
 					<span className="title">
-						{(PS.core as any).translateUIString(actionSet.actionSetName)}
+						{(photoshop.core as any).translateUIString(actionSet.actionSetName)}
 					</span>
 				</div>
 				{this.isExpanded && actionSet.actionItems.map((item,key)=><ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}

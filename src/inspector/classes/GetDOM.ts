@@ -1,14 +1,10 @@
-import photoshop from "photoshop";
-import type Document from "photoshop/dist/dom/Document";
-import Layer from "photoshop/dist/dom/Layer";
-import { Photoshop } from "photoshop/dist/dom/Photoshop";
-import { ActionSet, Action } from "photoshop/dist/dom/Actions";
+import photoshop, { Document, Layer, Photoshop, ActionSet, Action, HistoryState} from "photoshop";
 import { TReference, IDReference } from "./GetInfo";
 import { DocumentExtra } from "./DocumentExtra";
 import { LayerExtra } from "./LayerExtra";
 
 export class GetDOM{
-	public static getDom(ref: TReference[]): Photoshop | Layer | Document | ActionSet | Action | null {
+	public static getDom(ref: TReference[]): Photoshop | Layer | Document | ActionSet | Action | HistoryState | null {
 		const res: IDReference[] = ref?.filter(v => ("_ref" in v)) as IDReference[];
 		if (!res) {
 			return null;
@@ -83,7 +79,7 @@ export class GetDOM{
 		docId = GetDOM.sanitizeDocId(docId);
 		if (!docId) { return null;}
 		const doc = GetDOM.getDocumentDom(docId);
-		const found = (doc as any).historyStates.find((h: any) => historyId === h.id) || null;
+		const found = doc.historyStates.find((h) => historyId === h.id) || null;
 		return found;
 	}
 
@@ -91,6 +87,7 @@ export class GetDOM{
 		const docDom = new photoshop.app.ActionSet(actionSetID);
 		return docDom;
 	}
+
 	private static actionItemDom(actionItemID: number):Action {
 		const docDom = new photoshop.app.Action(actionItemID);
 		return docDom;

@@ -1,7 +1,6 @@
-import { Descriptor } from "photoshop/dist/types/UXP";
+import { Descriptor } from "photoshop";
 import { Store, CombinedState, AnyAction } from "redux";
 import { IDescriptorSettings, IInspectorState } from "../model/types";
-import { getDescriptorOptions } from "../selectors/inspectorCodeSelectors";
 import { getInspectorSettings } from "../selectors/inspectorSelectors";
 import { Base64} from "./Base64";
 
@@ -24,7 +23,7 @@ export class RawDataConverter{
 		return binary;
 	}
 
-	public static replaceArrayBuffer(obj: Descriptor): Descriptor {
+	public static replaceArrayBuffer(obj: Descriptor | Descriptor[]): Descriptor | Descriptor[] {
 		const store:Store<CombinedState<{inspector: IInspectorState;}>, AnyAction> = (window as any)._rootStore;
 		const settings = getInspectorSettings(store.getState());
 		if (!settings.makeRawDataEasyToInspect) {
@@ -33,7 +32,7 @@ export class RawDataConverter{
 		rec(obj);
 		return obj;
 
-		function rec(data:Descriptor) {
+		function rec(data:Descriptor | Descriptor[]) {
 			for (const key in data) {
 				if (Object.prototype.hasOwnProperty.call(data, key)) {
 					if (Array.isArray(data)) {

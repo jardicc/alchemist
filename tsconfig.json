@@ -15,7 +15,8 @@
 	  "disableSizeLimit": false,
 	  "typeRoots": [
 		"./src/inspector/model",
-		"./node_modules/@types"
+		"./node_modules/@types",
+		"./node_modules/@adobe-uxp-types"
 	  ]
     },
 
