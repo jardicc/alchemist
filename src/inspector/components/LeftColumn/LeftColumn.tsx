@@ -218,7 +218,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 								<SP.MenuItem
 									key={item.value}
 									value={item.value}
-									selected={this.props.selectedTargetReference === item.value ? true : null}
+									selected={this.props.selectedTargetReference === item.value ? true : undefined}
 								>{item.label}</SP.MenuItem>
 							))
 						}
@@ -251,7 +251,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			<SP.MenuItem
 				key={item.value}
 				value={item.value}
-				selected={activeReferenceProperty.value === item.value ? true : null}
+				selected={activeReferenceProperty.value === item.value ? true : undefined}
 			>{item.label}</SP.MenuItem>
 		);
 
@@ -295,7 +295,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 									<SP.MenuItem
 										key={item.value}
 										value={item.value}
-										selected={activeReferenceProperty.value === item.value ? true : null}
+										selected={activeReferenceProperty.value === item.value ? true : undefined}
 									>{item.label}</SP.MenuItem>
 								))
 							}
@@ -375,7 +375,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 									<SP.MenuItem
 										key={item.value}
 										value={item.value}
-										selected={content.value === item.value ? true: null}
+										selected={content.value === item.value ? true: undefined}
 									>{item.label}</SP.MenuItem>
 								))
 							}
@@ -568,7 +568,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const toPlay = this.props.selectedDescriptors;
 		for await (const item of toPlay) {
 			const startTime = Date.now();
-			let descriptors:ActionDescriptor[];
+			let descriptors:ActionDescriptor[]|null;
 			try {
 				descriptors = await replayDescriptor(item.calculatedReference as ActionDescriptor);				
 			} catch (e:any) {
@@ -595,7 +595,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				id: Helpers.uuidv4(),
 				locked: false,
 				crc: crc(JSON.stringify(descriptors)),
-				originalData: RawDataConverter.replaceArrayBuffer(descriptors),
+				originalData: descriptors ? RawDataConverter.replaceArrayBuffer(descriptors) : null,
 				originalReference,
 				pinned: false,
 				selected: false,

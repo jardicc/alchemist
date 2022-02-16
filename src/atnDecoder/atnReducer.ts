@@ -40,23 +40,27 @@ export const atnReducer = (state: IInspectorState, action: TAllActions): IInspec
 					if (indexOf === -1) {
 						draft.atnConverter.expandedItems.push(uuid);
 						if (recursive && uuid.length === 1) {
-							const rest: TExpandedItem[] = getSetByUUID(state, uuid[0]).actionItems.map(item => [item.__uuidParentSet__, item.__uuid__]);
-							draft.atnConverter.expandedItems.push(...rest);
+							const found = getSetByUUID(state, uuid[0]);
+							if (found) {
+								const rest: TExpandedItem[] = found.actionItems.map(item => [item.__uuidParentSet__, item.__uuid__]);
+								draft.atnConverter.expandedItems.push(...rest);								
+							}
 						}
 					}
 				} else {
 					if (indexOf !== -1) {
 						draft.atnConverter.expandedItems.splice(indexOf, 1);
 						if (recursive && uuid.length === 1) {
-							const rest: string[] = getSetByUUID(state, uuid[0]).actionItems.map(item => [item.__uuidParentSet__, item.__uuid__].join("|"));
-
-
-							rest.forEach(itm => {
-								const index = draft.atnConverter.expandedItems.findIndex((a) => {
-									return a.join("|") === itm;
+							const found = getSetByUUID(state, uuid[0]);
+							if (found) {
+								const rest: string[] = found.actionItems.map(item => [item.__uuidParentSet__, item.__uuid__].join("|"));								
+								rest.forEach(itm => {
+									const index = draft.atnConverter.expandedItems.findIndex((a) => {
+										return a.join("|") === itm;
+									});
+									draft.atnConverter.expandedItems.splice(index, 1);
 								});
-								draft.atnConverter.expandedItems.splice(index, 1);
-							});
+							}
 						}
 					}
 				}
@@ -77,10 +81,10 @@ export const atnReducer = (state: IInspectorState, action: TAllActions): IInspec
 				const { data } = state.atnConverter;
 				if (operation === "none") {
 					draft.atnConverter.selectedItems = [];
-				} else if (operation === "replace") {
-					draft.atnConverter.selectedItems = addChilds([action.payload.uuid]);
-				} else if (operation === "subtract") {
-					const all = addChilds([action.payload.uuid]).map(item => item.join("|"));
+				} else if (operation === "replace" && uuid?.length) {
+					draft.atnConverter.selectedItems = addChilds([uuid]);
+				} else if (operation === "subtract" && uuid?.length) {
+					const all = addChilds([uuid]).map(item => item.join("|"));
 
 					all.forEach((itemFromAll) => {
 						const foundIndex = draft.atnConverter.selectedItems.findIndex(itemFromDraft => (itemFromDraft.join("|") === itemFromAll));
@@ -88,8 +92,8 @@ export const atnReducer = (state: IInspectorState, action: TAllActions): IInspec
 							draft.atnConverter.selectedItems.splice(foundIndex, 1);
 						}
 					});
-				} else if (operation === "add") {
-					draft.atnConverter.selectedItems = [...state.atnConverter.selectedItems, ...addChilds([action.payload.uuid])];
+				} else if (operation === "add" && uuid?.length) {
+					draft.atnConverter.selectedItems = [...state.atnConverter.selectedItems, ...addChilds([uuid])];
 				}
 
 				function addChilds(items: TSelectedItem[]): TSelectedItem[] {

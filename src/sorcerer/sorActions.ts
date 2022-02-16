@@ -7,7 +7,7 @@ export interface ISelectAction {
 	payload: {
 		operation: "replace"
 		type: "panel" | "command" | "snippet" | "general"
-		uuid?: string
+		uuid: string|null
 	}
 }
 

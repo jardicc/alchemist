@@ -22,7 +22,7 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 			<div key={i} className="host">
 				<h4>{h.app}</h4>
 				<div className="row">
-					Min. version: <SP.Textfield value={h.minVersion} onInput={e => onSetHost(h.app, { minVersion: e.target.value })} />
+					Min. version: <SP.Textfield value={h.minVersion} onInput={e => onSetHost(h.app, { minVersion: e.target?.value })} />
 				</div>
 				<div className="row">
 					API version: <SP.Textfield value={h.data.apiVersion.toString()} disabled={true} />
@@ -47,16 +47,16 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 					Manifest version: <SP.Textfield value={manifestGeneric.manifestVersion.toString()} disabled={true}   />
 				</div>
 				<div className="row">
-					Plugin name: <SP.Textfield value={manifestGeneric.name} onInput={e=>onSetMain({name:e.target.value})}  />
+					Plugin name: <SP.Textfield value={manifestGeneric.name} onInput={e=>onSetMain({name:e.target?.value})}  />
 				</div>
 				<div className="row">
-					Plugin ID: <SP.Textfield value={manifestGeneric.id} onInput={e=>onSetMain({id:e.target.value})}  />
+					Plugin ID: <SP.Textfield value={manifestGeneric.id} onInput={e=>onSetMain({id:e.target?.value})}  />
 				</div>
 				<div className="row">
 					Main file: <SP.Textfield value={manifestGeneric.main} disabled={true} />
 				</div>
 				<div className="row">
-					Plugin version: <SP.Textfield value={manifestGeneric.version} onInput={e=>onSetMain({version:e.target.value})}   />
+					Plugin version: <SP.Textfield value={manifestGeneric.version} onInput={e=>onSetMain({version:e.target?.value})}   />
 				</div>
 				<h3>Host app</h3>
 				{this.renderHostInfo()}

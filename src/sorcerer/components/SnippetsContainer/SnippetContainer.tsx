@@ -23,19 +23,19 @@ export class Snippet extends React.Component<TSnippetContainer, ISnippetContaine
 		return (
 			<div className="SnippetContainerContainer" key="snippetPanel">
 				<div className="row">
-					Name: <SP.Textfield value={activeSnippet.label.default} onInput={e => onSet(activeSnippet.$$$uuid, { label: { default: e.target.value } })} />
+					Name: <SP.Textfield value={activeSnippet.label.default} onInput={e => onSet(activeSnippet.$$$uuid, { label: { default: e.target?.value ?? "" } })} />
 				</div>
 				<div className="row">
-					Version: <SP.Textfield value={activeSnippet.version} onInput={e => onSet(activeSnippet.$$$uuid, { version:  e.target.value })} />
+					Version: <SP.Textfield value={activeSnippet.version} onInput={e => onSet(activeSnippet.$$$uuid, { version:  e.target?.value })} />
 				</div>
 				<div className="row">
-					Author: <SP.Textfield value={activeSnippet.author} onInput={e => onSet(activeSnippet.$$$uuid, { author:  e.target.value })}  />
+					Author: <SP.Textfield value={activeSnippet.author} onInput={e => onSet(activeSnippet.$$$uuid, { author:  e.target?.value })}  />
 				</div>
 				<div className="row">
 					Code: 
 				</div>
 				<div className="row codeWrap">
-					<SP.Textarea className="snippetCode" value={activeSnippet.code} onInput={e => onSet(activeSnippet.$$$uuid, { code:  e.target.value })}  />
+					<SP.Textarea className="snippetCode" value={activeSnippet.code} onInput={e => onSet(activeSnippet.$$$uuid, { code:  e.target?.value })}  />
 				</div>
 			</div>
 		);
@@ -53,7 +53,7 @@ interface IOwn{
 }
 
 interface ISnippetContainerProps{
-	activeSnippet:ISnippet
+	activeSnippet:ISnippet|null
 }
 
 const mapStateToProps = (state: IRootState, ownProps: IOwn): ISnippetContainerProps => (state = state as IRootState,{

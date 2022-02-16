@@ -79,7 +79,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 								<SP.MenuItem
 									key={item.value}
 									value={item.value}
-									selected={content.value === item.value ? true : null}
+									selected={content.value === item.value ? true : undefined}
 								>{item.label}</SP.MenuItem>
 							))
 						}
@@ -107,7 +107,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 										<SP.MenuItem
 											key={item.value}
 											value={item.value}
-											selected={listenerFilterType === item.value ? true : null}
+											selected={listenerFilterType === item.value ? true : undefined}
 										>{item.label}</SP.MenuItem>
 									))
 							}

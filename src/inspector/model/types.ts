@@ -261,9 +261,9 @@ export interface IDescriptor{
 	/** filter settings */
 	originalReference: ITargetReference
 	/** used for AM */
-	calculatedReference: ITargetReferenceAM|ActionDescriptor[]
+	calculatedReference: ITargetReferenceAM|ActionDescriptor[]|null
 	/** content */
-	originalData: ActionDescriptor[] | ActionDescriptor
+	originalData: ActionDescriptor[] | ActionDescriptor|null
 	descriptorSettings: IDescriptorSettings
 	groupCount?:number
 }

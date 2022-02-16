@@ -39,6 +39,7 @@ function addUUIDs(arg:IActionSet) :IActionSetUUID{
 
 export async function decodeATN():Promise<IActionSetUUID[]> {
 	const dataViews = await loadFile();
+	if(!dataViews){return []}
 	const parsed = dataViews.map(dataView => addUUIDs(parse(dataView)));
 	return parsed;
 }
@@ -126,10 +127,10 @@ export function parse(d: DataView):IActionSet {
 				parseActionDescriptor(data, desc);
 			}
 
-			item.commands.push(command as ICommand);
+			item.commands!.push(command as ICommand);
 		}
 
-		res.actionItems.push(item as IActionItem);
+		res.actionItems!.push(item as IActionItem);
 		
 	}
 
@@ -166,7 +167,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 		// Descriptor
 		case "GlbO":
 		case "Objc": {
-			const subDesc: ActionDescriptor = { _obj: null };
+			const subDesc: ActionDescriptor = { _obj: "" };
 			parseActionDescriptor(data, subDesc);
 			desc[propertyName] = subDesc;
 			return;

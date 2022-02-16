@@ -67,9 +67,9 @@ export const getActiveItem = createSelector([getActiveSnippet, getActiveCommand,
 
 export const getManifestCode = createSelector([all, getIndentString], (all, indent) => {
 
-	const clone = cloneDeep(all.manifestInfo);
+	const clone:any = cloneDeep(all.manifestInfo);
 
-	clone.entrypoints.forEach(ep => {
+	clone.entrypoints.forEach((ep:any) => {
 		delete ep.$$$uuid;
 		if (ep.type === "command") {
 			delete ep.$$$snippetUUID;

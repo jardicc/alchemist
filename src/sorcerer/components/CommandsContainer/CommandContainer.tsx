@@ -24,13 +24,13 @@ export class Command extends React.Component<TCommandContainer, ICommandContaine
 				<div className="row">
 					Label: <SP.Textfield
 						value={activeCommand.label.default}
-						onInput={e => onSet(activeCommand.$$$uuid, { label: { default: e.target.value } })}
+						onInput={e => onSet(activeCommand.$$$uuid, { label: { default: e.target?.value ?? "" } })}
 					/>
 				</div>
 				<div className="row">
 					ID: <SP.Textfield
 						value={activeCommand.id}
-						onInput={e => onSet(activeCommand.$$$uuid, { id: e.target.value })}
+						onInput={e => onSet(activeCommand.$$$uuid, { id: e.target?.value })}
 					/>
 				</div>
 				<div className="row">
@@ -41,7 +41,7 @@ export class Command extends React.Component<TCommandContainer, ICommandContaine
 								<SP.MenuItem
 									key={item.$$$uuid}
 									value={item.$$$uuid}
-									selected={activeCommand.$$$snippetUUID === item.$$$uuid ? true : null}
+									selected={activeCommand.$$$snippetUUID === item.$$$uuid ? true : undefined}
 								>{item.label.default}</SP.MenuItem>
 							))}
 						</SP.Menu>
@@ -63,7 +63,7 @@ interface IOwn{
 }
 
 interface ICommandContainerProps{
-	activeCommand: IEntrypointCommand
+	activeCommand: IEntrypointCommand|null
 	snippets:ISnippet[]
 }
 

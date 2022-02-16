@@ -44,7 +44,7 @@ export async function alert(message:string):Promise<void> {
 
 export async function replayDescriptor(desc: ActionDescriptor): Promise<ActionDescriptor[] | null> {
 
-	let res: ActionDescriptor[];
+	let res: ActionDescriptor[]=[];
 	
 	try {
 		await core.executeAsModal(async () => {

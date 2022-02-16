@@ -20,7 +20,7 @@ export class SorcererBuilder{
 		const manifestContent = getManifestCode(state);
 
 		const folder = await fs.getFolder();
-		let targetFolder: uxp.storage.Folder = null;
+		let targetFolder: uxp.storage.Folder|null = null;
 
 		try {
 			const tFolder = await folder.getEntry(pluginName);
@@ -32,6 +32,8 @@ export class SorcererBuilder{
 			// if folder not exists
 			targetFolder = await folder.createFolder(pluginName);
 		}
+
+		if (!targetFolder) { throw new Error("No target folder");}
 
 		//
 		try {

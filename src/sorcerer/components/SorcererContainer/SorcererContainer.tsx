@@ -119,7 +119,7 @@ interface ISorcererProps{
 	panels: IEntrypointPanel[]
 	commands: IEntrypointCommand[]
 	snippets: ISnippet[]
-	selectedItem: ISnippet | IEntrypointPanel | IEntrypointCommand | { type: "general" }
+	selectedItem: ISnippet | IEntrypointPanel | IEntrypointCommand | { type: "general" }|null
 	manifestCode: string
 	enableRemove:boolean
 }

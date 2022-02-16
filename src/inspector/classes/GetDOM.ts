@@ -24,7 +24,7 @@ export class GetDOM{
 
 		if (res[0]._ref === "layer") {
 			if (res.length === 1) {
-				return GetDOM.getLayerDom(res[0]._id);				
+				return GetDOM.getLayerDom(res[0]._id,null);				
 			} else {
 				return GetDOM.getLayerDom(res[0]._id,res[1]._id);				
 			}
@@ -43,7 +43,7 @@ export class GetDOM{
 		return null;
 	}
 
-	private static sanitizeDocId(docId?: number) {
+	private static sanitizeDocId(docId: number|null) {
 		if (typeof docId !== "number") {
 			if (!photoshop.app.activeDocument) {
 				return null;
@@ -68,7 +68,7 @@ export class GetDOM{
 		return docDom;
 	}
 
-	private static getLayerDom(layer: number, docId?: number): Layer|null {
+	private static getLayerDom(layer: number, docId: number|null): Layer|null {
 		docId = GetDOM.sanitizeDocId(docId);
 		if (!docId) { return null;}
 		const layerDom = new photoshop.app.Layer(layer, docId);
@@ -79,7 +79,7 @@ export class GetDOM{
 		return layerDom;
 	}
 
-	private static getHistoryDom(historyId: number, docId?: number) {
+	private static getHistoryDom(historyId: number, docId: number|null) {
 		docId = GetDOM.sanitizeDocId(docId);
 		if (!docId) { return null;}
 		const doc = GetDOM.getDocumentDom(docId);
