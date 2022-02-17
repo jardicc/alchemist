@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./VisualDiff.less";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import {formatters, diff} from "jsondiffpatch";
 
 export interface IVisualDiffProps{

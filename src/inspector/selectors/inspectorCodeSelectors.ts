@@ -1,13 +1,13 @@
 import { cloneDeep } from "lodash";
-import { CommandOptions } from "photoshop/dist/types/UXP";
 import { createSelector } from "reselect";
 import { RawDataConverter } from "../classes/RawDataConverter";
 import { IDescriptor, IDescriptorSettings } from "../model/types";
 import { getContentPath } from "./inspectorContentSelectors";
 import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
 import stringifyObject from "stringify-object";
+import { ActionDescriptor, BatchPlayCommandOptions } from "photoshop/dom/CoreModules";
 
-
+type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?:boolean}
 
 export const getDescriptorOptions = createSelector([getActiveDescriptors, getAutoActiveDescriptor,getInspectorSettings], (selected, autoActive,settings) => {
 
@@ -36,7 +36,20 @@ export const getDescriptorOptions = createSelector([getActiveDescriptors, getAut
 	return res;
 });
 
-export const getActiveDescriptorCalculatedReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getContentPath, getReplayEnabled, getDescriptorOptions, getInspectorSettings], (selected, autoActive, treePath, replayEnabled,descOptions,settings) => {
+export const getIndentString = createSelector([getInspectorSettings], settings => {
+	let indent = "\t";
+
+	if (settings.indent !== "tab") {
+		indent = " ".repeat(parseInt(settings.indent.charAt(settings.indent.length - 1)));
+	}
+
+	return indent;
+});
+
+export const getActiveDescriptorCalculatedReference = createSelector([
+	getActiveDescriptors, getAutoActiveDescriptor, getContentPath,
+	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
+], (selected, autoActive, treePath, replayEnabled, descOptions, settings, indentString) => {
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
@@ -60,14 +73,14 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 	function addPerItemOptions(data: IDescriptor) {
 		if (data.descriptorSettings.dialogOptions) {
 			data = cloneDeep(data);
-			data.calculatedReference._options = {
+			(data.calculatedReference as ActionDescriptor)._options = {
 				dialogOptions: data.descriptorSettings.dialogOptions,
 			} as IDescriptorSettings;
 		}
 		return data.calculatedReference;
 	}
 
-	function addCommonOptions(data: IDescriptor[]): CommandOptions {
+	function addCommonOptions(data: IDescriptor[]): BatchPlayCommandOptionsExtended {
 
 		const hasAnyAsync = data.some(item => item.descriptorSettings.synchronousExecution === false);
 		const hasAnySync = data.some(item => item.descriptorSettings.synchronousExecution === true);
@@ -76,7 +89,7 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 		const modalIsWait = data.every(item => item.descriptorSettings.modalBehavior === "wait");
 		const modalIsDefault = data.every(item => !item.descriptorSettings.modalBehavior);
 
-		const res: CommandOptions = {};
+		const res: BatchPlayCommandOptionsExtended = {};
 
 		if (hasAnySync) { res.synchronousExecution = true; }
 		else if (hasAnyAsync) { res.synchronousExecution = false; }
@@ -93,12 +106,8 @@ export const getActiveDescriptorCalculatedReference = createSelector([getActiveD
 
 		const stringifyOptions = {
 			singleQuotes: settings.singleQuotes,
-			indent: "\t",
+			indent: indentString,
 		};
-
-		if (settings.indent !== "tab") {
-			stringifyOptions.indent = " ".repeat(parseInt(settings.indent.charAt(settings.indent.length - 1)));
-		}
 
 		if (selected.length >= 1) {
 			iDesc = selected;

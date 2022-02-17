@@ -35,7 +35,7 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 		return renderPath(path, onInspectPath);
 	}
 
-	private throttleSlider = (e:any) => {
+	private throttleSlider = (e: any) => {
 		if (this.levelDelay) {
 			clearTimeout(this.levelDelay);			
 		}

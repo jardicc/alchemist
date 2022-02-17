@@ -15,7 +15,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 		};
 	}
     
-	static getDerivedStateFromError(error:any) {
+	private static getDerivedStateFromError(error:any) {
 		// Update state so the next render will show the fallback UI.
 		console.log(error);
 		return {
@@ -23,13 +23,15 @@ export class ErrorBoundary extends React.Component<any, IState> {
 			error: error,
 		};
 	}
-    
-	componentDidCatch(error:any, errorInfo:any) {
+
+	/*
+	public componentDidCatch(error:any, errorInfo:any) {
 		// You can also log the error to an error reporting service
 		//logErrorToMyService(error, errorInfo);
 	}
-    
-	public render() {
+    */
+	
+	public render():React.ReactNode {
 		if (this.state.hasError) {
 
 			const style: React.CSSProperties = {

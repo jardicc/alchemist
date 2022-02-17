@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
-import { ListenerClass } from "./../../inspector/classes/Listener";
 import "./../index.less";
 import { Settings } from "../../inspector/classes/Settings";
-import photoshop from "photoshop";
+import photoshop, {core} from "photoshop";
 import { AMHackFileFactory } from "../../inspector/classes/AMHackFileFactory";
 import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
+import { renderSorcererUI } from "../../sorcerer/components/sorcererIndex";
 
 export class Main{
 
@@ -14,9 +13,11 @@ export class Main{
 	public static start(): void {
 		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "inspector", "value": true });
 		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "occultist", "value": true });
+		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "sorcerer", "value": true });
 		AMHackFileFactory.createFileToInclude();
 		renderInspectorUI();
 		renderATNDecoderUI();
+		renderSorcererUI();
 		AMHackFileFactory.getHackCode();
 
 		
@@ -40,9 +41,8 @@ if (Main.devMode) {
 } else {	
 	try {
 		run();
-	} catch (e) {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		require("photoshop").core.showAlert({
+	} catch (e:any) {
+		core.showAlert({
 			message: e.stack,
 		});
 	}

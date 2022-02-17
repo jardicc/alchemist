@@ -2,7 +2,7 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "1.5.2",
+	"version": "2.0.2",
 	"manifestVersion": 5,
 	"host": [{
 		"app": "PS",
@@ -62,6 +62,42 @@
 			"id": "occultist",
 			"label": {
 				"default": "Occultist"
+			},
+			"minimumSize": {
+				"width": 450,
+				"height": 360
+			},
+			"maximumSize": {
+				"width": 2000,
+				"height": 2000
+			},
+			"preferredDockedSize": {
+				"width": 600,
+				"height": 540
+			},
+			"preferredFloatingSize": {
+				"width": 600,
+				"height": 540
+			},
+			"icons": [{
+				"width": 23,
+				"height": 23,
+				"path": "icons/light.png",
+				"scale": [1, 2],
+				"theme": ["darkest", "dark", "medium"]
+			}, {
+				"width": 23,
+				"height": 23,
+				"path": "icons/dark.png",
+				"scale": [1, 2],
+				"theme": ["lightest", "light"]
+			}]
+		},
+		{
+			"type": "panel",
+			"id": "sorcerer",
+			"label": {
+				"default": "Sorcerer"
 			},
 			"minimumSize": {
 				"width": 450,

@@ -1,4 +1,7 @@
 import { TProtoMode } from "../inspector/model/types";
+import {action} from "photoshop";
+import { ActionDescriptor, BatchPlayCommandOptions } from "photoshop/dom/CoreModules";
+import { TReference } from "../inspector/classes/GetInfo";
 
 export function addMoreKeys(protoMode: TProtoMode, collection: any): string[] {
 	if (protoMode === "none") {
@@ -9,10 +12,24 @@ export function addMoreKeys(protoMode: TProtoMode, collection: any): string[] {
 		keys = keys.filter(k => !(k.startsWith("__") && k.endsWith("__")));
 	} else if (protoMode === "uxp") {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const obj:any = new Object();
+		const obj: any = new Object();
 		const defaultKeys = Object.getOwnPropertyNames(obj.__proto__);
-		keys = keys.filter(k => !defaultKeys.includes(k));	
+		keys = keys.filter(k => !defaultKeys.includes(k));
 	}
 
 	return keys;
+}
+
+export function batchPlaySync(desc: ActionDescriptor[], options: BatchPlayCommandOptions = {}): ActionDescriptor[] {
+	const res: ActionDescriptor[] = (action.batchPlay as any)(desc, {
+		...options,
+		synchronousExecution: true,
+	});
+
+	return res;
+}
+
+export function validateReference(ref:TReference[]):boolean {
+	const res = (action as any).validateReference(ref);
+	return res;
 }

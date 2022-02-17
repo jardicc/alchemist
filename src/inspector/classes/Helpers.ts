@@ -1,11 +1,5 @@
-import photoshop from "photoshop";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
-import { Descriptor } from "photoshop/dist/types/UXP";
-import { ITargetReferenceAM } from "./GetInfo";
-
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const executeAsModal = require("photoshop").core.executeAsModal;
+import photoshop,{core} from "photoshop";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export class Helpers{
 
@@ -13,6 +7,13 @@ export class Helpers{
 
 	public static uuidv4():string {
 		return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+			const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		});
+	}
+
+	public static uuidCustom():string {
+		return "s_xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
 			const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
 			return v.toString(16);
 		});
@@ -41,21 +42,21 @@ export async function alert(message:string):Promise<void> {
 	await photoshop.core.showAlert({ message});
 }
 
-export async function replayDescriptor(desc:ActionDescriptor):Promise<Descriptor[]|null> {
+export async function replayDescriptor(desc: ActionDescriptor): Promise<ActionDescriptor[] | null> {
 
+	let res: ActionDescriptor[]=[];
 	
 	try {
-		const res = await executeAsModal(async () => {
-			const res2 = await photoshop.action.batchPlay([desc], {});
-			return res2;
+		await core.executeAsModal(async () => {
+			res = await photoshop.action.batchPlay([desc], {});
 		}, {
-			"commandName": "Alchemist Replay: " + (desc as any)._obj,
+			"commandName": "Alchemist Replay: " + desc._obj,
 		});
 		return res;
 	}
-	catch (e) {
+	catch (e: any) {
 		if (e.number == 9) {
-			photoshop.core.showAlert({message:"executeAsModal was rejected (some other plugin is currently inside a modal scope)"});
+			photoshop.core.showAlert({ message: "executeAsModal was rejected (some other plugin is currently inside a modal scope)" });
 		}
 		throw new Error(e);
 	}

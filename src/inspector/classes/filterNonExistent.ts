@@ -1,8 +1,10 @@
 import { IDescriptor } from "../model/types";
 import photoshop from "photoshop";
+import { validateReference } from "../../shared/helpers";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export function filterNonExistent(descriptors: IDescriptor[]):IDescriptor[] {
-	const validate = photoshop.action.validateReference;
+	
 
 	const result = descriptors.filter(desc => {
 		let res = false;
@@ -13,7 +15,7 @@ export function filterNonExistent(descriptors: IDescriptor[]):IDescriptor[] {
 				return true;
 			}
 			default: {
-				res = validate(desc.calculatedReference._target);
+				res = validateReference((desc.calculatedReference as ActionDescriptor)._target);
 				return res;
 			}
 		}

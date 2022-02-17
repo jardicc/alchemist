@@ -4,9 +4,9 @@ import React, { MouseEventHandler } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
-import { setExpandActionAction, setSelectActionAction } from "../../actions/atnActions";
-import { getExpandedItemsSet, getSelectedItemsSet } from "../../selectors/atnSelectors";
-import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
+import { setExpandActionAction, setSelectActionAction } from "../../atnActions";
+import { getExpandedItemsSet, getSelectedItemsSet } from "../../atnSelectors";
+import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../atnModel";
 import { ActionItemContainer } from "../ActionItemContainer/ActionItemContainer";
 import { IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty, IconFolder } from "../../../shared/components/icons";
 import PS from "photoshop";
@@ -79,7 +79,7 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 					</div>
 					<IconFolder />
 					<span className="title">
-						{(PS.core as any).translateUIString(actionSet.actionSetName)}
+						{PS.core.translateUIString(actionSet.actionSetName)}
 					</span>
 				</div>
 				{this.isExpanded && actionSet.actionItems.map((item,key)=><ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}

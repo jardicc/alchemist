@@ -1,11 +1,13 @@
 /* eslint-disable quotes */
+import { getAtnInitialState } from "../../atnDecoder/atnInitialState";
 import { IInspectorState } from "../model/types";
+import { getSorInitialState } from "../../sorcerer/sorInitialState";
 
 
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [7, 0, 0],
+		version: [10, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
@@ -45,13 +47,7 @@ export function getInitialState(): IInspectorState {
 		dispatcher: {
 			snippets:[{content:`const batchPlay = require("photoshop").action.batchPlay;\n\nreturn await batchPlay([{"_obj": "invert"}],{});`}],
 		},
-		atnConverter: {
-			data: [],
-			expandedItems: [],
-			selectedItems: [],
-			lastSelected: null,
-			dontSendDisabled:false,
-		},
+		atnConverter: getAtnInitialState(),
 
 		targetReference: [
 			{
@@ -612,6 +608,6 @@ export function getInitialState(): IInspectorState {
 			hideDontRecord: true,
 			hideForceNotify:true,
 		},
-		
+		sorcerer:getSorInitialState(),
 	};
 }

@@ -4,8 +4,9 @@ import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
 import { uxp } from "../../inspector/types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
-import { IActionSet, IActionItem, ICommand, IDescriptor, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../types/model";
+import { IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../atnModel";
 import { Helpers } from "../../inspector/classes/Helpers";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 // IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html
 
@@ -38,6 +39,7 @@ function addUUIDs(arg:IActionSet) :IActionSetUUID{
 
 export async function decodeATN():Promise<IActionSetUUID[]> {
 	const dataViews = await loadFile();
+	if(!dataViews){return []}
 	const parsed = dataViews.map(dataView => addUUIDs(parse(dataView)));
 	return parsed;
 }
@@ -46,7 +48,6 @@ export async function loadFile():Promise<DataView[]|null> {
 	const files = await localFileSystem.getFileForOpening({
 		types: ["atn"],
 		allowMultiple: true,
-		//initialLocation: await Settings.settingsFolder()
 	});
 	if (!files?.length) {
 		return null;
@@ -62,7 +63,6 @@ export async function loadFile():Promise<DataView[]|null> {
 			result.push(new DataView(data));
 		} catch (e) {
 			console.log("Error - with reading of settings!");
-			//result.push( null);
 		}
 	}
 
@@ -112,7 +112,7 @@ export function parse(d: DataView):IActionSet {
 				dialogMode:data.getUint8(),
 			};
 
-			const desc: IDescriptor = {
+			const desc: ActionDescriptor = {
 				_obj: data.getCommandStringID(),
 			};
 
@@ -127,10 +127,10 @@ export function parse(d: DataView):IActionSet {
 				parseActionDescriptor(data, desc);
 			}
 
-			item.commands.push(command as ICommand);
+			item.commands!.push(command as ICommand);
 		}
 
-		res.actionItems.push(item as IActionItem);
+		res.actionItems!.push(item as IActionItem);
 		
 	}
 
@@ -167,7 +167,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 		// Descriptor
 		case "GlbO":
 		case "Objc": {
-			const subDesc: IDescriptor = { _obj: null };
+			const subDesc: ActionDescriptor = { _obj: "" };
 			parseActionDescriptor(data, subDesc);
 			desc[propertyName] = subDesc;
 			return;

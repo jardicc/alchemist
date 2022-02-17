@@ -4,10 +4,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
-import { setSelectActionAction } from "../../actions/atnActions";
-import { getSelectedItemsCommand } from "../../selectors/atnSelectors";
-import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
-import { IconArrowBottom, IconArrowRight, IconCheck, IconCircleCheck, IconEmpty } from "../../../shared/components/icons";
+import { setSelectActionAction } from "../../atnActions";
+import { getSelectedItemsCommand } from "../../atnSelectors";
+import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem } from "../../atnModel";
+import { IconCheck, IconEmpty } from "../../../shared/components/icons";
 import PS from "photoshop";
 
 export class ActionCommand extends React.Component<TActionCommand, IActionCommandState> { 
@@ -61,7 +61,7 @@ export class ActionCommand extends React.Component<TActionCommand, IActionComman
 						{actionCommand.enabled ? <IconCheck /> : <IconEmpty />}
 					</div>
 					<span className="title">
-						{(PS.core as any).translateUIString(actionCommand.commandName)}
+						{PS.core.translateUIString(actionCommand.commandName)}
 					</span>
 				</div>
 			</div>

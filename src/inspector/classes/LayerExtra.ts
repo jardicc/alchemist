@@ -1,22 +1,19 @@
-import Layer from "photoshop/dist/dom/Layer";
+
 import { IDReference } from "./GetInfo";
-import { action } from "../../shared/imports";
+import { Layer } from "photoshop/dom/Layer";
+import { app } from "photoshop";
+import { validateReference } from "../../shared/helpers";
 
-type TLayer = typeof Layer;
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const LayerNative:TLayer  = require("photoshop").app.Layer;
-
-export class LayerExtra extends LayerNative{
+export class LayerExtra extends app.Layer{
 	constructor(layer: Layer) {
-		super(layer._id, layer._docId);
+		super(layer.id, layer._docId);
 	}
 
 	public get amReference():IDReference[] {
 		return ([
 			{
 				"_ref": "layer",
-				"_id": this._id,
+				"_id": this.id,
 			},
 			{
 				"_ref": "document",
@@ -26,6 +23,6 @@ export class LayerExtra extends LayerNative{
 	}
 
 	public get exists(): boolean{
-		return action.validateReference(this.amReference);
+		return validateReference(this.amReference);
 	}
 }

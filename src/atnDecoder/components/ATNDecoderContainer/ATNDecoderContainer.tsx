@@ -11,15 +11,16 @@ import { decodeATN } from "../../../atnDecoder/classes/ATNDecoder";
 import { FooterContainer } from "../../../inspector/components/Footer/FooterContainer";
 import { IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation } from "../../../inspector/model/types";
 import { getAllDescriptors, getFontSizeSettings, getInspectorSettings } from "../../../inspector/selectors/inspectorSelectors";
-import { getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands } from "../../selectors/atnSelectors";
-import { clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction } from "../../actions/atnActions";
-import { IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem } from "../../types/model";
+import { getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands } from "../../atnSelectors";
+import { clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction } from "../../atnActions";
+import { IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem } from "../../atnModel";
 import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
 import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setMainTabAction, setModeTabAction, toggleDescriptorsGroupingAction } from "../../../inspector/actions/inspectorActions";
 import { alert, Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
 import PS from "photoshop";
 import SP from "react-uxp-spectrum";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 
 class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> { 
@@ -66,7 +67,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 			const descCrc = crc(JSON.stringify(command.descriptor));
 
 			const desc: IDescriptor = {
-				calculatedReference: command.descriptor,
+				calculatedReference: command.descriptor as any,
 				crc: descCrc,
 				descriptorSettings: {
 					dialogOptions: command.showDialogs ? "display" : "dontDisplay",
@@ -94,7 +95,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				renameMode: false,
 				selected: true,
 				startTime: 0,
-				title: (PS.core as any).translateUIString(commandParrent.actionItemName) + " / " + command.commandName,
+				title: PS.core.translateUIString(commandParrent?.actionItemName ?? "") + " / " + command.commandName,
 			};
 
 			const cleanOld = index === 0 && replace;

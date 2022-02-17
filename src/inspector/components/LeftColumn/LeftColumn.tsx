@@ -13,10 +13,8 @@ import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
 import { Helpers, replayDescriptor } from "../../classes/Helpers";
 import { guessOrinalReference } from "../../classes/guessOriginalReference";
-import { ActionDescriptor } from "photoshop/dist/types/photoshop";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
-import { Descriptor } from "photoshop/dist/types/UXP";
 import { str as crc } from "crc-32";
 import SP from "react-uxp-spectrum";
 
@@ -26,6 +24,7 @@ import { IRootState } from "../../../shared/store";
 import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction } from "../../actions/inspectorActions";
 import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType, getRanameEnabled } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
@@ -219,7 +218,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 								<SP.MenuItem
 									key={item.value}
 									value={item.value}
-									selected={this.props.selectedTargetReference === item.value ? true : null}
+									selected={this.props.selectedTargetReference === item.value ? true : undefined}
 								>{item.label}</SP.MenuItem>
 							))
 						}
@@ -252,7 +251,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			<SP.MenuItem
 				key={item.value}
 				value={item.value}
-				selected={activeReferenceProperty.value === item.value ? true : null}
+				selected={activeReferenceProperty.value === item.value ? true : undefined}
 			>{item.label}</SP.MenuItem>
 		);
 
@@ -296,7 +295,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 									<SP.MenuItem
 										key={item.value}
 										value={item.value}
-										selected={activeReferenceProperty.value === item.value ? true : null}
+										selected={activeReferenceProperty.value === item.value ? true : undefined}
 									>{item.label}</SP.MenuItem>
 								))
 							}
@@ -376,7 +375,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 									<SP.MenuItem
 										key={item.value}
 										value={item.value}
-										selected={content.value === item.value ? true: null}
+										selected={content.value === item.value ? true: undefined}
 									>{item.label}</SP.MenuItem>
 								))
 							}
@@ -569,10 +568,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const toPlay = this.props.selectedDescriptors;
 		for await (const item of toPlay) {
 			const startTime = Date.now();
-			let descriptors:Descriptor;
+			let descriptors:ActionDescriptor[]|null;
 			try {
 				descriptors = await replayDescriptor(item.calculatedReference as ActionDescriptor);				
-			} catch (e) {
+			} catch (e:any) {
 				NotificationManager.error(e.message,"Replay failed", 5000);
 				console.error("error");
 				return;
@@ -596,7 +595,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				id: Helpers.uuidv4(),
 				locked: false,
 				crc: crc(JSON.stringify(descriptors)),
-				originalData: RawDataConverter.replaceArrayBuffer(descriptors),
+				originalData: descriptors ? RawDataConverter.replaceArrayBuffer(descriptors) : null,
 				originalReference,
 				pinned: false,
 				selected: false,

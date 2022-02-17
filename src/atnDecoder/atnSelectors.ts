@@ -1,24 +1,24 @@
 import { createSelector } from "reselect";
-import { IRootState } from "../../shared/store";
+import { IRootState } from "../shared/store";
 
 import stringifyObject from "stringify-object";
-import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, IATNConverterState, TExpandedItem, TSelectedItem } from "../types/model";
-import { IInspectorState } from "../../inspector/model/types";
+import { IActionCommandUUID, IActionItemUUID, IActionSetUUID, IATNConverterState, TExpandedItem, TSelectedItem } from "./atnModel";
+import { IInspectorState } from "../inspector/model/types";
 
 export const all = (state:IRootState):IATNConverterState => state.inspector.atnConverter;
 export const getData = createSelector([all], s => s.data);
 
-export const getSetByUUID = (state: IInspectorState,uuidSet:string):IActionSetUUID => {
+export const getSetByUUID = (state: IInspectorState,uuidSet:string):IActionSetUUID|null => {
 	const res = state.atnConverter.data.find(set => set.__uuid__ === uuidSet) || null;
 	return res;
 };
 
-export const getActionByUUID = (state: IInspectorState, uuidSet: string, uuidAction:string): IActionItemUUID => {
+export const getActionByUUID = (state: IInspectorState, uuidSet: string, uuidAction:string): IActionItemUUID|null => {
 	const res = getSetByUUID(state,uuidSet)?.actionItems.find(item=>item.__uuid__ === uuidAction) || null;
 	return res;
 };
 
-export const getCommandByUUID = (state: IInspectorState, uuidSet: string, uuidAction: string, uuidCommand:string): IActionCommandUUID => {
+export const getCommandByUUID = (state: IInspectorState, uuidSet: string, uuidAction: string, uuidCommand:string): IActionCommandUUID|null => {
 	const res = getActionByUUID(state,uuidSet,uuidAction)?.commands.find(item=>item.__uuid__ === uuidCommand) || null;
 	return res;
 };
@@ -26,7 +26,7 @@ export const getCommandByUUID = (state: IInspectorState, uuidSet: string, uuidAc
 export function getTreePartUniversal (state: IInspectorState, path: [string]):IActionSetUUID
 export function getTreePartUniversal (state: IInspectorState, path: [string,string]):IActionItemUUID
 export function getTreePartUniversal (state: IInspectorState, path: [string,string,string]):IActionCommandUUID
-export function getTreePartUniversal(state: IInspectorState, path: [string, string?, string?]): IActionSetUUID | IActionItemUUID | IActionCommandUUID {
+export function getTreePartUniversal(state: IInspectorState, path: string[]): IActionSetUUID | IActionItemUUID | IActionCommandUUID | null {
 	switch (path.length) {
 		case 1:
 			return getSetByUUID(state, path[0]);
@@ -34,6 +34,8 @@ export function getTreePartUniversal(state: IInspectorState, path: [string, stri
 			return getActionByUUID(state, path[0], path[1]);
 		case 3:
 			return getCommandByUUID(state, path[0], path[1], path[2]);
+		default:
+			throw new Error("Wrong argument in getTreePartUniversal");
 	}
 }
 
@@ -133,13 +135,13 @@ export const getLastSelected = createSelector([
 ], (sets,actions,commands,all) => {
 	const len = all.lastSelected?.length;
 	if (len === 1) {
-		return sets.find(s => s.__uuid__ === all.lastSelected[0]) || null;
+		return sets.find(s => s.__uuid__ === all?.lastSelected?.[0]) || null;
 	}
 	if (len === 2) {
-		return actions.find(s => s.__uuid__ === all.lastSelected[1]) || null;
+		return actions.find(s => s.__uuid__ === all?.lastSelected?.[1]) || null;
 	}
 	if (len === 3) {
-		return commands.find(s => s.__uuid__ === all.lastSelected[2]) || null;		
+		return commands.find(s => s.__uuid__ === all?.lastSelected?.[2]) || null;		
 	}
 	return null;
 });

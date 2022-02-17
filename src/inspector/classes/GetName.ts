@@ -2,7 +2,8 @@ import { TReference, GetInfo } from "./GetInfo";
 import { cloneDeep } from "lodash";
 import photoshop from "photoshop";
 import { IGetNameOutput } from "../model/types";
-import { Descriptor } from "photoshop/dist/types/UXP";
+import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import { batchPlaySync } from "../../shared/helpers";
 
 export function getName(refs: TReference[]): IGetNameOutput[] {
 	const copyRef = cloneDeep(refs);
@@ -77,7 +78,7 @@ function getNameProp(refs: TReference[]):string|null {
 		return null;
 	}
 
-	const desc = {
+	const desc:ActionDescriptor = {
 		_obj: "get",
 		_target: [
 			{
@@ -86,11 +87,7 @@ function getNameProp(refs: TReference[]):string|null {
 			...refs,
 		],
 	};
-	const result = photoshop.action.batchPlay([
-		desc,
-	], {
-		synchronousExecution: true,
-	}) as Descriptor[];
+	const result = batchPlaySync([desc]);
 	let name = result[0][propName];
 	if (name === undefined || name === null) {
 		name = "N/A";

@@ -4,9 +4,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { IRootState } from "../../../shared/store";
-import { getExpandedItemsAction, getSelectedItemsAction } from "../../selectors/atnSelectors";
-import { setExpandActionAction,setSelectActionAction} from "../../actions/atnActions";
-import { IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../types/model";
+import { getExpandedItemsAction, getSelectedItemsAction } from "../../atnSelectors";
+import { setExpandActionAction,setSelectActionAction} from "../../atnActions";
+import { IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "../../atnModel";
 import { ActionCommandContainer } from "../ActionCommandContainer/ActionCommandContainer";
 import { IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty } from "../../../shared/components/icons";
 import PS from "photoshop";
@@ -77,7 +77,7 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 						{this.isExpanded  ? <IconChevronBottom /> : <IconChevronRight />}
 					</div>
 					<span className="title">
-						{(PS.core as any).translateUIString(actionItem.actionItemName)}
+						{PS.core.translateUIString(actionItem.actionItemName)}
 					</span>				
 				</div>
 				{this.isExpanded && actionItem.commands?.map((item, key) => <ActionCommandContainer parentAction={actionItem} parentSet={parentSet} actionCommand={item} key={key} />)}

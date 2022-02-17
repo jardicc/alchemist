@@ -1,0 +1,138 @@
+.SorcererContainer{
+	color:var(--text);
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	width: 100vw;
+	height: 100vh;
+	flex-shrink: 0;
+	background: var(--bg);
+
+
+	h3{
+		margin:0;
+	}
+
+	.manifest{
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		width: 0;
+
+		.manifestCode{
+			flex-grow: 1;
+			width: 100%;
+		}
+	}
+
+	.menuItemHeader{
+		padding-left: 0.7em;
+		display: flex;
+		align-items: center;
+		font-size: var(--biggerText);
+		font-weight: bold;
+
+		> span{
+			margin-right:  auto;
+		}
+
+		> .button{
+			align-self: center;
+			justify-self: center;
+			padding: 0 0.2em;
+		}
+	}
+
+	.menuItem{
+		padding-left: 1.7em;
+		cursor: pointer;
+
+		&.general{
+			padding-left: 0.7em;
+		}
+
+		&:hover{
+			color:var(--hover);
+		}
+
+		&.active{
+			color:var(--active);
+		}
+	}
+
+	.info{
+		overflow: auto;
+		overflow-y: auto;
+	}
+
+	.details{
+		padding:0.7em;
+		width: 0;
+
+		sp-textfield{
+			margin-left: auto;
+		}
+	}
+
+	.tree{
+		padding-top: 1em;
+		overflow: auto;
+		//min-width: 20em;
+		display: flex;
+		flex-direction: column;
+		border-right: 1px solid var(--divider);
+		border-bottom: none;
+		border-top: none;
+
+		.ctaEmpty{
+			display: flex;
+			flex-direction: column;
+			max-width: 15em;
+			margin:auto;
+			text-align: center;
+			justify-content: center;
+			align-items: center;
+			flex-shrink: 0;
+	
+			.button{
+				flex-grow: 0;
+			}
+		}
+	}
+
+	.atnData{
+		display: flex;
+		flex-grow: 1;
+	}
+
+	&.size-tiny{
+		font-size: 10px;
+	}
+	&.size-small{
+		font-size: 10.5px;
+	}
+	&.size-default{
+		font-size: 11px;
+	}
+	&.size-bigger{
+		font-size: 12px;
+	}
+	&.size-big{
+		font-size: 13px;
+	}
+	&.size-youMustBeJoking{
+		font-size: 24px;
+	}
+
+	textarea{
+		appearance: none;
+		margin-bottom:2px;
+	}
+
+	.buttonBar{
+		border-top: 1px solid var(--divider);
+		display: flex;
+		flex-direction: row;
+		flex-shrink: 0;
+	}
+}

@@ -104,9 +104,9 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 							<div className="label">synchronousExecution</div>
 							<SP.Dropdown quiet={false}>
 								<SP.Menu slot="options" onChange={this.onSynchronousExecution}>
-									<SP.MenuItem key={"true"} value={"true"} selected={(synchronousExecution === true) ? true : null}>true</SP.MenuItem>
-									<SP.MenuItem key={"false"} value={"false"} selected={(synchronousExecution === false) ? true : null}>false</SP.MenuItem>
-									<SP.MenuItem key={"default"} value={"default"} selected={(synchronousExecution === null) ? true : null}>Default</SP.MenuItem>
+									<SP.MenuItem key={"true"} value={"true"} selected={(synchronousExecution === true) ? true : undefined}>true</SP.MenuItem>
+									<SP.MenuItem key={"false"} value={"false"} selected={(synchronousExecution === false) ? true : undefined}>false</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(synchronousExecution === null) ? true : undefined}>Default</SP.MenuItem>
 								</SP.Menu>
 							</SP.Dropdown>
 						</div>
@@ -114,10 +114,10 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 							<div className="label">dialogOptions</div>
 							<SP.Dropdown quiet={false}>
 								<SP.Menu slot="options" onChange={this.onSetDialogOptions}>
-									<SP.MenuItem key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? true : null}>silent (DialogModes.NO)</SP.MenuItem>
-									<SP.MenuItem key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? true : null}>dontDisplay (DialogModes.ERROR)</SP.MenuItem>
-									<SP.MenuItem key={"display"} value={"display"} selected={(dialogOptions === "display") ? true : null}>display (DialogModes.ALL)</SP.MenuItem>
-									<SP.MenuItem key={"default"} value={"default"} selected={(dialogOptions === null) ? true : null}>Default</SP.MenuItem>
+									<SP.MenuItem key={"silent"} value={"silent"} selected={(dialogOptions === "silent") ? true : undefined}>silent (DialogModes.NO)</SP.MenuItem>
+									<SP.MenuItem key={"dontDisplay"} value={"dontDisplay"} selected={(dialogOptions === "dontDisplay") ? true : undefined}>dontDisplay (DialogModes.ERROR)</SP.MenuItem>
+									<SP.MenuItem key={"display"} value={"display"} selected={(dialogOptions === "display") ? true : undefined}>display (DialogModes.ALL)</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(dialogOptions === null) ? true : undefined}>Default</SP.MenuItem>
 								</SP.Menu>
 							</SP.Dropdown>
 						</div>
@@ -125,10 +125,10 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 							<div className="label">modalBehavior</div>
 							<SP.Dropdown quiet={false}>
 								<SP.Menu slot="options" onChange={this.onSetModalBehavior}>
-									<SP.MenuItem key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? true : null}>wait</SP.MenuItem>
-									<SP.MenuItem key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? true : null}>execute</SP.MenuItem>
-									<SP.MenuItem key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? true : null}>fail</SP.MenuItem>
-									<SP.MenuItem key={"default"} value={"default"} selected={(modalBehavior === null) ? true : null}>Default</SP.MenuItem>
+									<SP.MenuItem key={"wait"} value={"wait"} selected={(modalBehavior === "wait") ? true : undefined}>wait</SP.MenuItem>
+									<SP.MenuItem key={"execute"} value={"execute"} selected={(modalBehavior === "execute") ? true : undefined}>execute</SP.MenuItem>
+									<SP.MenuItem key={"fail"} value={"fail"} selected={(modalBehavior === "fail") ? true : undefined}>fail</SP.MenuItem>
+									<SP.MenuItem key={"default"} value={"default"} selected={(modalBehavior === null) ? true : undefined}>Default</SP.MenuItem>
 								</SP.Menu>
 							</SP.Dropdown>
 						</div>
@@ -144,16 +144,16 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 							</div>
 							<SP.Dropdown quiet={false}>
 								<SP.Menu slot="options" onChange={this.onSetIndent}>
-									<SP.MenuItem key={"tab"} value={"tab"} selected={(indent === "tab") ? true : null}>1 tab</SP.MenuItem>
+									<SP.MenuItem key={"tab"} value={"tab"} selected={(indent === "tab") ? true : undefined}>1 tab</SP.MenuItem>
 
-									<SP.MenuItem key={"space1"} value={"space1"} selected={(indent === "space1") ? true : null}>1 space</SP.MenuItem>
-									<SP.MenuItem key={"space2"} value={"space2"} selected={(indent === "space2") ? true : null}>2 spaces</SP.MenuItem>
-									<SP.MenuItem key={"space3"} value={"space3"} selected={(indent === "space3") ? true : null}>3 spaces</SP.MenuItem>
-									<SP.MenuItem key={"space4"} value={"space4"} selected={(indent === "space4") ? true : null}>4 spaces</SP.MenuItem>
-									<SP.MenuItem key={"space5"} value={"space5"} selected={(indent === "space5") ? true : null}>5 spaces</SP.MenuItem>
-									<SP.MenuItem key={"space6"} value={"space6"} selected={(indent === "space6") ? true : null}>6 spaces</SP.MenuItem>
-									<SP.MenuItem key={"space7"} value={"space7"} selected={(indent === "space7") ? true : null}>7 spaces</SP.MenuItem>
-									<SP.MenuItem key={"space8"} value={"space8"} selected={(indent === "space8") ? true : null}>8 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space1"} value={"space1"} selected={(indent === "space1") ? true : undefined}>1 space</SP.MenuItem>
+									<SP.MenuItem key={"space2"} value={"space2"} selected={(indent === "space2") ? true : undefined}>2 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space3"} value={"space3"} selected={(indent === "space3") ? true : undefined}>3 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space4"} value={"space4"} selected={(indent === "space4") ? true : undefined}>4 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space5"} value={"space5"} selected={(indent === "space5") ? true : undefined}>5 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space6"} value={"space6"} selected={(indent === "space6") ? true : undefined}>6 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space7"} value={"space7"} selected={(indent === "space7") ? true : undefined}>7 spaces</SP.MenuItem>
+									<SP.MenuItem key={"space8"} value={"space8"} selected={(indent === "space8") ? true : undefined}>8 spaces</SP.MenuItem>
 								</SP.Menu>
 							</SP.Dropdown>
 						</div>

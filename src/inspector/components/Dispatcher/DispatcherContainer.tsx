@@ -12,7 +12,6 @@ import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import { getInitialState } from "../../store/initialState";
 import { str as crc } from "crc-32";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import Sval from "sval";
 import { Dispatch } from "redux";
 
@@ -52,7 +51,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 					const res = await interpreter.exports.returnValue;
 					return res;
 				})();
-			} catch (e) {
+			} catch (e:any) {
 				data = {error:e.stack};
 			}
 			const endTime = Date.now();
