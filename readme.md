@@ -1,12 +1,26 @@
 # Alchemist for Photoshop
 
+## Alchemist panel
+
 Listens all (most of) Photoshop events. Something like actions panel in Photoshop but for scripting. Or ScriptListener plugin for ExtendScript but in panel. Also can inspect PS DOM and show PS AM descriptors from various places.
 
 Videos on how to use it from Davide Barranca series about UXP:
 - #7 BatchPlay (part 2): the Alchemist listener https://www.youtube.com/watch?v=aZn_6X6nvUM
 - #8 BatchPlay (part 3): the Alchemist inspector https://www.youtube.com/watch?v=qDw3mdGAG2o
 
-(I highly recommend you to check the whole series)
+Important links:
+- How `batchPlay` works. Read before you code! https://developer.adobe.com/photoshop/uxp/2022/ps_reference/media/batchplay/
+
+## Occultist panel
+Can convert action files (.atn) into JSON and also into source code snippets.
+
+Short demo: Convert Photoshop Action (.atn) files to UXP code with Alchemist https://www.youtube.com/watch?v=ve6awe_FOtY 
+
+## Sorcerer panel
+Can generate whole plugin based copy/pasted source code e.g. from Alchemist panel. It also can help you generate content of manifest.json file.
+So you can convert action file into plugin very quickly. E.g. record action file (.atn) -> Read it as JSON via Occultist -> Pass it into Alchemist to generate source code -> Generate plugin from generated source code.
+
+Video:  Generate plugin with Sorcerer panel https://www.youtube.com/watch?v=fhSy2nyK3Uk (tutorial)
 
 ![alt Plugin screenshot](md_images/screen.png)
 
@@ -80,7 +94,9 @@ The Alchemist plugin for Photoshop was developed with support from the **Adobe F
 
 ### Individual donors
 - Pierre Guidera - https://github.com/pierreGuidera
-- and 2 anonymous developers
+- and other anonymous developers
+
+Please let me know if you want your name here :-)
 
 Visit this site if you want to donate: https://bereza.gumroad.com/l/alchemist
 
