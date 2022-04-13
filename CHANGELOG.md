@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.3
+- fix: in PS 23.3.0 it does not load due to launchProcess  permission. Therefore in this version it is fixed
+
 ## 2.0.2
 - improves: better default values in Sorcerer (suspendHistory and executeAsModal)
 - improves: less restrictive default values for panel sizes

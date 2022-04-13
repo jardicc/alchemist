@@ -2,7 +2,7 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "2.0.2",
+	"version": "2.0.3",
 	"manifestVersion": 5,
 	"host": {
 		"app": "PS",
@@ -13,7 +13,6 @@
 	},
 	"requiredPermissions": {
 		"clipboard": "readAndWrite",
-		"launchProcess": "request",
 		"allowCodeGenerationFromStrings": true,
 		"localFileSystem":"fullAccess",
 		"network": {
