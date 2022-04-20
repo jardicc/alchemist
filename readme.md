@@ -11,6 +11,9 @@ Videos on how to use it from Davide Barranca series about UXP:
 Important links:
 - How `batchPlay` works. Read before you code! https://developer.adobe.com/photoshop/uxp/2022/ps_reference/media/batchplay/
 
+
+![alt Plugin screenshot](md_images/screen.png)
+
 ## Occultist panel
 Can convert action files (.atn) into JSON and also into source code snippets.
 
@@ -22,10 +25,11 @@ So you can convert action file into plugin very quickly. E.g. record action file
 
 Video:  Generate plugin with Sorcerer panel https://www.youtube.com/watch?v=fhSy2nyK3Uk (tutorial)
 
-![alt Plugin screenshot](md_images/screen.png)
 
 ## Versions
-Alchemist 1.4.0 requires Photoshop 22.5 or higher.
+Alchemist 2.1.0 or higher requires Photoshop version 23.3.0 or higher
+
+Alchemist 1.4.0 - 2.0.2 requires Photoshop version from 22.5.x to 23.2.x
 
 Alchemsit 1.3.0 works best with Photoshop 22.4.x and lower.
 

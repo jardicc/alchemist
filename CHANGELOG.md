@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0
+- fix: another fix for PS 23.3.0 since last fix broke it in PS 23.2.x  
+This change makes plugin incompatible with PS 23.2.x and lower.  
+If you want to use alchemist in 23.2.x or lower then use Alchemist version 2.0.2 or lower
+
 ## 2.0.3
 - fix: in PS 23.3.0 it does not load due to launchProcess  permission. Therefore in this version it is fixed
 
