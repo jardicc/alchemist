@@ -1,8 +1,8 @@
 {
     "version": "0.2.0",
     "scripts": {
-        "build": "webpack --config webpack.config.prod.js",
-        "watch": "webpack --watch --config webpack.config.dev.js"
+        "build": "webpack --config webpack.config.js --env mode=prod",
+        "watch": "webpack --watch --config webpack.config.js --env mode=dev"
     },
     "devDependencies": {
         "@babel/core": "^7.10.4",
