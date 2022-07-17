@@ -126,9 +126,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				<div className="info spread flex">
 					<div className="tree" onClick={(e) => { e.stopPropagation(); setSelectedItem([""], "none");}}>{this.renderSet()}</div>
 					<div className="noShrink">
-						<textarea
-							readOnly={true}
-							maxLength={Number.MAX_SAFE_INTEGER}
+						<SP.Textarea
 							className="infoBlock"
 							value={textData}
 						/>

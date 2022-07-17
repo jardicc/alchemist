@@ -12,6 +12,7 @@ import { TLabelRenderer } from "../JSONTree/types";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import { TreePath } from "../TreePath/TreePath";
+import SP from "react-uxp-spectrum";
 
 class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 
@@ -40,9 +41,9 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 				<TabPanel id="tree" title="Tree" noPadding={true}>
 					<div className="TreeContent">
 						<TreePath
-							autoExpandLevels = {autoExpandLevels}
-							onInspectPath = {onInspectPath}
-							onSetAutoExpandLevel = {onSetAutoExpandLevel}
+							autoExpandLevels={autoExpandLevels}
+							onInspectPath={onInspectPath}
+							onSetAutoExpandLevel={onSetAutoExpandLevel}
 							path={path}
 							allowInfinityLevels={true}
 						/>
@@ -53,7 +54,7 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 								<JSONTree
 									expandClicked={this.expandClicked}
 									labelRenderer={this.labelRenderer}
-									shouldExpandNode={shouldExpandNode(expandedKeys,autoExpandLevels, true)}
+									shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
 									data={content}
 									getItemString={this.getItemString} // shows object content shortcut
 									hideRoot={true}
@@ -66,11 +67,10 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
 					<div className="textareaWrap">
-						<span className="placeholder">{this.props.descriptorContent?.substr(0,2000) || ""}</span>
-						<textarea
-							maxLength={Number.MAX_SAFE_INTEGER}
+						<span className="placeholder">{this.props.descriptorContent?.substr(0, 2000) || ""}</span>
+						<SP.Textarea
 							className="rawCode"
-							defaultValue={this.props.descriptorContent}
+							value={this.props.descriptorContent}
 						/>
 					</div>
 				</TabPanel>

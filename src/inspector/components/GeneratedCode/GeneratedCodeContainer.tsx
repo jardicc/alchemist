@@ -83,13 +83,11 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 					<TabPanel id="generated" title="Generated" >
 						<div className="info code">
 							<div className="noShrink">
-								Generated code:
 								<div className="textareaWrap">
 									<span className="placeholder">{this.props.originalReference}</span>
-									<textarea
-										maxLength={Number.MAX_SAFE_INTEGER}
+									<SP.Textarea
 										className="infoBlock"
-										defaultValue={
+										value={
 											this.props.originalReference
 										}
 									/>

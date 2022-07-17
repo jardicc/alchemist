@@ -92,7 +92,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 							Events that never will be recorded. No matter what you will set in include/exclude filter. One per line, no quotes, no commas or semicolons. Will Not affect already recorded items.
 						</span>
 						<div>
-							<textarea className="neverRecordActionNamesArea" onChange={e=>onNeverRecordActionNamesChanged(e.currentTarget.value)} defaultValue={neverRecordActionNames.join("\n")} />
+							<SP.Textarea className="neverRecordActionNamesArea" onInput={(e:any)=>onNeverRecordActionNamesChanged(e.currentTarget.value)} value={neverRecordActionNames.join("\n")} />
 						</div>
 					</div>
 				</div>

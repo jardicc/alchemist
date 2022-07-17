@@ -17,7 +17,6 @@ import { TreeDomContainer } from "../TreeDom/TreeDomContainer";
 import { DispatcherContainer } from "../Dispatcher/DispatcherContainer";
 import { GeneratedCodeContainer } from "../GeneratedCode/GeneratedCodeContainer";
 import { SettingsContainer } from "../Settings/SettingsContainer";
-import { AMConverterContainer } from "../AMConverter/AMConverter";
 import { IconX} from "../../../shared/components/icons";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
 import {Pane} from "react-split-pane";
