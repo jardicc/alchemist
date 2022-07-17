@@ -14,6 +14,7 @@ import { getInitialState } from "../../store/initialState";
 import { str as crc } from "crc-32";
 import Sval from "sval";
 import { Dispatch } from "redux";
+import SP from "react-uxp-spectrum";
 
 class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 
@@ -97,7 +98,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 				<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
 				<div className="textareaWrap">
 					<span className="placeholder">{this.props.snippet}</span>
-					<textarea defaultValue={this.props.snippet} onChange={this.change} maxLength={Number.MAX_SAFE_INTEGER} placeholder={getInitialState().dispatcher.snippets[0].content} />
+					<SP.Textarea value={this.props.snippet} onInput={this.change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
 				</div>
 				<div className="button" onClick={this.send}>Send</div>
 			</div>
