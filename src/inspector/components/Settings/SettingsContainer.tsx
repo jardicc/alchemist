@@ -13,19 +13,6 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 	constructor(props: TSettings) {
 		super(props);
-
-		this.state = {
-			maxItemsTempValue: this.props.settings.maximumItems.toString(),
-			maxItemsFocus: false,
-		};
-	}
-
-	private setMaxItems = (value: string, focus = this.state.maxItemsFocus) => {
-		this.setState({
-			...this.state,
-			maxItemsTempValue: value,
-			maxItemsFocus: focus,
-		});
 	}
 	
 	public render(): React.ReactNode {
@@ -50,20 +37,10 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 				<div className="row">
 					<label>Max. descriptors:
-						<input
+						<SP.Textfield
 							type="number"
-							required={true}
-							minLength={1}
-							maxLength={5}
-							min={3}
-							max={99999}
-							value={this.state.maxItemsFocus ? this.state.maxItemsTempValue : maximumItems}
-							onChange={e => this.setMaxItems(e.currentTarget.value)}
-							onBlur={e => {
-								this.setMaxItems(maximumItems.toString(), false);
-								this.props.onSetMaximumItems(e.currentTarget.value);
-							}}
-							onFocus={() => this.setMaxItems(maximumItems.toString(), true)}
+							value={maximumItems.toString()}
+							onChange={(e:any) => this.props.onSetMaximumItems(e.currentTarget.value)}
 						/>
 					</label>
 				</div>

@@ -28,14 +28,14 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 			case "exclude": {
 				return (
 					<React.Fragment>
-						<div className="label">Exclude: </div><input onChange={this.setExclude} value={listenerExclude.join(";")} type="text" />
+						<div className="label">Exclude: </div><SP.Textfield onInput={this.setExclude as any} value={listenerExclude.join(";")} quiet />
 					</React.Fragment>
 				);
 			}
 			case "include": {
 				return (
 					<React.Fragment>
-						<div className="label">Include: </div><input onChange={this.setInclude} value={listenerInclude.join(";")} type="text" />
+						<div className="label">Include: </div><SP.Textfield onInput={this.setInclude as any} value={listenerInclude.join(";")} quiet />
 					</React.Fragment>
 				);
 			}

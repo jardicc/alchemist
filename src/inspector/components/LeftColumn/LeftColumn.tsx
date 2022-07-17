@@ -628,7 +628,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					<p>Also Alchemist might be unresponsive for several seconds once you click continue. <a href="https://github.com/jardicc/alchemist">Get development version here</a></p>					
 				</sp-body>
 				<footer>
-					<label className="dontShowLabel"><input onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSetDontShowMarketplaceInfo(e.currentTarget.checked)} type="checkbox" />{"Don't show again"}</label>
+					<label className="dontShowLabel"><SP.Checkbox onChange={(e: any) => onSetDontShowMarketplaceInfo(e.currentTarget.checked)} />{"Don't show again"}</label>
 					{/*<sp-button quiet={true} variant="secondary">Cancel</sp-button>*/}
 					<sp-button variant="cta" onClick={() => { this.marketplaceDialogRef.current.close("true"); }}>Continue</sp-button>
 				</footer>
