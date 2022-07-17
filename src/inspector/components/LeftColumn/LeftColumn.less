@@ -22,21 +22,18 @@
 	}
 	
 	.search {
-		background-color: var(--divider);
-		padding: 0.3em;
+		background-color: var(--sp-textfield-bg);
 		display: flex;
 		position: relative;
 		max-width: 100%;
 		flex-grow: 0;
 
-		input{
+		sp-textfield{
 			flex-grow: 1;
-			box-sizing: border-box;
 			margin: 0;
 			width: 0;
 			//width: 100%;
 			appearance: none;
-			background-color: var(--divider);
 			color: var(--text);
 
 			&:hover{
@@ -45,7 +42,7 @@
 		}
 
 		sp-checkbox{
-			padding:0;
+			padding:0 0.3em;
 			margin:0;
 			flex-grow: 0;
 			align-self: center;

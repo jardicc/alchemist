@@ -11,6 +11,7 @@
 	--hover: #1AD3B7;
 	--autoActive:yellow;
 	--divider: #383838;
+	--sp-textfield-bg:#323232;
 
 	--biggerText:1.15em;
 }
@@ -26,7 +27,8 @@
 		--active: #37E93B;
 		--hover: #1AD3B7;
 		--autoActive:yellow;
-		--divider: #212121
+		--divider: #212121;
+		--sp-textfield-bg:#1E1E1E;
 	}
 }
 
@@ -41,7 +43,8 @@
 		--active: #37E93B;
 		--hover: #1AD3B7;
 		--autoActive:yellow;
-		--divider: #383838
+		--divider: #383838;
+		--sp-textfield-bg:#323232;
 	}
 }
 
@@ -56,7 +59,8 @@
 		--active: #0076d6;
 		--hover: #ad50ff;
 		--autoActive:rgb(255, 136, 0);
-		--divider: #949494
+		--divider: #949494;
+		--sp-textfield-bg:#F5F5F5;
 	}
 }
 
@@ -72,6 +76,7 @@
 		--hover: #ad50ff;
 		--autoActive:rgb(255, 136, 0);;
 		--divider: #CCCCCC;
+		--sp-textfield-bg:#FFFFFF;
 	}
 }
 

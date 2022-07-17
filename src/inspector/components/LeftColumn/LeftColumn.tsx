@@ -560,8 +560,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		);
 	}
 
-	private onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.setSearchTerm(e.currentTarget.value);
+	private onSearch = (e: string) => {
+		this.props.setSearchTerm(e);
 	}
 
 	private onPlaySeparated = async () => {
@@ -647,10 +647,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 
 					<div className="search">
-						<input placeholder="Search..." onChange={this.onSearch} value={searchTerm || ""} type="text" />
+						<SP.Textfield placeholder="Search..." onInput={(e: any) => this.onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
 						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}>Group</SP.Checkbox>
 					</div>
-					<div className="descriptorsWrapper" onClick={()=>this.props.onSelect("none")}>
+					<div className="descriptorsWrapper" onClick={() => this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}
 					</div>
 
@@ -664,17 +664,17 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<div className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={this.rename}><IconPencil /></div>
 						<div className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
 						<div className={"lock buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
-							{selectedDescriptors.some(desc=>desc.locked) ? <IconLockUnlocked />:<IconLockLocked />}
+							{selectedDescriptors.some(desc => desc.locked) ? <IconLockUnlocked /> : <IconLockLocked />}
 						</div>
 						<div className={"pin buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onPin(!pinnedSelection, selectedDescriptorsUUIDs); }}>
-							{selectedDescriptors.some(desc=>desc.pinned) ? <IconPinLeft/>:<IconPinDown />}
+							{selectedDescriptors.some(desc => desc.pinned) ? <IconPinLeft /> : <IconPinDown />}
 						</div>
 						<div className={"remove buttonIcon " + ((selectedDescriptors?.length > 0) ? "" : "disallowed")} onClick={() => { onRemove(selectedDescriptorsUUIDs); }}><IconTrash /></div>
 					</div>
 					<div className="filterButtons">
 						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}><IconPlus /> Add</div>
-						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> :<IconMediaRecord />}Listener</div>
-						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> :<IconMediaRecord />}Inspector</div>
+						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>
+						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
 					</div>
 				</div>
 				{this.renderMarketplaceDialog()}
