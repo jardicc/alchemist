@@ -61,14 +61,14 @@ export class ErrorBoundary extends React.Component<any, IState> {
 				<div style={style}>
 					<h1>Something went wrong ¯\_(ツ)_/¯</h1>
 					<div>
-						<a style={whiteColor} href="#" onClick={(e) => { e.preventDefault(); location.reload(); }}>
+						<span style={whiteColor} onClick={(e) => { e.preventDefault(); location.reload(); }}>
 							<h2>Reload panel</h2>
-						</a>
+						</span>
 					</div>
 					<div>
-						<a style={whiteColor} href="#" onClick={(e) => { e.preventDefault(); Settings.reset(); }}>
+						<span style={whiteColor}  onClick={(e) => { e.preventDefault(); Settings.reset(); }}>
 							<h2>Reset panel state</h2>
-						</a>
+						</span>
 					</div>
 					<div style={stack}>{this.state.error?.stack}</div>
 				</div>
