@@ -49,7 +49,7 @@ export const getIndentString = createSelector([getInspectorSettings], settings =
 export const getActiveDescriptorCalculatedReference = createSelector([
 	getActiveDescriptors, getAutoActiveDescriptor, getContentPath,
 	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
-], (selected, autoActive, treePath, replayEnabled, descOptions, settings, indentString) => {
+], (selected, autoActive, treePath, replayEnabled, descOptions, settings, tab) => {
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
@@ -101,12 +101,25 @@ export const getActiveDescriptorCalculatedReference = createSelector([
 		return res;
 	}
 
+	// adds indentation
+	function idt(str:string):string {
+		return str.split("\n").map(l => tab + l).join("\n");
+	}
+
+	// replaces quotes
+	function qts(str:string):string {
+		if (settings.singleQuotes) {
+			str = str.replaceAll(`"`, `'`);
+		}
+		return str;
+	}
+
 	if (selected.length >= 1 || autoActive) {
 		let data:any = null, iDesc: IDescriptor[] = [];
 
 		const stringifyOptions = {
 			singleQuotes: settings.singleQuotes,
-			indent: indentString,
+			indent: tab,
 		};
 
 		if (selected.length >= 1) {
@@ -139,23 +152,29 @@ export const getActiveDescriptorCalculatedReference = createSelector([
 			const item = data[i];
 			RawDataConverter.convertFakeRawInCode(item,descOptions);
 		}
-		
-		let str = stringifyObject(data, stringifyOptions);
-		const commandOptions = addCommonOptions(iDesc);
-		
-		str =
-			"const batchPlay = require(\"photoshop\").action.batchPlay;\n" +
-				"\n" +
-				"const result =" + (commandOptions.synchronousExecution ? "" : " await") + " batchPlay(\n" +
-				str +
 
-				"," + stringifyObject(commandOptions, stringifyOptions) + ");\n";
-	
+		let strPinned = ""
+
 		if (treePath.length) {
 			// eslint-disable-next-line quotes
-			str = `${str}const pinned = result${makeNicePropertyPath(treePath)};`;
+			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
-		return str;
+		
+		const commandOptions = addCommonOptions(iDesc);
+
+		const strOptions = idt(stringifyObject(commandOptions, stringifyOptions));
+		const strDesc:string = idt(stringifyObject(data, stringifyOptions));
+
+		const strBatchPlayImport = qts(idt(`const {batchPlay} = require("photoshop").action;`));
+
+		const strBatchPlay = `const result = await batchPlay(\n${strDesc},\n${strOptions}\n);${strPinned}`
+		const strActionCommand = `async function actionCommands() {\n${strBatchPlayImport}\n\n${idt(strBatchPlay)}\n}\n\n`;
+
+		const strCall = qts(`async function runModalFunction() {\n${tab}await require("photoshop").core.executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);
+
+		const strResult = strActionCommand + strCall;
+
+		return strResult;
 	} else {
 		return "Add some descriptor";
 	}

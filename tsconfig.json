@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
 	  "allowSyntheticDefaultImports": true,
-	  "lib": ["DOM","ES2020"],
+	  "lib": ["DOM","ES2021"],
 	  "moduleResolution": "node",
 	  "strict": true,
 	  "strictNullChecks": true,
