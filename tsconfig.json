@@ -11,7 +11,7 @@
         "module": "esnext",
         "outDir": "./dist/",
         "sourceMap": true,
-	  "target": "ES2020",
+	  "target": "ES2021",
 	  "disableSizeLimit": false,
 	  "typeRoots": [
 		"./src/inspector/model",
