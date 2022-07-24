@@ -3,7 +3,7 @@ import { cloneDeep } from "lodash";
 import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
 import { DocumentExtra } from "./DocumentExtra";
 import { getName } from "./GetName";
-import { getInitialState } from "../store/initialState";
+import { getInitialState } from "../inspInitialState";
 import { RawDataConverter } from "./RawDataConverter";
 import { str as crc } from "crc-32";
 import { batchPlaySync } from "../../shared/helpers";

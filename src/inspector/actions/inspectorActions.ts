@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings, IDescriptorSettings, ISettings } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 
@@ -252,10 +252,6 @@ export interface IDontShowMarketplaceInfoAction{
 	payload:boolean
 }
 
-export interface ISetConverterInfoAction{
-	type: "SET_CONVERTER",
-	payload: Partial<IAMCoverter>
-}
 
 export interface ISetFontSizeAction{
 	type: "SET_FONT_SIZE",
@@ -302,13 +298,6 @@ export function setFontSizeAction(size: TFontSizeSettings):ISetFontSizeAction {
 	return {
 		type: "SET_FONT_SIZE",
 		payload: size,
-	};
-}
-
-export function setConverterInfoAction(info: Partial<IAMCoverter>): ISetConverterInfoAction{
-	return {
-		type: "SET_CONVERTER",
-		payload: info,
 	};
 }
 
@@ -667,7 +656,6 @@ export type TActions = ISetMainTab |
 	ISetAutoExpandLevelAction |
 	ISetMaximumItemsAction |
 	IDontShowMarketplaceInfoAction |
-	ISetConverterInfoAction |
 	ISetFontSizeAction |
 	ISetNeverRecordActionNamesAction |
 	IToggleDescriptorsGroupingAction |

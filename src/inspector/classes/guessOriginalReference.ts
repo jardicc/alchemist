@@ -1,7 +1,7 @@
 import { ITargetReference, TTargetReference, TAllReferenceSubtypes } from "../model/types";
 import { IPropertyReference, TReference } from "./GetInfo";
 import { Reference } from "./Reference";
-import { getInitialState } from "../store/initialState";
+import { getInitialState } from "../inspInitialState";
 
 export const guessOrinalReference = (refAM: TReference[]): ITargetReference => {
 	const r = new Reference(refAM);

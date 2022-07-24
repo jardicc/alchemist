@@ -10,7 +10,7 @@ import "./Dispatcher.less";
 import { Helpers } from "../../classes/Helpers";
 import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
 import { RawDataConverter } from "../../classes/RawDataConverter";
-import { getInitialState } from "../../store/initialState";
+import { getInitialState } from "../../inspInitialState";
 import { str as crc } from "crc-32";
 import Sval from "sval";
 import { Dispatch } from "redux";

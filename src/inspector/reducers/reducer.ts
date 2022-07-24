@@ -1,7 +1,7 @@
 
 
 import produce from "immer";
-import { getInitialState } from "../store/initialState";
+import { getInitialState } from "../inspInitialState";
 import { TActions } from "../actions/inspectorActions";
 import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType } from "../model/types";
 import { GetInfo } from "../classes/GetInfo";
@@ -435,7 +435,6 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			) {
 				action.payload.settings.autoUpdateListener = false;
 				action.payload.settings.autoUpdateInspector = false;
-				action.payload.amConvertor = cloneDeep(state.amConvertor);
 				state = action.payload;				
 			}
 			break;
@@ -551,15 +550,6 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 		case "DONT_SHOW_MARKETPLACE_INFO_ACTION": {
 			state = produce(state, draft => {
 				draft.settings.dontShowMarketplaceInfo = action.payload;
-			});
-			break;
-		}
-		case "SET_CONVERTER": {
-			state = produce(state, draft => {
-				draft.amConvertor = {
-					...state.amConvertor,
-					...action.payload,
-				};
 			});
 			break;
 		}

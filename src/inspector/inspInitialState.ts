@@ -1,7 +1,7 @@
 /* eslint-disable quotes */
-import { getAtnInitialState } from "../../atnDecoder/atnInitialState";
-import { IInspectorState } from "../model/types";
-import { getSorInitialState } from "../../sorcerer/sorInitialState";
+import { getAtnInitialState } from "../atnDecoder/atnInitialState";
+import { IInspectorState } from "./model/types";
+import { getSorInitialState } from "../sorcerer/sorInitialState";
 
 
 
@@ -37,10 +37,6 @@ export function getInitialState(): IInspectorState {
 			info: {
 				showOptionalDocumentReference: true,
 			},
-		},
-		amConvertor: {
-			isPresetFileInstalled: false,
-			snippet:"n/a",
 		},
 		descriptors: [
 		],

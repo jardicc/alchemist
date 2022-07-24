@@ -2,7 +2,7 @@ import produce from "immer";
 import { uniqBy } from "lodash";
 import { IInspectorState } from "../inspector/model/types";
 import { TAllActions } from "../inspector/reducers/reducer";
-import { getInitialState } from "../inspector/store/initialState";
+import { getInitialState } from "../inspector/inspInitialState";
 import { TExpandedItem, TSelectedItem } from "./atnModel";
 import { getSetByUUID } from "./atnSelectors";
 
