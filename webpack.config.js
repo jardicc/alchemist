@@ -103,20 +103,6 @@ module.exports = (env) => {
 				// OPTIONAL: defaults to "zip"
 				// the file extension to use instead of "zip"
 				extension: "ccx",
-			
-				// yazl Options		
-				// OPTIONAL: see https://github.com/thejoshwolfe/yazl#addfilerealpath-metadatapath-options
-				fileOptions: {
-					mtime: new Date(),
-					mode: 0o100664,
-					compress: true,
-					forceZip64Format: false,
-				},
-			
-				// OPTIONAL: see https://github.com/thejoshwolfe/yazl#endoptions-finalsizecallback
-				zipOptions: {
-					forceZip64Format: false,
-				},
 			})
 		)
 	}
