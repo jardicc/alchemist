@@ -93,6 +93,9 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			case "history":
 			case "snapshot":
 			case "action":
+			case "timeline":
+			case "animation":
+			case "animationFrame":
 				return;
 		}
 
@@ -243,8 +246,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const foundSettings: IPropertySettings | undefined = propertySettings.find(p => p.type === selectedTargetReference);
 		if (!foundSettings) { throw new Error("Properties not found"); }
 
+		const foundNotSpecified: boolean = !!foundSettings.list.find(p => p.stringID === "notSpecified");
 		const defaultList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "default").map(f => ({ label: f.title, value: f.stringID }));
 		const hiddenList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "hidden").map(f => ({ label: f.title, value: f.stringID }));
+		const firstPartyList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "1st").map(f => ({ label: f.title, value: f.stringID }));
 		const optionalList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "optional").map(f => ({ label: f.title, value: f.stringID }));
 
 		const mapFc = (item: IProperty<string>) => (
@@ -255,7 +260,23 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			>{item.label}</SP.MenuItem>
 		);
 
-		const hidden = hiddenList.length === 0 ? null : (
+		const notSpecified = foundNotSpecified && <SP.MenuItem
+			key={"notSpecified"}
+			value={"notSpecified"}
+			selected={activeReferenceProperty.value === "notSpecified" ? true : undefined}
+		>(not specified)</SP.MenuItem>;
+
+		const firstP = !!firstPartyList.length && (
+			<>
+				<SP.Divider />
+				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
+					<span slot="header">1st Party Only</span>
+					{firstPartyList.map(mapFc)}
+				</sp-menu-group>
+			</>
+		);
+		
+		const hidden = !!hiddenList.length && (
 			<>
 				<SP.Divider />
 				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
@@ -265,7 +286,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			</>
 		);
 
-		const optional = optionalList.length === 0 ? null : (
+		const optional = !!optionalList.length && (
 			<>
 				<SP.Divider />
 				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
@@ -274,7 +295,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				</sp-menu-group>
 			</>
 		);
-		const defaultEl = defaultList.length === 0 ? null : (
+		const defaultEl = !!defaultList.length && (
 			<>
 				<SP.Divider />
 				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
@@ -290,18 +311,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				<div className="dropdownWrap">
 					<SP.Dropdown quiet={true}>
 						<SP.Menu slot="options" onChange={(e)=>this.onSetSubType("property",e)}>
-							{
-								baseItemsProperty.map(item => (
-									<SP.MenuItem
-										key={item.value}
-										value={item.value}
-										selected={activeReferenceProperty.value === item.value ? true : undefined}
-									>{item.label}</SP.MenuItem>
-								))
-							}
+							{notSpecified}
 							{defaultEl}
 							{optional}
 							{hidden}
+							{firstP}
 						</SP.Menu>
 					</SP.Dropdown>
 					<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
@@ -360,28 +374,28 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 	private buildFilterRow = (
 		label: string,
-		subType: TSubTypes|"main",
+		subType: TSubTypes | "main",
 		items: TBaseItems,
-		content: {value:string|null|number,filterBy:TState},
+		content: { value: string | null | number, filterBy: TState },
 	): React.ReactNode => {
 		return (
 			<div className="filter">
 				<div className="label">{label}</div>
 				<div className="dropdownWrap">
-					<sp-dropdown size={SP.SpectrumComponetDefaults.defaultSize} quiet={true} onMouseDown={()=>this.dropdownClick(subType)}>
-						<SP.Menu slot="options" onChange={(e)=>this.onSetSubType(subType,e)}>
+					<sp-dropdown size={SP.SpectrumComponetDefaults.defaultSize} quiet={true} onMouseDown={() => this.dropdownClick(subType)}>
+						<SP.Menu slot="options" onChange={(e) => this.onSetSubType(subType, e)}>
 							{
 								items.map(item => (
 									<SP.MenuItem
 										key={item.value}
 										value={item.value}
-										selected={content.value === item.value ? true: undefined}
+										selected={content.value === item.value ? true : undefined}
 									>{item.label}</SP.MenuItem>
 								))
 							}
 						</SP.Menu>
 					</sp-dropdown>
-					<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
+					<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype, state) => this.props.onSetFilter(this.props.selectedTargetReference, subtype, state)} />
 				</div>
 			</div>
 		);
@@ -530,7 +544,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 	private renderFilters = (): React.ReactNode => {
 		return (
-			<React.Fragment>
+			<>
 				{this.renderMainClass()}
 				{this.renderListenerFilter()}
 				{this.renderDocument()}
@@ -545,7 +559,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				{this.renderActionItem()}
 				{this.renderCommand()}
 				{this.renderProperty()}
-			</React.Fragment>
+			</>
 		);
 	}
 
@@ -714,7 +728,7 @@ export interface ILeftColumnProps{
 	pinnedSelection: boolean
 	removableSelection: boolean
 	replayEnabled: boolean
-	renameEnabled:boolean
+	renameEnabled: boolean
 	allDescriptors: IDescriptor[]
 
 	activeTargetReferenceForAM: ITargetReference | null;

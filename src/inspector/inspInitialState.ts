@@ -7,7 +7,7 @@ import { getSorInitialState } from "../sorcerer/sorInitialState";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [10, 0, 0],
+		version: [11, 0, 0],
 		activeSection: "descriptors",
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
@@ -221,6 +221,33 @@ export function getInitialState(): IInspectorState {
 				type: "generator",
 				data: [],
 			},
+			{
+				type: "timeline",
+				data: [
+					{
+						subType: "property",
+						content: { value: "", filterBy: "off" },
+					},
+				],
+			},
+			{
+				type: "animationFrame",
+				data: [
+					{
+						subType: "property",
+						content: { value: "", filterBy: "off" },
+					},
+				],
+			},
+			{
+				type: "animation",
+				data: [
+					{
+						subType: "property",
+						content: { value: "", filterBy: "off" },
+					},
+				],
+			},
 		],
 		settings: {
 			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
@@ -249,6 +276,8 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "application",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
+						{ title: "$PnCK - paintCursorKind", stringID: "$PnCK", type: "default" },
 						{ title: "active", stringID: "active", type: "default" },
 						{ title: "autoShowHomeScreen", stringID: "autoShowHomeScreen", type: "default" },
 						{ title: "available", stringID: "available", type: "default" },
@@ -261,12 +290,10 @@ export function getInitialState(): IInspectorState {
 						{ title: "colorSettings", stringID: "colorSettings", type: "default" },
 						{ title: "controlColor", stringID: "controlColor", type: "default" },
 						{ title: "currentToolOptions", stringID: "currentToolOptions", type: "default" },
-						{ title: "customPreference", stringID: "customPreference", type: "default" },
 						{ title: "defaultAppScript", stringID: "defaultAppScript", type: "default" },
 						{ title: "displayPrefs", stringID: "displayPrefs", type: "default" },
 						{ title: "documentArea", stringID: "documentArea", type: "default" },
 						{ title: "exactPoints", stringID: "exactPoints", type: "default" },
-						{ title: "executablePath", stringID: "executablePath", type: "default" },
 						{ title: "experimentalFeatures", stringID: "experimentalFeatures", type: "default" },
 						{ title: "exportAssetsPrefs", stringID: "exportAssetsPrefs", type: "default" },
 						{ title: "eyeDropperSample", stringID: "eyeDropperSample", type: "default" },
@@ -278,8 +305,6 @@ export function getInitialState(): IInspectorState {
 						{ title: "fontSmallSize", stringID: "fontSmallSize", type: "default" },
 						{ title: "foregroundColor", stringID: "foregroundColor", type: "default" },
 						{ title: "generalPreferences", stringID: "generalPreferences", type: "default" },
-						{ title: "generalPrefs", stringID: "generalPrefs", type: "default" },
-						{ title: "generatorStatus", stringID: "generatorStatus", type: "default" },
 						{ title: "globalAngle", stringID: "globalAngle", type: "default" },
 						{ title: "gradientClassEvent", stringID: "gradientClassEvent", type: "default" },
 						{ title: "gridMajor", stringID: "gridMajor", type: "default" },
@@ -289,7 +314,6 @@ export function getInitialState(): IInspectorState {
 						{ title: "highlightColorOption", stringID: "highlightColorOption", type: "default" },
 						{ title: "historyLogPreferences", stringID: "historyLogPreferences", type: "default" },
 						{ title: "historyPreferences", stringID: "historyPreferences", type: "default" },
-						{ title: "historyPrefs", stringID: "historyPrefs", type: "default" },
 						{ title: "homeScreenReady", stringID: "homeScreenReady", type: "default" },
 						{ title: "homeScreenVisibility", stringID: "homeScreenVisibility", type: "default" },
 						{ title: "hostName", stringID: "hostName", type: "default" },
@@ -322,7 +346,6 @@ export function getInitialState(): IInspectorState {
 						{ title: "interfaceWhite", stringID: "interfaceWhite", type: "default" },
 						{ title: "interpolationMethod", stringID: "interpolationMethod", type: "default" },
 						{ title: "keyboardFocus", stringID: "keyboardFocus", type: "default" },
-						{ title: "keyPaintCursorKind", stringID: "keyPaintCursorKind", type: "default" },
 						{ title: "kuiBrightnessLevel", stringID: "kuiBrightnessLevel", type: "default" },
 						{ title: "layerThumbnailSize", stringID: "layerThumbnailSize", type: "default" },
 						{ title: "layerVisibilityChangesAreUndoable", stringID: "layerVisibilityChangesAreUndoable", type: "default" },
@@ -340,22 +363,18 @@ export function getInitialState(): IInspectorState {
 						{ title: "osVersion", stringID: "osVersion", type: "default" },
 						{ title: "panelList", stringID: "panelList", type: "default" },
 						{ title: "panelUILockIsEnabled", stringID: "panelUILockIsEnabled", type: "default" },
-						{ title: "path", stringID: "path", type: "default" },
 						{ title: "pluginPicker", stringID: "pluginPicker", type: "default" },
 						{ title: "pluginPrefs", stringID: "pluginPrefs", type: "default" },
 						{ title: "PnCK", stringID: "PnCK", type: "default" },
 						{ title: "preferencesFolder", stringID: "preferencesFolder", type: "default" },
 						{ title: "presetManager", stringID: "presetManager", type: "default" },
-						{ title: "quickTimeInstalled", stringID: "quickTimeInstalled", type: "default" },
 						{ title: "recentFiles", stringID: "recentFiles", type: "default" },
 						{ title: "recentFilesAsStrings", stringID: "recentFilesAsStrings", type: "default" },
 						{ title: "regionCode", stringID: "regionCode", type: "default" },
 						{ title: "rulerUnits", stringID: "rulerUnits", type: "default" },
 						{ title: "scratchDiskPreferences", stringID: "scratchDiskPreferences", type: "default" },
-						{ title: "serialString", stringID: "serialString", type: "default" },
 						{ title: "showToolTips", stringID: "showToolTips", type: "default" },
 						{ title: "size", stringID: "size", type: "default" },
-						{ title: "systemInfo", stringID: "systemInfo", type: "default" },
 						{ title: "tileSize", stringID: "tileSize", type: "default" },
 						{ title: "tool", stringID: "tool", type: "default" },
 						{ title: "toolsPreferences", stringID: "toolsPreferences", type: "default" },
@@ -374,29 +393,41 @@ export function getInitialState(): IInspectorState {
 						{ title: "workspaceList", stringID: "workspaceList", type: "default" },
 						{ title: "workspacePreferences", stringID: "workspacePreferences", type: "default" },
 						{ title: "z3DPrefs", stringID: "z3DPrefs", type: "default" },
+						
 						// hidden
-						{ title: "addCopyToLayerNames", stringID: "addCopyToLayerNames", type: "default" },
-						{ title: "brush", stringID: "brush", type: "default" },
-						{ title: "canvasBackgroundColors", stringID: "canvasBackgroundColors", type: "default" },
-						{ title: "colorProfileList", stringID: "colorProfileList", type: "default" },
-						{ title: "cursorCrosshair", stringID: "cursorCrosshair", type: "default" },
-						{ title: "cursorShape", stringID: "cursorShape", type: "default" },
-						{ title: "designSpaceLibrariesInfo", stringID: "designSpaceLibrariesInfo", type: "default" },
-						{ title: "FileFormats", stringID: "FileFormats", type: "default" },
-						{ title: "httpsCommandGet", stringID: "httpsCommandGet", type: "default" },
-						{ title: "menuBarInfo", stringID: "menuBarInfo", type: "default" },
-						{ title: "newDocPresetJSON", stringID: "newDocPresetJSON", type: "default" },
-						{ title: "newDocPresetMRUlist", stringID: "newDocPresetMRUlist", type: "default" },
-						{ title: "overscrollMode", stringID: "overscrollMode", type: "default" },
-						{ title: "pixelScaleFactorList", stringID: "pixelScaleFactorList", type: "default" },
-						{ title: "recentFileEntries", stringID: "recentFileEntries", type: "default" },
-						{ title: "recentlyUsedCCLibrariesTemplateElements", stringID: "recentlyUsedCCLibrariesTemplateElements", type: "default" },
+						{ title: "brush", stringID: "brush", type: "hidden" },
+						{ title: "canvasBackgroundColors", stringID: "canvasBackgroundColors", type: "hidden" },
+						{ title: "colorProfileList", stringID: "colorProfileList", type: "hidden" },
+						{ title: "cursorCrosshair", stringID: "cursorCrosshair", type: "hidden" },
+						{ title: "cursorShape", stringID: "cursorShape", type: "hidden" },
+						{ title: "FileFormats", stringID: "FileFormats", type: "hidden" },
+						{ title: "httpsCommandGet", stringID: "httpsCommandGet", type: "hidden" },
+						{ title: "LoadedPluginsNames", stringID: "LoadedPluginsNames", type: "hidden" },
+						{ title: "menuBarInfo", stringID: "menuBarInfo", type: "hidden" },
+						{ title: "newDocPresetJSON", stringID: "newDocPresetJSON", type: "hidden" },
+						{ title: "newDocPresetMRUlist", stringID: "newDocPresetMRUlist", type: "hidden" },
+						{ title: "overscrollMode", stringID: "overscrollMode", type: "hidden" },
+						{ title: "pixelScaleFactorList", stringID: "pixelScaleFactorList", type: "hidden" },
+						{ title: "recentFileEntries", stringID: "recentFileEntries", type: "hidden" },
+						{ title: "recentlyUsedCCLibrariesTemplateElements", stringID: "recentlyUsedCCLibrariesTemplateElements", type: "hidden" },
+						{ title: "springLoadedTools", stringID: "springLoadedTools", type: "hidden" },
+						{ title: "springLoadedToolsTimingSensitivity", stringID: "springLoadedToolsTimingSensitivity", type: "hidden" },
 
+						// first party
+						{ title: "customPreference", stringID: "customPreference", type: "1st" },
+						{ title: "executablePath", stringID: "executablePath", type: "1st" },
+						{ title: "generatorStatus", stringID: "generatorStatus", type: "1st" },
+						{ title: "path", stringID: "path", type: "1st" },
+						{ title: "quickTimeInstalled", stringID: "quickTimeInstalled", type: "1st" },
+						{ title: "serialString", stringID: "serialString", type: "1st" },
+						{ title: "systemInfo", stringID: "systemInfo", type: "1st" },
+						{ title: "designSpaceLibrariesInfo", stringID: "designSpaceLibrariesInfo", type: "1st" },
 					],
 				},
 				{
 					type: "history",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "ID", stringID: "ID", type: "default" },
 						{ title: "auto", stringID: "auto", type: "default" },
 						{ title: "count", stringID: "count", type: "default" },
@@ -409,6 +440,7 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "snapshot",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "ID", stringID: "ID", type: "default" },
 						{ title: "auto", stringID: "auto", type: "default" },
 						{ title: "count", stringID: "count", type: "default" },
@@ -421,6 +453,7 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "layer",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "background", stringID: "background", type: "default" },
 						{ title: "bounds", stringID: "bounds", type: "default" },
 						{ title: "boundsNoEffects", stringID: "boundsNoEffects", type: "default" },
@@ -455,8 +488,6 @@ export function getInitialState(): IInspectorState {
 						{ title: "keyOriginType", stringID: "keyOriginType", type: "optional" },
 						{ title: "layer3D", stringID: "layer3D", type: "optional" },
 						{ title: "layerEffects", stringID: "layerEffects", type: "optional" },
-						{ title: "layerGroup", stringID: "layerGroup", type: "optional" },
-						{ title: "layerGroupExpanded", stringID: "layerGroupExpanded", type: "optional" },
 						{ title: "layerSectionExpanded", stringID: "layerSectionExpanded", type: "optional" },
 						{ title: "layerTransformation", stringID: "layerTransformation", type: "optional" },
 						{ title: "linkedLayerIDs", stringID: "linkedLayerIDs", type: "optional" },
@@ -498,6 +529,7 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "path",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "AGMStrokeStyleInfo", stringID: "AGMStrokeStyleInfo", type: "default" },
 						{ title: "count", stringID: "count", type: "default" },
 						{ title: "flatness", stringID: "flatness", type: "default" },
@@ -513,6 +545,7 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "channel",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "ID", stringID: "ID", type: "default" },
 						{ title: "alphaChannelOptions", stringID: "alphaChannelOptions", type: "default" },
 						{ title: "channelName", stringID: "channelName", type: "default" },
@@ -525,6 +558,7 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "document",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "bigNudgeH", stringID: "bigNudgeH", type: "default" },
 						{ title: "bigNudgeV", stringID: "bigNudgeV", type: "default" },
 						{ title: "center", stringID: "center", type: "default" },
@@ -606,6 +640,7 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "guide",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "ID", stringID: "ID", type: "default" },
 						{ title: "count", stringID: "count", type: "default" },
 						{ title: "itemIndex", stringID: "itemIndex", type: "default" },
@@ -618,6 +653,7 @@ export function getInitialState(): IInspectorState {
 				{
 					type: "action",
 					list: [
+						{ title: "(not specified)", stringID: "notSpecified"},
 						{ title: "ID", stringID: "ID", type: "default" },
 						{ title: "count", stringID: "count", type: "default" },
 						{ title: "itemIndex", stringID: "itemIndex", type: "default" },
@@ -627,6 +663,37 @@ export function getInitialState(): IInspectorState {
 						{ title: "parentName", stringID: "parentName", type: "default" },
 					],
 				},
+				{
+					type: "timeline",
+					list: [
+						{ title: "enabled", stringID: "enabled", type: "default" },
+						{ title: "hasMotion", stringID: "hasMotion", type: "default" },
+						{ title: "time", stringID: "time", type: "default" },
+						{ title: "currentFrame", stringID: "currentFrame", type: "default" },
+						{ title: "duration", stringID: "duration", type: "default" },
+						{ title: "frameCount", stringID: "frameCount", type: "default" },
+						{ title: "frameRate", stringID: "frameRate", type: "default" },
+						{ title: "documentTimelineSettings", stringID: "documentTimelineSettings", type: "default" },
+						{ title: "workInTime", stringID: "workInTime", type: "default" },
+						{ title: "workOutTime", stringID: "workOutTime", type: "default" },
+					]
+				},
+				{
+					type: "animationFrame",
+					list: [
+						{ title: "animationFrameDelay", stringID: "animationFrameDelay", type: "default" },
+						{ title: "animationFrameReplace", stringID: "animationFrameReplace", type: "default" },
+					]
+				},
+				{
+					type: "animation",
+					list: [
+						{ title: "enabled", stringID: "enabled", type: "default" },
+						{ title: "currentFrame", stringID: "currentFrame", type: "default" },
+						{ title: "frameCount", stringID: "frameCount", type: "default" },
+						{ title: "animationLoopCount", stringID: "animationLoopCount", type: "default" },
+					]
+				}
 			],
 			maximumItems: 150,
 			leftColumnWidthPx: 300,

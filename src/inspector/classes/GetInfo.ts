@@ -145,6 +145,30 @@ export class GetInfo {
 				});
 				break;
 			}
+			case "timeline": {
+				rootT.push({
+					"_ref": "timeline",
+					"_enum": "ordinal",
+					"_value": "targetEnum",
+				});
+				break;
+			}
+			case "animationFrame": {
+				rootT.push({
+					"_ref": "animationFrameClass",
+					"_enum": "ordinal",
+					"_value": "targetEnum",
+				});
+				break;
+			}
+			case "animation": {
+				rootT.push({
+					"_ref": "animationClass",
+					"_enum": "ordinal",
+					"_value": "targetEnum",
+				});
+				break;
+			}
 			case "channel": {
 				const activeID = await this.getActiveChannelID();
 				if (activeID === null) { return null; }

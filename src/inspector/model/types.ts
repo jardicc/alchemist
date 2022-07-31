@@ -10,8 +10,8 @@ export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "s
 
 export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" | "layer" | "path" | "property" | "snapshot"|"listenerCategory";
 export type TTargetReference = "listener"|"customDescriptor" | "featureData" | "generator" | "overkill" | TPropertyClass;
-export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" | "action";
-export type TPropertyType = "hidden" | "optional" | "default";
+export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" | "action" | "timeline" | "animationFrame"| "animation"
+export type TPropertyType = "hidden" | "optional" | "default" | "1st";
 export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"
 export type TActiveInspectorTab = ITreeDataTabs;
 
@@ -30,7 +30,7 @@ export type TImportItems = "append" | "replace";
 
 export type TPath = (string)[];
 export type TCustomDescriptorReference = "notSpecified" | "anySpecified";
-export type TBaseProperty = "notSpecified" | "anySpecified";
+export type TBaseProperty = "notSpecified" | "anySpecified" | "";
 export type TCategoryReference = "notSpecified" | "anySpecified";
 export type THistoryReference = "active" | string;
 export type TSnapshotReference = "active" | string;
@@ -45,6 +45,11 @@ export type TGuideReference = "" | string;
 export type TActionSet = "" | string;
 export type TActionItem = "" | string;
 export type TActionCommand = "" | string;
+
+export type TTimeline = "" | string;
+export type TActionFrame = "" | string;
+export type TAnimation = "" | string;
+
 export type TFilterEvents = "none" | "include" | "exclude";
 
 export type TSelectDescriptorOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
@@ -151,10 +156,30 @@ export interface IListenerCategory{
 	subType:"listenerCategory"
 	content: IContentWrapper<TListenerCategoryReference>
 }
+export interface ITimeline{
+	subType: "timeline"
+	content: IContentWrapper<TTimeline>
+}
+export interface IActionFrame{
+	subType: "animationFrame"
+	content: IContentWrapper<TActionFrame>
+}
+export interface IAnimation{
+	subType: "animationClass"
+	content: IContentWrapper<TAnimation>
+}
 
-export type TFilterContent = IContentWrapper<TCategoryReference> | IContentWrapper<TBaseProperty> | IContentWrapper<TCustomDescriptorReference> | IContentWrapper<THistoryReference> | IContentWrapper<TSnapshotReference> | IContentWrapper<TLayerReference> | IContentWrapper<TPathReference> | IContentWrapper<TChannelReference> | IContentWrapper<TDocumentReference> | IContentWrapper<TGuideReference> | IContentWrapper<TActionSet> | IContentWrapper<TActionItem> | IContentWrapper<TActionCommand> | IContentWrapper<TGeneratorReference>;
+export type TFilterContent =
+	IContentWrapper<TCategoryReference> | IContentWrapper<TBaseProperty> |
+	IContentWrapper<TCustomDescriptorReference> | IContentWrapper<THistoryReference> |
+	IContentWrapper<TSnapshotReference> | IContentWrapper<TLayerReference> | 
+	IContentWrapper<TPathReference> | IContentWrapper<TChannelReference> | 
+	IContentWrapper<TDocumentReference> | IContentWrapper<TGuideReference> | 
+	IContentWrapper<TActionSet> | IContentWrapper<TActionItem> | IContentWrapper<TActionCommand> |
+	IContentWrapper<TGeneratorReference>|IContentWrapper<TTimeline>
 
-export type TAllReferenceSubtypes = ICategory|IProperty | ICustomDescriptor | IHistory | ISnapshot | ILayer | IPath | IChannel | IDocument | IGuide | IActionSet | IActionItem | IActionCommand|IGenerator|IListenerCategory
+export type TAllReferenceSubtypes = ICategory | IProperty | ICustomDescriptor | IHistory | ISnapshot | ILayer | IPath | IChannel | IDocument |
+	IGuide | IActionSet | IActionItem | IActionCommand | IGenerator | IListenerCategory | ITimeline | IActionFrame | IAnimation
 
 /////
 
@@ -202,7 +227,7 @@ export interface IPropertySettings {
 export interface IPropertyItem {
 	title: string
 	stringID: string
-	type: TPropertyType
+	type?: TPropertyType
 }
 
 export interface IInspector{

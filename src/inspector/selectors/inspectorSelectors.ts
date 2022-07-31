@@ -23,6 +23,7 @@ export const getPinnedSelection = createSelector([getSelectedDescriptors], s => 
 export const getRemovableSelection = createSelector([getLockedSelection], s => !s);
 
 export const getActiveTargetReference = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
+	debugger
 	const result = targets?.find(item => item.type === selected);
 	return (result || null);
 });
@@ -52,25 +53,6 @@ export const getActiveTargetReferenceForAM = createSelector([getTargetReference,
 		data: result.data.filter(ref => ref.content.value !== ""),
 	};
 	return (newRes || null);
-});
-
-export const getAddAllowed = createSelector([getActiveTargetReference], s => { 
-	if (s) {
-		if (s.type === "generator") {
-			return true;
-		}
-		if (s.type === "listener") {
-			return false;
-		}
-		for (const key in s.data) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			if ((s.data as any)[key] === "undefined") {
-				return false;
-			}
-		}
-		return true;
-	}
-	return false;
 });
 
 export const getDescriptorsListView = createSelector([getAllDescriptors, getActiveTargetReference, getFilterBySelectedReferenceType,getInspectorSettings], (allDesc, activeRefFilter, rootFilter,settings) => {	
@@ -281,6 +263,28 @@ export const getRanameEnabled = createSelector([getDescriptorsListView], (all) =
 		return false;
 	}
 	return (!selected[0].groupCount || selected[0].groupCount === 1);
+});
+
+export const getAddAllowed = createSelector([getActiveTargetReference, getActiveReferenceProperty], (s, property) => { 
+	if (property?.value === "") {
+		return false;
+	}
+	if (s) {
+		if (s.type === "generator") {
+			return true;
+		}
+		if (s.type === "listener") {
+			return false;
+		}
+		for (const key in s.data) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			if ((s.data as any)[key] === "undefined") {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
 });
 
 /*export const getColumnSizesPercentage = createSelector([getInspectorSettings], (s) => {
