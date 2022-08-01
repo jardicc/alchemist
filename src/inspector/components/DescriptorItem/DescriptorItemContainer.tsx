@@ -78,9 +78,9 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		return (
 			<div className={"editMode " + this.generateClassName()} onClick={this.select}>
 				<sp-textfield
-					className="renameInput"
+					class="renameInput"
 					onInput={this.onNameChange}
-					defaultValue={descriptor.title}
+					value={descriptor.title}
 					type="text"
 					onKeyDown={this.onKeyPress}
 					size={SP.SpectrumComponetDefaults.defaultSize}
