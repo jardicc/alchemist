@@ -22,7 +22,7 @@ module.exports = {
 		"@typescript-eslint",
 	],
 	"rules": {
-		"no-empty-interface": false,
+		"no-empty-interface": 0,
 		"no-unreachable-loop": [
 			"error",	
 		],
