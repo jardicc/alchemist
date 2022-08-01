@@ -67,7 +67,6 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
 					<div className="textareaWrap">
-						<span className="placeholder">{this.props.descriptorContent?.substr(0, 2000) || ""}</span>
 						<SP.Textarea
 							className="rawCode"
 							value={this.props.descriptorContent}

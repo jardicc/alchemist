@@ -27,49 +27,6 @@ code{
 	background-color: var(--divider);
 }
 
-
-// this exists as workaround for Photoshop bug
-body.menuExpanded {
-
-	.tabContent * {
-		overflow: hidden !important;
-	}
-
-	textarea{
-		display: none !important;
-	}
-
-	.textareaWrap .placeholder{
-		color:var(--text);
-		background: var(--bgInput);
-		display: flex;
-		flex-direction: column;
-		flex-grow: 1;
-		flex-shrink: 1;
-		font-family: Tahoma, sans-serif;
-		padding:0.3em;
-		border-radius: 4px;
-		overflow: hidden;
-		position: absolute;
-		top:0;
-		left:0;
-		right:0;
-		bottom: 0;
-	}
-}
-
-// this exists as workaround for Photoshop bug
-body.menuExpanded .textareaWrap{
-	border:1px solid var(--borderInput);
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	flex-shrink: 0;
-	border-radius: 4px;
-	overflow: hidden;
-	position: relative;
-}
-
 .textareaWrap .placeholder{
 	display: none;;
 }

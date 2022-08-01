@@ -84,7 +84,6 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 						<div className="info code">
 							<div className="noShrink">
 								<div className="textareaWrap">
-									<span className="placeholder">{this.props.originalReference}</span>
 									<SP.Textarea
 										className="infoBlock"
 										value={

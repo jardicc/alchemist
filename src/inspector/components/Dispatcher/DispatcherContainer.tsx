@@ -97,7 +97,6 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 			<div className="Dispatcher">				
 				<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
 				<div className="textareaWrap">
-					<span className="placeholder">{this.props.snippet}</span>
 					<SP.Textarea value={this.props.snippet} onInput={this.change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
 				</div>
 				<div className="button" onClick={this.send}>Send</div>

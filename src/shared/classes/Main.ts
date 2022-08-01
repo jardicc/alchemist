@@ -4,6 +4,7 @@ import { Settings } from "../../inspector/classes/Settings";
 import photoshop, {core} from "photoshop";
 import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
 import { renderSorcererUI } from "../../sorcerer/components/sorcererIndex";
+import { FlyoutMenu } from "../../inspector/classes/Flyoutmenu";
 
 export class Main{
 
@@ -16,6 +17,7 @@ export class Main{
 		renderInspectorUI();
 		renderATNDecoderUI();
 		renderSorcererUI();
+		FlyoutMenu.setup();
 	}
 }
 

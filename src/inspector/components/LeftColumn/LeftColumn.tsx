@@ -21,10 +21,12 @@ import SP from "react-uxp-spectrum";
 import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction } from "../../actions/inspectorActions";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType, getRanameEnabled } from "../../selectors/inspectorSelectors";
+import { setTargetReferenceAction, addDescriptorAction, setSelectedReferenceTypeAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setFilterStateAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction, clearViewAction, importItemsAction } from "../../actions/inspectorActions";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getPropertySettings, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getFilterBySelectedReferenceType, getRanameEnabled, getAllDescriptors } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import { ButtonMenu } from "../ButtonMenu/ButtonMenu";
+import { filterNonExistent } from "../../classes/filterNonExistent";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
@@ -246,7 +248,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const foundSettings: IPropertySettings | undefined = propertySettings.find(p => p.type === selectedTargetReference);
 		if (!foundSettings) { throw new Error("Properties not found"); }
 
-		const foundNotSpecified: boolean = !!foundSettings.list.find(p => p.stringID === "notSpecified");
+		const foundNotSpecified = !!foundSettings.list.find(p => p.stringID === "notSpecified");
 		const defaultList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "default").map(f => ({ label: f.title, value: f.stringID }));
 		const hiddenList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "hidden").map(f => ({ label: f.title, value: f.stringID }));
 		const firstPartyList: IProperty<string>[] = foundSettings.list.filter(p => p.type === "1st").map(f => ({ label: f.title, value: f.stringID }));
@@ -564,10 +566,10 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	private renderDescriptorsList = (): React.ReactNode => {
-		const { allDescriptors } = this.props;
+		const { allInViewDescriptors } = this.props;
 		return (
-			allDescriptors.map((d, index) => (
-				<div className="DescriptorItem" key={index} ref={index===allDescriptors.length-1 ? this.lastDescRef as any : null}>
+			allInViewDescriptors.map((d, index) => (
+				<div className="DescriptorItem" key={index} ref={index===allInViewDescriptors.length-1 ? this.lastDescRef as any : null}>
 					<DescriptorItemContainer descriptor={d} key={d.id}  />
 				</div>
 			))
@@ -651,7 +653,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	public render(): JSX.Element {
-		const { addAllowed,replayEnabled,onLock, onPin, onRemove,selectedDescriptorsUUIDs,  selectedDescriptors,lockedSelection, pinnedSelection, renameEnabled,settings:{autoUpdateListener,autoUpdateInspector,searchTerm,groupDescriptors} } = this.props;
+		const { addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
+			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
+			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors },
+			onClear, onClearView, onClearNonExistent, allDescriptors,
+		} = this.props;
 		return (
 			<div className="LeftColumn">
 				<div className="oneMore">
@@ -669,6 +675,21 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					</div>
 
 					<div className="descriptorButtons">
+						<ButtonMenu
+							key="clear"
+							className="abc"
+							placementVertical="top"
+							placementHorizontal="right"
+							items={
+								<div className="column">
+									<div className="button" onMouseDown={() => { onClear(); }}>All</div>
+									<div className="button" onMouseDown={() => { onClearView(false); }}>In view</div>
+									<div className="button" onMouseDown={() => { onClearView(true); }}>Not in view</div>
+									<div className="button" onMouseDown={() => { onClearNonExistent(filterNonExistent(allDescriptors)); }}>Non-existent</div>
+								</div>
+							}>
+							<div className="button">Clear...</div>
+						</ButtonMenu>
 						<div className="spread"></div>
 
 						{/*
@@ -729,7 +750,7 @@ export interface ILeftColumnProps{
 	removableSelection: boolean
 	replayEnabled: boolean
 	renameEnabled: boolean
-	allDescriptors: IDescriptor[]
+	allInViewDescriptors: IDescriptor[]
 
 	activeTargetReferenceForAM: ITargetReference | null;
 	activeTargetReference: ITargetReference | null;
@@ -748,6 +769,7 @@ export interface ILeftColumnProps{
 	activeReferenceActionItem:IContentWrapper<TActionItem>
 	activeReferenceCommand: IContentWrapper<TActionCommand>
 	activeReferenceProperty: IContentWrapper<TBaseProperty>
+	allDescriptors:IDescriptor[]
 
 	settings:ISettings	
 	hasAutoActiveDescriptor:boolean
@@ -762,7 +784,8 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
 	lockedSelection: getLockedSelection(state),
 	pinnedSelection: getPinnedSelection(state),
 	removableSelection: getRemovableSelection(state),
-	allDescriptors: getDescriptorsListView(state),
+	allInViewDescriptors: getDescriptorsListView(state),
+	allDescriptors: getAllDescriptors(state),
 	selectedTargetReference: getSelectedTargetReference(state),
 	activeTargetReference: getActiveTargetReference(state),
 	activeTargetReferenceDocument: getActiveTargetDocument(state) as IContentWrapper<TDocumentReference>,
@@ -806,7 +829,10 @@ interface ILeftColumnDispatch {
 	setRenameMode: (uuid: string, on: boolean) => void
 	
 	onSetDontShowMarketplaceInfo: (enabled: boolean) => void
-	toggleDescGrouping:()=>void
+	toggleDescGrouping: () => void
+	
+	onClearView: (keep: boolean) => void
+	onClearNonExistent:(items: IDescriptor[])=>void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record<string, unknown>> = (dispatch: Dispatch): ILeftColumnDispatch => ({
@@ -828,6 +854,9 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record
 	
 	onSetDontShowMarketplaceInfo: (enabled: boolean) => dispatch(setDontShowMarketplaceInfoAction(enabled)),
 	toggleDescGrouping:()=>dispatch(toggleDescriptorsGroupingAction()),
+
+	onClearView: (keep) => dispatch(clearViewAction(keep)),
+	onClearNonExistent:(items)=>dispatch(importItemsAction(items,"replace")),
 });
 
 export const LeftColumnContainer = connect<ILeftColumnProps, ILeftColumnDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(LeftColumn);
