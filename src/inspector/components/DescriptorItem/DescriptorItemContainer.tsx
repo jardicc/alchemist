@@ -9,6 +9,7 @@ import "./DescriptorItem.less";
 import { IconLockLocked, IconPinDown } from "../../../shared/components/icons";
 import { TState } from "../FilterButton/FilterButton";
 import { Dispatch } from "redux";
+import {default as SP} from "react-uxp-spectrum";
 
 class DescriptorItem extends React.Component<TDescriptorItem,IState> { 
 	constructor(props: TDescriptorItem) {
@@ -76,12 +77,13 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		const { descriptor } = this.props;
 		return (
 			<div className={"editMode " + this.generateClassName()} onClick={this.select}>
-				<input
+				<sp-textfield
 					className="renameInput"
-					onChange={this.onNameChange}
+					onInput={this.onNameChange}
 					defaultValue={descriptor.title}
 					type="text"
 					onKeyDown={this.onKeyPress}
+					size={SP.SpectrumComponetDefaults.defaultSize}
 				/>
 				<div className="button" onClick={this.rename}>OK</div>
 				<div className="button" onClick={this.cancel}>×</div>
