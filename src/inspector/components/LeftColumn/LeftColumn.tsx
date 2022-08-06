@@ -31,10 +31,16 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	private marketplaceDialogRef: React.RefObject<any>;
-	private lastDescRef:React.RefObject<Element> = React.createRef();
+	private lastDescRef:React.RefObject<HTMLDivElement> = React.createRef();
+	private wrapperDescRef:React.RefObject<HTMLDivElement> = React.createRef();
 
-	public componentDidUpdate=():void=> {
-		this.lastDescRef?.current?.scrollIntoView();
+	public componentDidUpdate = (): void => {
+		const itemElement = this.lastDescRef?.current;
+		const wrapperElement = this.wrapperDescRef?.current;
+		if (!itemElement || !wrapperElement) {return;}
+		if (wrapperElement.scrollHeight - wrapperElement.offsetHeight - wrapperElement.scrollTop <= 20) {
+			itemElement.scrollIntoView();			
+		}
 	}
 
 	private getDescriptor = async (): Promise<void> => {
@@ -174,7 +180,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return (
 			allInViewDescriptors.map((d, index) => {
 				return (
-					<div className={"DescriptorItem"} key={index} ref={index === allInViewDescriptors.length - 1 ? this.lastDescRef as any : null}>
+					<div className={"DescriptorItem"}  key={index} ref={index === allInViewDescriptors.length - 1 ? this.lastDescRef as any : null}>
 						<DescriptorItemContainer descriptor={d} key={d.id} />
 					</div>
 				);
@@ -273,7 +279,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<SP.Textfield placeholder="Search..." onInput={(e: any) => this.onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
 						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}>Group</SP.Checkbox>
 					</div>
-					<div className="descriptorsWrapper" onClick={() => this.props.onSelect("none")}>
+					<div className="descriptorsWrapper" ref={this.wrapperDescRef} onClick={() => this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}
 					</div>
 
