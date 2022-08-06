@@ -22,6 +22,7 @@ import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
 import {Pane} from "react-split-pane";
 import SplitPane from "react-split-pane";
 import { default as SP } from "react-uxp-spectrum";
+import {FiltersContainer} from "../Filters/Filters";
 
 
 class Inspector extends React.Component<TInspector, IInspectorState> { 
@@ -63,13 +64,14 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 	public render(): JSX.Element {
 		const { fontSizeSettings,leftColumnWidthPx,setColumnSize} = this.props;
 		return (
-			<div className={`Inspector ${fontSizeSettings}`} key={SP.SpectrumComponetDefaults.defaultSize}>
+			<div className={`Inspector ${fontSizeSettings}`} key={fontSizeSettings}>
 				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
 					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
 						<div className="descriptorsColumns">
 							<SplitPane className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={setColumnSize}>
 								<Pane className="leftPane">
 									<LeftColumnContainer />
+
 								</Pane>
 								<Pane className="rightPane">
 									<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>

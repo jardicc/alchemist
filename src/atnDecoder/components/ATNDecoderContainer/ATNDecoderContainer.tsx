@@ -122,7 +122,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 
 
 		return (
-			<div className={`ATNDecoderContainer ${fontSizeSettings}`}>
+			<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 				<div className="info spread flex">
 					<div className="tree" onClick={(e) => { e.stopPropagation(); setSelectedItem([""], "none");}}>{this.renderSet()}</div>
 					<div className="noShrink">

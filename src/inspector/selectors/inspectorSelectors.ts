@@ -23,7 +23,6 @@ export const getPinnedSelection = createSelector([getSelectedDescriptors], s => 
 export const getRemovableSelection = createSelector([getLockedSelection], s => !s);
 
 export const getActiveTargetReference = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
-	debugger
 	const result = targets?.find(item => item.type === selected);
 	return (result || null);
 });

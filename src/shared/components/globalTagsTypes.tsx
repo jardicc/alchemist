@@ -6,8 +6,8 @@ import type React from "react";
 declare global {
 	namespace JSX {
 		interface IntrinsicElements {
-			"sp-action-group": any;
 			"sp-menu-group": any;
+			"sp-action-group": any;
 			"sp-split-button": any;
 			"sp-popover": any;
 			"p-action-group>": any;

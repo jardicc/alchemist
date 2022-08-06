@@ -27,16 +27,16 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 		switch (this.props.settings.listenerFilterType) {
 			case "exclude": {
 				return (
-					<React.Fragment>
+					<>
 						<div className="label">Exclude: </div><SP.Textfield onInput={this.setExclude as any} value={listenerExclude.join(";")} quiet />
-					</React.Fragment>
+					</>
 				);
 			}
 			case "include": {
 				return (
-					<React.Fragment>
+					<>
 						<div className="label">Include: </div><SP.Textfield onInput={this.setInclude as any} value={listenerInclude.join(";")} quiet />
-					</React.Fragment>
+					</>
 				);
 			}
 			case "none": {
@@ -93,7 +93,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 	public render(): JSX.Element {
 		const {settings:{listenerFilterType},activeTargetReferenceListenerCategory } = this.props;
 		return (
-			<React.Fragment>
+			<>
 				<div className="category">
 					{this.buildFilterRow("Category","listenerCategory",baseItemsListener,activeTargetReferenceListenerCategory)}
 				</div>
@@ -117,7 +117,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 				<div className="excludeIncludeInput">
 					{this.renderFilterFields()}
 				</div>
-			</React.Fragment>
+			</>
 		);
 	}
 }

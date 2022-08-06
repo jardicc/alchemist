@@ -91,6 +91,12 @@ export interface IDispatcher{
 
 //////
 
+
+export interface IFilterProperty<T>{
+	label: string
+	value:T
+}
+
 export interface IContentWrapper<T>{
 	value: T
 	filterBy: TState
