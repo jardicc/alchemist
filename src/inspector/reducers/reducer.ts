@@ -20,7 +20,7 @@ import { sorReducer } from "../../sorcerer/sorReducer";
 export type TAllActions = TActions | TAtnActions|TSorActions;
 
 export const inspectorReducer = (state = getInitialState(), action:TAllActions ): IInspectorState => {
-	console.log(JSON.stringify(action, null, "\t"));
+	console.log(action/*JSON.stringify(action, null, "\t")*/);
 	switch (action.type) {
 		// OCCULTIST
 		

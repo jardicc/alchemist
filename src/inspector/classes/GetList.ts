@@ -29,8 +29,8 @@ export class GetList {
 
 	public static getLayers(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TLayerReference>[] {
 		const docE = this.getDocumentExtra(arg);
-		if (!docE) { return []; }
-		const layers = docE.layers.map(d => ({ value: d.id.toString(), label: d.name }));
+		if (!docE) {return [];}
+		const layers = docE.allLayers.reverse().map(d => ({ value: d.layerID.toString(), label: d.name }));
 		return layers;
 	}
 
