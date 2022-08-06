@@ -5,6 +5,20 @@
 	
 	border-top: 1px solid var(--divider);
 
+	.error::before{
+		content: "[Error]";
+		margin-right:1em;
+		text-decoration: none;
+	}
+
+	.error{
+		color: var(--textDim);
+		
+		.name{
+			//
+		}
+	}
+
 	&:last-child {
 		border-bottom: 1px solid var(--divider);
 	}
