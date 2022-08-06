@@ -33,10 +33,15 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 			return (
 				<div className="tabRow">
 					{this.props.children.map(item => (
-						<div className={"tabHeader" + ((item.props.id === activeKey) ? " active" : "")} key={item.props.id} onClick={() => {
-							console.log(item.props.id);
-							this.props.onChange(item.props.id);
-						}}>{item.props.title}</div>
+						<div
+							className={"tabHeader" + ((item.props.id === activeKey) ? " active" : "")}
+							key={item.props.id}
+							onClick={() => {
+								console.log(item.props.id);
+								this.props.onChange(item.props.id);
+							}}
+							style={item.props.marginRight && {marginRight: "auto"}}
+						>{item.props.title}</div>
 					))}
 				</div>
 			);

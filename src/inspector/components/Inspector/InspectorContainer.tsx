@@ -65,48 +65,36 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		const { fontSizeSettings,leftColumnWidthPx,setColumnSize} = this.props;
 		return (
 			<div className={`Inspector ${fontSizeSettings}`} key={fontSizeSettings}>
-				<TabList className="tabsRoot" activeKey={this.props.mainTab} onChange={this.props.setMainTab}>
-					<TabPanel noPadding={true} id="descriptors" title="Descriptors" >
-						<div className="descriptorsColumns">
-							<SplitPane className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={setColumnSize}>
-								<Pane className="leftPane">
-									<LeftColumnContainer />
+				<div className="descriptorsColumns">
+					<SplitPane className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={setColumnSize}>
+						<Pane className="leftPane">
+							<LeftColumnContainer />
 
-								</Pane>
-								<Pane className="rightPane">
-									<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
-										<TabPanel id="content" title="Content" noPadding={true}>
-											<TreeContentContainer />
-										</TabPanel>
-										<TabPanel id="difference" title="Difference" noPadding={true}>
-											<TreeDiffContainer />
-										</TabPanel>
-										<TabPanel id="dom" title="DOM (live)" noPadding={true} >
-											<TreeDomContainer />
-										</TabPanel>
-										<TabPanel id="reference" title="Code" >
-											<GeneratedCodeContainer />
-										</TabPanel>
-									</TabList>
-								</Pane>
-							</SplitPane>
-						</div>
-					</TabPanel>
-					<TabPanel id="dispatcher" title="Dispatch">
-						<DispatcherContainer />
-					</TabPanel>
-					<TabPanel id="settings" title="Settings">
-						<SettingsContainer  />
-					</TabPanel>
-
-					{
-					/*
-					<TabPanel id="amConverter" title="AM Converter" showScrollbars={true}>
-						<AMConverterContainer />
-					</TabPanel>
-					*/
-					}
-				</TabList>
+						</Pane>
+						<Pane className="rightPane">
+							<TabList className="tabsDescriptor" activeKey={this.props.modeTab} onChange={this.props.setModeTab}>
+								<TabPanel id="content" title="Content" noPadding={true}>
+									<TreeContentContainer />
+								</TabPanel>
+								<TabPanel id="difference" title="Difference" noPadding={true}>
+									<TreeDiffContainer />
+								</TabPanel>
+								<TabPanel id="dom" title="DOM (live)" noPadding={true} >
+									<TreeDomContainer />
+								</TabPanel>
+								<TabPanel id="reference" title="Code" marginRight={true}>
+									<GeneratedCodeContainer />
+								</TabPanel>
+								<TabPanel id="dispatcher" title="Dispatch">
+									<DispatcherContainer />
+								</TabPanel>
+								<TabPanel id="settings" title="Settings">
+									<SettingsContainer />
+								</TabPanel>
+							</TabList>
+						</Pane>
+					</SplitPane>
+				</div>
 				<FooterContainer parentPanel="inspector" />
 				{this.state.showMessage && <div className="messageStrip"><a href={this.state.link} className="link">{this.state.message}</a><span className="close" onClick={this.closeMessage}><IconX /></span></div>}
 			</div>
