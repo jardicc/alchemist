@@ -8,9 +8,12 @@ export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
 export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "size-bigger" | "size-big" | "size-youMustBeJoking"
 
-export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" | "layer" | "path" | "property" | "snapshot"|"listenerCategory";
-export type TTargetReference = "listener"|"customDescriptor" | "featureData" | "generator" | "overkill" | TPropertyClass;
-export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" | "action" | "timeline" | "animationFrame"| "animation"
+export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" |
+	"layer" | "path" | "property" | "snapshot";
+export type TTargetReference = "listener" | "customDescriptor" | "featureData" | "generator" | "overkill" |
+	"dispatcher" | "notifier" | "replies" | TPropertyClass;
+export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" |
+	"action" | "timeline" | "animationFrame" | "animation"
 export type TPropertyType = "hidden" | "optional" | "default" | "1st";
 export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"
 export type TActiveInspectorTab = ITreeDataTabs;
@@ -38,7 +41,6 @@ export type TDocumentReference = "active" | string;
 export type TLayerReference = "active" | string;
 export type TPathReference = "active" | "vectorMask" | "workPathIndex" | string;
 export type TGeneratorReference = "full"
-export type TListenerCategoryReference = "notSpecified" | "anySpecified"|"listener"|"reply"|"dispatch";
 export type TChannelReference = "active" | TChannelReferenceValid;
 export type TChannelReferenceValid = "composite" | "RGB" | "red" | "green" | "blue" | "CMYK" | "black" | "cyan" | "magenta" | "yellow" | "lab" | "lightness" | "a" | "b" | "gray" | "monotone" | "duotone" | "tritone" | "quadtone" | "mask" | "transparencyEnum" | "filterMask" | string;
 export type TGuideReference = "" | string;
@@ -158,10 +160,6 @@ export interface IGenerator{
 	subType:"generator"
 	content: IContentWrapper<TGeneratorReference>
 }
-export interface IListenerCategory{
-	subType:"listenerCategory"
-	content: IContentWrapper<TListenerCategoryReference>
-}
 export interface ITimeline{
 	subType: "timeline"
 	content: IContentWrapper<TTimeline>
@@ -185,7 +183,7 @@ export type TFilterContent =
 	IContentWrapper<TGeneratorReference>|IContentWrapper<TTimeline>
 
 export type TAllReferenceSubtypes = ICategory | IProperty | ICustomDescriptor | IHistory | ISnapshot | ILayer | IPath | IChannel | IDocument |
-	IGuide | IActionSet | IActionItem | IActionCommand | IGenerator | IListenerCategory | ITimeline | IActionFrame | IAnimation
+	IGuide | IActionSet | IActionItem | IActionCommand | IGenerator | ITimeline | IActionFrame | IAnimation
 
 /////
 

@@ -1,12 +1,10 @@
 import { IRootState } from "../../../shared/store";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
-import { getInspectorSettings, getSelectedTargetReference, getActiveTargetReferenceListenerCategory, getActiveTargetReference } from "../../selectors/inspectorSelectors";
+import { getInspectorSettings, getSelectedTargetReference, getActiveTargetReference } from "../../selectors/inspectorSelectors";
 import { setExcludeAction, setFilterTypeAction, setIncludeAction, setFilterStateAction, setTargetReferenceAction } from "../../actions/inspectorActions";
 import React from "react";
-import { TSubTypes, ISettings, TFilterEvents, TTargetReference, ITargetReference, IContentWrapper, TListenerCategoryReference } from "../../model/types";
-import { TBaseItems, baseItemsListener } from "../../model/properties";
-import { TState, FilterButton } from "../FilterButton/FilterButton";
-import cloneDeep from "lodash/cloneDeep";
+import { TSubTypes, ISettings, TFilterEvents, TTargetReference, ITargetReference } from "../../model/types";
+import { TState } from "../FilterButton/FilterButton";
 import SP from "react-uxp-spectrum";
 
 class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> { 
@@ -22,94 +20,51 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 		this.props.setInclude(e.currentTarget.value.split(";"));
 	}
 
-	private renderFilterFields = () => {
+	private renderFilterFields = ():JSX.Element|null => {
 		const {listenerExclude,listenerInclude } = this.props.settings;
 		switch (this.props.settings.listenerFilterType) {
 			case "exclude": {
 				return (
 					<>
-						<div className="label">Exclude: </div><SP.Textfield onInput={this.setExclude as any} value={listenerExclude.join(";")} quiet />
+						<div className="label">Exclude: </div><SP.Textfield onInput={this.setExclude as any} value={listenerExclude.join(";")} className="input" quiet />
 					</>
 				);
 			}
 			case "include": {
 				return (
 					<>
-						<div className="label">Include: </div><SP.Textfield onInput={this.setInclude as any} value={listenerInclude.join(";")} quiet />
+						<div className="label">Include: </div><SP.Textfield onInput={this.setInclude as any} value={listenerInclude.join(";")} className="input" quiet />
 					</>
 				);
 			}
-			case "none": {
-				return null;
-			}
 		}
+		return null;
 	}
 
 	private onSetFilterEventsType = (e: any) => {
 		this.props.setFilterEventsType(e.target.value);
 	}
 
-	private onSetSubType = (subType: TSubTypes, value: any) => {
-
-		const { onSetTargetReference, activeTargetReference} = this.props;
-		const found = cloneDeep(activeTargetReference);
-		
-		if (found) {
-			const content = found?.data?.find(i => i.subType === subType)?.content;
-			if (content) {
-				content.value = value.target.value;
-				onSetTargetReference(found);
-			}
-		}
-	}
-
-	private buildFilterRow = (
-		label: string,
-		subType: "listenerCategory",
-		items: TBaseItems,
-		content: {value:string|null|number,filterBy:TState},
-	): React.ReactNode => {
-		return (
-			<div className="filter">
-				<div className="label">{label}</div>
-				<SP.Dropdown quiet={true}>
-					<SP.Menu slot="options" onChange={(e) => this.onSetSubType("listenerCategory", e)}>
-						{
-							items.map(item => (
-								<SP.MenuItem
-									key={item.value}
-									value={item.value}
-									selected={content.value === item.value ? true : undefined}
-								>{item.label}</SP.MenuItem>
-							))
-						}
-					</SP.Menu>
-				</SP.Dropdown>
-				<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype, state) => this.props.onSetFilter(this.props.selectedTargetReference, subtype, state)} />
-			</div>
-		);
-	}
-
 	public render(): JSX.Element {
-		const {settings:{listenerFilterType},activeTargetReferenceListenerCategory } = this.props;
+		const {settings:{listenerFilterType} } = this.props;
 		return (
 			<>
-				<div className="category">
-					{this.buildFilterRow("Category","listenerCategory",baseItemsListener,activeTargetReferenceListenerCategory)}
-				</div>
 				<div className="filter excludeIncludeDropdownRow">
 					<div className="label">Filter:</div>
 					<SP.Dropdown quiet={true}>
 						<SP.Menu slot="options" onChange={this.onSetFilterEventsType}>
 							{
-								[{ value: "none", label: "None" }, { value: "include", label: "Include" }, { value: "exclude", label: "Exclude" }]
-									.map(item => (
-										<SP.MenuItem
-											key={item.value}
-											value={item.value}
-											selected={listenerFilterType === item.value ? true : undefined}
-										>{item.label}</SP.MenuItem>
-									))
+								[
+									{value: "none", label: "None"},
+									{value: "include", label: "Include"},
+									{value: "exclude", label: "Exclude"},
+								].map(item => (
+									<SP.MenuItem
+										key={item.value}
+										value={item.value}
+										selected={listenerFilterType === item.value ? true : undefined}
+									>{item.label}</SP.MenuItem>
+								))
 							}
 						</SP.Menu>
 					</SP.Dropdown>
@@ -128,14 +83,12 @@ type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
 interface IListenerFilterProps{
 	settings: ISettings
 	selectedTargetReference: TTargetReference
-	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
 	activeTargetReference: ITargetReference | null;
 }
 
 const mapStateToProps = (state: IRootState): IListenerFilterProps => ({
 	settings: getInspectorSettings(state),
 	selectedTargetReference: getSelectedTargetReference(state),		
-	activeTargetReferenceListenerCategory: getActiveTargetReferenceListenerCategory(state) as IContentWrapper<TListenerCategoryReference>,
 	activeTargetReference: getActiveTargetReference(state),
 });
 

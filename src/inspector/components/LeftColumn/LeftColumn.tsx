@@ -96,19 +96,17 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			return;
 		}
 
+		const category = descriptor?._isCommand ? "listener" : "notifier";
+
+		if (category === "notifier") {debugger;}
+
 		// delete because it will be added as a first later
 		delete descriptor._obj;
 
 		console.log(event);
 		const originalReference:ITargetReference = {
-			type: "listener",
-			data: [{
-				subType: "listenerCategory",
-				content: {
-					filterBy: "off",
-					value:"listener",
-				},
-			}],
+			type: category,
+			data: [],
 		};
 		const descWithEvent: ITargetReferenceAM = {
 			_obj:event,
@@ -208,14 +206,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			const endTime = Date.now();
 
 			const originalReference: ITargetReference = {
-				type: "listener",
-				data: [{
-					subType: "listenerCategory",
-					content: {
-						filterBy: "off",
-						value: "reply",
-					},
-				}],
+				type: "replies",
+				data: [],
 			};
 
 			const result: IDescriptor = {

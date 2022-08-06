@@ -1,5 +1,8 @@
 
-import { TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference, TGuideReference, TActionSet, TActionItem, TActionCommand, TListenerCategoryReference, IFilterProperty } from "./types";
+import {
+	TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference,
+	TGuideReference, TActionSet, TActionItem, TActionCommand, IFilterProperty,
+} from "./types";
 
 export type TBaseItems = (
 	IFilterProperty<TTargetReference> |
@@ -16,7 +19,11 @@ export type TBaseItems = (
 	
 
 export const mainClasses: IFilterProperty<TTargetReference>[] = [
-	{ label: "Listener", value: "listener" },
+	{ label: "Listener - Playable", value: "listener" },
+	{ label: "Listener - Events", value: "notifier" },
+	{ label: "Dispatcher", value: "dispatcher" },
+	{label: "Replies", value: "replies"},
+	
 	{ label: "Application", value: "application" },
 	{ label: "Document", value: "document" },
 	{ label: "Layer", value: "layer" },
@@ -37,12 +44,7 @@ export const mainClasses: IFilterProperty<TTargetReference>[] = [
 export const baseItemsProperty:IFilterProperty<TBaseProperty>[] = [
 	{ label: "(not specified)", value: "notSpecified" },
 ];
-export const baseItemsListener:IFilterProperty<TListenerCategoryReference>[] = [
-	{ label: "(not specified)", value: "notSpecified" },
-	{ label: "Listener", value: "listener" },
-	{ label: "Replies", value: "reply" },
-	{ label: "Dispatched", value: "dispatch" },
-];
+
 export const baseItemsCustomDescriptor:IFilterProperty<string>[] = [
 	{ label: "(undefined)", value: "undefined" },
 ];

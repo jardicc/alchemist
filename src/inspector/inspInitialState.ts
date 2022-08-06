@@ -48,12 +48,19 @@ export function getInitialState(): IInspectorState {
 		targetReference: [
 			{
 				type: "listener",
-				data: [
-					{
-						subType: "listenerCategory",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
+				data: [],
+			},
+			{
+				type: "dispatcher",
+				data: [],
+			},
+			{
+				type: "notifier",
+				data: [],
+			},
+			{
+				type: "replies",
+				data: [],
 			},
 			{
 				type: "application",
@@ -255,7 +262,7 @@ export function getInitialState(): IInspectorState {
 			makeRawDataEasyToInspect: false,
 			selectReferenceBeforeGet: true,
 			searchTerm: null,
-			listenerFilterType: "exclude",
+			listenerFilterType: "none",
 			listenerExclude: [
 				"layersFiltered",
 				"toolModalStateChanged",
@@ -676,14 +683,14 @@ export function getInitialState(): IInspectorState {
 						{ title: "documentTimelineSettings", stringID: "documentTimelineSettings", type: "default" },
 						{ title: "workInTime", stringID: "workInTime", type: "default" },
 						{ title: "workOutTime", stringID: "workOutTime", type: "default" },
-					]
+					],
 				},
 				{
 					type: "animationFrame",
 					list: [
 						{ title: "animationFrameDelay", stringID: "animationFrameDelay", type: "default" },
 						{ title: "animationFrameReplace", stringID: "animationFrameReplace", type: "default" },
-					]
+					],
 				},
 				{
 					type: "animation",
@@ -692,8 +699,8 @@ export function getInitialState(): IInspectorState {
 						{ title: "currentFrame", stringID: "currentFrame", type: "default" },
 						{ title: "frameCount", stringID: "frameCount", type: "default" },
 						{ title: "animationLoopCount", stringID: "animationLoopCount", type: "default" },
-					]
-				}
+					],
+				},
 			],
 			maximumItems: 150,
 			leftColumnWidthPx: 300,

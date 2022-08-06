@@ -2,7 +2,7 @@ import React from "react";
 import "./Filters.less";
 import { cloneDeep } from "lodash";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, TBaseItems } from "../../model/properties";
-import { IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, TListenerCategoryReference, IFilterProperty } from "../../model/types";
+import { IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, IFilterProperty } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
@@ -11,7 +11,7 @@ import SP from "react-uxp-spectrum";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { setTargetReferenceAction, setSelectedReferenceTypeAction, setFilterStateAction } from "../../actions/inspectorActions";
-import { getPropertySettings, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceListenerCategory, getActiveTargetReferenceForAM, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
+import { getPropertySettings, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceForAM, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
 
 export class Filters extends React.Component<TFilters, IState> {
@@ -31,16 +31,10 @@ export class Filters extends React.Component<TFilters, IState> {
 		};
 	}
 
-	private lastDescRef:React.RefObject<Element> = React.createRef();
-
-	public componentDidUpdate=():void=> {
-		this.lastDescRef?.current?.scrollIntoView();
-	}
-
 	/** refactor into reducer? */
 	private onSetSubType = (subType: TSubTypes | "main", value: any) => {
 		if (subType === "main") {
-			this.onSetMainClass(value);
+			this.onSetMainCategory(value);
 			return;
 		}
 		const { onSetTargetReference, activeTargetReference } = this.props;
@@ -55,11 +49,11 @@ export class Filters extends React.Component<TFilters, IState> {
 		}
 	}
 
-	private onSetMainClass = (value: React.ChangeEvent<HTMLSelectElement>) => {
+	private onSetMainCategory = (value: React.ChangeEvent<HTMLSelectElement>) => {
 		this.props.onSetSelectedReferenceType(value.target.value as TTargetReference);
 	}
 
-	private renderMainClass = (): React.ReactNode => {
+	private renderMainCategory = (): React.ReactNode => {
 		const { selectedTargetReference, filterBySelectedReferenceType} = this.props;
 		return this.buildFilterRow("Type:", "main", mainClasses, {
 			value: selectedTargetReference,
@@ -71,24 +65,17 @@ export class Filters extends React.Component<TFilters, IState> {
 		const { selectedTargetReference } = this.props;
 		
 		switch (selectedTargetReference) {
-			case "listener":
-			case "customDescriptor":
-			case "featureData":
-			case "generator":
-			case "application":
-			case "history":
-			case "snapshot":
-			case "action":
-			case "timeline":
-			case "animation":
-			case "animationFrame":
-				return;
+			case "channel":
+			case "document":
+			case "guide":
+			case "layer":
+			case "path": {
+				const list = [...baseItemsDocument,...this.state.documentsList];
+		
+				const { activeTargetReferenceDocument } = this.props;
+				return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
+			}
 		}
-
-		const list = [...baseItemsDocument,...this.state.documentsList];
-
-		const { activeTargetReferenceDocument } = this.props;
-		return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
 	}
 	
 	private renderLayer = (): React.ReactNode|void => {
@@ -226,6 +213,9 @@ export class Filters extends React.Component<TFilters, IState> {
 			case "featureData":
 			case "generator":
 			case "listener":
+			case "dispatcher":
+			case "notifier":
+			case "replies":				
 				return;
 		}
 
@@ -387,17 +377,18 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderListenerFilter = () => {
-		if (this.props.selectedTargetReference !== "listener") {
-			return null;
+	private renderListenerFilter = (): JSX.Element | void => {
+		switch (this.props.selectedTargetReference) {
+			case "listener":
+			case "notifier":
+				return <ListenerFilterContainer />;
 		}
-		return <ListenerFilterContainer />;
 	}
 
 	public render(): JSX.Element {
 		return (
 			<div className="filtersWrapper">
-				{this.renderMainClass()}
+				{this.renderMainCategory()}
 				{this.renderListenerFilter()}
 				{this.renderDocument()}
 				{this.renderHistory()}
@@ -445,7 +436,6 @@ export interface IFiltersProps{
 	activeTargetReference: ITargetReference | null;
 	activeTargetReferenceDocument: IContentWrapper<TDocumentReference>
 	activeTargetReferenceForAM: ITargetReference | null;
-	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
 	filterBySelectedReferenceType: TState
 	propertySettings: IPropertySettings[]
 	selectedTargetReference: TTargetReference
@@ -466,7 +456,6 @@ const mapStateToProps = (state: IRootState): IFiltersProps => ({
 	activeTargetReference: getActiveTargetReference(state),
 	activeTargetReferenceDocument: getActiveTargetDocument(state) as IContentWrapper<TDocumentReference>,
 	activeTargetReferenceForAM: getActiveTargetReferenceForAM(state),
-	activeTargetReferenceListenerCategory: getActiveTargetReferenceListenerCategory(state) as IContentWrapper<TListenerCategoryReference>,
 	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),		
 	propertySettings: getPropertySettings(state),
 	selectedTargetReference: getSelectedTargetReference(state),

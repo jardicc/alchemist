@@ -58,14 +58,8 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 			const endTime = Date.now();
 
 			const originalReference: ITargetReference = {
-				type: "listener",
-				data: [{
-					subType: "listenerCategory",
-					content: {
-						filterBy: "off",
-						value: "dispatch",
-					},
-				}],
+				type: "dispatcher",
+				data: [],
 			};
 			const result: IDescriptor = {
 				endTime,

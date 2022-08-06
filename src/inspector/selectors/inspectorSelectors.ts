@@ -224,12 +224,6 @@ export const getActiveDescriptorOriginalReference = createSelector([getActiveDes
 	}
 });
 
-export const getActiveTargetReferenceListenerCategory = createSelector([getActiveTargetReference], (t) => {
-	if (!t) { return null;}
-	const result = t.data.find(i => i.subType === "listenerCategory")?.content;
-
-	return (result===undefined) ? null : result;
-});
 
 export const getActiveTargetDocument = createSelector([getActiveTargetReference], (t) => {
 	if (!t) { return null;}
