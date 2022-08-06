@@ -128,8 +128,8 @@ export const getGeneratedCode = createSelector([
 		} else if (autoActive) {
 			iDesc = [autoActive];
 		}
-		if (iDesc.some(item => item.originalReference.data.some(subitem => subitem.content.value === "reply" || subitem.content.value === "dispatch"))) {
-			return "// Alchemist can't generate code from replay reply and dispatched code";
+		if (iDesc.some(item => ["replies","notifier","dispatcher"].includes(item.originalReference.type))) {
+			return "// Alchemist can't generate code from replay reply, dispatched code. Notifiers are not supported to save your time because those are non-playable in 99.99% of cases";
 		}
 		data = iDesc.map(item => addPerItemOptions(item));
 		// adds raw data type support

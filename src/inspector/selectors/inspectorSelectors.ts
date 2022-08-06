@@ -244,7 +244,7 @@ export const getReplayEnabled = createSelector([getActiveDescriptors], (selected
 	if (selected.length < 1) {
 		return false;
 	}
-	if (selected.some(item => item.originalReference.data.some(subitem => subitem.content.value === "reply" || subitem.content.value === "dispatch"))) {
+	if (selected.some(item => ["replies", "dispatcher"].includes(item.originalReference.type))) {
 		return false;
 	}
 	return true;

@@ -277,9 +277,13 @@ export class GetInfo {
 
 	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM, reply=false, reference=false): string => {
 		switch (originalReference.type) {
+			case "replies": {
+				return "Reply: " + calculatedReference._obj;
+			}
 			case "listener":
-			case "notifier":
-				return (reply ? "Reply: " : "") + calculatedReference._obj;
+			case "notifier": {
+				return calculatedReference._obj;
+			}
 		}
 		const parts = getName(calculatedReference._target);
 		//parts.push(...subs.map(d => d.subType + ": " + d.content.value));
