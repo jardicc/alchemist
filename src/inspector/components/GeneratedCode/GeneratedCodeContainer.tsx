@@ -1,6 +1,6 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { getActiveDescriptorCalculatedReference, getCodeActiveView, getDescriptorOptions } from "../../selectors/inspectorCodeSelectors";
+import { getGeneratedCode, getCodeActiveView, getDescriptorOptions } from "../../selectors/inspectorCodeSelectors";
 import { getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings } from "../../selectors/inspectorSelectors";
 import { setDescriptorOptionsAction, setInspectorViewAction, setSettingsAction } from "../../actions/inspectorActions";
 
@@ -87,7 +87,7 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 									<SP.Textarea
 										className="infoBlock"
 										value={
-											this.props.originalReference
+											this.props.code
 										}
 									/>
 								</div>
@@ -191,7 +191,7 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
 type TGeneratedCode = IGeneratedCodeProps & IGeneratedCodeDispatch
 
 interface IGeneratedCodeProps{
-	originalReference: string
+	code: string
 	autoSelectedUUIDs: string[]
 	selected: IDescriptor[]
 	descriptorSettings: IDescriptorSettings
@@ -200,7 +200,7 @@ interface IGeneratedCodeProps{
 }
 
 const mapStateToProps = (state: IRootState): IGeneratedCodeProps => ({
-	originalReference: getActiveDescriptorCalculatedReference(state),
+	code: getGeneratedCode(state),
 	selected: getActiveDescriptors(state),
 	autoSelectedUUIDs: getAutoSelectedUUIDs(state),
 	descriptorSettings: getDescriptorOptions(state),

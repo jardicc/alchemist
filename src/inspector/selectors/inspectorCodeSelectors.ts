@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import { cloneDeep } from "lodash";
 import { createSelector } from "reselect";
 import { RawDataConverter } from "../classes/RawDataConverter";
@@ -46,7 +47,7 @@ export const getIndentString = createSelector([getInspectorSettings], settings =
 	return indent;
 });
 
-export const getActiveDescriptorCalculatedReference = createSelector([
+export const getGeneratedCode = createSelector([
 	getActiveDescriptors, getAutoActiveDescriptor, getContentPath,
 	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
 ], (selected, autoActive, treePath, replayEnabled, descOptions, settings, tab) => {
@@ -153,7 +154,7 @@ export const getActiveDescriptorCalculatedReference = createSelector([
 			RawDataConverter.convertFakeRawInCode(item,descOptions);
 		}
 
-		let strPinned = ""
+		let strPinned = "";
 
 		if (treePath.length) {
 			// eslint-disable-next-line quotes
@@ -167,7 +168,7 @@ export const getActiveDescriptorCalculatedReference = createSelector([
 
 		const strBatchPlayImport = qts(idt(`const {batchPlay} = require("photoshop").action;`));
 
-		const strBatchPlay = `const result = await batchPlay(\n${strDesc},\n${strOptions}\n);${strPinned}`
+		const strBatchPlay = `const result = await batchPlay(\n${strDesc},\n${strOptions}\n);${strPinned}`;
 		const strActionCommand = `async function actionCommands() {\n${strBatchPlayImport}\n\n${idt(strBatchPlay)}\n}\n\n`;
 
 		const strCall = qts(`async function runModalFunction() {\n${tab}await require("photoshop").core.executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);

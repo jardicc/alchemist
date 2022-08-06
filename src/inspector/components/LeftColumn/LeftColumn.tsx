@@ -3,7 +3,7 @@ import "./LeftColumn.less";
 import { GetInfo, ITargetReferenceAM } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
 import { IDescriptor, ITargetReference, ISettings, TSelectDescriptorOperation } from "../../model/types";
-import { IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop } from "../../../shared/components/icons";
+import { IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop, IconClipboard } from "../../../shared/components/icons";
 import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
 import { Helpers, replayDescriptor } from "../../classes/Helpers";
@@ -17,12 +17,13 @@ import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
 import { addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction, clearViewAction, importItemsAction } from "../../actions/inspectorActions";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getRanameEnabled, getAllDescriptors } from "../../selectors/inspectorSelectors";
+import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getRanameEnabled, getAllDescriptors, getCopyToClipboardEnabled } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { ButtonMenu } from "../ButtonMenu/ButtonMenu";
 import { filterNonExistent } from "../../classes/filterNonExistent";
 import {FiltersContainer} from "../Filters/Filters";
+import {getGeneratedCode} from "../../selectors/inspectorCodeSelectors";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
@@ -264,11 +265,15 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		</dialog>);
 	}
 
+	private copyToClipboard = () => {
+		(navigator.clipboard as any).setContent({"text/plain": this.props.generatedCode});
+	}
+
 	public render(): JSX.Element {
 		const { addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
 			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
 			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors },
-			onClear, onClearView, onClearNonExistent, allDescriptors,
+			onClear, onClearView, onClearNonExistent, allDescriptors,copyToClipboardEnabled,
 		} = this.props;
 		return (
 			<div className="Filters LeftColumn">
@@ -303,17 +308,17 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 						{/*
 							<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
-							<div className="clipboard buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconClipboard/></div>
 						*/}
-						<div className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={this.rename}><IconPencil /></div>
-						<div className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
-						<div className={"lock buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
+						<div title="Rename" className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={this.rename}><IconPencil /></div>
+						<div title="Copy to clipboard"  className={"clipboard buttonIcon " + (copyToClipboardEnabled ? "allowed" : "disallowed")} onClick={this.copyToClipboard}><IconClipboard/></div>
+						<div title="Replay" className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
+						<div title="(Un)lock" className={"lock buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
 							{selectedDescriptors.some(desc => desc.locked) ? <IconLockUnlocked /> : <IconLockLocked />}
 						</div>
-						<div className={"pin buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onPin(!pinnedSelection, selectedDescriptorsUUIDs); }}>
+						<div title="(Un)pin" className={"pin buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onPin(!pinnedSelection, selectedDescriptorsUUIDs); }}>
 							{selectedDescriptors.some(desc => desc.pinned) ? <IconPinLeft /> : <IconPinDown />}
 						</div>
-						<div className={"remove buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onRemove(selectedDescriptorsUUIDs); }}><IconTrash /></div>
+						<div title="Remove" className={"remove buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onRemove(selectedDescriptorsUUIDs); }}><IconTrash /></div>
 					</div>
 					<div className="filterButtons">
 						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}><IconPlus /> Add</div>
@@ -347,6 +352,8 @@ export interface ILeftColumnProps{
 	removableSelection: boolean
 	renameEnabled: boolean
 	replayEnabled: boolean
+	generatedCode: string
+	copyToClipboardEnabled: boolean
 	selectedDescriptors: IDescriptor[]
 	selectedDescriptorsUUIDs: string[]
 	settings:ISettings	
@@ -355,6 +362,7 @@ export interface ILeftColumnProps{
 
 const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
 	activeTargetReferenceForAM: getActiveTargetReferenceForAM(state),
+	copyToClipboardEnabled: getCopyToClipboardEnabled(state),
 	addAllowed: getAddAllowed(state),
 	allDescriptors: getAllDescriptors(state),
 	allInViewDescriptors: getDescriptorsListView(state),
@@ -365,6 +373,7 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
 	removableSelection: getRemovableSelection(state),
 	renameEnabled: getRanameEnabled(state),
 	replayEnabled: getReplayEnabled(state),
+	generatedCode: getGeneratedCode(state),
 	selectedDescriptors: getSelectedDescriptors(state),
 	selectedDescriptorsUUIDs: getSelectedDescriptorsUUID(state),
 	settings: getInspectorSettings(state),

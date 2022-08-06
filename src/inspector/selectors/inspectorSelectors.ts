@@ -256,6 +256,10 @@ export const getReplayEnabled = createSelector([getActiveDescriptors], (selected
 	return true;
 });
 
+export const getCopyToClipboardEnabled = createSelector([getReplayEnabled], (enabled) => {
+	return enabled;
+});
+
 export const getRanameEnabled = createSelector([getDescriptorsListView], (all) => {
 	const selected = all.filter(d => d.selected);
 	if (selected?.length !== 1) {
