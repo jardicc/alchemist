@@ -411,21 +411,21 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;
 		}
-		case "SET_FILTER_TYPE": {
+		case "SET_LISTENER_NOTIFIER": {
 			state = produce(state, draft => {
-				draft.settings.listenerFilterType = action.payload;
-			});
-			break;
-		}
-		case "SET_INCLUDE_ACTION": {
-			state = produce(state, draft => {
-				draft.settings.listenerInclude = action.payload;
-			});
-			break;
-		}
-		case "SET_EXCLUDE_ACTION": {
-			state = produce(state, draft => {
-				draft.settings.listenerExclude = action.payload;
+
+				if (state.selectedReferenceType === "listener") {
+					draft.settings.listenerFilter = {
+						...state.settings.listenerFilter,
+						...action.payload.data,
+					};					
+				} else if (state.selectedReferenceType === "notifier") {
+					draft.settings.notifierFilter = {
+						...state.settings.notifierFilter,
+						...action.payload.data,
+					};	
+				}
+
 			});
 			break;
 		}

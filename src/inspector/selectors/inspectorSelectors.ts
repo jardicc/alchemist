@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
-import { IDescriptor, IInspectorState } from "../model/types";
+import { IDescriptor, IInspectorState, IListenerNotifierFilter } from "../model/types";
 import { Helpers } from "../classes/Helpers";
 import { cloneDeep } from "lodash";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
@@ -54,11 +54,20 @@ export const getActiveTargetReferenceForAM = createSelector([getTargetReference,
 	return (newRes || null);
 });
 
+export const getListenerNotifierFilterSettings = createSelector([all], (all) => {
+	if (all.selectedReferenceType === "listener") {
+		return all.settings.listenerFilter;
+	} else if (all.selectedReferenceType === "notifier") {
+		return all.settings.notifierFilter;
+	}
+	throw Error("Wrong type in filter");
+});
+
 export const getDescriptorsListView = createSelector([getAllDescriptors, getActiveTargetReference, getFilterBySelectedReferenceType,getInspectorSettings], (allDesc, activeRefFilter, rootFilter,settings) => {	
 	const pinned = allDesc.filter(i => i.pinned);
 	const notPinned = allDesc.filter(i => !i.pinned);
 	let reordered = [...notPinned, ...pinned];
-	const { searchTerm } = settings;
+	const { searchTerm,listenerFilter,notifierFilter } = settings;
 
 	if (searchTerm) {
 		reordered = reordered.filter(item => (item.title.toLowerCase().includes(searchTerm.toLowerCase())));
@@ -95,14 +104,15 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		}
 		return true;
 	});
-	if (activeRefFilter?.type === "listener") {
-		if (settings.listenerFilterType === "exclude" && settings.listenerExclude.join(";").trim().length) {
+	if (activeRefFilter?.type === "listener" || activeRefFilter?.type === "notifier") {
+		const filterSettings: IListenerNotifierFilter = (activeRefFilter?.type === "listener") ? listenerFilter : notifierFilter;
+		if (filterSettings.type === "exclude" && filterSettings.exclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				!settings.listenerExclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				!filterSettings.exclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
-		} else if (settings.listenerFilterType === "include" && settings.listenerInclude.join(";").trim().length) {
+		} else if (filterSettings.type === "include" && filterSettings.include.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				settings.listenerInclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				filterSettings.include.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		}
 	}
@@ -223,6 +233,8 @@ export const getActiveDescriptorOriginalReference = createSelector([getActiveDes
 		return "Add some descriptor";
 	}
 });
+
+
 
 
 export const getActiveTargetDocument = createSelector([getActiveTargetReference], (t) => {

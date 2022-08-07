@@ -1,4 +1,4 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings } from "../model/types";
+import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 
@@ -153,20 +153,14 @@ export interface ISetSearchTermAction{
 	type: "SET_SEARCH_TERM_ACTION",
 	payload: string|null
 }
-export interface ISetFilterType{	
-	type: "SET_FILTER_TYPE",
-	payload: TFilterEvents
+
+export interface ISetListenerNotifierAction{
+	type: "SET_LISTENER_NOTIFIER"
+	payload: {
+		data: Partial<IListenerNotifierFilter>
+	}
 }
 
-export interface ISetIncludeAction{	
-	type: "SET_INCLUDE_ACTION",
-	payload: string[]
-}
-
-export interface ISetExcludeAction{	
-	type: "SET_EXCLUDE_ACTION",
-	payload: string[]
-}
 /*
 export interface IGroupSameAction{	
 	type: "GROUP_SAME_ACTION",
@@ -578,23 +572,12 @@ export function setSearchTermAction(str:string|null):ISetSearchTermAction{
 	};
 }
 
-export function setFilterTypeAction(filterType:TFilterEvents): ISetFilterType{
+export function setListenerNotifierFilterAction(data:Partial<IListenerNotifierFilter>): ISetListenerNotifierAction{
 	return {
-		type: "SET_FILTER_TYPE",
-		payload:filterType,
-	};
-}
-
-export function setIncludeAction(arr:string[]):ISetIncludeAction{
-	return{
-		type: "SET_INCLUDE_ACTION",
-		payload:arr,
-	};
-}
-export function setExcludeAction(arr:string[]):ISetExcludeAction{
-	return{
-		type: "SET_EXCLUDE_ACTION",
-		payload:arr,
+		type: "SET_LISTENER_NOTIFIER",
+		payload: {
+			data,
+		},
 	};
 }
 /*
@@ -640,9 +623,7 @@ export type TActions = ISetMainTab |
 	IListenerAction |
 	IAutoInspectorAction |
 	ISetSearchTermAction |
-	ISetFilterType |
-	ISetIncludeAction |
-	ISetExcludeAction |
+	ISetListenerNotifierAction|
 	//IGroupSameAction |
 	IFilterEventNameAction |
 	IReplaceWholeState |

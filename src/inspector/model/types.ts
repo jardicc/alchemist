@@ -194,9 +194,7 @@ export interface ISettings {
 	autoUpdateInspector: boolean
 	groupDescriptors: "none" | "strict"
 	searchTerm: string | null
-	listenerFilterType: TFilterEvents
-	listenerExclude: string[]
-	listenerInclude: string[]
+
 	lastHistoryID: number
 	autoUpdateListener: boolean
 	lastSelectedItem: string | null
@@ -214,6 +212,15 @@ export interface ISettings {
 	hide_isCommand: boolean
 	hideDontRecord: boolean
 	hideForceNotify: boolean
+
+	listenerFilter: IListenerNotifierFilter
+	notifierFilter: IListenerNotifierFilter
+}
+
+export interface IListenerNotifierFilter{
+	type: TFilterEvents
+	exclude: string[]
+	include: string[]
 }
 
 export interface IDescriptorSettings {
