@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
-import { IDescriptor, IInspectorState, IListenerNotifierFilter } from "../model/types";
+import { IDescriptor, IInspectorState, IListenerNotifierFilter, TTargetReference } from "../model/types";
 import { Helpers } from "../classes/Helpers";
 import { cloneDeep } from "lodash";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
@@ -289,7 +289,7 @@ export const getAddAllowed = createSelector([getActiveTargetReference, getActive
 		if (s.type === "generator") {
 			return true;
 		}
-		if (s.type === "listener") {
+		if ((["listener","dispatcher","customDescriptor","notifier","replies"] as TTargetReference[]).includes(s.type)) {
 			return false;
 		}
 		for (const key in s.data) {
