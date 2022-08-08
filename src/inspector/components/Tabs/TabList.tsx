@@ -6,6 +6,7 @@ export interface ITabListProps{
 	activeKey: string
 	className: string
 	children: React.ReactElement[]
+	postFix?: React.ReactElement
 	onChange:(id:any)=>void
 }
 
@@ -43,6 +44,7 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 							style={item.props.marginRight && {marginRight: "auto"}}
 						>{item.props.title}</div>
 					))}
+					{this.props.postFix}
 				</div>
 			);
 		}

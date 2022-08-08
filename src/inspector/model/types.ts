@@ -22,8 +22,6 @@ export type TActiveInspectorTab = ITreeDataTabs;
 export type TGenericViewType = "tree" | "raw";
 export type TCodeViewType = "generated" | "options";
 
-export type TActiveSection = "descriptors" | "settings";
-
 export type TExportItems = "selected" | "all";
 export type TImportItems = "append" | "replace";
 
@@ -63,7 +61,6 @@ export type TDescriptorsGrouping = "none" | "eventName"
 
 export interface IInspectorState {
 	version: [number, number, number]
-	activeSection: TActiveSection
 	selectedReferenceType: TTargetReference
 	filterBySelectedReferenceType: TState
 	descriptorsGrouping: TDescriptorsGrouping
@@ -189,6 +186,7 @@ export type TAllReferenceSubtypes = ICategory | IProperty | ICustomDescriptor | 
 
 export interface ISettings {
 	fontSize: TFontSizeSettings
+	settingsVisible: boolean
 	makeRawDataEasyToInspect: boolean
 	selectReferenceBeforeGet: boolean
 	autoUpdateInspector: boolean
@@ -203,6 +201,7 @@ export interface ISettings {
 	properties: IPropertySettings[]
 	maximumItems: number
 	leftColumnWidthPx: number
+	rightColumnWidthPx: number
 	initialDescriptorSettings: IDescriptorSettings
 	neverRecordActionNames: string[]
 	

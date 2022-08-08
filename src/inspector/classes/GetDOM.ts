@@ -6,39 +6,39 @@ import { Action, ActionSet } from "photoshop/dom/Actions";
 import { Layer } from "photoshop/dom/Layer";
 import { Photoshop } from "photoshop/dom/Photoshop";
 import { Document } from "photoshop/dom/Document";
+import {Guide} from "photoshop/dom/Guide";
 
 export class GetDOM{
-	public static getDom(ref: TReference[]): Photoshop | Layer | Document | ActionSet | Action | null {
+	public static getDom(ref: TReference[]): Photoshop | Layer | Document | ActionSet | Action | Guide | null {
 		const res: IDReference[] = ref?.filter(v => ("_ref" in v)) as IDReference[];
 		if (!res) {
 			return null;
 		}
 
-		if (res[0]._ref === "historyState" || res[0]._ref === "snapshot") {
-			return GetDOM.getHistoryDom(res[0]._id, res[1]?._id);
-		}
-
-		if (res[0]._ref === "application") {
-			return GetDOM.getAppDom();
-		}
-
-		if (res[0]._ref === "layer") {
-			if (res.length === 1) {
-				return GetDOM.getLayerDom(res[0]._id,null);				
-			} else {
-				return GetDOM.getLayerDom(res[0]._id,res[1]._id);				
+		switch (res[0]._ref) {
+			case "historyState":
+			case "snapshot":
+				return GetDOM.getHistoryDom(res[0]._id, res[1]?._id);
+			case "application":
+				return GetDOM.getAppDom();
+			case "layer": {
+				if (res.length === 1) {
+					return GetDOM.getLayerDom(res[0]._id, null);
+				}
+				return GetDOM.getLayerDom(res[0]._id, res[1]._id);
 			}
-		}
-
-		if (res[0]._ref === "document") {
-			return GetDOM.getDocumentDom(res[0]._id);
-		}
-
-		if (res[0]._ref === "actionSet") {
-			return GetDOM.actionSetDom(res[0]._id);
-		}
-		if (res[0]._ref === "action") {
-			return GetDOM.actionItemDom(res[0]._id);
+			case "document": 
+				return GetDOM.getDocumentDom(res[0]._id);
+			case "actionSet": 
+				return GetDOM.actionSetDom(res[0]._id);
+			case "action": 
+				return GetDOM.actionItemDom(res[0]._id);
+			case "guide":{
+				const guides = GetDOM.getDocumentDom(res[1]._id)?.guides;
+				const found:Guide|null = (guides as any)?.find((g: Guide) => g.id === res[0]._id);
+				if (!found) {return null;}
+				return found;
+			}
 		}
 		return null;
 	}
@@ -53,6 +53,12 @@ export class GetDOM{
 		return docId;
 	}
 
+	/*
+	private static getGuideDom(): Guide{
+		const guide = new photoshop.app.
+	}
+	*/
+	
 	private static getAppDom():Photoshop {
 		const appDom = new photoshop.app.Photoshop();
 		return appDom;

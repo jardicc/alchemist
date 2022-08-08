@@ -9,10 +9,7 @@ import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
-import { cloneDeep, uniqBy } from "lodash";
 import { TAtnActions } from "../../atnDecoder/atnActions";
-import { getSetByUUID, getTreePartUniversal, selectedActions, selectedCommands, selectedSets } from "../../atnDecoder/atnSelectors";
-import { TExpandedItem, TSelectedItem } from "../../atnDecoder/atnModel";
 import { atnReducer } from "../../atnDecoder/atnReducer";
 import { TSorActions } from "../../sorcerer/sorActions";
 import { sorReducer } from "../../sorcerer/sorReducer";
@@ -22,15 +19,7 @@ export type TAllActions = TActions | TAtnActions|TSorActions;
 export const inspectorReducer = (state = getInitialState(), action:TAllActions ): IInspectorState => {
 	console.log(action/*JSON.stringify(action, null, "\t")*/);
 	switch (action.type) {
-		// OCCULTIST
-		
 		// ALCHEMIST
-		case "SET_MAIN_TAB": {
-			state = produce(state, draft => {
-				draft.activeSection = action.payload;
-			});
-			break;
-		}
 		case "SET_MODE_TAB": {
 			state = produce(state, draft => {
 				draft.inspector.activeTab = action.payload;
@@ -488,6 +477,12 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;	
 		}
+		case "TOGGLE_SETTINGS": {
+			state = produce(state, draft => {
+				draft.settings.settingsVisible = !state.settings.settingsVisible;
+			});
+			break;
+		}
 		case "SET_INSPECTOR_VIEW_ACTION": {
 			state = produce(state, draft => {
 				const {inspectorType,viewType } = action.payload;
@@ -508,7 +503,11 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 		}
 		case "SET_COLUMN_SIZE_ACTION": {
 			state = produce(state, draft => {
-				draft.settings.leftColumnWidthPx = action.payload;
+				if (action.payload.location === "left") {
+					draft.settings.leftColumnWidthPx = action.payload.value;					
+				} else {
+					draft.settings.rightColumnWidthPx = action.payload.value;					
+				}
 			});
 			break;
 		}

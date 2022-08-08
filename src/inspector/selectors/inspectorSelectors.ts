@@ -7,7 +7,6 @@ import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
  
-export const getMainTabID = createSelector([all], s => s.activeSection);
 export const getModeTabID = createSelector([all], s => s.inspector.activeTab);
 
 export const getSelectedTargetReference = createSelector([all], s => s.selectedReferenceType);
@@ -37,8 +36,16 @@ export const getFontSizeSettings = createSelector([getInspectorSettings], (s) =>
 	return s.fontSize;
 });
 
+export const getSettingsVisible = createSelector([getInspectorSettings], (s) => {
+	return s.settingsVisible;
+});
+
 export const getLeftColumnWidth = createSelector([getInspectorSettings], (s) => {
 	return s.leftColumnWidthPx;
+});
+
+export const getRightColumnWidth = createSelector([getInspectorSettings], (s) => {
+	return s.rightColumnWidthPx;
 });
 
 export const getNeverRecordActionNames = createSelector([getInspectorSettings], s => s.neverRecordActionNames);

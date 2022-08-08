@@ -1,11 +1,7 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter } from "../model/types";
+import { TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 
-export interface ISetMainTab {
-	type: "SET_MAIN_TAB"
-	payload: TActiveSection
-}
 
 export interface ISetModeTab {
 	type: "SET_MODE_TAB"
@@ -37,6 +33,11 @@ export interface ISelectDescriptor {
 		uuid?: string
 		crc?:number
 	}
+}
+
+export interface IToggleSettingsAction{
+	type: "TOGGLE_SETTINGS"
+	payload:null
 }
 
 export interface IClearViewAction{
@@ -220,7 +221,10 @@ export interface ISetInspectorViewAction {
 
 export interface ISetColumnSizeAction{
 	type: "SET_COLUMN_SIZE_ACTION",
-	payload:number
+	payload: {
+		location: "left"|"right"
+		value: number
+	}
 }
 
 export interface ISetRecordRawAction{
@@ -312,6 +316,13 @@ export function setAutoExpandLevelAction(part: "DOM" | "content" | "diff",level:
 	};
 }
 
+export function toggleSettingsAction(): IToggleSettingsAction{
+	return {
+		type: "TOGGLE_SETTINGS",
+		payload: null,
+	};
+}
+
 export function setRecordRawAction(value: boolean): ISetRecordRawAction{
 	return {
 		type: "SET_RECORD_RAW",
@@ -327,10 +338,13 @@ export function setMaximumItems(value: string):ISetMaximumItemsAction {
 	};
 }
 
-export function setColumnSizeAction(px: number): ISetColumnSizeAction{
+export function setColumnSizeAction(px: number, location:"left"|"right"): ISetColumnSizeAction{
 	return {
 		type: "SET_COLUMN_SIZE_ACTION",
-		payload: px,
+		payload: {
+			value: px,
+			location,
+		},
 	};
 }
 
@@ -442,12 +456,6 @@ export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"
 		payload: {
 			type, subType, state,
 		},
-	};
-}
-export function setMainTabAction(id:TActiveSection):ISetMainTab{
-	return {
-		type: "SET_MAIN_TAB",
-		payload: id,
 	};
 }
 export function setModeTabAction(id:TActiveInspectorTab):ISetModeTab{
@@ -598,7 +606,8 @@ export function filterEventNameAction(eventName:string, kind:"include"|"exclude"
 }
 
 
-export type TActions = ISetMainTab |
+export type TActions = 
+	IToggleSettingsAction |
 	ISetInspectorPathDOMAction |
 	ISetModeTab |
 	ISetTargetReference |
