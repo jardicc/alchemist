@@ -24,11 +24,11 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 		return (
 			<div className="Footer">
 				<div className="versionBar">
-					<span className="version">{versions.plugin} {Main.devMode ? "DEV":"PROD"}</span>
+					<span className="version"><a href="https://github.com/jardicc/alchemist/releases">{versions.plugin} {Main.devMode ? "DEV":"PROD"}</a></span>
+					<span> / </span>
+					<span className="version"><a href="https://developer.adobe.com/photoshop/uxp/2022/ps_reference/changelog/">PS: {psVersion}</a> ({buildNumber})</span>
 					<span> / </span>
 					<span className="version">UXP: {uxpVersion}</span>
-					<span> / PS: </span>
-					<span className="version">{psVersion} ({buildNumber})</span>
 				</div>
 				<div className="spread"></div>
 				<div className="copy">Copyright © {new Date().getFullYear()} <a href="https://bereza.cz">Bereza.cz</a></div>

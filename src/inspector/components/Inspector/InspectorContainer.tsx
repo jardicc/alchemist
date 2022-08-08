@@ -77,40 +77,47 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 						<Pane className="leftPane">
 							<LeftColumnContainer />
 						</Pane>
-						<Pane className="rightPane">
-							<SplitPane className="split" split="vertical"  defaultSize={visible ? rightColumnWidthPx : 0} onDragFinished={(px) => setColumnSize(px, "right")} maxSize={visible ? undefined : 0} minSize={visible ? 200 : 0} primary={"second"}>
-								<Pane className="rightPane" >
-									<TabList
-										className="tabsDescriptor"
-										activeKey={this.props.modeTab}
-										onChange={this.props.setModeTab}
-										postFix={btnSettings}
-									>
-										<TabPanel id="content" title="Content" noPadding={true}>
-											<TreeContentContainer />
-										</TabPanel>
-										<TabPanel id="difference" title="Difference" noPadding={true}>
-											<TreeDiffContainer />
-										</TabPanel>
-										<TabPanel id="dom" title="DOM (live)" noPadding={true} >
-											<TreeDomContainer />
-										</TabPanel>
-										<TabPanel id="reference" title="Code" noPadding={true}>
-											<GeneratedCodeContainer />
-										</TabPanel>
-										<TabPanel id="dispatcher" title="Dispatch" marginRight={true}>
-											<DispatcherContainer />
-										</TabPanel>
-									</TabList>
-								</Pane>
-								<Pane className="rightPane">
-									{visible && <SettingsContainer />}
-								</Pane>
-							</SplitPane>
-						</Pane>
+						<SplitPane split="horizontal" primary="second" maxSize={25} minSize={25} defaultSize={25} allowResize={false} resizerStyle={{display:"none"}}>
+							
+							<Pane className="rightPane">
+								<SplitPane className="split" split="vertical" defaultSize={visible ? rightColumnWidthPx : 0} onDragFinished={(px) => setColumnSize(px, "right")} maxSize={visible ? undefined : 0} minSize={visible ? 200 : 0} primary={"second"}>
+									<Pane className="rightPane" >
+										<TabList
+											className="tabsDescriptor"
+											activeKey={this.props.modeTab}
+											onChange={this.props.setModeTab}
+											postFix={visible ? undefined : btnSettings}
+										>
+											<TabPanel id="content" title="Content" noPadding={true}>
+												<TreeContentContainer />
+											</TabPanel>
+											<TabPanel id="difference" title="Difference" noPadding={true}>
+												<TreeDiffContainer />
+											</TabPanel>
+											<TabPanel id="dom" title="DOM (live)" noPadding={true} >
+												<TreeDomContainer />
+											</TabPanel>
+											<TabPanel id="reference" title="Code" noPadding={true}>
+												<GeneratedCodeContainer />
+											</TabPanel>
+											<TabPanel id="dispatcher" title="Dispatch" marginRight={true}>
+												<DispatcherContainer />
+											</TabPanel>
+										</TabList>
+									</Pane>
+									<Pane className="rightPane" style={{overflow: "auto"}}>
+										{visible && <SettingsContainer />}
+									</Pane>
+								</SplitPane>
+							</Pane>
+							<Pane className="footerPane">
+								<FooterContainer parentPanel="inspector" />
+
+							</Pane>
+						</SplitPane>
 					</SplitPane>
 				</div>
-				<FooterContainer parentPanel="inspector" />
+				
 				{this.state.showMessage && <div className="messageStrip"><a href={this.state.link} className="link">{this.state.message}</a><span className="close" onClick={this.closeMessage}><IconX /></span></div>}
 			</div>
 		);

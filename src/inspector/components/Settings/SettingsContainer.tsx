@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings } from "../../selectors/inspectorSelectors";
-import { setDescriptorOptionsAction, setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction, setSettingsAction } from "../../actions/inspectorActions";
+import { getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings, getSettingsVisible } from "../../selectors/inspectorSelectors";
+import { setDescriptorOptionsAction, setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction, setSettingsAction, toggleSettingsAction } from "../../actions/inspectorActions";
 import SP from "react-uxp-spectrum";
 import React, { Component } from "react";
 import { IDescriptor, IDescriptorSettings, ISettings, TFontSizeSettings } from "../../model/types";
@@ -69,7 +69,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 	
 	public render(): React.ReactNode {
 		const { settings: { makeRawDataEasyToInspect: ignoreRawData, maximumItems,fontSize,neverRecordActionNames }, onSetRecordRaw,onSetFontSize, onNeverRecordActionNamesChanged } = this.props;
-		const { onSetGlobalOptions} = this.props;
+		const { onSetGlobalOptions, settingsVisible:visible, setToggleSettings} = this.props;
 		const { dialogOptions, modalBehavior, synchronousExecution,supportRawDataType } = this.props.descriptorSettings;
 		const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand} = this.props.globalSettings;
 		
@@ -82,10 +82,19 @@ class Settings extends Component<TSettings, ISettingsState> {
 			{ label: "You must be joking", val: "size-youMustBeJoking" },
 		];
 
+		const btnSettings = (
+			<div className={"FilterButton settings semi"} title="Show settings" onClick={setToggleSettings} style={{position:"fixed",right:"1.5em",top:0}}>
+				<div className="icon flex row">{/*<IconCog />&nbsp;*/}<span>×</span></div>
+			</div>
+		);
+
 		SettingsClass.setSpectrumComponentSize(fontSize);
 
 		return (
 			<div className="Settings">
+
+				{visible && btnSettings}
+
 				<h3>User interface</h3>
 				<div className="column">
 					<span className="fontSizeLabel">
@@ -241,6 +250,7 @@ interface ISettingsProps{
 	globalSettings: ISettings
 	descriptorSettings: IDescriptorSettings
 	selected: IDescriptor[]
+	settingsVisible: boolean
 }
 
 const mapStateToProps = (state: IRootState): ISettingsProps => ({	
@@ -249,6 +259,7 @@ const mapStateToProps = (state: IRootState): ISettingsProps => ({
 	descriptorSettings: getDescriptorOptions(state),
 	globalSettings: getInspectorSettings(state),
 	selected: getActiveDescriptors(state),
+	settingsVisible: getSettingsVisible(state),
 });
 
 interface ISettingsDispatch {
@@ -259,6 +270,7 @@ interface ISettingsDispatch {
 	
 	onSetGlobalOptions: (options: Partial<ISettings>) => void
 	onSetDescriptorOptions: (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => void
+	setToggleSettings():void
 }
 
 const mapDispatchToProps = (dispatch:Dispatch): ISettingsDispatch => ({
@@ -269,6 +281,7 @@ const mapDispatchToProps = (dispatch:Dispatch): ISettingsDispatch => ({
 	
 	onSetGlobalOptions: (options) => dispatch(setSettingsAction(options)),
 	onSetDescriptorOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
+	setToggleSettings: () => dispatch(toggleSettingsAction()),
 });
 
 export const SettingsContainer = connect<ISettingsProps, ISettingsDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Settings);
