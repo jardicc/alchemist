@@ -96,60 +96,6 @@ class Settings extends Component<TSettings, ISettingsState> {
 				<h3 className="mainHeading">SETTINGS</h3>
 				{visible && btnSettings}
 
-				<Accordion id="ui" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="UI">
-					<div className="column">
-						<span className="fontSizeLabel">
-							Font size:
-						</span>
-						<SP.Dropdown className="fontSizeDropdown fullW" >
-							<SP.Menu slot="options" onChange={e => onSetFontSize(items[e.target?.selectedIndex ?? 0].val)}>
-								{
-									items.map(item => (
-										<SP.MenuItem
-											key={item.val}
-											selected={fontSize === item.val ? true : undefined}
-										>{item.label}</SP.MenuItem>
-									))
-								}
-							</SP.Menu>
-						</SP.Dropdown>
-					</div>
-				</Accordion>
-
-				<Accordion id="banList" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="Ignored Actions">
-					<div className="column">
-						<div>
-							<span>
-								Events that never will be recorded. No matter what you will set in include/exclude filter. One per line, no quotes, no commas or semicolons. Will Not affect already recorded items.
-							</span>
-						</div>
-						<div>
-							<SP.Textarea
-								className="neverRecordActionNamesArea fullW"
-								onInput={(e: any) => onNeverRecordActionNamesChanged(e.currentTarget.value)}
-								value={neverRecordActionNames.join("\n")}
-							/>
-						</div>
-					</div>
-				</Accordion>
-
-				<Accordion id="descriptorSettings" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="Descriptor Settings">
-					<div className="row">
-						<SP.Checkbox checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} >Record raw data type as an array of numbers to make it easily readable (might slow down Alchemist)</SP.Checkbox>
-					</div>
-
-					<div className="column">
-						<label>Max. descriptors:</label>
-						<SP.Textfield
-							className="fullW"
-							type="number"
-							value={maximumItems.toString()}
-							onChange={(e: any) => this.props.onSetMaximumItems(e.currentTarget.value)}
-						/>
-					</div>
-				</Accordion>
-
-
 				<Accordion id="batchPlaySettings" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="Batch play">
 					<div className="column">
 						<span className="scope">{this.renderOptionsScope()}</span>
@@ -238,6 +184,62 @@ class Settings extends Component<TSettings, ISettingsState> {
 						>Hide property &quot;forceNotify&quot;</SP.Checkbox>
 					</div>
 				</Accordion>
+
+				<Accordion id="ui" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="UI">
+					<div className="column">
+						<span className="fontSizeLabel">
+							Font size:
+						</span>
+						<SP.Dropdown className="fontSizeDropdown fullW" >
+							<SP.Menu slot="options" onChange={e => onSetFontSize(items[e.target?.selectedIndex ?? 0].val)}>
+								{
+									items.map(item => (
+										<SP.MenuItem
+											key={item.val}
+											selected={fontSize === item.val ? true : undefined}
+										>{item.label}</SP.MenuItem>
+									))
+								}
+							</SP.Menu>
+						</SP.Dropdown>
+					</div>
+				</Accordion>
+
+				<Accordion id="banList" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="Ignored Actions">
+					<div className="column">
+						<div>
+							<span>
+								Events that never will be recorded. No matter what you will set in include/exclude filter. One per line, no quotes, no commas or semicolons. Will Not affect already recorded items.
+							</span>
+						</div>
+						<div>
+							<SP.Textarea
+								className="neverRecordActionNamesArea fullW"
+								onInput={(e: any) => onNeverRecordActionNamesChanged(e.currentTarget.value)}
+								value={neverRecordActionNames.join("\n")}
+							/>
+						</div>
+					</div>
+				</Accordion>
+
+				<Accordion id="descriptorSettings" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="Descriptor Settings">
+					<div className="row">
+						<SP.Checkbox checked={ignoreRawData ? true : undefined} onChange={(e) => onSetRecordRaw(!!e.target?.checked)} >Record raw data type as an array of numbers to make it easily readable (might slow down Alchemist)</SP.Checkbox>
+					</div>
+
+					<div className="column">
+						<label>Max. descriptors:</label>
+						<SP.Textfield
+							className="fullW"
+							type="number"
+							value={maximumItems.toString()}
+							onChange={(e: any) => this.props.onSetMaximumItems(e.currentTarget.value)}
+						/>
+					</div>
+				</Accordion>
+
+
+
 			</div>
 		);
 	}

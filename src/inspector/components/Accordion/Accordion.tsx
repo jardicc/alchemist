@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React from "react";
+import {IconCaretRight, IconChevronBottom, IconChevronRight} from "../../../shared/components/icons";
 import "./Accordion.less";
 
 export interface IAccordionProps{
@@ -44,6 +45,7 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 	private renderHeader = (): JSX.Element => {
 		return (
 			<div className="header" onClick={this.onHeaderClick}>
+				{this.isExpanded ? <IconChevronBottom />:<IconChevronRight />}
 				<span className="title">{this.props.header}</span>
 			</div>
 		);
