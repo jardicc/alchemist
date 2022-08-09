@@ -204,6 +204,7 @@ export interface ISettings {
 	rightColumnWidthPx: number
 	initialDescriptorSettings: IDescriptorSettings
 	neverRecordActionNames: string[]
+	accordionExpandedIDs: string[]
 	
 	singleQuotes: boolean
 	indent: "tab" | "space1" | "space2" | "space3" | "space4" | "space5" | "space6" | "space7" | "space8"

@@ -289,6 +289,7 @@ export function getInitialState(): IInspectorState {
 			dontShowMarketplaceInfo: false,
 			activeDescriptors: [],
 			neverRecordActionNames: ["idle"],
+			accordionExpandedIDs:[],
 			properties: [
 				{
 					type: "application",

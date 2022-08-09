@@ -35,6 +35,14 @@ export interface ISelectDescriptor {
 	}
 }
 
+export interface IToggleAccordionAction{
+	type: "TOGGLE_ACCORDION"
+	payload: {
+		id: string
+		expanded: boolean		
+	}
+}
+
 export interface IToggleSettingsAction{
 	type: "TOGGLE_SETTINGS"
 	payload:null
@@ -605,6 +613,16 @@ export function filterEventNameAction(eventName:string, kind:"include"|"exclude"
 	};
 }
 
+export function toggleAccordion(id: string, expanded: boolean): IToggleAccordionAction{
+	return {
+		type: "TOGGLE_ACCORDION",
+		payload: {
+			id,
+			expanded,			
+		},
+	};
+}
+
 
 export type TActions = 
 	IToggleSettingsAction |
@@ -649,4 +667,5 @@ export type TActions =
 	ISetFontSizeAction |
 	ISetNeverRecordActionNamesAction |
 	IToggleDescriptorsGroupingAction |
-	ISetSettingsAction
+	ISetSettingsAction |
+	IToggleAccordionAction

@@ -583,6 +583,20 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;
 		}
+		case "TOGGLE_ACCORDION": {
+			state = produce(state, draft => {
+				if (action.payload.expanded) {
+					if (!state.settings.accordionExpandedIDs.includes(action.payload.id)) {
+						draft.settings.accordionExpandedIDs.push(action.payload.id);
+					}
+				} else {
+					if (state.settings.accordionExpandedIDs.includes(action.payload.id)) { 
+						draft.settings.accordionExpandedIDs = state.settings.accordionExpandedIDs.filter(id => id !== action.payload.id);
+					}
+				}
+			});
+			break;
+		}
 	}
 
 	state = atnReducer(state, action);
