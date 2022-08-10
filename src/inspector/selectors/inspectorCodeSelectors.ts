@@ -6,7 +6,7 @@ import { IDescriptor, IDescriptorSettings } from "../model/types";
 import { getContentPath } from "./inspectorContentSelectors";
 import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
 import stringifyObject from "stringify-object";
-import { ActionDescriptor, BatchPlayCommandOptions } from "photoshop/dom/CoreModules";
+import {ActionDescriptor, BatchPlayCommandOptions} from "photoshop/dom/CoreModules";
 
 type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?:boolean}
 
@@ -107,6 +107,10 @@ export const getGeneratedCode = createSelector([
 		return str.split("\n").map(l => tab + l).join("\n");
 	}
 
+	function udt(str: string): string{
+		return str.split("\n").map(l => l.replace(tab, "")).join("\n");
+	}
+
 	// replaces quotes
 	function qts(str:string):string {
 		if (settings.singleQuotes) {
@@ -114,6 +118,9 @@ export const getGeneratedCode = createSelector([
 		}
 		return str;
 	}
+
+	const addModules = false;
+	const wrappers /*"modal"|"batchPlay"|"array"|"objects"*/ = "objects"+"";
 
 	if (selected.length >= 1 || autoActive) {
 		let data:any = null, iDesc: IDescriptor[] = [];
@@ -164,18 +171,40 @@ export const getGeneratedCode = createSelector([
 		const commandOptions = addCommonOptions(iDesc);
 
 		const strOptions = idt(stringifyObject(commandOptions, stringifyOptions));
-		const strDesc:string = idt(stringifyObject(data, stringifyOptions));
+		const strDesc:string = stringifyObject(data, stringifyOptions);
 
-		const strBatchPlayImport = qts(idt(`const {batchPlay} = require("photoshop").action;`));
 
-		const strBatchPlay = `const result = await batchPlay(\n${strDesc},\n${strOptions}\n);${strPinned}`;
-		const strActionCommand = `async function actionCommands() {\n${strBatchPlayImport}\n\n${idt(strBatchPlay)}\n}\n\n`;
+		const strExecModalImport = addModules ? qts(`const {executeAsModal} = require("photoshop").core;\n`) : "";
+		const strBatchPlayImport = addModules ? qts(`const {batchPlay} = require("photoshop").action;\n\n`) : "";
 
-		const strCall = qts(`async function runModalFunction() {\n${tab}await require("photoshop").core.executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);
+		const strBatchPlay = `const result = await batchPlay(\n${idt(strDesc)},\n${strOptions}\n);${strPinned}`;
+		const strActionCommand = `async function actionCommands() {\n${idt(strBatchPlay)}\n}\n\n`;
 
-		const strResult = strActionCommand + strCall;
+		const strCall = qts(`async function runModalFunction() {\n${tab}await executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);
 
-		return strResult;
+		
+			
+		
+		if (wrappers==="batchPlay") {
+			return (
+				strExecModalImport +
+				strBatchPlayImport +
+				strBatchPlay
+			);
+		} else if (wrappers==="modal") {
+			return (
+				strExecModalImport +
+				strBatchPlayImport +
+				strActionCommand +
+				strCall
+			);
+		} else if (wrappers === "array") {
+			return strDesc;
+		} else if (wrappers === "objects") {
+			return udt(strDesc.slice(2, -2));
+		}
+
+		return "";
 	} else {
 		return "Add some descriptor";
 	}
