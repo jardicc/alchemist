@@ -208,6 +208,9 @@ export interface ISettings {
 	
 	singleQuotes: boolean
 	indent: "tab" | "space1" | "space2" | "space3" | "space4" | "space5" | "space6" | "space7" | "space8"
+
+	codeImports: "none" | "require"
+	codeWrappers: "modal" | "batchPlay" | "array" | "objects"
 	
 	hide_isCommand: boolean
 	hideDontRecord: boolean

@@ -17,6 +17,8 @@ class Settings extends Component<TSettings, ISettingsState> {
 		super(props);
 	}
 
+	private levelDelay: number | null = null;
+
 	private common = (options: Partial<IDescriptorSettings>) => {
 		const {autoSelectedUUIDs, selected, onSetDescriptorOptions: onSetOptions} = this.props;
 		if (autoSelectedUUIDs?.length) {
@@ -67,12 +69,68 @@ class Settings extends Component<TSettings, ISettingsState> {
 		const value = e.currentTarget.value;
 		this.props.onSetGlobalOptions({indent: value});
 	}
+
+	private onSetCodeWrappers = (e:any) => {
+		if (this.levelDelay) {
+			clearTimeout(this.levelDelay);			
+		}
+		const value = this.wrappersString(e.target.value);
+
+		this.levelDelay = window.setTimeout(() => {
+			this.props.onSetGlobalOptions({
+				codeWrappers:value,
+			});
+		}, 50);
+	}
+
+	private get wrappersValue():number {
+		switch (this.props.settings.codeWrappers) {
+			case "modal":
+				return 0;
+			case "batchPlay":
+				return 1;
+			case "array":
+				return 2;
+			case "objects":
+				return 3;
+		}
+	}
+
+	private wrappersString(num:0|1|2|3) {
+		switch (num) {
+			case 0:
+				return "modal";
+			case 1:
+				return "batchPlay";
+			case 2:
+				return "array";
+			case 3:
+				return "objects";
+		}
+	}
+
+	private get wrappersLabel():string {
+		switch (this.props.settings.codeWrappers) {
+			case "modal":
+				return "Execute as modal";
+			case "batchPlay":
+				return "Batch play";
+			case "array":
+				return "Array of descriptors";
+			case "objects":
+				return "Just objects";
+		}
+	}
+
+	private onSetImports = (e:any) => {
+		this.props.onSetGlobalOptions({codeImports:e.target?.checked ? "require" : "none"});
+	}
 	
 	public render(): React.ReactNode {
 		const {settings: {makeRawDataEasyToInspect: ignoreRawData, maximumItems, fontSize, neverRecordActionNames, accordionExpandedIDs}, onSetRecordRaw, onSetFontSize, onNeverRecordActionNamesChanged} = this.props;
 		const {onSetGlobalOptions, settingsVisible: visible, setToggleSettings, onToggleAccordion} = this.props;
 		const {dialogOptions, modalBehavior, synchronousExecution, supportRawDataType} = this.props.descriptorSettings;
-		const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand} = this.props.globalSettings;
+		const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand,codeImports,codeWrappers} = this.props.globalSettings;
 		
 		const items: {val: TFontSizeSettings, label: string}[] = [
 			{label: "Tiny", val: "size-tiny"},
@@ -139,11 +197,11 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 				<Accordion id="codeSettings" expanded={accordionExpandedIDs} onChange={onToggleAccordion} header="Generated Code">
 					<span className="scope">Global options for all items including already recorded</span>
-					<div className="column">
+					<div className="column indent">
 						<div className="label">
 							Indent using:
 						</div>
-						<SP.Dropdown quiet={false}>
+						<SP.Dropdown quiet={false} className="fullW">
 							<SP.Menu slot="options" onChange={this.onSetIndent} className="fullW">
 								<SP.MenuItem key={"tab"} value={"tab"} selected={(indent === "tab") ? true : undefined}>1 tab</SP.MenuItem>
 
@@ -157,6 +215,25 @@ class Settings extends Component<TSettings, ISettingsState> {
 								<SP.MenuItem key={"space8"} value={"space8"} selected={(indent === "space8") ? true : undefined}>8 spaces</SP.MenuItem>
 							</SP.Menu>
 						</SP.Dropdown>
+					</div>
+					<div className="column">
+						<div className="label">
+							<span>Wrappers: </span><span>{ this.wrappersLabel}</span>
+						</div>
+						<SP.Slider
+							variant="filled"
+							min={0}
+							max={3}
+							onInput={this.onSetCodeWrappers}
+							//onChange={(e: any) => onSetAutoExpandLevel(e.target.value)}
+							value={this.wrappersValue}
+						/>
+					</div>
+					<div className="row">
+						<SP.Checkbox
+							onChange={this.onSetImports}
+							checked={codeImports==="require" || undefined}
+						>{"Add require()"}</SP.Checkbox>
 					</div>
 					<div className="row">
 						<SP.Checkbox
@@ -237,9 +314,6 @@ class Settings extends Component<TSettings, ISettingsState> {
 						/>
 					</div>
 				</Accordion>
-
-
-
 			</div>
 		);
 	}

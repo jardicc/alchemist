@@ -119,8 +119,8 @@ export const getGeneratedCode = createSelector([
 		return str;
 	}
 
-	const addModules = false;
-	const wrappers /*"modal"|"batchPlay"|"array"|"objects"*/ = "objects"+"";
+	const addModules = settings.codeImports === "require";
+	const wrappers = settings.codeWrappers;
 
 	if (selected.length >= 1 || autoActive) {
 		let data:any = null, iDesc: IDescriptor[] = [];

@@ -724,6 +724,9 @@ export function getInitialState(): IInspectorState {
 			},
 			indent: "space3",
 			singleQuotes: false,
+			codeImports: "require",
+			codeWrappers: "modal",
+
 			hide_isCommand: true,
 			hideDontRecord: true,
 			hideForceNotify: true,
