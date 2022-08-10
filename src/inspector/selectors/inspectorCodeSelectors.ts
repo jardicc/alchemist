@@ -187,7 +187,6 @@ export const getGeneratedCode = createSelector([
 		
 		if (wrappers==="batchPlay") {
 			return (
-				strExecModalImport +
 				strBatchPlayImport +
 				strBatchPlay
 			);
