@@ -62,6 +62,7 @@ export const getTreeContent = createSelector([getTreeContentUnfiltered, getSearc
 function filter(tree: any, keyword: string) {
 	const foundPaths: string[][] = [];
 	const currentPath: string[] = [];
+	keyword = keyword.toLowerCase();
 
 	if (!keyword) {
 		return tree;
@@ -76,7 +77,7 @@ function filter(tree: any, keyword: string) {
 		entries.forEach(entry => {
 
 			let added = false;
-			if (entry[0].includes(keyword)) {
+			if (entry[0].toLowerCase().includes(keyword)) {
 				foundPaths.push([...currentPath, entry[0]]);
 				added = true;
 			}
@@ -86,7 +87,7 @@ function filter(tree: any, keyword: string) {
 				case "boolean":
 				case "number":
 				case "string": {
-					if (entry[1].toString().includes(keyword) && !added) {
+					if (entry[1].toString().toLowerCase().includes(keyword) && !added) {
 						foundPaths.push([...currentPath, entry[0]]);
 					}
 					break;
