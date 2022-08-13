@@ -265,6 +265,7 @@ export interface IDOM{
 
 export interface IContent{
 	viewType: TGenericViewType
+	search:string
 	treePath: string[]
 	autoExpandLevels:number
 	expandedTree:TPath[]

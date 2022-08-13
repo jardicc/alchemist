@@ -15,6 +15,7 @@ export function getInitialState(): IInspectorState {
 			activeTab: "content",
 			content: {
 				viewType: "tree",
+				search:"",
 				treePath: [],
 				autoExpandLevels: 0,
 				expandedTree: [],

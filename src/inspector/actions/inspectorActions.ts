@@ -279,6 +279,18 @@ export interface ISetSettingsAction{
 	payload: Partial<ISettings>
 }
 
+export interface ISetSearchContentKeywordAction{
+	type: "SET_SEARCH_CONTENT_KEYWORD",
+	payload:string
+}
+
+export function setSearchContentKeywordAction(keyword: string): ISetSearchContentKeywordAction{
+	return {
+		type: "SET_SEARCH_CONTENT_KEYWORD",
+		payload: keyword,
+	};
+}
+
 export function setSettingsAction(settings:Partial<ISettings>): ISetSettingsAction{
 	return {
 		type: "SET_SETTINGS",
@@ -668,4 +680,5 @@ export type TActions =
 	ISetNeverRecordActionNamesAction |
 	IToggleDescriptorsGroupingAction |
 	ISetSettingsAction |
-	IToggleAccordionAction
+	IToggleAccordionAction |
+	ISetSearchContentKeywordAction

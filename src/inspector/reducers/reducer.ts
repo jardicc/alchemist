@@ -597,6 +597,11 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;
 		}
+		case "SET_SEARCH_CONTENT_KEYWORD": {
+			state = produce(state, draft => {
+				draft.inspector.content.search = action.payload;
+			});
+		}
 	}
 
 	state = atnReducer(state, action);
