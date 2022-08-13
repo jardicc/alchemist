@@ -98,7 +98,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 		const category = descriptor?._isCommand ? "listener" : "notifier";
 
-		if (category === "notifier") {debugger;}
+		// if (category === "notifier") {debugger;}
 
 		// delete because it will be added as a first later
 		delete descriptor._obj;

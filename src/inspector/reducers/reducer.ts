@@ -13,6 +13,7 @@ import { TAtnActions } from "../../atnDecoder/atnActions";
 import { atnReducer } from "../../atnDecoder/atnReducer";
 import { TSorActions } from "../../sorcerer/sorActions";
 import { sorReducer } from "../../sorcerer/sorReducer";
+import {ListenerClass} from "../classes/Listener";
 
 export type TAllActions = TActions | TAtnActions|TSorActions;
 
@@ -282,12 +283,20 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 		case "SET_LISTENER": {
 			state = produce(state, draft => {
 				draft.settings.autoUpdateListener = action.payload;
+				if (action.payload) {
+					ListenerClass.stopInspector();
+					draft.settings.autoUpdateInspector = false;					
+				}
 			});
 			break;
 		}
 		case "SET_AUTO_INSPECTOR": {
 			state = produce(state, draft => {
 				draft.settings.autoUpdateInspector = action.payload;
+				if (action.payload) {
+					ListenerClass.stopListener();
+					draft.settings.autoUpdateListener = false;					
+				}
 			});
 			break;
 		}

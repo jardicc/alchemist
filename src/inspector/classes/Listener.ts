@@ -10,8 +10,8 @@ export type TNotificationListenerCb = (event: string, descriptor: ActionDescript
 
 export class ListenerClass{	
 
-	private static listenerCb:TNotificationListenerCb = async (event: string, descriptor: ActionDescriptor) => { };
-	private static inspectorCb:TNotificationListenerCb = async (event: string, descriptor: ActionDescriptor) => { };
+	private static listenerCb:TNotificationListenerCb | null = null;
+	private static inspectorCb:TNotificationListenerCb | null = null;
 	//private static listenerAMHackCb:TNotificationListenerCb = async (event: string, descriptor: any) => { };
 
 	private static eventsArrayCache: string[] | null = null;
@@ -28,7 +28,7 @@ export class ListenerClass{
 		//ListenerClass.addAMConverterHack();
 		if (Main.devMode) {
 			//app.eventNotifier = this.listenerCb;
-			action.addNotificationListener(['all'], this.listenerCb);
+			action.addNotificationListener(["all"], this.listenerCb);
 		} else {
 			action.addNotificationListener(this.allEventsArray, this.listenerCb);
 		}
@@ -36,12 +36,14 @@ export class ListenerClass{
 
 	public static stopListener(): void{
 		//this.removeAMConverterHack();
+		if (!this.listenerCb) {return;}
 		if (Main.devMode) {
 			//app.eventNotifier = () => { };
-			action.removeNotificationListener(['all'], this.listenerCb);
+			action.removeNotificationListener(["all"], this.listenerCb);
 		} else {
 			action.removeNotificationListener(this.allEventsArray, this.listenerCb);			
 		}
+		this.listenerCb = null;
 	}
 
 	public static startInspector(cb: TNotificationListenerCb): void{
@@ -50,7 +52,9 @@ export class ListenerClass{
 	}
 
 	public static stopInspector(): void{
-		action.removeNotificationListener(["select"], this.inspectorCb);
+		if (!this.inspectorCb) {return; }
+		action.removeNotificationListener(["select"], this.inspectorCb);			
+		this.inspectorCb = null;
 	}
 
 	// AM coverter hack

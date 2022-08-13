@@ -35,9 +35,9 @@ export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, 
 	return data;
 });
 
-export const getActiveDescriptorContent = createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
+export const getActiveDescriptorContent = createSelector([getActiveDescriptors, getAutoActiveDescriptor,getSearchContentKeyword], (selected, autoActive,keyword) => {
 	if (selected.length >= 1) {
-		const toSend = selected.map(item => item.originalData);
+		const toSend = selected.map(item => filter(item.originalData,keyword));
 		return JSON.stringify(toSend.length === 1 ? toSend[0] : toSend, null, 3);
 	} else if (autoActive) {
 		return JSON.stringify(autoActive.originalData, null, 3);
@@ -56,6 +56,10 @@ export const getContentExpandLevel = createSelector([getInspectorContentTab], (t
 
 // TODO do not add array item by property name e.g. do not search by index ["5"]
 export const getTreeContent = createSelector([getTreeContentUnfiltered, getSearchContentKeyword], (tree,keyword) => {
+	return filter(tree, keyword);
+});
+
+function filter(tree: any, keyword: string) {
 	const foundPaths: string[][] = [];
 	const currentPath: string[] = [];
 
@@ -137,4 +141,4 @@ export const getTreeContent = createSelector([getTreeContentUnfiltered, getSearc
 
 	//console.log(foundPaths);
 	return result;
-});
+}
