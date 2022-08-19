@@ -16,7 +16,12 @@
 			"schemes": ["http", "https"]
 		},
 		"network": {
-			"domains": ["alchemist.bereza.cz"]
+			"domains": [
+				"alchemist.bereza.cz",
+				"github.com",
+				"bereza.cz",
+				"developer.adobe.com"
+			]
 		}
 	},
 	"entrypoints": [{
@@ -26,7 +31,7 @@
 				"default": "Alchemist"
 			},
 			"minimumSize": {
-				"width": 450,
+				"width": 600,
 				"height": 360
 			},
 			"maximumSize": {
@@ -34,11 +39,11 @@
 				"height": 2000
 			},
 			"preferredDockedSize": {
-				"width": 600,
+				"width": 800,
 				"height": 540
 			},
 			"preferredFloatingSize": {
-				"width": 600,
+				"width": 800,
 				"height": 540
 			},
 			"icons": [{
