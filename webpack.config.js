@@ -1,8 +1,11 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const ZipPlugin = require("zip-webpack-plugin");
+const WatchExternalFilesPlugin = require("webpack-watch-external-files-plugin");
 
 module.exports = (env) => {
 	
@@ -55,11 +58,16 @@ module.exports = (env) => {
 			new CleanWebpackPlugin(),
 			new CopyPlugin({
 				patterns: [
-					{ from: "uxp", to: "./" },
+					{from: "uxp", to: "./"},
 				],
 			}),
+			// this will copy manifest files and icon files on change 
+			// without need to explicitly trigger watcher or restart it
+			new WatchExternalFilesPlugin({
+				files: ["/uxp/**"],
+			}),
 		],
-	}
+	};
 
 	// Additional steps for production build
 	if (isProduction) {
@@ -103,8 +111,8 @@ module.exports = (env) => {
 				// OPTIONAL: defaults to "zip"
 				// the file extension to use instead of "zip"
 				extension: "ccx",
-			})
-		)
+			}),
+		);
 	}
 
 	return config;
