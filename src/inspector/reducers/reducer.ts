@@ -285,7 +285,9 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 				draft.settings.autoUpdateListener = action.payload;
 				if (action.payload) {
 					ListenerClass.stopInspector();
-					draft.settings.autoUpdateInspector = false;					
+					ListenerClass.stopSpy();
+					draft.settings.autoUpdateInspector = false;
+					draft.settings.autoUpdateSpy = false;
 				}
 			});
 			break;
@@ -295,7 +297,21 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 				draft.settings.autoUpdateInspector = action.payload;
 				if (action.payload) {
 					ListenerClass.stopListener();
-					draft.settings.autoUpdateListener = false;					
+					ListenerClass.stopSpy();
+					draft.settings.autoUpdateListener = false;
+					draft.settings.autoUpdateSpy = false;
+				}
+			});
+			break;
+		}
+		case "SET_SPY": {
+			state = produce(state, draft => {
+				draft.settings.autoUpdateSpy = action.payload;
+				if (action.payload) {
+					ListenerClass.stopListener();
+					ListenerClass.stopInspector();
+					draft.settings.autoUpdateListener = false;
+					draft.settings.autoUpdateInspector = false;
 				}
 			});
 			break;
@@ -433,6 +449,7 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			) {
 				action.payload.settings.autoUpdateListener = false;
 				action.payload.settings.autoUpdateInspector = false;
+				action.payload.settings.autoUpdateSpy = false;
 				state = action.payload;				
 			}
 			break;
@@ -610,6 +627,13 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			state = produce(state, draft => {
 				draft.inspector.content.search = action.payload;
 			});
+			break;
+		}
+		case "SET_SPY_INSTALLED": {
+			state = produce(state, draft => {
+				draft.settings.isSpyInstalled = action.payload;
+			});
+			break;
 		}
 	}
 

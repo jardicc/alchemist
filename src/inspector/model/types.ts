@@ -195,6 +195,8 @@ export interface ISettings {
 
 	lastHistoryID: number
 	autoUpdateListener: boolean
+	autoUpdateSpy: boolean
+	isSpyInstalled: boolean
 	lastSelectedItem: string | null
 	dontShowMarketplaceInfo: boolean
 	activeDescriptors: string[]

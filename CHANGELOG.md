@@ -1,5 +1,58 @@
 # Changelog
 
+## 2.2.0
+
+- add connection to CEP "Spy" plugin to get more events from Photoshop. This plugin is not distributed and enabled by default.
+
+adds these document properties
+cloudDocument
+compositor
+homeScreenReady // nope? - feature dependent?
+isCloudDoc
+overscrollMode // nope
+slices
+targetPathsVisibility // nope
+visible
+watchSuspension // nope?
+
+new path properties
+AGMStrokeStyleInfo
+symmetryPath
+
+new document properties
+layerGroup // nope
+layerGroupExpanded // nope
+layerTransformation // ???
+parentLayerID
+selection // ???
+text // ???
+AGMokeStyleInfo // nope
+
+new application properties
+active
+autoShowHomeScreen
+brushes
+brushSettingsLocks
+customPreference
+gridMinor
+hasMatchingOpenDoc // ??? needs aditional descriptor?
+homeScreenReady
+keyboardFocus
+$PnCK - paintCursorKind
+modalDialogLevel
+modalToolLevel
+mondoFilterLevel
+multiUndoEnabled
+numberOfActionSets
+pluginPrefs
+VMStatus
+springLoadedTools
+springLoadedToolsTimingSensitivity
+LoadedPluginsNames
+
+
+Note: Use "reset alchemist state" to load these new properties.
+
 ## 2.1.0
 
 - fix: another fix for PS 23.3.0 since last fix broke it in PS 23.2.x  

@@ -16,7 +16,7 @@ import SP from "react-uxp-spectrum";
 import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction, clearViewAction, importItemsAction } from "../../actions/inspectorActions";
+import { addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction, clearViewAction, importItemsAction, setSpyAction } from "../../actions/inspectorActions";
 import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getRanameEnabled, getAllDescriptors, getCopyToClipboardEnabled } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
@@ -155,11 +155,23 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			//ListenerClass.listenerCb = async () => { };
 			ListenerClass.stopListener();
+			
 		} else {
 			//ListenerClass.listenerCb = this.listener;
 			ListenerClass.startListener(this.listener);
+			
 		}
 		this.props.setListener(!autoUpdateListener);
+	}
+
+	private attachSpy = async () => {
+		const { settings:{autoUpdateSpy}} = this.props;
+		if (autoUpdateSpy) {
+			ListenerClass.stopSpy();
+		} else {
+			ListenerClass.startSpy(this.props.settings.neverRecordActionNames, this.props.settings.initialDescriptorSettings, this.props.onAddDescriptor);
+		}
+		this.props.setSpy(!autoUpdateSpy);
 	}
 
 	private attachAutoInspector = async () => {
@@ -264,7 +276,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	public render(): JSX.Element {
 		const { addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
 			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
-			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors },
+			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors,autoUpdateSpy, isSpyInstalled },
 			onClear, onClearView, onClearNonExistent, allDescriptors,copyToClipboardEnabled,
 		} = this.props;
 		return (
@@ -314,7 +326,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					</div>
 					<div className="filterButtons">
 						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}><IconPlus /> Add</div>
-						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>
+						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
+						{
+							// helper tool to listen to more events
+							!isSpyInstalled && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
+						}
 						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
 					</div>
 				</div>
@@ -383,6 +399,7 @@ interface ILeftColumnDispatch {
 
 	
 	setListener:(enabled:boolean)=>void
+	setSpy:(enabled:boolean)=>void
 	setAutoInspector: (enabled: boolean) => void
 	setSearchTerm:(str: string)=> void
 	setRenameMode: (uuid: string, on: boolean) => void
@@ -403,6 +420,7 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record
 	onLock: (lock, arg) => dispatch(lockDescAction(lock, arg)),
 
 	setListener: (enabled) => dispatch(setListenerAction(enabled)),
+	setSpy: (enabled) => dispatch(setSpyAction(enabled)),
 	setAutoInspector: (enabled) => dispatch(setAutoInspectorAction(enabled)),
 	setSearchTerm: (str) => dispatch(setSearchTermAction(str)),
 	setRenameMode: (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid, on)),
