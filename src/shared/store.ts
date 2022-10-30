@@ -1,5 +1,4 @@
 import { legacy_createStore as createStore, applyMiddleware, combineReducers } from "redux";
-import { composeWithDevTools } from "@redux-devtools/extension";
 import { inspectorReducer } from "../inspector/reducers/reducer";
 import { IInspectorState } from "../inspector/model/types";
 
@@ -8,23 +7,15 @@ import { IInspectorState } from "../inspector/model/types";
  * store is type of State defined in our reducers
  */
 
-export interface IRootState{
+export interface IRootState {
 	inspector: IInspectorState;
-
- }
-
-const composeEnhancers = composeWithDevTools({
-	// Specify name here, actionsBlacklist, actionsCreators and other options if needed
-});
+}
 
 const rootReducer = combineReducers<IRootState>({
 	inspector:inspectorReducer,
 	//atnConverter: atnConverterReducer
 });
-export const rootStore = createStore(rootReducer, /* preloadedState, */ composeEnhancers(
-	applyMiddleware(),
-	// other store enhancers if any
-));
+export const rootStore = createStore(rootReducer, /* preloadedState, */applyMiddleware());
 console.log(rootStore.getState());
 
 (window as any)._rootStore = rootStore;
