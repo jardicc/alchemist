@@ -15,13 +15,11 @@
 		"launchProcess": {
 			"schemes": ["http", "https"]
 		},
+		"ipc": {
+			"enablePluginCommunication": true   
+		},
 		"network": {
-			"domains": [
-				"alchemist.bereza.cz",
-				"github.com",
-				"bereza.cz",
-				"developer.adobe.com"
-			]
+			"domains": "all"
 		}
 	},
 	"entrypoints": [{
