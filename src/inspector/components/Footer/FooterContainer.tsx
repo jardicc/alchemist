@@ -21,10 +21,18 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 		const buildParts = psVersionSegments?.split(" ")?.[1]?.split(".");
 		const buildNumber = buildParts?.length >= 3 ? (buildParts[1] + buildParts[2]) : "";
 
+		let mode = "PROD";
+		if (Main.devMode) {
+			mode = "DEV";
+		}
+		if (Main.privileged) {
+			mode = "PRV";
+		}
+
 		return (
 			<div className="Footer">
 				<div className="versionBar">
-					<span className="version"><a href="https://github.com/jardicc/alchemist/releases">{versions.plugin} {Main.devMode ? "DEV":"PROD"}</a></span>
+					<span className="version"><a href="https://github.com/jardicc/alchemist/releases">{versions.plugin} {mode}</a></span>
 					<span> / </span>
 					<span className="version"><a href="https://developer.adobe.com/photoshop/uxp/2022/ps_reference/changelog/">PS: {psVersion}</a> ({buildNumber})</span>
 					<span> / </span>

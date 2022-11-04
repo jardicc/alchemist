@@ -141,7 +141,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	 */
 	private attachListener = async () => {
 		const { settings:{dontShowMarketplaceInfo,autoUpdateListener}} = this.props;
-		if (!dontShowMarketplaceInfo && !autoUpdateListener && !Main.devMode) {
+		if (!dontShowMarketplaceInfo && !autoUpdateListener && !Main.devMode && !Main.privileged) {
 			const res = await this.marketplaceDialogRef.current.uxpShowModal({
 				title: "Advice",
 				size: {

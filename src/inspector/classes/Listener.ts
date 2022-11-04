@@ -136,7 +136,7 @@ export class ListenerClass{
 	public static startListener(cb: TNotificationListenerCb): void{
 		this.listenerCb = cb;
 		//ListenerClass.addAMConverterHack();
-		if (Main.devMode) {
+		if (Main.devMode || Main.privileged) {
 			//app.eventNotifier = this.listenerCb;
 			action.addNotificationListener(["all"], this.listenerCb);
 		} else {
@@ -147,7 +147,7 @@ export class ListenerClass{
 	public static stopListener(): void{
 		//this.removeAMConverterHack();
 		if (!this.listenerCb) {return;}
-		if (Main.devMode) {
+		if (Main.devMode || Main.privileged) {
 			//app.eventNotifier = () => { };
 			action.removeNotificationListener(["all"], this.listenerCb);
 		} else {

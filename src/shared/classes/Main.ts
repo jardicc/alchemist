@@ -10,6 +10,10 @@ export class Main{
 
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	public static readonly devMode = require("uxp")?.entrypoints?._pluginInfo?._pluginInfo?.source === "devtools";
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	public static readonly privileged = require("uxp")?.entrypoints?._pluginInfo?._pluginInfo?.privileged === true;
+
+
 
 	public static start(): void {
 		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "inspector", "value": true });
