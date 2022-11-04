@@ -2,7 +2,7 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "2.1.0",
+	"version": "2.5.0",
 	"manifestVersion": 5,
 	"host": {
 		"app": "PS",
