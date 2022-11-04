@@ -24,6 +24,9 @@ export class ListenerClass{
 	private static eventsArrayCache: string[] | null = null;
 	private static spyInterval: number | null = null;
 
+	/**
+	 * Find out whether special CEP panel is installed
+	 */
 	public static async getSpyInstalled() {
 		const result = await action.batchPlay(
 			[
@@ -136,7 +139,7 @@ export class ListenerClass{
 	public static startListener(cb: TNotificationListenerCb): void{
 		this.listenerCb = cb;
 		//ListenerClass.addAMConverterHack();
-		if (Main.devMode || Main.privileged) {
+		if (Main.devMode || Main.isFirstParty) {
 			//app.eventNotifier = this.listenerCb;
 			action.addNotificationListener(["all"], this.listenerCb);
 		} else {
@@ -147,7 +150,7 @@ export class ListenerClass{
 	public static stopListener(): void{
 		//this.removeAMConverterHack();
 		if (!this.listenerCb) {return;}
-		if (Main.devMode || Main.privileged) {
+		if (Main.devMode || Main.isFirstParty) {
 			//app.eventNotifier = () => { };
 			action.removeNotificationListener(["all"], this.listenerCb);
 		} else {

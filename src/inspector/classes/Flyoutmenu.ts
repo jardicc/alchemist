@@ -35,6 +35,13 @@ export class FlyoutMenu {
 			case "exportSelectedItems":
 				FlyoutMenu.exportItems("selected");
 				break;
+			
+			case "reset":
+				Settings.reset();
+				break;
+			case "reload":
+				location.reload();
+				break;
 		}
 	}
 
@@ -72,23 +79,31 @@ export class FlyoutMenu {
 					},
 					menuItems: [
 						{
-							id: "setWarpFactor", label: "Import",
+							id: "groupImport", label: "Import",
 							submenu: [
-								{ id: "importAppState", label: "App state" },
-								{ id: "importAddItems", label: "Add items" },
-								{ id: "importReplaceItems", label: "Replace items" },
+								{id: "importAppState", label: "App state"},
+								{id: "importAddItems", label: "Add items"},
+								{id: "importReplaceItems", label: "Replace items"},
 							],
 						},
 						
 						{
-							id: "raiseShields", label: "Export",
+							id: "groupExport", label: "Export",
 							submenu: [
-								{ id: "exportAppState", label: "App state" },
-								{ id: "exportAllItems", label: "All items" },
-								{ id: "exportSelectedItems", label: "Selected items" },
+								{id: "exportAppState", label: "App state"},
+								{id: "exportAllItems", label: "All items"},
+								{id: "exportSelectedItems", label: "Selected items"},
 							],
 						},
-						{ id: "spacer", label: "-" }, // SPACER
+						{id: "spacer", label: "-"}, // SPACER
+						{
+							id: "groupProblem", label: "Repair",
+							submenu: [
+								{id: "reload", label: "Reload"},
+								{id: "reset", label: "Reset settings"},
+							],
+						},
+						{id: "spacer2", label: "-"}, // SPACER
 					],
 					invokeMenu(id: string) {
 						FlyoutMenu.handleFlyout(id);

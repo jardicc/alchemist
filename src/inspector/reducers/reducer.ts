@@ -450,6 +450,7 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 				action.payload.settings.autoUpdateListener = false;
 				action.payload.settings.autoUpdateInspector = false;
 				action.payload.settings.autoUpdateSpy = false;
+				action.payload.settings.isSpyInstalled = state.settings.isSpyInstalled;
 				state = action.payload;				
 			}
 			break;

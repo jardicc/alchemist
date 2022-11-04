@@ -141,7 +141,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	 */
 	private attachListener = async () => {
 		const { settings:{dontShowMarketplaceInfo,autoUpdateListener}} = this.props;
-		if (!dontShowMarketplaceInfo && !autoUpdateListener && !Main.devMode && !Main.privileged) {
+		if (!dontShowMarketplaceInfo && !autoUpdateListener && !Main.devMode && !Main.isFirstParty) {
 			const res = await this.marketplaceDialogRef.current.uxpShowModal({
 				title: "Advice",
 				size: {
@@ -329,7 +329,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
 						{
 							// helper tool to listen to more events
-							!isSpyInstalled && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
+							isSpyInstalled && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
 						}
 						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
 					</div>
