@@ -723,8 +723,8 @@ export function getInitialState(): IInspectorState {
 			initialDescriptorSettings: {
 				supportRawDataType: false,
 				dialogOptions: "dontDisplay",
-				modalBehavior: "fail",
-				synchronousExecution: false,
+				modalBehavior: null,
+				synchronousExecution: null,
 			},
 			indent: "space3",
 			singleQuotes: false,
