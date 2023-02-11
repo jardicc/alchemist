@@ -2,7 +2,7 @@ import React from "react";
 import "./Filters.less";
 import { cloneDeep } from "lodash";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, TBaseItems } from "../../model/properties";
-import { IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, IFilterProperty } from "../../model/types";
+import { IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, IFilterProperty, IPropertyItem } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
@@ -13,6 +13,7 @@ import { IRootState } from "../../../shared/store";
 import { setTargetReferenceAction, setSelectedReferenceTypeAction, setFilterStateAction } from "../../actions/inspectorActions";
 import { getPropertySettings, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceForAM, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
+import {AccDrop} from "../AccDrop/AccDrop";
 
 export class Filters extends React.Component<TFilters, IState> {
 	constructor(props: TFilters) {
@@ -220,8 +221,10 @@ export class Filters extends React.Component<TFilters, IState> {
 		}
 
 		const foundSettings: IPropertySettings | undefined = propertySettings.find(p => p.type === selectedTargetReference);
-		if (!foundSettings) { throw new Error("Properties not found"); }
-
+		if (!foundSettings) {throw new Error("Properties not found");}
+		
+		return this.buildFilterRow("Property:","property", foundSettings.list, {filterBy: activeReferenceProperty.filterBy, value: activeReferenceProperty.value});
+	/*
 		const foundNotSpecified = !!foundSettings.list.find(p => p.stringID === "notSpecified");
 		const defaultList: IFilterProperty<string>[] = foundSettings.list.filter(p => p.type === "default").map(f => ({ label: f.title, value: f.stringID }));
 		const hiddenList: IFilterProperty<string>[] = foundSettings.list.filter(p => p.type === "hidden").map(f => ({ label: f.title, value: f.stringID }));
@@ -298,6 +301,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				</div>
 			</div>
 		);
+*/
 	}
 
 	private dropdownClick = async (type: TSubTypes | "main") => {
@@ -351,29 +355,30 @@ export class Filters extends React.Component<TFilters, IState> {
 	private buildFilterRow = (
 		label: string,
 		subType: TSubTypes | "main",
-		items: TBaseItems,
-		content: { value: string | null | number, filterBy: TState },
+		items: TBaseItems | IPropertyItem[],
+		content: { value: string, filterBy: TState },
 	): React.ReactNode => {
 		return (
-			<div className="filter">
-				<div className="label">{label}</div>
-				<div className="dropdownWrap">
-					<sp-dropdown size={SP.SpectrumComponetDefaults.defaultSize} quiet={true} onMouseDown={() => this.dropdownClick(subType)}>
-						<SP.Menu slot="options" onChange={(e) => this.onSetSubType(subType, e)}>
-							{
-								items.map(item => (
-									<SP.MenuItem
-										key={item.value}
-										value={item.value}
-										selected={content.value === item.value ? true : undefined}
-									>{item.label}</SP.MenuItem>
-								))
-							}
-						</SP.Menu>
-					</sp-dropdown>
-					<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype, state) => this.props.onSetFilter(this.props.selectedTargetReference, subtype, state)} />
-				</div>
-			</div>
+			<>
+				<AccDrop
+					items={items}
+					selected={Array.isArray(content.value) ? content.value : [content.value]}
+					header={label}
+					id={subType}
+					onSelect={(id, value) => this.onSetSubType(id as any, {target:{value}})}
+					onChange={() => this.dropdownClick(subType)}
+					headerPostFix={
+						<FilterButton
+							subtype={subType}
+							state={content.filterBy}
+							onClick={(subtype, state, e) => {
+								this.props.onSetFilter(this.props.selectedTargetReference, subtype, state);
+								e.stopPropagation();
+							}}
+						/>
+					}
+				/>
+			</>
 		);
 	}
 
