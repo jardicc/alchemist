@@ -1,0 +1,23 @@
+.ItemVisibilityButton{
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+	padding: 0 0.5em;
+	border-radius: 3px;
+
+	&.visible{
+		fill:var(--active);
+	}
+	&.hidden{
+		fill:var(--textDim);
+	}
+
+	//&.visible, &hidden{
+		&:hover{
+			fill: var(--hover);
+			border:1px solid var(--hover)
+		}
+	//}
+}

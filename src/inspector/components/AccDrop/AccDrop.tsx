@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import React, {ReactElement} from "react";
+import React, {ComponentType, ReactElement} from "react";
 import {IconCaretRight, IconChevronBottom, IconChevronRight} from "../../../shared/components/icons";
 import {TBaseItems} from "../../model/properties";
-import {IPropertyItem} from "../../model/types";
+import {IPropertyGroup, IPropertyItem} from "../../model/types";
+import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
+
+export interface IAccDropPostFixProps{
+	value:string
+}
 
 export interface IAccDropProps {
 	id: string
@@ -11,9 +16,11 @@ export interface IAccDropProps {
 	header: string | React.ReactElement
 	onChange?: (id: string, expanded: boolean) => void
 	onSelect: (id: string, value: string) => void
-	items: TBaseItems | IPropertyItem[]
+	showSearch?: boolean
+	items: (IPropertyItem | IPropertyGroup)[]
 	selected: string[]
 	headerPostFix?: ReactElement
+	ItemPostFix?: ComponentType<IAccDropPostFixProps>
 }
 
 export interface IAccDropDispatch {
@@ -22,16 +29,23 @@ export interface IAccDropDispatch {
 
 interface IAccDropState{
 	expanded: boolean
+	searchValue: string
 }
 
 export type TAccDrop = IAccDropProps & IAccDropDispatch
 
 export class AccDrop extends React.Component<TAccDrop, IAccDropState> { 
+
+	private searchRef: React.LegacyRef<HTMLDivElement>
+
 	constructor(props: TAccDrop) {
 		super(props);
 
+		this.searchRef = React.createRef();
+
 		this.state = {
 			expanded: false,
+			searchValue: "",
 		};
 	}
 
@@ -39,42 +53,119 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		if(this.props.onChange){
 			this.props.onChange(this.props.id, !this.state.expanded);
 		}
+		this.toggleExpanded();
+	}
+
+	private toggleExpanded = () => {
 		this.setState({
 			...this.state,
 			expanded: !this.state.expanded,
-		});
+		},
+		/*, () => {
+			if (this.state.expanded) {
+				(this.searchRef as any)?.current?.focus();
+			}
+		}*/);
 	}
 
 	private getLabel = () => {
 
-		const labels = [...this.props.items].filter(item => {
-			if ("stringID" in item) {
-				return this.props.selected.includes(item.stringID);
+		const newList: IPropertyItem[] = [];
+
+		this.props.items.forEach(item => {
+			if ("group" in item) {
+				newList.push(...item.data);
 			} else {
-				return this.props.selected.includes(item.value);
-			}
-		}).map(item => {
-			if ("stringID" in item) {
-				return item.title;
-			} else {
-				return item.label;
+				newList.push(item);
 			}
 		});
+
+		const labels = newList.filter(item =>
+			this.props.selected.includes(item.value),
+		).map(item => item.label);
 
 		return labels.join(", ");
 	}
 
 	private renderHeader = (): JSX.Element => {
+		const {id, className, header, headerPostFix} = this.props;
+
 		return (
-			<div className="header" onClick={this.onHeaderClick}>
+			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.onHeaderClick}>
 				<div className="chevron">
 					{this.state.expanded ? <IconChevronBottom />:<IconChevronRight />}
 
 				</div>
-				<span className="title">{this.props.header + " " + this.getLabel()}</span>
-				{this.props.headerPostFix}
+				<span className="title">{header + " " + this.getLabel()}</span>				
+				{headerPostFix}
 			</div>
 		);
+	}
+
+	private renderGroup = (group: IPropertyGroup) => {
+		return (
+			<React.Fragment key={"f_"+group.group}>
+				<div className="groupHeader" key={"g_" + group.group}>{group.groupLabel}</div>
+				<div key={"gw_" + group.group} className="groupWrapper">
+					{
+						group.data.map(item => this.renderItem(item))
+					}
+				</div>
+			</React.Fragment>
+		);
+	}
+
+	private renderSearchField = () => {
+		if (!this.props.showSearch || !this.state.expanded) {
+			return null;
+		}
+		return (
+			<div className="AccDrop searchField">
+				<SP.Textfield
+					value={this.state.searchValue}
+					className="filterContent"
+					type="search"
+					placeholder="Filter..."
+					key="search"
+					// value={this.state.searchValue}
+					onInput={(e) => this.setState({
+						...this.state,
+						searchValue: (e.target?.value ?? ""),
+					})}
+				/>
+			</div>
+		);
+	}
+
+	private renderItem = (item: IPropertyItem) => {
+		const {id, selected, onSelect, showSearch, ItemPostFix} = this.props;
+		if (
+			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) || 
+			!showSearch
+		) {
+			return (
+				<div
+					className="item"
+					key={"i_"+item.value+id}
+					onClick={(e) => {
+						onSelect(id, item.value);
+						e.stopPropagation();
+						this.toggleExpanded();
+					}}
+					data-selected={selected.includes(item.value) || undefined}
+				>
+					<div className="label">
+						{item.label}
+					</div>
+					{
+						ItemPostFix && <div 
+							className="itemPostFix"
+						><ItemPostFix value={item.value} /></div>
+					}
+				</div>
+			);			
+		}
+		return null;
 	}
 
 	private renderContent = (): React.ReactNode => {
@@ -86,35 +177,15 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 
 		return (
-			<div className="container">
+			<div key={"c_" + id} className={"AccDrop container " + (this.props.className || "")}>
+				
 				{
-					items.map(item => {
-						if ("stringID" in item) {
-							return (
-								<div
-									className="item"
-									key={item.stringID}
-									onClick={(e) => {
-										onSelect(id, item.stringID);
-										e.stopPropagation();
-	
-									}}
-									data-selected={selected.includes(item.stringID) || undefined}
-								>{item.title}</div>
-							);
+					items.map((item, index) => {
+						if ("group" in item) {
+							//return null;
+							return this.renderGroup(item);
 						} else {
-							return (
-								<div
-									className="item"
-									key={item.value}
-									onClick={(e) => {
-										onSelect(id, item.value);
-										e.stopPropagation();
-	
-									}}
-									data-selected={selected.includes(item.value) || undefined}
-								>{item.label}</div>
-							);
+							return this.renderItem(item);
 						}
 					})
 				}
@@ -125,10 +196,11 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	public render(): JSX.Element {
 		
 		return (
-			<div className={"AccDrop "+(this.props.className||"")}>
+			<>
 				{this.renderHeader()}
+				{this.renderSearchField()}
 				{this.renderContent()}
-			</div>
+			</>
 		);
 	}
 }

@@ -292,6 +292,24 @@ export interface ISetSearchContentKeywordAction{
 	payload:string
 }
 
+export interface ISetCategoryItemVisibilityAction{
+	type: "SET_CATEGORY_ITEM_VISIBILITY",
+	payload: {
+		operation: "add" | "remove"
+		value: TTargetReference
+	}
+}
+
+export function setCategoryItemVisibilityAction(value:TTargetReference, operation: "add" | "remove"): ISetCategoryItemVisibilityAction{
+	return {
+		type: "SET_CATEGORY_ITEM_VISIBILITY",
+		payload: {
+			operation,
+			value,
+		},
+	};
+}
+
 export function setSearchContentKeywordAction(keyword: string): ISetSearchContentKeywordAction{
 	return {
 		type: "SET_SEARCH_CONTENT_KEYWORD",
@@ -703,4 +721,5 @@ export type TActions =
 	IToggleAccordionAction |
 	ISetSearchContentKeywordAction |
 	ISpyInstalledAction |
-	ISpyAction
+	ISpyAction |
+	ISetCategoryItemVisibilityAction

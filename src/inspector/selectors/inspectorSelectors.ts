@@ -26,7 +26,7 @@ export const getActiveTargetReference = createSelector([getTargetReference, getS
 	return (result || null);
 });
 
-
+export const getCategoryItemsVisibility = createSelector([all], s => s.explicitlyVisibleTopCategories);
 
 export const getInspectorSettings = createSelector([all], (s) => {
 	return s.settings;

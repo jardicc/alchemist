@@ -2,7 +2,7 @@ import React from "react";
 import "./Filters.less";
 import { cloneDeep } from "lodash";
 import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, TBaseItems } from "../../model/properties";
-import { IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, IFilterProperty, IPropertyItem } from "../../model/types";
+import { IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, IFilterProperty, IPropertyItem, IPropertyGroup } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { GetList } from "../../classes/GetList";
 import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
@@ -13,7 +13,11 @@ import { IRootState } from "../../../shared/store";
 import { setTargetReferenceAction, setSelectedReferenceTypeAction, setFilterStateAction } from "../../actions/inspectorActions";
 import { getPropertySettings, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceForAM, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
-import {AccDrop} from "../AccDrop/AccDrop";
+import {AccDrop, IAccDropPostFixProps} from "../AccDrop/AccDrop";
+import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityButton";
+
+
+
 
 export class Filters extends React.Component<TFilters, IState> {
 	constructor(props: TFilters) {
@@ -352,12 +356,14 @@ export class Filters extends React.Component<TFilters, IState> {
 		}
 	}
 
+	// TODO refactor this
 	private buildFilterRow = (
 		label: string,
 		subType: TSubTypes | "main",
-		items: TBaseItems | IPropertyItem[],
-		content: { value: string, filterBy: TState },
+		items: (IPropertyItem | IPropertyGroup)[],
+		content: {value: string, filterBy: TState},
 	): React.ReactNode => {
+
 		return (
 			<>
 				<AccDrop
@@ -365,8 +371,11 @@ export class Filters extends React.Component<TFilters, IState> {
 					selected={Array.isArray(content.value) ? content.value : [content.value]}
 					header={label}
 					id={subType}
-					onSelect={(id, value) => this.onSetSubType(id as any, {target:{value}})}
+					onSelect={(id, value) => this.onSetSubType(id as any, {target: {value}})}
 					onChange={() => this.dropdownClick(subType)}
+					showSearch={subType === "property"}
+					// show filter per item for main category
+					ItemPostFix={subType==="main" ? ItemVisibilityButtonWrap : undefined}
 					headerPostFix={
 						<FilterButton
 							subtype={subType}
@@ -392,7 +401,7 @@ export class Filters extends React.Component<TFilters, IState> {
 
 	public render(): JSX.Element {
 		return (
-			<div className="filtersWrapper">
+			<>
 				{this.renderMainCategory()}
 				{this.renderListenerFilter()}
 				{this.renderDocument()}
@@ -407,7 +416,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				{this.renderActionItem()}
 				{this.renderCommand()}
 				{this.renderProperty()}
-			</div>
+			</>
 		);
 	}
 }

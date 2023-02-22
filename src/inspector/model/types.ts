@@ -71,7 +71,9 @@ export interface IInspectorState {
 	dispatcher: IDispatcher
 
 	atnConverter: IATNConverterState
-	sorcerer:ISorcererState
+	sorcerer: ISorcererState
+	
+	explicitlyVisibleTopCategories:TTargetReference[]
 }
 
 export interface ITargetReference {
@@ -237,13 +239,18 @@ export interface IDescriptorSettings {
 
 export interface IPropertySettings {
 	type: TPropertyClass
-	list: IPropertyItem[]
+	list: (IPropertyItem|IPropertyGroup)[]
+}
+
+export interface IPropertyGroup{
+	group: string,
+	groupLabel:string,
+	data: IPropertyItem[]
 }
 
 export interface IPropertyItem {
-	title: string
-	stringID: string
-	type?: TPropertyType
+	label: string
+	value: string
 }
 
 export interface IInspector{

@@ -636,6 +636,19 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;
 		}
+		case "SET_CATEGORY_ITEM_VISIBILITY": {
+			state = produce(state, draft => {
+				const set = new Set(state.explicitlyVisibleTopCategories);
+				if (action.payload.operation === "add") {
+					set.add(action.payload.value);					
+				} else {
+					set.delete(action.payload.value);
+				}
+
+				draft.explicitlyVisibleTopCategories = [...set];
+			});
+			break;
+		}
 	}
 
 	state = atnReducer(state, action);
