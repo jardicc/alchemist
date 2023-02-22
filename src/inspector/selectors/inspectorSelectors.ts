@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
 import { IDescriptor, IInspectorState, IListenerNotifierFilter, TTargetReference } from "../model/types";
@@ -26,7 +27,14 @@ export const getActiveTargetReference = createSelector([getTargetReference, getS
 	return (result || null);
 });
 
-export const getCategoryItemsVisibility = createSelector([all], s => s.explicitlyVisibleTopCategories);
+export const getCategoryItemsVisibility = createSelector([all, getActiveTargetReference], (s, target) => {
+	// adds currently selected category into visibility even though is not explicitly set to visible
+	if (target?.type) {
+		const res: TTargetReference[] = [...new Set([...s.explicitlyVisibleTopCategories, target.type])];
+		return res;
+	}
+	return s.explicitlyVisibleTopCategories;
+});
 
 export const getInspectorSettings = createSelector([all], (s) => {
 	return s.settings;
@@ -70,9 +78,21 @@ export const getListenerNotifierFilterSettings = createSelector([all], (all) => 
 	throw Error("Wrong type in filter");
 });
 
-export const getDescriptorsListView = createSelector([getAllDescriptors, getActiveTargetReference, getFilterBySelectedReferenceType,getInspectorSettings], (allDesc, activeRefFilter, rootFilter,settings) => {	
-	const pinned = allDesc.filter(i => i.pinned);
-	const notPinned = allDesc.filter(i => !i.pinned);
+export const getDescriptorsListView = createSelector([
+	getAllDescriptors,
+	getActiveTargetReference,
+	getFilterBySelectedReferenceType,
+	getInspectorSettings,
+	getCategoryItemsVisibility,
+], (
+	allDesc,
+	activeRefFilter,
+	rootFilter,
+	settings,
+	categoryVisibility,
+) => {	
+	const pinned:IDescriptor[] = allDesc.filter(i => i.pinned);
+	const notPinned: IDescriptor[] = allDesc.filter(i => !i.pinned);
 	let reordered = [...notPinned, ...pinned];
 	const { searchTerm,listenerFilter,notifierFilter } = settings;
 
@@ -96,9 +116,14 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		}
 	
 		const origRefFilter = desc.originalReference;
+		if (!activeRefFilter || !categoryVisibility.includes(origRefFilter.type)) {
+			return false;
+		}
+		/*
 		if (activeRefFilter?.type !== origRefFilter.type) {
 			return false;
 		}
+		*/
 		if (activeRefFilter?.type !== "listener") {
 			for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
 				if (activeRefFilter.data[i].content.filterBy === "off") {

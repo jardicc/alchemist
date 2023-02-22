@@ -29,6 +29,7 @@ export interface IAccDropDispatch {
 
 interface IAccDropState{
 	expanded: boolean
+	calcHeight: number
 	searchValue: string
 }
 
@@ -36,15 +37,19 @@ export type TAccDrop = IAccDropProps & IAccDropDispatch
 
 export class AccDrop extends React.Component<TAccDrop, IAccDropState> { 
 
-	private searchRef: React.LegacyRef<HTMLDivElement>
+	private searchRef: React.RefObject<HTMLDivElement>;
+	private heightRef: React.RefObject<HTMLDivElement>;
 
 	constructor(props: TAccDrop) {
 		super(props);
 
 		this.searchRef = React.createRef();
+		this.heightRef = React.createRef();
+
 
 		this.state = {
 			expanded: false,
+			calcHeight: props.items.length*1.5,
 			searchValue: "",
 		};
 	}
@@ -150,7 +155,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					onClick={(e) => {
 						onSelect(id, item.value);
 						e.stopPropagation();
-						this.toggleExpanded();
+						// this.toggleExpanded();
 					}}
 					data-selected={selected.includes(item.value) || undefined}
 				>
@@ -170,28 +175,52 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 	private renderContent = (): React.ReactNode => {
 		const {id, selected, items, onSelect} = this.props;
+		const {calcHeight} = this.state;
 
 		if (!this.state.expanded) {
 			return null;
 		}
 
+		const containerMaxHeight: React.CSSProperties = {};
+
+		if (calcHeight !== null) {
+			containerMaxHeight.maxHeight = (calcHeight + 1) + "em";
+		}
 
 		return (
-			<div key={"c_" + id} className={"AccDrop container " + (this.props.className || "")}>
-				
-				{
-					items.map((item, index) => {
-						if ("group" in item) {
-							//return null;
-							return this.renderGroup(item);
-						} else {
-							return this.renderItem(item);
-						}
-					})
-				}
+			<div key={"c_" + id} className={"AccDrop container " + (this.props.className || "")} style={containerMaxHeight}>
+				<div className="measureHeightWrapper" ref={this.heightRef}>
+					{
+						items.map((item, index) => {
+							if ("group" in item) {
+								//return null;
+								return this.renderGroup(item);
+							} else {
+								return this.renderItem(item);
+							}
+						})
+					}
+				</div>
 			</div>
 		);
 	}
+	
+	
+	componentDidUpdate(prevProps: Readonly<TAccDrop>, prevState: Readonly<IAccDropState>, snapshot?: any): void {
+		if (this.heightRef) {
+			const height = this.props.items.length * 1.5;
+
+			if (prevState.calcHeight === height) {
+				return;
+			}
+
+			this.setState({
+				...this.state,
+				calcHeight: height,
+			});
+		}
+	}
+	
 
 	public render(): JSX.Element {
 		
