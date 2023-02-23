@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import { cloneDeep } from "lodash";
 import { createSelector } from "reselect";
 import { RawDataConverter } from "../classes/RawDataConverter";
@@ -5,7 +6,7 @@ import { IDescriptor, IDescriptorSettings } from "../model/types";
 import { getContentPath } from "./inspectorContentSelectors";
 import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
 import stringifyObject from "stringify-object";
-import { ActionDescriptor, BatchPlayCommandOptions } from "photoshop/dom/CoreModules";
+import {ActionDescriptor, BatchPlayCommandOptions} from "photoshop/dom/CoreModules";
 
 type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?:boolean}
 
@@ -46,10 +47,10 @@ export const getIndentString = createSelector([getInspectorSettings], settings =
 	return indent;
 });
 
-export const getActiveDescriptorCalculatedReference = createSelector([
+export const getGeneratedCode = createSelector([
 	getActiveDescriptors, getAutoActiveDescriptor, getContentPath,
 	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
-], (selected, autoActive, treePath, replayEnabled, descOptions, settings, indentString) => {
+], (selected, autoActive, treePath, replayEnabled, descOptions, settings, tab) => {
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
@@ -101,12 +102,32 @@ export const getActiveDescriptorCalculatedReference = createSelector([
 		return res;
 	}
 
+	// adds indentation
+	function idt(str:string):string {
+		return str.split("\n").map(l => tab + l).join("\n");
+	}
+
+	function udt(str: string): string{
+		return str.split("\n").map(l => l.replace(tab, "")).join("\n");
+	}
+
+	// replaces quotes
+	function qts(str:string):string {
+		if (settings.singleQuotes) {
+			str = str.replaceAll(`"`, `'`);
+		}
+		return str;
+	}
+
+	const addModules = settings.codeImports === "require";
+	const wrappers = settings.codeWrappers;
+
 	if (selected.length >= 1 || autoActive) {
 		let data:any = null, iDesc: IDescriptor[] = [];
 
 		const stringifyOptions = {
 			singleQuotes: settings.singleQuotes,
-			indent: indentString,
+			indent: tab,
 		};
 
 		if (selected.length >= 1) {
@@ -114,8 +135,8 @@ export const getActiveDescriptorCalculatedReference = createSelector([
 		} else if (autoActive) {
 			iDesc = [autoActive];
 		}
-		if (iDesc.some(item => item.originalReference.data.some(subitem => subitem.content.value === "reply" || subitem.content.value === "dispatch"))) {
-			return "// Alchemist can't generate code from replay reply and dispatched code";
+		if (iDesc.some(item => ["replies","notifier","dispatcher"].includes(item.originalReference.type))) {
+			return "// Alchemist can't generate code from replay reply, dispatched code. Notifiers are not supported to save your time because those are non-playable in 99.99% of cases";
 		}
 		data = iDesc.map(item => addPerItemOptions(item));
 		// adds raw data type support
@@ -139,23 +160,50 @@ export const getActiveDescriptorCalculatedReference = createSelector([
 			const item = data[i];
 			RawDataConverter.convertFakeRawInCode(item,descOptions);
 		}
-		
-		let str = stringifyObject(data, stringifyOptions);
-		const commandOptions = addCommonOptions(iDesc);
-		
-		str =
-			"const batchPlay = require(\"photoshop\").action.batchPlay;\n" +
-				"\n" +
-				"const result =" + (commandOptions.synchronousExecution ? "" : " await") + " batchPlay(\n" +
-				str +
 
-				"," + stringifyObject(commandOptions, stringifyOptions) + ");\n";
-	
+		let strPinned = "";
+
 		if (treePath.length) {
 			// eslint-disable-next-line quotes
-			str = `${str}const pinned = result${makeNicePropertyPath(treePath)};`;
+			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
-		return str;
+		
+		const commandOptions = addCommonOptions(iDesc);
+
+		const strOptions = idt(stringifyObject(commandOptions, stringifyOptions));
+		const strDesc:string = stringifyObject(data, stringifyOptions);
+
+
+		const strExecModalImport = addModules ? qts(`const {executeAsModal} = require("photoshop").core;\n`) : "";
+		const strBatchPlayImport = addModules ? qts(`const {batchPlay} = require("photoshop").action;\n\n`) : "";
+
+		const strBatchPlay = `const result = await batchPlay(\n${idt(strDesc)},\n${strOptions}\n);${strPinned}`;
+		const strActionCommand = `async function actionCommands() {\n${idt(strBatchPlay)}\n}\n\n`;
+
+		const strCall = qts(`async function runModalFunction() {\n${tab}await executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);
+
+		
+			
+		
+		if (wrappers==="batchPlay") {
+			return (
+				strBatchPlayImport +
+				strBatchPlay
+			);
+		} else if (wrappers==="modal") {
+			return (
+				strExecModalImport +
+				strBatchPlayImport +
+				strActionCommand +
+				strCall
+			);
+		} else if (wrappers === "array") {
+			return strDesc;
+		} else if (wrappers === "objects") {
+			return udt(strDesc.slice(2, -2));
+		}
+
+		return "";
 	} else {
 		return "Add some descriptor";
 	}

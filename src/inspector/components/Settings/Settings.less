@@ -1,4 +1,10 @@
 .Settings{
+
+	width: 0;
+	min-width: 100%;
+	//padding: 1em;
+	position: relative;
+
 	.fontSizeLabel{
 		margin-right: 1em;
 	}
@@ -6,11 +12,55 @@
 		min-width: 20em;
 	}
 	.neverRecordActionNamesArea{
-		height:10em;
+		height:7em;
 		margin:0.5em 0;
 	}
 
+	.mainHeading{
+		padding:0.5em 1em;
+		margin: 0;
+	}
+
+	.indent{
+		margin-bottom: 1em;
+	}
+
+	.row{
+		flex-shrink: 0;
+
+		.label{
+			min-width: 11em;
+			word-break: break-all;
+			flex-grow: 1;
+			width: 0;
+			flex-shrink: 0;
+
+		}
+		sp-dropdown{
+			flex-grow: 2;
+			width: 0;
+		}
+	}
+
+	.scope{
+		font-style: italic;
+		margin-bottom: 1em;
+	}
+
 	h3{
-		margin-left: 0;
+		font-size: 1.2em;
+		line-height: 1.2em;
+		flex-shrink: 0;
+	}
+
+	.title{
+		font-size: 1.4em;
+		flex-shrink: 0;
+		padding-bottom: 1em;
+	}
+
+	.fullW{
+		width: 0;
+		min-width: 100%;
 	}
 }

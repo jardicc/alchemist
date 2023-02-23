@@ -1,14 +1,13 @@
 import photoshop from "photoshop";
-import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference, THistoryReference } from "../model/types";
+import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference, THistoryReference, IFilterProperty } from "../model/types";
 
 import { DocumentExtra } from "./DocumentExtra";
 import { GetInfo } from "./GetInfo";
-import {IProperty } from "../components/LeftColumn/LeftColumn";
 
 const PS = photoshop.app;
 
 export class GetList {
-	public static async getDocuments(): Promise<IProperty<TDocumentReference>[]> {
+	public static async getDocuments(): Promise<IFilterProperty<TDocumentReference>[]> {
 		console.log("get docs");
 		const documents = PS.documents.map(d => new DocumentExtra(d));
 		const docs = documents.map(async d => ({ value: d.id.toString(), label: await d.$title() }));
@@ -28,60 +27,66 @@ export class GetList {
 		return docE;
 	}
 
-	public static getLayers(arg: IContentWrapper<TDocumentReference>): IProperty<TLayerReference>[] {
+	public static getLayers(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TLayerReference>[] {
 		const docE = this.getDocumentExtra(arg);
-		if (!docE) { return []; }
-		const layers = docE.layers.map(d => ({ value: d.id.toString(), label: d.name }));
+		if (!docE) {return [];}
+		const layers = docE.allLayers.reverse().map(d => ({ value: d.layerID.toString(), label: d.name }));
 		return layers;
 	}
 
-	public static getChannels(arg: IContentWrapper<TDocumentReference>): IProperty<TChannelReference>[] {
+	public static getChannels(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TChannelReference>[] {
 		const docE = this.getDocumentExtra(arg);
 		if (!docE) { return []; }
-		const pairs: IProperty<TChannelReference>[] = docE.userChannelIDsAndNames.map(p => ({ value: p.value.toString(), label: p.label })); // remove index
+		const pairs: IFilterProperty<TChannelReference>[] = docE.userChannelIDsAndNames.map(p => ({ value: p.value.toString(), label: p.label })); // remove index
 		return pairs;
 	}
 
-	public static getPaths(arg: IContentWrapper<TDocumentReference>): IProperty<TPathReference>[] {
+	public static getPaths(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TPathReference>[] {
 		const docE = this.getDocumentExtra(arg);
 		if (!docE) { return []; }
-		const pairs: IProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p => ({ value: p.value.toString(), label: p.label }));
+		const pairs: IFilterProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p => ({ value: p.value.toString(), label: p.label }));
 		return pairs;
 	}
 
-	public static getGuides(arg: IContentWrapper<TDocumentReference>): IProperty<TGuideReference>[] {
+	public static getGuides(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TGuideReference>[] {
 		const docE = this.getDocumentExtra(arg);
 		if (!docE) { return []; }
-		const pairs: IProperty<TPathReference>[] = docE.guidesIDs.map(p => ({ value: p.value.toString(), label: p.label }));
+		const pairs: IFilterProperty<TPathReference>[] = docE.guidesIDs.map(p => ({ value: p.value.toString(), label: p.label }));
 		return pairs;
 	}
-	public static getHistory(): IProperty<THistoryReference>[] {
+	public static getHistory(): IFilterProperty<THistoryReference>[] {
 		const pairs = GetInfo.getHistory();
-		const result: IProperty<THistoryReference>[] = pairs.filter(p => p.snapshot === false).map(p => ({ value: p.value.toString(), label: p.label })); // remove snapshot
+		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => p.snapshot === false).map(p => ({ value: p.value.toString(), label: p.label })); // remove snapshot
 		return result;
 	}
 
-	public static getSnapshots(): IProperty<THistoryReference>[] {
+	public static getSnapshots(): IFilterProperty<THistoryReference>[] {
 		const pairs = GetInfo.getHistory();
-		const result: IProperty<THistoryReference>[] = pairs.filter(p => p.snapshot === true).map(p => ({ value: p.value.toString(), label: p.label })); // remove snapshot
+		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => p.snapshot === true).map(p => ({ value: p.value.toString(), label: p.label })); // remove snapshot
 		return result;
 	}
 
-	public static getActionSets(): IProperty<TActionSet>[] {
-		const actionSets: IProperty<TActionSet>[] = PS.actionTree.map(item => ({ value: item.id.toString(), label: item.name }));
+	public static getActionSets(): IFilterProperty<TActionSet>[] {
+		const actionSets: IFilterProperty<TActionSet>[] = PS.actionTree.map(item => ({ value: item.id.toString(), label: item.name }));
 		return actionSets;
 	}
 
-	public static getActionItem(actionSetID: number): IProperty<TActionItem>[] {
+	public static getActionItem(actionSetID: number): IFilterProperty<TActionItem>[] {
+		if (Number.isNaN(actionSetID)) {
+			return [];
+		}
 		const actionSet = new PS.ActionSet(actionSetID);
-		const action: IProperty<TActionItem>[] = actionSet.actions.map(item => ({ value: item.id.toString(), label: item.name }));
+		const action: IFilterProperty<TActionItem>[] = actionSet.actions.map(item => ({ value: item.id.toString(), label: item.name }));
 		return action;
 	}
 
-	public static getActionCommand(actionItemID: number): IProperty<TActionCommand>[] {
+	public static getActionCommand(actionItemID: number): IFilterProperty<TActionCommand>[] {
+		if (Number.isNaN(actionItemID)) {
+			return [];
+		}
 		const result2 = GetInfo.getAllCommandsOfAction(actionItemID);
 
-		const final: IProperty<TActionCommand>[] = result2.map(item => ({ value: item.ID.toString(), label: item.name }));
+		const final: IFilterProperty<TActionCommand>[] = result2.map(item => ({ value: item.ID.toString(), label: item.name }));
 		return final;
 	}
 }

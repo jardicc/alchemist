@@ -47,6 +47,35 @@ export class DocumentExtra extends app.Document{
 		return await this.getPropertyAsync("title");
 	}
 
+	public get allLayers():{name:string,layerID:number}[] {
+		const docRef = {
+			_ref: "document",
+			_id: this.id,
+		};
+
+		const result = batchPlaySync([
+			{
+				_obj: "multiGet",
+				_target: docRef,
+				extendedReference: [
+					[
+						"name",
+						"layerID",
+					],
+					{
+						_obj: "layer",
+						index: this.backgroundLayer ? 0 : 1,
+						count: -1,
+					},
+				],
+			},
+		], {
+			"modalBehavior": "execute",
+		});
+		const res = result[0].list;
+		return res;
+	}
+
 	public get guidesIDs(): { value: number; label: string }[]{
 		const len = this.numberOfGuides;
 		const desc: ActionDescriptor[] = [];

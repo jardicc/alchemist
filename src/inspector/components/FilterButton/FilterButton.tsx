@@ -9,7 +9,7 @@ export type TState = "on" | "off" | "semi";
 export interface IFilterButtonProps {
 	state:TState
 	subtype: TSubTypes | "main"
-	onClick: (id: TSubTypes | "main", state: TState) => void
+	onClick: (id: TSubTypes | "main", state: TState, e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
 export interface IFilterButtonDispatch {
@@ -34,7 +34,7 @@ export class FilterButton extends React.Component<TFilterButton, IFilterButtonSt
 		const { state,onClick,subtype } = this.props;
 		
 		return (
-			<div className={"FilterButton" + " " + state} onClick={() => onClick(subtype, state)} title="Filter">
+			<div className={"FilterButton" + " " + state} onClick={(e) => onClick(subtype, state, e)} title="Filter">
 				<div className="icon"><IconEye /></div>
 			</div>
 		);

@@ -1,12 +1,10 @@
 import { IRootState } from "../../../shared/store";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
-import { getInspectorSettings, getSelectedTargetReference, getActiveTargetReferenceListenerCategory, getActiveTargetReference } from "../../selectors/inspectorSelectors";
-import { setExcludeAction, setFilterTypeAction, setIncludeAction, setFilterStateAction, setTargetReferenceAction } from "../../actions/inspectorActions";
+import { getSelectedTargetReference, getActiveTargetReference, getListenerNotifierFilterSettings } from "../../selectors/inspectorSelectors";
+import { setFilterStateAction, setTargetReferenceAction, setListenerNotifierFilterAction } from "../../actions/inspectorActions";
 import React from "react";
-import { TSubTypes, ISettings, TFilterEvents, TTargetReference, ITargetReference, IContentWrapper, TListenerCategoryReference } from "../../model/types";
-import { TBaseItems, baseItemsListener } from "../../model/properties";
-import { TState, FilterButton } from "../FilterButton/FilterButton";
-import cloneDeep from "lodash/cloneDeep";
+import { TSubTypes, TTargetReference, ITargetReference, IListenerNotifierFilter } from "../../model/types";
+import { TState } from "../FilterButton/FilterButton";
 import SP from "react-uxp-spectrum";
 
 class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> { 
@@ -15,101 +13,64 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 	}
 	
 	private setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.setExclude(e.currentTarget.value.split(";"));
+		this.props.onSetNotifierListenerFilter({
+			exclude: e.currentTarget.value.split(";"),
+		});
 	}
 
 	private setInclude = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.setInclude(e.currentTarget.value.split(";"));
+		this.props.onSetNotifierListenerFilter({
+			include: e.currentTarget.value.split(";"),
+		});
 	}
 
-	private renderFilterFields = () => {
-		const {listenerExclude,listenerInclude } = this.props.settings;
-		switch (this.props.settings.listenerFilterType) {
+	private onSetFilterEventsType = (e: any) => {
+		this.props.onSetNotifierListenerFilter({
+			type: e.target.value,
+		});
+	}
+
+	private renderFilterFields = ():JSX.Element|null => {
+		const {exclude,include,type} = this.props.settings;
+		switch (type) {
 			case "exclude": {
 				return (
-					<React.Fragment>
-						<div className="label">Exclude: </div><input onChange={this.setExclude} value={listenerExclude.join(";")} type="text" />
-					</React.Fragment>
+					<>
+						<div className="label">Exclude: </div><SP.Textfield onInput={this.setExclude as any} value={exclude.join(";")} className="input" quiet />
+					</>
 				);
 			}
 			case "include": {
 				return (
-					<React.Fragment>
-						<div className="label">Include: </div><input onChange={this.setInclude} value={listenerInclude.join(";")} type="text" />
-					</React.Fragment>
+					<>
+						<div className="label">Include: </div><SP.Textfield onInput={this.setInclude as any} value={include.join(";")} className="input" quiet />
+					</>
 				);
 			}
-			case "none": {
-				return null;
-			}
 		}
-	}
-
-	private onSetFilterEventsType = (e: any) => {
-		this.props.setFilterEventsType(e.target.value);
-	}
-
-	private onSetSubType = (subType: TSubTypes, value: any) => {
-
-		const { onSetTargetReference, activeTargetReference} = this.props;
-		const found = cloneDeep(activeTargetReference);
-		
-		if (found) {
-			const content = found?.data?.find(i => i.subType === subType)?.content;
-			if (content) {
-				content.value = value.target.value;
-				onSetTargetReference(found);
-			}
-		}
-	}
-
-	private buildFilterRow = (
-		label: string,
-		subType: "listenerCategory",
-		items: TBaseItems,
-		content: {value:string|null|number,filterBy:TState},
-	): React.ReactNode => {
-		return (
-			<div className="filter">
-				<div className="label">{label}</div>
-				<SP.Dropdown quiet={true}>
-					<SP.Menu slot="options" onChange={(e) => this.onSetSubType("listenerCategory", e)}>
-						{
-							items.map(item => (
-								<SP.MenuItem
-									key={item.value}
-									value={item.value}
-									selected={content.value === item.value ? true : undefined}
-								>{item.label}</SP.MenuItem>
-							))
-						}
-					</SP.Menu>
-				</SP.Dropdown>
-				<FilterButton subtype={subType} state={content.filterBy} onClick={(subtype, state) => this.props.onSetFilter(this.props.selectedTargetReference, subtype, state)} />
-			</div>
-		);
+		return null;
 	}
 
 	public render(): JSX.Element {
-		const {settings:{listenerFilterType},activeTargetReferenceListenerCategory } = this.props;
+		const {type} = this.props.settings;
 		return (
-			<React.Fragment>
-				<div className="category">
-					{this.buildFilterRow("Category","listenerCategory",baseItemsListener,activeTargetReferenceListenerCategory)}
-				</div>
+			<>
 				<div className="filter excludeIncludeDropdownRow">
 					<div className="label">Filter:</div>
 					<SP.Dropdown quiet={true}>
 						<SP.Menu slot="options" onChange={this.onSetFilterEventsType}>
 							{
-								[{ value: "none", label: "None" }, { value: "include", label: "Include" }, { value: "exclude", label: "Exclude" }]
-									.map(item => (
-										<SP.MenuItem
-											key={item.value}
-											value={item.value}
-											selected={listenerFilterType === item.value ? true : undefined}
-										>{item.label}</SP.MenuItem>
-									))
+								[
+									{value: "none", label: "None"},
+									{value: "include", label: "Include"},
+									{value: "exclude", label: "Exclude"},
+								].map(item => (
+									<SP.MenuItem
+										key={item.value}
+										value={item.value}
+										selected={type === item.value ? true : undefined}
+									>{item.label}</SP.MenuItem>
+								))
 							}
 						</SP.Menu>
 					</SP.Dropdown>
@@ -117,7 +78,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 				<div className="excludeIncludeInput">
 					{this.renderFilterFields()}
 				</div>
-			</React.Fragment>
+			</>
 		);
 	}
 }
@@ -126,33 +87,27 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
 
 interface IListenerFilterProps{
-	settings: ISettings
+	settings: IListenerNotifierFilter
 	selectedTargetReference: TTargetReference
-	activeTargetReferenceListenerCategory: IContentWrapper<TListenerCategoryReference>
 	activeTargetReference: ITargetReference | null;
 }
 
 const mapStateToProps = (state: IRootState): IListenerFilterProps => ({
-	settings: getInspectorSettings(state),
+	settings: getListenerNotifierFilterSettings(state),
 	selectedTargetReference: getSelectedTargetReference(state),		
-	activeTargetReferenceListenerCategory: getActiveTargetReferenceListenerCategory(state) as IContentWrapper<TListenerCategoryReference>,
 	activeTargetReference: getActiveTargetReference(state),
 });
 
 interface IListenerFilterDispatch {
-	setFilterEventsType(type: TFilterEvents): void
-	setInclude(arr:string[]):void
-	setExclude(arr: string[]): void
 	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
 	onSetTargetReference: (arg: ITargetReference) => void
+	onSetNotifierListenerFilter: (arg: Partial<IListenerNotifierFilter>) => void
 }
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IListenerFilterDispatch, Record<string, unknown>> = (dispatch):IListenerFilterDispatch => ({
-	setExclude: (arr) => dispatch(setExcludeAction(arr)),
-	setFilterEventsType: (type) => dispatch(setFilterTypeAction(type)),
-	setInclude: (arr) => dispatch(setIncludeAction(arr)),
+const mapDispatchToProps: MapDispatchToPropsFunction<IListenerFilterDispatch, Record<string, unknown>> = (dispatch): IListenerFilterDispatch => ({
 	onSetFilter: (type, subType, state) => dispatch(setFilterStateAction(type, subType, state)),
-	onSetTargetReference:(arg) => dispatch(setTargetReferenceAction(arg)),
+	onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
+	onSetNotifierListenerFilter: (arg) => dispatch(setListenerNotifierFilterAction(arg)),
 });
 
 export const ListenerFilterContainer = connect(mapStateToProps, mapDispatchToProps)(ListenerFilter);

@@ -1,22 +1,29 @@
-import { IProperty } from "../components/LeftColumn/LeftColumn";
-import { TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference, TGuideReference, TActionSet, TActionItem, TActionCommand, TListenerCategoryReference } from "./types";
+
+import {
+	TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference,
+	TGuideReference, TActionSet, TActionItem, TActionCommand, IFilterProperty,
+} from "./types";
 
 export type TBaseItems = (
-	IProperty<TTargetReference> |
-	IProperty<TBaseProperty>|
-	IProperty<TDocumentReference>|
-	IProperty<TLayerReference>|
-	IProperty<TPathReference>|
-	IProperty<TChannelReference> |
-	IProperty<TGuideReference> |
-	IProperty<TActionSet> |
-	IProperty<TActionItem> |
-	IProperty<TActionCommand>
+	IFilterProperty<TTargetReference> |
+	IFilterProperty<TBaseProperty>|
+	IFilterProperty<TDocumentReference>|
+	IFilterProperty<TLayerReference>|
+	IFilterProperty<TPathReference>|
+	IFilterProperty<TChannelReference> |
+	IFilterProperty<TGuideReference> |
+	IFilterProperty<TActionSet> |
+	IFilterProperty<TActionItem> |
+	IFilterProperty<TActionCommand>
 )[]
 	
 
-export const mainClasses: IProperty<TTargetReference>[] = [
-	{ label: "Listener", value: "listener" },
+export const mainClasses: IFilterProperty<TTargetReference>[] = [
+	{ label: "Listener - Playable", value: "listener" },
+	{ label: "Listener - Events", value: "notifier" },
+	{ label: "Dispatcher", value: "dispatcher" },
+	{label: "Replies", value: "replies"},
+	
 	{ label: "Application", value: "application" },
 	{ label: "Document", value: "document" },
 	{ label: "Layer", value: "layer" },
@@ -26,35 +33,33 @@ export const mainClasses: IProperty<TTargetReference>[] = [
 	{ label: "Guide", value: "guide" },
 	{ label: "History", value: "history" },
 	{ label: "Snapshot", value: "snapshot" },
+	{ label: "Animation", value: "animation" },
+	{ label: "Animation Frame", value: "animationFrame" },
+	{ label: "Timeline", value: "timeline" },
 	{ label: "Generator", value: "generator" },
 	// { label: "Overkill", value: "overkill" },
 	//{ label: "Custom descriptor", value: "customDescriptor" },
 	//{ label: "Features", value: "featureData" },
 ];
-export const baseItemsProperty:IProperty<TBaseProperty>[] = [
+export const baseItemsProperty:IFilterProperty<TBaseProperty>[] = [
 	{ label: "(not specified)", value: "notSpecified" },
 ];
-export const baseItemsListener:IProperty<TListenerCategoryReference>[] = [
-	{ label: "(not specified)", value: "notSpecified" },
-	{ label: "Listener", value: "listener" },
-	{ label: "Replies", value: "reply" },
-	{ label: "Dispatched", value: "dispatch" },
-];
-export const baseItemsCustomDescriptor:IProperty<string>[] = [
+/*
+export const baseItemsCustomDescriptor:IFilterProperty<string>[] = [
 	{ label: "(undefined)", value: "undefined" },
-];
-export const baseItemsDocument:IProperty<TDocumentReference>[] = [
+];*/
+export const baseItemsDocument:IFilterProperty<TDocumentReference>[] = [
 	{ label: "(active)", value: "active" },
 ];
-export const baseItemsLayer:IProperty<TLayerReference>[] = [
+export const baseItemsLayer:IFilterProperty<TLayerReference>[] = [
 	{ label: "(active)", value: "active" },
 ];
-export const baseItemsPath :IProperty<TPathReference>[]= [
+export const baseItemsPath :IFilterProperty<TPathReference>[]= [
 	{ label: "(active)", value: "active" },
 	{ label: "(vector mask)", value: "vectorMask" },
 	{ label: "(work path)", value: "workPathIndex" },
 ];
-export const baseItemsChannel:IProperty<TChannelReference>[] = [
+export const baseItemsChannel:IFilterProperty<TChannelReference>[] = [
 	{ label: "(active)", value: "active" },
 	{ label: "(composite)",value: "composite"},
 	{ label: "(Mask)",value: "mask"},
@@ -80,10 +85,10 @@ export const baseItemsChannel:IProperty<TChannelReference>[] = [
 	{ label: "(Quadtone)",value: "quadtone"},
 
 ];
-export const baseItemsGuide:IProperty<TGuideReference>[] = [
+export const baseItemsGuide:IFilterProperty<TGuideReference>[] = [
 	{ label: "(undefined)", value: "" },
 ];	
-export const baseItemsActionCommon:(IProperty<TActionSet>|IProperty<TActionItem>|IProperty<TActionCommand>)[] = [
+export const baseItemsActionCommon:(IFilterProperty<TActionSet>|IFilterProperty<TActionItem>|IFilterProperty<TActionCommand>)[] = [
 	{ label: "(undefined)", value: "" },
 ];	
 

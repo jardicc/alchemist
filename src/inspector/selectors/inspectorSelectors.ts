@@ -1,13 +1,13 @@
+/* eslint-disable comma-dangle */
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
-import { IDescriptor, IInspectorState } from "../model/types";
+import { IDescriptor, IInspectorState, IListenerNotifierFilter, TTargetReference } from "../model/types";
 import { Helpers } from "../classes/Helpers";
 import { cloneDeep } from "lodash";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
  
-export const getMainTabID = createSelector([all], s => s.activeSection);
 export const getModeTabID = createSelector([all], s => s.inspector.activeTab);
 
 export const getSelectedTargetReference = createSelector([all], s => s.selectedReferenceType);
@@ -27,7 +27,14 @@ export const getActiveTargetReference = createSelector([getTargetReference, getS
 	return (result || null);
 });
 
-
+export const getCategoryItemsVisibility = createSelector([all, getActiveTargetReference], (s, target) => {
+	// adds currently selected category into visibility even though is not explicitly set to visible
+	if (target?.type) {
+		const res: TTargetReference[] = [...new Set([...s.explicitlyVisibleTopCategories, target.type])];
+		return res;
+	}
+	return s.explicitlyVisibleTopCategories;
+});
 
 export const getInspectorSettings = createSelector([all], (s) => {
 	return s.settings;
@@ -37,8 +44,16 @@ export const getFontSizeSettings = createSelector([getInspectorSettings], (s) =>
 	return s.fontSize;
 });
 
+export const getSettingsVisible = createSelector([getInspectorSettings], (s) => {
+	return s.settingsVisible;
+});
+
 export const getLeftColumnWidth = createSelector([getInspectorSettings], (s) => {
 	return s.leftColumnWidthPx;
+});
+
+export const getRightColumnWidth = createSelector([getInspectorSettings], (s) => {
+	return s.rightColumnWidthPx;
 });
 
 export const getNeverRecordActionNames = createSelector([getInspectorSettings], s => s.neverRecordActionNames);
@@ -54,30 +69,32 @@ export const getActiveTargetReferenceForAM = createSelector([getTargetReference,
 	return (newRes || null);
 });
 
-export const getAddAllowed = createSelector([getActiveTargetReference], s => { 
-	if (s) {
-		if (s.type === "generator") {
-			return true;
-		}
-		if (s.type === "listener") {
-			return false;
-		}
-		for (const key in s.data) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			if ((s.data as any)[key] === "undefined") {
-				return false;
-			}
-		}
-		return true;
+export const getListenerNotifierFilterSettings = createSelector([all], (all) => {
+	if (all.selectedReferenceType === "listener") {
+		return all.settings.listenerFilter;
+	} else if (all.selectedReferenceType === "notifier") {
+		return all.settings.notifierFilter;
 	}
-	return false;
+	throw Error("Wrong type in filter");
 });
 
-export const getDescriptorsListView = createSelector([getAllDescriptors, getActiveTargetReference, getFilterBySelectedReferenceType,getInspectorSettings], (allDesc, activeRefFilter, rootFilter,settings) => {	
-	const pinned = allDesc.filter(i => i.pinned);
-	const notPinned = allDesc.filter(i => !i.pinned);
+export const getDescriptorsListView = createSelector([
+	getAllDescriptors,
+	getActiveTargetReference,
+	getFilterBySelectedReferenceType,
+	getInspectorSettings,
+	getCategoryItemsVisibility,
+], (
+	allDesc,
+	activeRefFilter,
+	rootFilter,
+	settings,
+	categoryVisibility,
+) => {	
+	const pinned:IDescriptor[] = allDesc.filter(i => i.pinned);
+	const notPinned: IDescriptor[] = allDesc.filter(i => !i.pinned);
 	let reordered = [...notPinned, ...pinned];
-	const { searchTerm } = settings;
+	const { searchTerm,listenerFilter,notifierFilter } = settings;
 
 	if (searchTerm) {
 		reordered = reordered.filter(item => (item.title.toLowerCase().includes(searchTerm.toLowerCase())));
@@ -99,13 +116,21 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		}
 	
 		const origRefFilter = desc.originalReference;
+		if (!activeRefFilter || !categoryVisibility.includes(origRefFilter.type)) {
+			return false;
+		}
+		/*
 		if (activeRefFilter?.type !== origRefFilter.type) {
 			return false;
 		}
+		*/
 		if (activeRefFilter?.type !== "listener") {
 			for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
 				if (activeRefFilter.data[i].content.filterBy === "off") {
 					return true;
+				}
+				if (activeRefFilter?.type !== origRefFilter.type) {
+					return false;
 				}
 				if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
 					return false;
@@ -114,14 +139,15 @@ export const getDescriptorsListView = createSelector([getAllDescriptors, getActi
 		}
 		return true;
 	});
-	if (activeRefFilter?.type === "listener") {
-		if (settings.listenerFilterType === "exclude" && settings.listenerExclude.join(";").trim().length) {
+	if (activeRefFilter?.type === "listener" || activeRefFilter?.type === "notifier") {
+		const filterSettings: IListenerNotifierFilter = (activeRefFilter?.type === "listener") ? listenerFilter : notifierFilter;
+		if (filterSettings.type === "exclude" && filterSettings.exclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				!settings.listenerExclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				!filterSettings.exclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
-		} else if (settings.listenerFilterType === "include" && settings.listenerInclude.join(";").trim().length) {
+		} else if (filterSettings.type === "include" && filterSettings.include.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				settings.listenerInclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				filterSettings.include.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		}
 	}
@@ -243,12 +269,8 @@ export const getActiveDescriptorOriginalReference = createSelector([getActiveDes
 	}
 });
 
-export const getActiveTargetReferenceListenerCategory = createSelector([getActiveTargetReference], (t) => {
-	if (!t) { return null;}
-	const result = t.data.find(i => i.subType === "listenerCategory")?.content;
 
-	return (result===undefined) ? null : result;
-});
+
 
 export const getActiveTargetDocument = createSelector([getActiveTargetReference], (t) => {
 	if (!t) { return null;}
@@ -269,10 +291,14 @@ export const getReplayEnabled = createSelector([getActiveDescriptors], (selected
 	if (selected.length < 1) {
 		return false;
 	}
-	if (selected.some(item => item.originalReference.data.some(subitem => subitem.content.value === "reply" || subitem.content.value === "dispatch"))) {
+	if (selected.some(item => ["replies", "dispatcher"].includes(item.originalReference.type))) {
 		return false;
 	}
 	return true;
+});
+
+export const getCopyToClipboardEnabled = createSelector([getReplayEnabled], (enabled) => {
+	return enabled;
 });
 
 export const getRanameEnabled = createSelector([getDescriptorsListView], (all) => {
@@ -281,6 +307,28 @@ export const getRanameEnabled = createSelector([getDescriptorsListView], (all) =
 		return false;
 	}
 	return (!selected[0].groupCount || selected[0].groupCount === 1);
+});
+
+export const getAddAllowed = createSelector([getActiveTargetReference, getActiveReferenceProperty], (s, property) => { 
+	if (property?.value === "") {
+		return false;
+	}
+	if (s) {
+		if (s.type === "generator") {
+			return true;
+		}
+		if ((["listener","dispatcher","notifier","replies"] as TTargetReference[]).includes(s.type)) {
+			return false;
+		}
+		for (const key in s.data) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			if ((s.data as any)[key] === "undefined") {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
 });
 
 /*export const getColumnSizesPercentage = createSelector([getInspectorSettings], (s) => {

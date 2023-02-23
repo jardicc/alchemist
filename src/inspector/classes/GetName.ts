@@ -38,6 +38,9 @@ function getTypeTitle(str: string): string{
 		case "channel": return "CH";
 		case "document": return "D";
 		case "guide":
+		case "timeline":
+		case "animationFrame":
+		case "animation":
 		case "application": return str;
 		default: return str;		
 	}
@@ -45,7 +48,6 @@ function getTypeTitle(str: string): string{
 
 function getNameProp(refs: TReference[]):string|null {
 	let propName: string | null;
-
 	if ("_property" in refs[0]) { return null;}
 
 	switch (refs[0]._ref) {
@@ -67,6 +69,9 @@ function getNameProp(refs: TReference[]):string|null {
 			propName = "title";
 			break;
 		case "guide":
+		case "timeline":
+		case "animationFrameClass":
+		case "animationClass":
 		case "application":
 			propName = null;
 			break;

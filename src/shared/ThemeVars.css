@@ -5,12 +5,15 @@
 	--bgInput:#454545;
 	--borderInput: #666666;
 	--text:#F0F0F0;
+	--textDim:#F0F0F0A0;
 	--textDisallowed:#f0f0f070;
+	--textDisallowedDimmer:#f0f0f040;
 	--textFade: #989898;
 	--active: #37E93B;
 	--hover: #1AD3B7;
 	--autoActive:yellow;
 	--divider: #383838;
+	--sp-textfield-bg:#323232;
 
 	--biggerText:1.15em;
 }
@@ -21,12 +24,14 @@
 		--bgInput:#292929;
 		--borderInput: #474747;
 		--text:#E1E1E1;
+		--textDim:#E1E1E1A0;
 		--textDisallowed:#E1E1E170;
 		--textFade: #848484;
 		--active: #37E93B;
 		--hover: #1AD3B7;
 		--autoActive:yellow;
-		--divider: #212121
+		--divider: #212121;
+		--sp-textfield-bg:#1E1E1E;
 	}
 }
 
@@ -36,12 +41,14 @@
 		--bgInput:#454545;
 		--borderInput: #666666;
 		--text:#F0F0F0;
+		--textDim:#F0F0F0A0;
 		--textDisallowed:#f0f0f070;
 		--textFade: #989898;
 		--active: #37E93B;
 		--hover: #1AD3B7;
 		--autoActive:yellow;
-		--divider: #383838
+		--divider: #383838;
+		--sp-textfield-bg:#323232;
 	}
 }
 
@@ -51,12 +58,14 @@
 		--bgInput:#D1D1D1;
 		--borderInput: #949494;
 		--text:#303030;
+		--textDim:#303030A0;
 		--textDisallowed:#30303070;
 		--textFade: #6E6E6E;
 		--active: #0076d6;
 		--hover: #ad50ff;
 		--autoActive:rgb(255, 136, 0);
-		--divider: #949494
+		--divider: #949494;
+		--sp-textfield-bg:#F5F5F5;
 	}
 }
 
@@ -66,12 +75,14 @@
 		--bgInput:#FCFCFC;
 		--borderInput: #CCCCCC;
 		--text:#464646;
+		--textDim:#464646A0;
 		--textDisallowed:#46464670;
 		--textFade: #909090;
 		--active: #0076d6;
 		--hover: #ad50ff;
 		--autoActive:rgb(255, 136, 0);;
 		--divider: #CCCCCC;
+		--sp-textfield-bg:#FFFFFF;
 	}
 }
 

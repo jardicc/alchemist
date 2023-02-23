@@ -15,7 +15,7 @@ import { getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCom
 import { clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction } from "../../atnActions";
 import { IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem } from "../../atnModel";
 import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
-import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setMainTabAction, setModeTabAction, toggleDescriptorsGroupingAction } from "../../../inspector/actions/inspectorActions";
+import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setModeTabAction, toggleDescriptorsGroupingAction } from "../../../inspector/actions/inspectorActions";
 import { alert, Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
 import PS from "photoshop";
@@ -81,15 +81,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				originalData: command.descriptor,
 				originalReference: {
 					type: "listener",
-					data: [
-						{
-							subType: "listenerCategory",
-							content: {
-								filterBy: "off",
-								value: "listener",
-							},
-						},
-					],
+					data: [],
 				},
 				pinned: false,
 				renameMode: false,
@@ -122,13 +114,11 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 
 
 		return (
-			<div className={`ATNDecoderContainer ${fontSizeSettings}`}>
+			<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 				<div className="info spread flex">
 					<div className="tree" onClick={(e) => { e.stopPropagation(); setSelectedItem([""], "none");}}>{this.renderSet()}</div>
-					<div className="noShrink">
-						<textarea
-							readOnly={true}
-							maxLength={Number.MAX_SAFE_INTEGER}
+					<div className="atnCode">
+						<SP.Textarea
 							className="infoBlock"
 							value={textData}
 						/>
@@ -153,6 +143,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 
 type TATNDecoder = IATNDecoderProps & IATNDecoderDispatch
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IATNDecoderState{
 
 }
@@ -190,7 +181,6 @@ const mapDispatchToProps: MapDispatchToPropsFunction<IATNDecoderDispatch, Record
 	setData: (data) => dispatch(setDataAction(data)),
 	onClearAll: () => dispatch(clearAllAction()),
 	onPassSelected: (desc, replace) => {
-		dispatch(setMainTabAction("descriptors"));
 		dispatch(setModeTabAction("reference"));
 		dispatch(setInspectorViewAction("code", "generated"));
 		dispatch(toggleDescriptorsGroupingAction("none"));

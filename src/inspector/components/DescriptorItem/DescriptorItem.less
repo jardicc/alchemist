@@ -5,6 +5,20 @@
 	
 	border-top: 1px solid var(--divider);
 
+	.error::before{
+		content: "[Error]";
+		margin-right:1em;
+		text-decoration: none;
+	}
+
+	.error{
+		color: var(--textDim);
+		
+		.name{
+			//
+		}
+	}
+
 	&:last-child {
 		border-bottom: 1px solid var(--divider);
 	}
@@ -64,6 +78,7 @@
 	.editMode{
 		padding:0;
 		display: flex;
+		flex-grow: 1;
 
 		.renameInput{
 			appearance: none;
@@ -72,7 +87,7 @@
 			background-color: var(--divider);
 			box-sizing: border-box;
 			margin: 0;
-			width: 100%;
+			width: 0;
 		}
 
 		.button{

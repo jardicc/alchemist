@@ -1,7 +1,7 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction } from "../../actions/inspectorActions";
-import { getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel } from "../../selectors/inspectorContentSelectors";
+import { setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction, setSearchContentKeywordAction } from "../../actions/inspectorActions";
+import { getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel, getSearchContentKeyword } from "../../selectors/inspectorContentSelectors";
 import React, { Component } from "react";
 import "./TreeContent.less";
 import { getItemString } from "../TreeDiff/getItemString";
@@ -12,6 +12,7 @@ import { TLabelRenderer } from "../JSONTree/types";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
 import { TreePath } from "../TreePath/TreePath";
+import SP from "react-uxp-spectrum";
 
 class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 
@@ -30,19 +31,31 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
 	}
+
+	private renderSearchField = () => {
+		return (
+			<SP.Textfield
+				className="filterContent"
+				type="search"
+				placeholder="Filter..."
+				value={this.props.search}
+				onInput={(e)=>this.props.onSetSearch(e.target?.value ?? "")}
+			/>
+		);
+	}
 	
 	
 	public render(): React.ReactNode {
 		const { content, protoMode, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys, viewType ,onSetView} = this.props;
 		//console.log(content);
 		return (
-			<TabList className="tabsView" activeKey={viewType} onChange={onSetView}>
+			<TabList className="tabsView" activeKey={viewType} onChange={onSetView} postFix={this.renderSearchField()} >
 				<TabPanel id="tree" title="Tree" noPadding={true}>
 					<div className="TreeContent">
 						<TreePath
-							autoExpandLevels = {autoExpandLevels}
-							onInspectPath = {onInspectPath}
-							onSetAutoExpandLevel = {onSetAutoExpandLevel}
+							autoExpandLevels={autoExpandLevels}
+							onInspectPath={onInspectPath}
+							onSetAutoExpandLevel={onSetAutoExpandLevel}
 							path={path}
 							allowInfinityLevels={true}
 						/>
@@ -53,7 +66,7 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 								<JSONTree
 									expandClicked={this.expandClicked}
 									labelRenderer={this.labelRenderer}
-									shouldExpandNode={shouldExpandNode(expandedKeys,autoExpandLevels, true)}
+									shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
 									data={content}
 									getItemString={this.getItemString} // shows object content shortcut
 									hideRoot={true}
@@ -66,11 +79,9 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
 					<div className="textareaWrap">
-						<span className="placeholder">{this.props.descriptorContent?.substr(0,2000) || ""}</span>
-						<textarea
-							maxLength={Number.MAX_SAFE_INTEGER}
+						<SP.Textarea
 							className="rawCode"
-							defaultValue={this.props.descriptorContent}
+							value={this.props.descriptorContent}
 						/>
 					</div>
 				</TabPanel>
@@ -88,12 +99,14 @@ interface ITreeContentProps{
 	protoMode: TProtoMode
 	descriptorContent: string
 	viewType: TGenericViewType
-	autoExpandLevels:number
+	autoExpandLevels: number
+	search: string
 }
 
 const mapStateToProps = (state: IRootState): ITreeContentProps => ({
 	content: getTreeContent(state),		
 	path: getContentPath(state),
+	search: getSearchContentKeyword(state),
 	protoMode: "none",
 	expandedKeys: getContentExpandedNodes(state),
 	descriptorContent: getActiveDescriptorContent(state),
@@ -105,7 +118,8 @@ interface ITreeContentDispatch {
 	onInspectPath: (path: string[], mode: "replace" | "add") => void;
 	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
 	onSetView: (viewType: TGenericViewType) => void
-	onSetAutoExpandLevel:(level:number)=>void
+	onSetAutoExpandLevel: (level: number) => void
+	onSetSearch:(keyword:string)=>void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Record<string, unknown>> = (dispatch):ITreeContentDispatch => ({
@@ -113,6 +127,7 @@ const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Recor
 	onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("content", path, expand, recursive, data)),
 	onSetView: (viewType) => dispatch(setInspectorViewAction("content", viewType)),
 	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("content", level)),
+	onSetSearch:(keyword)=>dispatch(setSearchContentKeywordAction(keyword)),
 });
 
 export const TreeContentContainer = connect(mapStateToProps, mapDispatchToProps)(TreeContent);

@@ -1,0 +1,72 @@
+.AccDrop{
+	&.header{
+		border: 1px solid var(--divider);
+		border-width: 1px 0;
+		padding: 0.2em 1em;
+		display: flex;
+		flex-shrink: 0;
+		flex-grow: 0;
+		align-items: center;
+	
+		.FilterButton {
+			margin-left: auto;
+		}
+	
+		.title{
+			font-size: 1.12em;
+			line-height: 1.2em;
+			margin-left: 0;
+			margin-bottom: 0.1em;
+			// margin-top: 1em;
+			flex-shrink: 0;
+			font-weight: bold;
+		}
+	
+		.chevron svg{
+			display: inline;
+			margin-right: 0.5em;
+			fill:var(--text);
+		}
+	}
+	
+	&.container{
+		padding:1em ;
+		height: 0;
+		flex-grow: 1;
+		overflow: auto;
+		background: var(--bgList);
+		border-bottom: 1px solid var(--divider);
+
+		.itemPostFix{
+			margin-left: auto;
+		}
+
+		.item{
+			display: flex;
+			flex-direction: row;
+			flex-shrink: 0;
+		}
+	
+		.item[data-selected]{
+			color:var(--active);
+		}
+	
+		.item:hover{
+			color:var(--hover);
+		}
+	
+		.groupWrapper{
+			padding-left: 1em;
+		}
+	}
+
+	&.searchField{
+		display: flex;
+
+		.filterContent{
+			flex-grow: 1;
+			margin:1em;
+			margin-bottom: 0;
+		}
+	}
+}

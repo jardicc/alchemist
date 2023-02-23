@@ -57,7 +57,7 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 	private import = async () => {
 		const data = await SorcererBuilder.importPreset();
 		if (!data) {
-			return
+			return;
 		}
 		this.props.setPreset(data);
 	}
@@ -66,7 +66,7 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 		const { fontSizeSettings,commands,snippets,panels,selectItem,make,remove,selectedItem, manifestCode, enableRemove } = this.props;
 
 		return (
-			<div className={`SorcererContainer ${fontSizeSettings}`}>
+			<div className={`SorcererContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 				<div className="info spread flex">
 					<div className="tree">
 						<div className={"menuItem general " + (this.props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>

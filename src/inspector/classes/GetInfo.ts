@@ -3,7 +3,7 @@ import { cloneDeep } from "lodash";
 import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
 import { DocumentExtra } from "./DocumentExtra";
 import { getName } from "./GetName";
-import { getInitialState } from "../store/initialState";
+import { getInitialState } from "../inspInitialState";
 import { RawDataConverter } from "./RawDataConverter";
 import { str as crc } from "crc-32";
 import { batchPlaySync } from "../../shared/helpers";
@@ -145,6 +145,30 @@ export class GetInfo {
 				});
 				break;
 			}
+			case "timeline": {
+				rootT.push({
+					"_ref": "timeline",
+					"_enum": "ordinal",
+					"_value": "targetEnum",
+				});
+				break;
+			}
+			case "animationFrame": {
+				rootT.push({
+					"_ref": "animationFrameClass",
+					"_enum": "ordinal",
+					"_value": "targetEnum",
+				});
+				break;
+			}
+			case "animation": {
+				rootT.push({
+					"_ref": "animationClass",
+					"_enum": "ordinal",
+					"_value": "targetEnum",
+				});
+				break;
+			}
 			case "channel": {
 				const activeID = await this.getActiveChannelID();
 				if (activeID === null) { return null; }
@@ -252,8 +276,29 @@ export class GetInfo {
 	}
 
 	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM, reply=false, reference=false): string => {
-		if (originalReference.type==="listener") {
-			return (reply ? "Reply: " : "") + calculatedReference._obj;
+		switch (originalReference.type) {
+			case "replies": {
+				return "Reply: " + calculatedReference._obj;
+			}
+			case "listener": {
+
+				let postfix = "";
+
+				const target:any = calculatedReference._target || calculatedReference.null;
+				if (Array.isArray(target)) {
+					postfix += target.reduceRight((str, current) => {
+						return (str + " " + current?._ref ?? "");
+					}, "");
+				} else {
+					postfix += " " + (target?._ref ?? "");
+				}
+
+				const res = calculatedReference._obj + (postfix.trim() ? " (" + postfix.trim() + ")" : "");
+				return res;
+			}
+			case "notifier": {
+				return calculatedReference._obj;
+			}
 		}
 		const parts = getName(calculatedReference._target);
 		//parts.push(...subs.map(d => d.subType + ": " + d.content.value));

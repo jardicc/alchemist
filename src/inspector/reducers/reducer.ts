@@ -1,7 +1,7 @@
 
 
 import produce from "immer";
-import { getInitialState } from "../store/initialState";
+import { getInitialState } from "../inspInitialState";
 import { TActions } from "../actions/inspectorActions";
 import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType } from "../model/types";
 import { GetInfo } from "../classes/GetInfo";
@@ -9,28 +9,18 @@ import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
 import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
-import { cloneDeep, uniqBy } from "lodash";
 import { TAtnActions } from "../../atnDecoder/atnActions";
-import { getSetByUUID, getTreePartUniversal, selectedActions, selectedCommands, selectedSets } from "../../atnDecoder/atnSelectors";
-import { TExpandedItem, TSelectedItem } from "../../atnDecoder/atnModel";
 import { atnReducer } from "../../atnDecoder/atnReducer";
 import { TSorActions } from "../../sorcerer/sorActions";
 import { sorReducer } from "../../sorcerer/sorReducer";
+import {ListenerClass} from "../classes/Listener";
 
 export type TAllActions = TActions | TAtnActions|TSorActions;
 
-export const inspectorReducer = (state = getInitialState(), action:TAllActions ): IInspectorState => {
-	console.log(JSON.stringify(action, null, "\t"));
+export const inspectorReducer = (state:IInspectorState = Settings.importState() || getInitialState(), action:TAllActions ): IInspectorState => {
+	console.log(action/*JSON.stringify(action, null, "\t")*/);
 	switch (action.type) {
-		// OCCULTIST
-		
 		// ALCHEMIST
-		case "SET_MAIN_TAB": {
-			state = produce(state, draft => {
-				draft.activeSection = action.payload;
-			});
-			break;
-		}
 		case "SET_MODE_TAB": {
 			state = produce(state, draft => {
 				draft.inspector.activeTab = action.payload;
@@ -293,12 +283,36 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 		case "SET_LISTENER": {
 			state = produce(state, draft => {
 				draft.settings.autoUpdateListener = action.payload;
+				if (action.payload) {
+					ListenerClass.stopInspector();
+					ListenerClass.stopSpy();
+					draft.settings.autoUpdateInspector = false;
+					draft.settings.autoUpdateSpy = false;
+				}
 			});
 			break;
 		}
 		case "SET_AUTO_INSPECTOR": {
 			state = produce(state, draft => {
 				draft.settings.autoUpdateInspector = action.payload;
+				if (action.payload) {
+					ListenerClass.stopListener();
+					ListenerClass.stopSpy();
+					draft.settings.autoUpdateListener = false;
+					draft.settings.autoUpdateSpy = false;
+				}
+			});
+			break;
+		}
+		case "SET_SPY": {
+			state = produce(state, draft => {
+				draft.settings.autoUpdateSpy = action.payload;
+				if (action.payload) {
+					ListenerClass.stopListener();
+					ListenerClass.stopInspector();
+					draft.settings.autoUpdateListener = false;
+					draft.settings.autoUpdateInspector = false;
+				}
 			});
 			break;
 		}
@@ -411,21 +425,21 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;
 		}
-		case "SET_FILTER_TYPE": {
+		case "SET_LISTENER_NOTIFIER": {
 			state = produce(state, draft => {
-				draft.settings.listenerFilterType = action.payload;
-			});
-			break;
-		}
-		case "SET_INCLUDE_ACTION": {
-			state = produce(state, draft => {
-				draft.settings.listenerInclude = action.payload;
-			});
-			break;
-		}
-		case "SET_EXCLUDE_ACTION": {
-			state = produce(state, draft => {
-				draft.settings.listenerExclude = action.payload;
+
+				if (state.selectedReferenceType === "listener") {
+					draft.settings.listenerFilter = {
+						...state.settings.listenerFilter,
+						...action.payload.data,
+					};					
+				} else if (state.selectedReferenceType === "notifier") {
+					draft.settings.notifierFilter = {
+						...state.settings.notifierFilter,
+						...action.payload.data,
+					};	
+				}
+
 			});
 			break;
 		}
@@ -435,7 +449,8 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			) {
 				action.payload.settings.autoUpdateListener = false;
 				action.payload.settings.autoUpdateInspector = false;
-				action.payload.amConvertor = cloneDeep(state.amConvertor);
+				action.payload.settings.autoUpdateSpy = false;
+				action.payload.settings.isSpyInstalled = state.settings.isSpyInstalled;
 				state = action.payload;				
 			}
 			break;
@@ -489,6 +504,12 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;	
 		}
+		case "TOGGLE_SETTINGS": {
+			state = produce(state, draft => {
+				draft.settings.settingsVisible = !state.settings.settingsVisible;
+			});
+			break;
+		}
 		case "SET_INSPECTOR_VIEW_ACTION": {
 			state = produce(state, draft => {
 				const {inspectorType,viewType } = action.payload;
@@ -509,7 +530,11 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 		}
 		case "SET_COLUMN_SIZE_ACTION": {
 			state = produce(state, draft => {
-				draft.settings.leftColumnWidthPx = action.payload;
+				if (action.payload.location === "left") {
+					draft.settings.leftColumnWidthPx = action.payload.value;					
+				} else {
+					draft.settings.rightColumnWidthPx = action.payload.value;					
+				}
 			});
 			break;
 		}
@@ -554,15 +579,6 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 			});
 			break;
 		}
-		case "SET_CONVERTER": {
-			state = produce(state, draft => {
-				draft.amConvertor = {
-					...state.amConvertor,
-					...action.payload,
-				};
-			});
-			break;
-		}
 		case "SET_FONT_SIZE": {
 			state = produce(state, draft => {
 				draft.settings.fontSize = action.payload;
@@ -591,6 +607,45 @@ export const inspectorReducer = (state = getInitialState(), action:TAllActions )
 					...state.settings,
 					...action.payload,
 				};
+			});
+			break;
+		}
+		case "TOGGLE_ACCORDION": {
+			state = produce(state, draft => {
+				if (action.payload.expanded) {
+					if (!state.settings.accordionExpandedIDs.includes(action.payload.id)) {
+						draft.settings.accordionExpandedIDs.push(action.payload.id);
+					}
+				} else {
+					if (state.settings.accordionExpandedIDs.includes(action.payload.id)) { 
+						draft.settings.accordionExpandedIDs = state.settings.accordionExpandedIDs.filter(id => id !== action.payload.id);
+					}
+				}
+			});
+			break;
+		}
+		case "SET_SEARCH_CONTENT_KEYWORD": {
+			state = produce(state, draft => {
+				draft.inspector.content.search = action.payload;
+			});
+			break;
+		}
+		case "SET_SPY_INSTALLED": {
+			state = produce(state, draft => {
+				draft.settings.isSpyInstalled = action.payload;
+			});
+			break;
+		}
+		case "SET_CATEGORY_ITEM_VISIBILITY": {
+			state = produce(state, draft => {
+				const set = new Set(state.explicitlyVisibleTopCategories);
+				if (action.payload.operation === "add") {
+					set.add(action.payload.value);					
+				} else {
+					set.delete(action.payload.value);
+				}
+
+				draft.explicitlyVisibleTopCategories = [...set];
 			});
 			break;
 		}

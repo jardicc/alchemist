@@ -2,11 +2,21 @@
 	display: flex;
 	width: 100%;
 	flex-direction: column;
+	flex-grow: 1;
 
 	.descriptorsWrapper{
 		flex-grow: 1;
-		overflow:scroll;
+		overflow:auto;
 		height: 0;
+		display: flex;
+		flex-direction: column;
+		background: var(--bgList);
+		border-top: 1px solid var(--divider);
+		border-bottom: 1px solid var(--divider);
+		flex-grow: 1;
+		flex-shrink: 0;
+		min-height: 0;
+		min-height: 90px;
 	}
 
 	.add{
@@ -22,21 +32,19 @@
 	}
 	
 	.search {
-		background-color: var(--divider);
-		padding: 0.3em;
+		background-color: var(--sp-textfield-bg);
 		display: flex;
+		flex-shrink: 0;
 		position: relative;
 		max-width: 100%;
 		flex-grow: 0;
 
-		input{
+		sp-textfield{
 			flex-grow: 1;
-			box-sizing: border-box;
 			margin: 0;
 			width: 0;
 			//width: 100%;
 			appearance: none;
-			background-color: var(--divider);
 			color: var(--text);
 
 			&:hover{
@@ -45,65 +53,10 @@
 		}
 
 		sp-checkbox{
-			padding:0;
+			padding:0 0.3em;
 			margin:0;
 			flex-grow: 0;
-			height:1em;
 			align-self: center;
-		}
-	}
-
-	.excludeIncludeInput{
-		display: flex;
-		align-items: center;
-		margin: 0 0.5em;
-		
-		.label{
-			width: 0;
-			min-width: 60px;
-		}
-
-		input{
-			flex-grow: 1;
-			width: 0;
-			margin: 0 0.3em 0 0;
-		}
-	}
-
-	
-	.filtersWrapper{
-		flex-shrink: 0;
-	}
-	
-	.filterButtons{
-		flex-shrink: 0;
-		display: flex;
-		flex-wrap: wrap;
-		
-
-		.button{
-			margin: 0;
-			border-radius: 0;
-			border-color: var(--divider);
-			border-bottom: none;
-			border-right: none;
-			font-weight: bold;
-
-			> svg{
-				width: 1em;
-				height: 1em;
-				margin-right: 0.5em;
-			}
-
-			&:hover{
-				color:var(--divider);
-				fill:var(--divider);
-				background: var(--hover);
-
-				> svg{
-					fill:var(--divider);
-				}
-			}
 		}
 	}
 	
@@ -114,59 +67,18 @@
 		height: 0;
 	}
 	
-	.filter{
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		margin: 0 0.5em;
-
-		&.excludeIncludeDropdownRow{
-			margin-right: 1.3em;
-		}
-
-		.dropdownWrap{
-			display: flex;
-			align-items: center;
-			flex-grow: 1;
-		}
-
-		sp-dropdown{
-			flex-grow: 1;
-			min-width: 8em;
-			width: 8em;
-		}
-	}
-	
-	
 	.descriptorButtons{
+		flex-shrink: 0;
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
 		justify-content: flex-end;
-	}
-	
-	.descriptorButtons .button{
-		display: inline-block;
-	}
-	
-	.filter .label{
-		width: 0;
-		min-width: 5em;
-		margin-right: 0.7em;
-	}
-	
-	.descriptorsWrapper{
-		overflow: auto;
-		display: flex;
-		flex-direction: column;
-		background: var(--bgList);
-		border-top: 1px solid var(--divider);
 		border-bottom: 1px solid var(--divider);
-		flex-grow: 1;
-		flex-shrink: 0;
-		min-height: 0;
+
+		.button{
+			display: inline-block;
+		}
 	}
-	
 }
 
 .MarketplaceAdvice{

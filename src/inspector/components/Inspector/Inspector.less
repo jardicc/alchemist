@@ -8,6 +8,11 @@
 	flex-shrink: 0;
 	background: var(--bg);
 
+	.filterContent{
+		margin-left: auto;
+	}
+
+
 	
 	&.size-tiny{
 		font-size: 10px;
@@ -48,6 +53,7 @@
 		right: 0;
 		left: 0;
 		display: flex;
+		flex-direction: column;
 	}
 
 	.rightPane{
@@ -115,6 +121,10 @@
 			left: 0;
 		}
 	}
+
+	.FilterButton.settings{
+		margin-right: 0.5em;
+	}
 	
 	
 	> .TabList{
@@ -138,6 +148,10 @@
 					flex-direction: column;
 					flex-grow: 1;
 					//overflow: scroll;
+				}
+
+				> .raw,.generated{
+					padding: 0;
 				}
 			}
 		}

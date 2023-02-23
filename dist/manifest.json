@@ -2,11 +2,11 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"main": "index.html",
-	"version": "2.1.0",
+	"version": "2.5.0",
 	"manifestVersion": 5,
 	"host": {
 		"app": "PS",
-		"minVersion": "23.3"
+		"minVersion": "24.2"
 	},
 	"requiredPermissions": {
 		"allowCodeGenerationFromStrings": true,
@@ -15,8 +15,11 @@
 		"launchProcess": {
 			"schemes": ["http", "https"]
 		},
+		"ipc": {
+			"enablePluginCommunication": true   
+		},
 		"network": {
-			"domains": ["alchemist.bereza.cz"]
+			"domains": "all"
 		}
 	},
 	"entrypoints": [{
@@ -26,7 +29,7 @@
 				"default": "Alchemist"
 			},
 			"minimumSize": {
-				"width": 450,
+				"width": 600,
 				"height": 360
 			},
 			"maximumSize": {
@@ -34,11 +37,11 @@
 				"height": 2000
 			},
 			"preferredDockedSize": {
-				"width": 600,
+				"width": 800,
 				"height": 540
 			},
 			"preferredFloatingSize": {
-				"width": 600,
+				"width": 800,
 				"height": 540
 			},
 			"icons": [{

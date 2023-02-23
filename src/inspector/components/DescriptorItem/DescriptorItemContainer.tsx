@@ -9,6 +9,7 @@ import "./DescriptorItem.less";
 import { IconLockLocked, IconPinDown } from "../../../shared/components/icons";
 import { TState } from "../FilterButton/FilterButton";
 import { Dispatch } from "redux";
+import {default as SP} from "react-uxp-spectrum";
 
 class DescriptorItem extends React.Component<TDescriptorItem,IState> { 
 	constructor(props: TDescriptorItem) {
@@ -47,8 +48,11 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 	}
 
 	private generateClassName = () => {
-		const { descriptor } = this.props;
-		return "wrap" + (descriptor.selected ? " selected" : "") + (this.autoSelected ? " autoSelected" : "");
+		const {descriptor} = this.props;
+		
+		const errorClass = ((descriptor.originalData as any)?.[0]?._obj === "error") ? " error" : "";
+
+		return "wrap" + (descriptor.selected ? " selected" : "") + (this.autoSelected ? " autoSelected" : "") + errorClass;
 	}
 
 	private rename = () => {
@@ -76,12 +80,13 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		const { descriptor } = this.props;
 		return (
 			<div className={"editMode " + this.generateClassName()} onClick={this.select}>
-				<input
-					className="renameInput"
-					onChange={this.onNameChange}
-					defaultValue={descriptor.title}
+				<sp-textfield
+					class="renameInput"
+					onInput={this.onNameChange}
+					value={descriptor.title}
 					type="text"
 					onKeyDown={this.onKeyPress}
+					size={SP.SpectrumComponetDefaults.defaultSize}
 				/>
 				<div className="button" onClick={this.rename}>OK</div>
 				<div className="button" onClick={this.cancel}>×</div>
@@ -90,7 +95,8 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 	}
 
 	private renderNormalState = () => {
-		const { descriptor } = this.props;
+		const {descriptor} = this.props;
+		
 		
 		const {descriptor:{locked,pinned,groupCount} } = this.props;
 		return (

@@ -1,14 +1,22 @@
-import { IDescriptor, TFontSizeSettings } from "../model/types";
+import { IDescriptor, IInspectorState, TFontSizeSettings } from "../model/types";
 import { alert } from "./Helpers";
 import type {uxp} from "../types/uxp";
 import { SpectrumComponetDefaults } from "react-uxp-spectrum";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
+const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fs: any = require("fs");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const readFileSync:any = require("fs").readFileSync;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const writeFileSync:any = require("fs").writeFileSync;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const lstatSync:any = require("fs").lstatSync;
 
 export class Settings{
 
-	public static loaded = false;
+	// public static loaded = false;
 
 	private static readonly settingsFilename = "settings.json";
 	private static saveTimeout: number;
@@ -82,10 +90,7 @@ export class Settings{
 	}
 
 	private static async _saveSettings(object: any, folder: any): Promise<void>{
-		if (!Settings.loaded) {
-			return;
-		}
-
+		
 		const data = JSON.stringify(object, null, "\t");
 		//console.log(folder);
 		const created = await folder.createFile(Settings.settingsFilename, {
@@ -96,25 +101,16 @@ export class Settings{
 		});
 	}
 
-	public static async importState(): Promise<any | null> {
-		const folder = await Settings.settingsFolder();
-		let entry: any;
+	public static importState(): IInspectorState | null {
 		try {
-			entry = await folder.getEntry(Settings.settingsFilename);
-		
-			if (!entry.isFile) {
-				return null;
-			}
-			const data: string = await entry.read();
-			const result = JSON.parse(data);
+			const text = readFileSync(`plugin-data:/${Settings.settingsFilename}`, {encoding: "utf-8"});
+			const result = JSON.parse(text);
 			Settings.setSpectrumComponentSize(result.settings.fontSize);
-
 			return result;
 		} catch (e) {
-			console.log("Error - with reading of settings!");
-			await folder.createFile(Settings.settingsFilename, {
-				overwrite: true,
-			});
+			console.log("Error - with reading of settings! If you run this plugin for first time then settings file does not exist and that is fine. It will be created automatically later.");
+			// console.error(e);
+			// writeFileSync(`plugin-data:/${Settings.settingsFilename}`, "");
 			return null;
 		}
 	}

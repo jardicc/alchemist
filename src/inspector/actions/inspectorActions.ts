@@ -1,11 +1,7 @@
-import { TActiveSection, TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, IAMCoverter, TFontSizeSettings, IDescriptorSettings, ISettings } from "../model/types";
+import { TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter } from "../model/types";
 import { TState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 
-export interface ISetMainTab {
-	type: "SET_MAIN_TAB"
-	payload: TActiveSection
-}
 
 export interface ISetModeTab {
 	type: "SET_MODE_TAB"
@@ -37,6 +33,19 @@ export interface ISelectDescriptor {
 		uuid?: string
 		crc?:number
 	}
+}
+
+export interface IToggleAccordionAction{
+	type: "TOGGLE_ACCORDION"
+	payload: {
+		id: string
+		expanded: boolean		
+	}
+}
+
+export interface IToggleSettingsAction{
+	type: "TOGGLE_SETTINGS"
+	payload:null
 }
 
 export interface IClearViewAction{
@@ -142,6 +151,14 @@ export interface IListenerAction{
 	type:"SET_LISTENER",
 	payload:boolean
 }
+export interface ISpyAction{
+	type:"SET_SPY",
+	payload:boolean
+}
+export interface ISpyInstalledAction{
+	type:"SET_SPY_INSTALLED",
+	payload:boolean
+}
 export interface IAutoInspectorAction{
 	type:"SET_AUTO_INSPECTOR",
 	payload:boolean
@@ -153,20 +170,14 @@ export interface ISetSearchTermAction{
 	type: "SET_SEARCH_TERM_ACTION",
 	payload: string|null
 }
-export interface ISetFilterType{	
-	type: "SET_FILTER_TYPE",
-	payload: TFilterEvents
+
+export interface ISetListenerNotifierAction{
+	type: "SET_LISTENER_NOTIFIER"
+	payload: {
+		data: Partial<IListenerNotifierFilter>
+	}
 }
 
-export interface ISetIncludeAction{	
-	type: "SET_INCLUDE_ACTION",
-	payload: string[]
-}
-
-export interface ISetExcludeAction{	
-	type: "SET_EXCLUDE_ACTION",
-	payload: string[]
-}
 /*
 export interface IGroupSameAction{	
 	type: "GROUP_SAME_ACTION",
@@ -226,7 +237,10 @@ export interface ISetInspectorViewAction {
 
 export interface ISetColumnSizeAction{
 	type: "SET_COLUMN_SIZE_ACTION",
-	payload:number
+	payload: {
+		location: "left"|"right"
+		value: number
+	}
 }
 
 export interface ISetRecordRawAction{
@@ -252,10 +266,6 @@ export interface IDontShowMarketplaceInfoAction{
 	payload:boolean
 }
 
-export interface ISetConverterInfoAction{
-	type: "SET_CONVERTER",
-	payload: Partial<IAMCoverter>
-}
 
 export interface ISetFontSizeAction{
 	type: "SET_FONT_SIZE",
@@ -275,6 +285,36 @@ export interface IToggleDescriptorsGroupingAction{
 export interface ISetSettingsAction{
 	type: "SET_SETTINGS",
 	payload: Partial<ISettings>
+}
+
+export interface ISetSearchContentKeywordAction{
+	type: "SET_SEARCH_CONTENT_KEYWORD",
+	payload:string
+}
+
+export interface ISetCategoryItemVisibilityAction{
+	type: "SET_CATEGORY_ITEM_VISIBILITY",
+	payload: {
+		operation: "add" | "remove"
+		value: TTargetReference
+	}
+}
+
+export function setCategoryItemVisibilityAction(value:TTargetReference, operation: "add" | "remove"): ISetCategoryItemVisibilityAction{
+	return {
+		type: "SET_CATEGORY_ITEM_VISIBILITY",
+		payload: {
+			operation,
+			value,
+		},
+	};
+}
+
+export function setSearchContentKeywordAction(keyword: string): ISetSearchContentKeywordAction{
+	return {
+		type: "SET_SEARCH_CONTENT_KEYWORD",
+		payload: keyword,
+	};
 }
 
 export function setSettingsAction(settings:Partial<ISettings>): ISetSettingsAction{
@@ -305,13 +345,6 @@ export function setFontSizeAction(size: TFontSizeSettings):ISetFontSizeAction {
 	};
 }
 
-export function setConverterInfoAction(info: Partial<IAMCoverter>): ISetConverterInfoAction{
-	return {
-		type: "SET_CONVERTER",
-		payload: info,
-	};
-}
-
 export function setDontShowMarketplaceInfoAction(enabled: boolean): IDontShowMarketplaceInfoAction{
 	return {
 		type: "DONT_SHOW_MARKETPLACE_INFO_ACTION",
@@ -326,6 +359,13 @@ export function setAutoExpandLevelAction(part: "DOM" | "content" | "diff",level:
 			level,
 			part,
 		},
+	};
+}
+
+export function toggleSettingsAction(): IToggleSettingsAction{
+	return {
+		type: "TOGGLE_SETTINGS",
+		payload: null,
 	};
 }
 
@@ -344,10 +384,13 @@ export function setMaximumItems(value: string):ISetMaximumItemsAction {
 	};
 }
 
-export function setColumnSizeAction(px: number): ISetColumnSizeAction{
+export function setColumnSizeAction(px: number, location:"left"|"right"): ISetColumnSizeAction{
 	return {
 		type: "SET_COLUMN_SIZE_ACTION",
-		payload: px,
+		payload: {
+			value: px,
+			location,
+		},
 	};
 }
 
@@ -410,6 +453,18 @@ export function setListenerAction(enabled:boolean):IListenerAction{
 		payload:enabled,
 	};
 }
+export function setSpyAction(enabled:boolean):ISpyAction{
+	return{
+		type:"SET_SPY",
+		payload:enabled,
+	};
+}
+export function setSpyInstalledAction(enabled:boolean):ISpyInstalledAction{
+	return{
+		type:"SET_SPY_INSTALLED",
+		payload:enabled,
+	};
+}
 export function setAutoInspectorAction(enabled:boolean):IAutoInspectorAction{
 	return{
 		type:"SET_AUTO_INSPECTOR",
@@ -459,12 +514,6 @@ export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"
 		payload: {
 			type, subType, state,
 		},
-	};
-}
-export function setMainTabAction(id:TActiveSection):ISetMainTab{
-	return {
-		type: "SET_MAIN_TAB",
-		payload: id,
 	};
 }
 export function setModeTabAction(id:TActiveInspectorTab):ISetModeTab{
@@ -589,23 +638,12 @@ export function setSearchTermAction(str:string|null):ISetSearchTermAction{
 	};
 }
 
-export function setFilterTypeAction(filterType:TFilterEvents): ISetFilterType{
+export function setListenerNotifierFilterAction(data:Partial<IListenerNotifierFilter>): ISetListenerNotifierAction{
 	return {
-		type: "SET_FILTER_TYPE",
-		payload:filterType,
-	};
-}
-
-export function setIncludeAction(arr:string[]):ISetIncludeAction{
-	return{
-		type: "SET_INCLUDE_ACTION",
-		payload:arr,
-	};
-}
-export function setExcludeAction(arr:string[]):ISetExcludeAction{
-	return{
-		type: "SET_EXCLUDE_ACTION",
-		payload:arr,
+		type: "SET_LISTENER_NOTIFIER",
+		payload: {
+			data,
+		},
 	};
 }
 /*
@@ -625,8 +663,19 @@ export function filterEventNameAction(eventName:string, kind:"include"|"exclude"
 	};
 }
 
+export function toggleAccordion(id: string, expanded: boolean): IToggleAccordionAction{
+	return {
+		type: "TOGGLE_ACCORDION",
+		payload: {
+			id,
+			expanded,			
+		},
+	};
+}
 
-export type TActions = ISetMainTab |
+
+export type TActions = 
+	IToggleSettingsAction |
 	ISetInspectorPathDOMAction |
 	ISetModeTab |
 	ISetTargetReference |
@@ -651,9 +700,7 @@ export type TActions = ISetMainTab |
 	IListenerAction |
 	IAutoInspectorAction |
 	ISetSearchTermAction |
-	ISetFilterType |
-	ISetIncludeAction |
-	ISetExcludeAction |
+	ISetListenerNotifierAction|
 	//IGroupSameAction |
 	IFilterEventNameAction |
 	IReplaceWholeState |
@@ -667,8 +714,12 @@ export type TActions = ISetMainTab |
 	ISetAutoExpandLevelAction |
 	ISetMaximumItemsAction |
 	IDontShowMarketplaceInfoAction |
-	ISetConverterInfoAction |
 	ISetFontSizeAction |
 	ISetNeverRecordActionNamesAction |
 	IToggleDescriptorsGroupingAction |
-	ISetSettingsAction
+	ISetSettingsAction |
+	IToggleAccordionAction |
+	ISetSearchContentKeywordAction |
+	ISpyInstalledAction |
+	ISpyAction |
+	ISetCategoryItemVisibilityAction

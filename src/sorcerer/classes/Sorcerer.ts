@@ -79,19 +79,9 @@ export class SorcererBuilder{
 		await scriptFile.write(scriptContent, { append: false, format: require("uxp").storage.formats.utf8 });
 
 		const zip = new Zip();
-		zip.file("manifest.json", manifestContent, {
-			unixPermissions: "0644",
-			dosPermissions: 0x0020,
-			compression: ""
-		});
-		zip.file("index.html", htmlContent, {
-			unixPermissions: "0644",
-			dosPermissions: 0x0020
-		});
-		zip.file("index.js", scriptContent, {
-			unixPermissions: "0644",
-			dosPermissions: 0x0020
-		});
+		zip.file("manifest.json", manifestContent);
+		zip.file("index.html", htmlContent);
+		zip.file("index.js", scriptContent);
 
 		const zipResult = await zip.generateAsync({
 			type: "arraybuffer",
