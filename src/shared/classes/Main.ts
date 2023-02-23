@@ -5,8 +5,6 @@ import photoshop, {core} from "photoshop";
 import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
 import { renderSorcererUI } from "../../sorcerer/components/sorcererIndex";
 import { FlyoutMenu } from "../../inspector/classes/Flyoutmenu";
-import {IRootState} from "../store";
-import {getInitialState} from "../../inspector/inspInitialState";
 
 export class Main{
 
@@ -29,11 +27,13 @@ export class Main{
 	}
 }
 
-async function run() {
-	type TGlobal = Window & typeof globalThis & { Main: Main };
-	(window as TGlobal).Main = Main;
+export type TGlobal = Window & typeof globalThis & {
+	Main: Main
+};
 
-	(window as any)._preloadedState = {inspector: await Settings.importState() || getInitialState()};
+
+async function run() {
+	(window as TGlobal).Main = Main;
 
 	document.addEventListener("uxpcommand", (event:any) => {
 		console.log(event);

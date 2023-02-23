@@ -305,7 +305,7 @@ export class Filters extends React.Component<TFilters, IState> {
 	private FilterRow = (filterProps: IFilterRowProps): JSX.Element => {
 		const {content, header, items, showSearch} = filterProps;
 		const id = filterProps.id as TSubTypes | "main";
-		debugger
+		
 		return (
 			<AccDrop
 				selected={Array.isArray(content.value) ? content.value : [content.value]}

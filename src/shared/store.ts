@@ -16,7 +16,7 @@ const rootReducer = combineReducers<IRootState>({
 	inspector:inspectorReducer,
 });
 
-export const rootStore = createStore(rootReducer, (window as any)._preloadedState, applyMiddleware());
+export const rootStore = createStore(rootReducer, applyMiddleware());
 console.log(rootStore.getState());
 
 (window as any)._rootStore = rootStore;

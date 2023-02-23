@@ -26,12 +26,14 @@ module.exports = (env) => {
 			// Add '.ts' and '.tsx' as resolvable extensions.
 			extensions: [".ts", ".tsx", ".js"],
 			fallback: {
-				"os": false,
+				os: false,
+				fs: false,
 			},
 		},
 		externals: {
-			"photoshop": "commonjs2 photoshop",
-			"uxp": "commonjs2 uxp",
+			photoshop: "commonjs2 photoshop",
+			uxp: "commonjs2 uxp",
+			fs: "commonjs2 fs",
 		},
 		performance: {
 			maxEntrypointSize: Infinity,

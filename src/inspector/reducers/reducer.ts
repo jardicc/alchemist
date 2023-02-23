@@ -17,7 +17,7 @@ import {ListenerClass} from "../classes/Listener";
 
 export type TAllActions = TActions | TAtnActions|TSorActions;
 
-export const inspectorReducer = (state:IInspectorState = getInitialState(), action:TAllActions ): IInspectorState => {
+export const inspectorReducer = (state:IInspectorState = Settings.importState() || getInitialState(), action:TAllActions ): IInspectorState => {
 	console.log(action/*JSON.stringify(action, null, "\t")*/);
 	switch (action.type) {
 		// ALCHEMIST
