@@ -129,6 +129,9 @@ export const getDescriptorsListView = createSelector([
 				if (activeRefFilter.data[i].content.filterBy === "off") {
 					return true;
 				}
+				if (activeRefFilter?.type !== origRefFilter.type) {
+					return false;
+				}
 				if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
 					return false;
 				}
@@ -314,7 +317,7 @@ export const getAddAllowed = createSelector([getActiveTargetReference, getActive
 		if (s.type === "generator") {
 			return true;
 		}
-		if ((["listener","dispatcher",/*"customDescriptor",*/"notifier","replies"] as TTargetReference[]).includes(s.type)) {
+		if ((["listener","dispatcher","notifier","replies"] as TTargetReference[]).includes(s.type)) {
 			return false;
 		}
 		for (const key in s.data) {

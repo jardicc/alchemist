@@ -18,10 +18,11 @@ export interface IAccDropProps {
 	selected: string[]
 
 	className?: string
-	onChange?: (id: string, expanded: boolean) => void
+	onHeaderClick?: (id: string, expanded: boolean) => void
 	showSearch?: boolean
 	headerPostFix?: ReactElement
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
+	doNotCollapse?:boolean
 }
 
 export interface IAccDropDispatch {
@@ -69,9 +70,9 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		return height;
 	}
 
-	private onHeaderClick = () => {
-		if(this.props.onChange){
-			this.props.onChange(this.props.id, !this.state.expanded);
+	private headerClick = () => {
+		if(this.props.onHeaderClick){
+			this.props.onHeaderClick(this.props.id, !this.state.expanded);
 		}
 		this.toggleExpanded();
 	}
@@ -111,7 +112,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		const {id, className, header, headerPostFix} = this.props;
 
 		return (
-			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.onHeaderClick}>
+			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
 				<div className="chevron">
 					{this.state.expanded ? <IconChevronBottom />:<IconChevronRight />}
 
@@ -158,7 +159,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	}
 
 	private renderItem = (item: IPropertyItem) => {
-		const {id, selected, onSelect, showSearch, ItemPostFix} = this.props;
+		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse} = this.props;
 		if (
 			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) || 
 			!showSearch
@@ -170,7 +171,9 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					onClick={(e) => {
 						onSelect(id, item.value);
 						e.stopPropagation();
-						// this.toggleExpanded();
+						if (!doNotCollapse) {
+							this.toggleExpanded();
+						}
 					}}
 					data-selected={selected.includes(item.value) || undefined}
 				>

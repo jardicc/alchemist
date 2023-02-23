@@ -5,6 +5,8 @@ import photoshop, {core} from "photoshop";
 import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
 import { renderSorcererUI } from "../../sorcerer/components/sorcererIndex";
 import { FlyoutMenu } from "../../inspector/classes/Flyoutmenu";
+import {IRootState} from "../store";
+import {getInitialState} from "../../inspector/inspInitialState";
 
 export class Main{
 
@@ -14,8 +16,7 @@ export class Main{
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	public static readonly isFirstParty = require("uxp")?.entrypoints?._pluginInfo?.id !== "2bcdb900";
 	
-
-
+	// public static preloadedState:IRootState
 
 	public static start(): void {
 		(photoshop.core as any).suppressResizeGripper({ "type": "panel", "target": "inspector", "value": true });
@@ -28,9 +29,12 @@ export class Main{
 	}
 }
 
-function run() {
+async function run() {
 	type TGlobal = Window & typeof globalThis & { Main: Main };
 	(window as TGlobal).Main = Main;
+
+	(window as any)._preloadedState = {inspector: await Settings.importState() || getInitialState()};
+
 	document.addEventListener("uxpcommand", (event:any) => {
 		console.log(event);
 		if (event.commandId === "resetStateFn") {

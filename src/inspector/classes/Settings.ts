@@ -1,4 +1,4 @@
-import { IDescriptor, TFontSizeSettings } from "../model/types";
+import { IDescriptor, IInspectorState, TFontSizeSettings } from "../model/types";
 import { alert } from "./Helpers";
 import type {uxp} from "../types/uxp";
 import { SpectrumComponetDefaults } from "react-uxp-spectrum";
@@ -96,7 +96,7 @@ export class Settings{
 		});
 	}
 
-	public static async importState(): Promise<any | null> {
+	public static async importState(): Promise<IInspectorState | null> {
 		const folder = await Settings.settingsFolder();
 		let entry: any;
 		try {

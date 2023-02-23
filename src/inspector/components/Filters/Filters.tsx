@@ -23,7 +23,8 @@ interface IFilterRowProps{
 	header: string | React.ReactElement
 	content: {value: string, filterBy: TState}
 	showSearch?: boolean
-	itemPostFix?:ComponentType<IAccDropPostFixProps>
+	ItemPostFix?:ComponentType<IAccDropPostFixProps>
+	doNotCollapse?:boolean
 }
 
 export class Filters extends React.Component<TFilters, IState> {
@@ -39,7 +40,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			actionItemsList: [],
 			actionCommandsList: [],
 			historyList: [],
-			snapshotsList:[],
+			snapshotsList: [],
 		};
 	}
 
@@ -49,7 +50,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			this.onSetMainCategory(value);
 			return;
 		}
-		const { onSetTargetReference, activeTargetReference } = this.props;
+		const {onSetTargetReference, activeTargetReference} = this.props;
 		const found = cloneDeep(activeTargetReference);
 		
 		if (found) {
@@ -72,7 +73,8 @@ export class Filters extends React.Component<TFilters, IState> {
 				header="Type:"
 				id="main"
 				items={mainClasses}
-				itemPostFix={ItemVisibilityButtonWrap}
+				ItemPostFix={ItemVisibilityButtonWrap}
+				doNotCollapse={true}
 				content={{
 					value: selectedTargetReference,
 					filterBy: filterBySelectedReferenceType,
@@ -81,8 +83,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 	
-	private renderDocument = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
+	private renderDocument = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
 		
 		switch (selectedTargetReference) {
 			case "channel":
@@ -90,9 +92,9 @@ export class Filters extends React.Component<TFilters, IState> {
 			case "guide":
 			case "layer":
 			case "path": {
-				const list = [...baseItemsDocument,...this.state.documentsList];
+				const list = [...baseItemsDocument, ...this.state.documentsList];
 		
-				const { activeTargetReferenceDocument } = this.props;
+				const {activeTargetReferenceDocument} = this.props;
 				
 				return (
 					<this.FilterRow
@@ -106,9 +108,9 @@ export class Filters extends React.Component<TFilters, IState> {
 		}
 	}
 	
-	private renderLayer = (): React.ReactNode|void => {
-		const { activeReferenceChannel, activeReferencePath } = this.props;
-		const { selectedTargetReference } = this.props;
+	private renderLayer = (): React.ReactNode | void => {
+		const {activeReferenceChannel, activeReferencePath} = this.props;
+		const {selectedTargetReference} = this.props;
 		
 		if ((selectedTargetReference === "layer" || selectedTargetReference === "channel" || selectedTargetReference === "path") === false) {
 			return;
@@ -122,7 +124,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			return;
 		}
 
-		const list = [...baseItemsLayer,...this.state.layersList];
+		const list = [...baseItemsLayer, ...this.state.layersList];
 		
 		const {activeTargetLayerReference} = this.props;
 		
@@ -136,12 +138,12 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderChannel = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "channel") { return; }
-		const list = [...baseItemsChannel,...this.state.channelsList];
+	private renderChannel = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "channel") {return;}
+		const list = [...baseItemsChannel, ...this.state.channelsList];
 
-		const { activeReferenceChannel } = this.props;
+		const {activeReferenceChannel} = this.props;
 		return (
 			<this.FilterRow
 				header="Channel:"
@@ -152,12 +154,12 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 	
-	private renderPath = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "path") { return; }
-		const list = [...baseItemsPath,...this.state.pathsList];
+	private renderPath = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "path") {return;}
+		const list = [...baseItemsPath, ...this.state.pathsList];
 
-		const { activeReferencePath } = this.props;
+		const {activeReferencePath} = this.props;
 
 		return (
 			<this.FilterRow
@@ -169,10 +171,10 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderActionSet = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "action") { return; }
-		const { activeReferenceActionSet } = this.props;
+	private renderActionSet = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "action") {return;}
+		const {activeReferenceActionSet} = this.props;
 		const list = [...baseItemsActionCommon, ...this.state.actionSetsList];
 
 		
@@ -186,11 +188,11 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderActionItem = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "action") { return; }
-		const { activeReferenceActionItem, activeReferenceActionSet } = this.props;
-		if (!activeReferenceActionSet?.value) { return; }
+	private renderActionItem = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "action") {return;}
+		const {activeReferenceActionItem, activeReferenceActionSet} = this.props;
+		if (!activeReferenceActionSet?.value) {return;}
 		const list = [...baseItemsActionCommon, ...this.state.actionItemsList];
 
 		return (
@@ -203,12 +205,12 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderCommand = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "action") { return; }
-		const { activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet } = this.props;
-		if (!activeReferenceActionItem?.value || !activeReferenceActionSet?.value) { return; }
-		const list = [...baseItemsActionCommon,...this.state.actionCommandsList];
+	private renderCommand = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "action") {return;}
+		const {activeReferenceCommand, activeReferenceActionItem, activeReferenceActionSet} = this.props;
+		if (!activeReferenceActionItem?.value || !activeReferenceActionSet?.value) {return;}
+		const list = [...baseItemsActionCommon, ...this.state.actionCommandsList];
 
 		return (
 			<this.FilterRow
@@ -220,12 +222,12 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderGuide = ():React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "guide") { return; }
-		const list = [...baseItemsGuide,...this.state.guidesList];
+	private renderGuide = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "guide") {return;}
+		const list = [...baseItemsGuide, ...this.state.guidesList];
 
-		const { activeReferenceGuide } = this.props;
+		const {activeReferenceGuide} = this.props;
 		return (
 			<this.FilterRow
 				header="Guide:"
@@ -236,12 +238,12 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderHistory = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "history") { return; }
-		const list = [...baseItemsDocument,...this.state.historyList];
+	private renderHistory = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "history") {return;}
+		const list = [...baseItemsDocument, ...this.state.historyList];
 
-		const { activeReferenceHistory } = this.props;
+		const {activeReferenceHistory} = this.props;
 		return (
 			<this.FilterRow
 				header="History:"
@@ -252,12 +254,12 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private renderSnapshots = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		if (selectedTargetReference !== "snapshot") { return; }
-		const list = [...baseItemsDocument,...this.state.snapshotsList];
+	private renderSnapshots = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		if (selectedTargetReference !== "snapshot") {return;}
+		const list = [...baseItemsDocument, ...this.state.snapshotsList];
 
-		const { activeReferenceSnapshot } = this.props;
+		const {activeReferenceSnapshot} = this.props;
 		return (
 			<this.FilterRow
 				header="Snapshots:"
@@ -267,46 +269,18 @@ export class Filters extends React.Component<TFilters, IState> {
 			/>
 		);
 	}
-	/*
-	private renderCustomDescriptorCategory = (): React.ReactNode|void => {
-		if (this.props.selectedTargetReference !== "customDescriptor") {
-			return null;
-		}
-
-		const list = [...baseItemsCustomDescriptor];
-
-		return (
-			<div className="filter">
-				<div className="label">Category:</div>
-				<SP.Dropdown quiet={true}>
-					<SP.Menu slot="options" onChange={(e) => { console.log(e); }}>
-						{
-							list.map(item => (
-								<SP.MenuItem
-									key={item.value}
-									value={item.value}
-									selected={this.props.selectedTargetReference === item.value ? true : undefined}
-								>{item.label}</SP.MenuItem>
-							))
-						}
-					</SP.Menu>
-				</SP.Dropdown>
-			</div>
-		);
-	}
-	*/
-	private renderProperty = (): React.ReactNode|void => {
-		const { selectedTargetReference } = this.props;
-		const { propertySettings, activeReferenceProperty } = this.props;
+	
+	private renderProperty = (): React.ReactNode | void => {
+		const {selectedTargetReference} = this.props;
+		const {propertySettings, activeReferenceProperty} = this.props;
 		
 		switch (selectedTargetReference) {
-			//case "customDescriptor":
 			case "featureData":
 			case "generator":
 			case "listener":
 			case "dispatcher":
 			case "notifier":
-			case "replies":				
+			case "replies":
 				return;
 		}
 
@@ -319,6 +293,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				header="Property:"
 				items={foundSettings.list}
 				showSearch={true}
+				doNotCollapse={true}
 				content={{
 					filterBy: activeReferenceProperty.filterBy,
 					value: activeReferenceProperty.value,
@@ -328,14 +303,14 @@ export class Filters extends React.Component<TFilters, IState> {
 	}
 
 	private FilterRow = (filterProps: IFilterRowProps): JSX.Element => {
-		const {content,header,items,showSearch } = filterProps;
+		const {content, header, items, showSearch} = filterProps;
 		const id = filterProps.id as TSubTypes | "main";
-
+		debugger
 		return (
 			<AccDrop
 				selected={Array.isArray(content.value) ? content.value : [content.value]}
 				onSelect={(id, value) => this.onSetSubType(id as any, {target: {value}})}
-				onChange={() => this.dropdownClick(id)}
+				onHeaderClick={() => this.updateList(id)}
 				headerPostFix={
 					<FilterButton
 						subtype={id}
@@ -371,7 +346,6 @@ export class Filters extends React.Component<TFilters, IState> {
 				{this.renderChannel()}
 				{this.renderPath()}
 				{this.renderLayer()}
-				{/*this.renderCustomDescriptorCategory()*/}
 				{this.renderActionSet()}
 				{this.renderActionItem()}
 				{this.renderCommand()}
@@ -380,49 +354,59 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private dropdownClick = async (type: TSubTypes | "main") => {
+	private updateList = async (type: TSubTypes | "main") => {
 		console.log("click");
-		const {activeReferenceActionSet,activeReferenceActionItem,activeTargetReferenceDocument } = this.props;
+		const {activeReferenceActionSet, activeReferenceActionItem, activeTargetReferenceDocument} = this.props;
 
 		switch (type) {
-			case "layer": 
-				return this.setState({...this.state,
+			case "layer":
+				return this.setState({
+					...this.state,
 					layersList: GetList.getLayers(activeTargetReferenceDocument),
 				});
 			case "document":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					documentsList: await GetList.getDocuments(),
 				});
 			case "action":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					actionItemsList: GetList.getActionItem(parseInt(activeReferenceActionSet.value)),
 				});
 			case "actionset":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					actionSetsList: GetList.getActionSets(),
 				});
 			case "command":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					actionCommandsList: GetList.getActionCommand(parseInt(activeReferenceActionItem.value)),
 				});
 			case "channel":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					channelsList: GetList.getChannels(activeTargetReferenceDocument),
 				});
 			case "path":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					pathsList: GetList.getPaths(activeTargetReferenceDocument),
 				});
 			case "guide":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					guidesList: GetList.getGuides(activeTargetReferenceDocument),
 				});
 			case "history":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					historyList: GetList.getHistory(),
 				});
 			case "snapshot":
-				return this.setState({...this.state,
+				return this.setState({
+					...this.state,
 					snapshotsList: GetList.getSnapshots(),
 				});
 		}

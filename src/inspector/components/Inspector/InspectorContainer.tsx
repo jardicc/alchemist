@@ -30,7 +30,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 	constructor(props: TInspector) {
 		super(props);
 
-		this.props.setWholeState();
+		//this.props.setWholeState();
 		this.state = {
 			showMessage: false,
 			message: "",
@@ -154,17 +154,17 @@ const mapStateToProps = (state: any): IInspectorProps => (state = state as IRoot
 
 interface IInspectorDispatch {
 	setModeTab(mode: TActiveInspectorTab): void
-	setWholeState(): void
+	//setWholeState(): void
 	setColumnSize(px: number, location: "left" | "right"): void
 	setToggleSettings():void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IInspectorDispatch, Record<string, unknown>> = (dispatch): IInspectorDispatch => ({
 	setModeTab: (key) => dispatch(setModeTabAction(key)),
-	setWholeState: async () => {
+	/*setWholeState: async () => {
 		dispatch(replaceWholeStateAction(await Settings.importState()));
 		Settings.loaded = true;
-	},
+	},*/
 	setColumnSize: (px, location: "left" | "right") => dispatch(setColumnSizeAction(px, location)),
 	setToggleSettings: () => dispatch(toggleSettingsAction()),
 });

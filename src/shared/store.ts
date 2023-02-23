@@ -1,6 +1,7 @@
 import { legacy_createStore as createStore, applyMiddleware, combineReducers } from "redux";
 import { inspectorReducer } from "../inspector/reducers/reducer";
 import { IInspectorState } from "../inspector/model/types";
+import {Main} from "./classes/Main";
 
 /*
  * We're giving State interface to create store
@@ -13,9 +14,9 @@ export interface IRootState {
 
 const rootReducer = combineReducers<IRootState>({
 	inspector:inspectorReducer,
-	//atnConverter: atnConverterReducer
 });
-export const rootStore = createStore(rootReducer, /* preloadedState, */applyMiddleware());
+
+export const rootStore = createStore(rootReducer, (window as any)._preloadedState, applyMiddleware());
 console.log(rootStore.getState());
 
 (window as any)._rootStore = rootStore;

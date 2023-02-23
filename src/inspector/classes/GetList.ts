@@ -72,12 +72,18 @@ export class GetList {
 	}
 
 	public static getActionItem(actionSetID: number): IFilterProperty<TActionItem>[] {
+		if (Number.isNaN(actionSetID)) {
+			return [];
+		}
 		const actionSet = new PS.ActionSet(actionSetID);
 		const action: IFilterProperty<TActionItem>[] = actionSet.actions.map(item => ({ value: item.id.toString(), label: item.name }));
 		return action;
 	}
 
 	public static getActionCommand(actionItemID: number): IFilterProperty<TActionCommand>[] {
+		if (Number.isNaN(actionItemID)) {
+			return [];
+		}
 		const result2 = GetInfo.getAllCommandsOfAction(actionItemID);
 
 		const final: IFilterProperty<TActionCommand>[] = result2.map(item => ({ value: item.ID.toString(), label: item.name }));
