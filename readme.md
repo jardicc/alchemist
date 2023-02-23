@@ -34,7 +34,9 @@ Video:  Generate plugin with Sorcerer panel <https://www.youtube.com/watch?v=fhS
 
 ## Versions
 
-Alchemist 2.1.0 or higher requires Photoshop version 23.3.0 or higher
+Alchemist 2.5.0 or higher requires Photoshop version 24.2.0 or higher
+
+Alchemist 2.1.0 requires Photoshop version 23.3.0 or higher
 
 Alchemist 1.4.0 - 2.0.2 requires Photoshop version from 22.5.x to 23.2.x
 
