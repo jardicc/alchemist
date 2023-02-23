@@ -314,7 +314,7 @@ export const getAddAllowed = createSelector([getActiveTargetReference, getActive
 		if (s.type === "generator") {
 			return true;
 		}
-		if ((["listener","dispatcher","customDescriptor","notifier","replies"] as TTargetReference[]).includes(s.type)) {
+		if ((["listener","dispatcher",/*"customDescriptor",*/"notifier","replies"] as TTargetReference[]).includes(s.type)) {
 			return false;
 		}
 		for (const key in s.data) {

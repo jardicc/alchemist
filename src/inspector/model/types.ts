@@ -10,7 +10,7 @@ export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "s
 
 export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" |
 	"layer" | "path" | "property" | "snapshot";
-export type TTargetReference = "listener" | "customDescriptor" | "featureData" | "generator" | "overkill" |
+export type TTargetReference = "listener" | /*"customDescriptor" | */"featureData" | "generator" | "overkill" |
 	"dispatcher" | "notifier" | "replies" | TPropertyClass;
 export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" |
 	"action" | "timeline" | "animationFrame" | "animation"
@@ -30,7 +30,7 @@ export type TImportItems = "append" | "replace";
 //export type TActiveTargetReference = null|Record<string unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
 
 export type TPath = (string)[];
-export type TCustomDescriptorReference = "notSpecified" | "anySpecified";
+//export type TCustomDescriptorReference = "notSpecified" | "anySpecified";
 export type TBaseProperty = "notSpecified" | "anySpecified" | "";
 export type TCategoryReference = "notSpecified" | "anySpecified";
 export type THistoryReference = "active" | string;
@@ -111,10 +111,12 @@ export interface IProperty{
 	subType:"property"
 	content: IContentWrapper<TBaseProperty>
 }
+/*
 export interface ICustomDescriptor{
 	subType:"customDescriptor"
 	content: IContentWrapper<TCustomDescriptorReference>
 }
+*/
 export interface IHistory{
 	subType:"history"
 	content: IContentWrapper<THistoryReference>
@@ -174,14 +176,14 @@ export interface IAnimation{
 
 export type TFilterContent =
 	IContentWrapper<TCategoryReference> | IContentWrapper<TBaseProperty> |
-	IContentWrapper<TCustomDescriptorReference> | IContentWrapper<THistoryReference> |
+	//IContentWrapper<TCustomDescriptorReference> | IContentWrapper<THistoryReference> |
 	IContentWrapper<TSnapshotReference> | IContentWrapper<TLayerReference> | 
 	IContentWrapper<TPathReference> | IContentWrapper<TChannelReference> | 
 	IContentWrapper<TDocumentReference> | IContentWrapper<TGuideReference> | 
 	IContentWrapper<TActionSet> | IContentWrapper<TActionItem> | IContentWrapper<TActionCommand> |
 	IContentWrapper<TGeneratorReference>|IContentWrapper<TTimeline>
 
-export type TAllReferenceSubtypes = ICategory | IProperty | ICustomDescriptor | IHistory | ISnapshot | ILayer | IPath | IChannel | IDocument |
+export type TAllReferenceSubtypes = ICategory | IProperty | /*ICustomDescriptor | */IHistory | ISnapshot | ILayer | IPath | IChannel | IDocument |
 	IGuide | IActionSet | IActionItem | IActionCommand | IGenerator | ITimeline | IActionFrame | IAnimation
 
 /////

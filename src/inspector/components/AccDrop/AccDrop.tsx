@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React, {ComponentType, ReactElement} from "react";
-import {IconCaretRight, IconChevronBottom, IconChevronRight} from "../../../shared/components/icons";
-import {TBaseItems} from "../../model/properties";
+import {IconChevronBottom, IconChevronRight} from "../../../shared/components/icons";
 import {IPropertyGroup, IPropertyItem} from "../../model/types";
 import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
@@ -12,13 +11,15 @@ export interface IAccDropPostFixProps{
 
 export interface IAccDropProps {
 	id: string
-	className?: string
-	header: string | React.ReactElement
-	onChange?: (id: string, expanded: boolean) => void
-	onSelect: (id: string, value: string) => void
-	showSearch?: boolean
 	items: (IPropertyItem | IPropertyGroup)[]
+	header: string | React.ReactElement
+	
+	onSelect: (id: string, value: string) => void
 	selected: string[]
+
+	className?: string
+	onChange?: (id: string, expanded: boolean) => void
+	showSearch?: boolean
 	headerPostFix?: ReactElement
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
 }
@@ -49,9 +50,23 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 		this.state = {
 			expanded: false,
-			calcHeight: props.items.length*1.5,
+			calcHeight: this.height,
 			searchValue: "",
 		};
+	}
+
+	private get height(): number {
+		let height = 0;
+
+		this.props.items.forEach(item => {
+			height += 1.5;
+			if ("data" in item) {
+				height += item.data.length * 1.5;
+			}
+		});
+
+		height += 1.5;		
+		return height;
 	}
 
 	private onHeaderClick = () => {
@@ -174,7 +189,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	}
 
 	private renderContent = (): React.ReactNode => {
-		const {id, selected, items, onSelect} = this.props;
+		const {id, items} = this.props;
 		const {calcHeight} = this.state;
 
 		if (!this.state.expanded) {
@@ -184,14 +199,14 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		const containerMaxHeight: React.CSSProperties = {};
 
 		if (calcHeight !== null) {
-			containerMaxHeight.maxHeight = (calcHeight + 1) + "em";
+			containerMaxHeight.maxHeight = calcHeight + "em";
 		}
 
 		return (
 			<div key={"c_" + id} className={"AccDrop container " + (this.props.className || "")} style={containerMaxHeight}>
 				<div className="measureHeightWrapper" ref={this.heightRef}>
 					{
-						items.map((item, index) => {
+						items.map((item) => {
 							if ("group" in item) {
 								//return null;
 								return this.renderGroup(item);
@@ -208,7 +223,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	
 	componentDidUpdate(prevProps: Readonly<TAccDrop>, prevState: Readonly<IAccDropState>, snapshot?: any): void {
 		if (this.heightRef) {
-			const height = this.props.items.length * 1.5;
+			const height = this.height;
 
 			if (prevState.calcHeight === height) {
 				return;

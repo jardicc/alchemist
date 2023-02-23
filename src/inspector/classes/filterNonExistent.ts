@@ -9,8 +9,8 @@ export function filterNonExistent(descriptors: IDescriptor[]):IDescriptor[] {
 	const result = descriptors.filter(desc => {
 		let res = false;
 		switch (desc.originalReference.type) {
+			// case "customDescriptor":
 			case "featureData":
-			case "customDescriptor":
 			case "listener": {
 				return true;
 			}

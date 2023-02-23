@@ -44,10 +44,10 @@ export const mainClasses: IFilterProperty<TTargetReference>[] = [
 export const baseItemsProperty:IFilterProperty<TBaseProperty>[] = [
 	{ label: "(not specified)", value: "notSpecified" },
 ];
-
+/*
 export const baseItemsCustomDescriptor:IFilterProperty<string>[] = [
 	{ label: "(undefined)", value: "undefined" },
-];
+];*/
 export const baseItemsDocument:IFilterProperty<TDocumentReference>[] = [
 	{ label: "(active)", value: "active" },
 ];

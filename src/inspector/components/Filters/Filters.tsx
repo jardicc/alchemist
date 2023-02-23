@@ -1,7 +1,7 @@
-import React from "react";
+import React, {ComponentType} from "react";
 import "./Filters.less";
 import { cloneDeep } from "lodash";
-import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, baseItemsCustomDescriptor, mainClasses, TBaseItems } from "../../model/properties";
+import { baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument, baseItemsLayer, mainClasses, TBaseItems } from "../../model/properties";
 import { IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference, TChannelReference, TTargetReference, ITargetReference, TSubTypes, IContentWrapper, TActionSet, TActionItem, TActionCommand, TBaseProperty, THistoryReference, TSnapshotReference, IFilterProperty, IPropertyItem, IPropertyGroup } from "../../model/types";
 import { FilterButton, TState } from "../FilterButton/FilterButton";
 import { GetList } from "../../classes/GetList";
@@ -13,11 +13,18 @@ import { IRootState } from "../../../shared/store";
 import { setTargetReferenceAction, setSelectedReferenceTypeAction, setFilterStateAction } from "../../actions/inspectorActions";
 import { getPropertySettings, getSelectedTargetReference, getActiveTargetReference, getActiveTargetDocument, getActiveTargetLayer, getActiveReferenceChannel, getActiveReferenceGuide, getActiveReferencePath, getActiveReferenceActionSet, getActiveReferenceActionItem, getActiveReferenceCommand, getActiveReferenceProperty, getActiveReferenceHistory, getActiveReferenceSnapshot, getActiveTargetReferenceForAM, getFilterBySelectedReferenceType } from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
-import {AccDrop, IAccDropPostFixProps} from "../AccDrop/AccDrop";
+import {AccDrop, IAccDropPostFixProps, IAccDropProps} from "../AccDrop/AccDrop";
 import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityButton";
 
 
-
+interface IFilterRowProps{
+	id: string
+	items: (IPropertyItem | IPropertyGroup)[]
+	header: string | React.ReactElement
+	content: {value: string, filterBy: TState}
+	showSearch?: boolean
+	itemPostFix?:ComponentType<IAccDropPostFixProps>
+}
 
 export class Filters extends React.Component<TFilters, IState> {
 	constructor(props: TFilters) {
@@ -59,11 +66,19 @@ export class Filters extends React.Component<TFilters, IState> {
 	}
 
 	private renderMainCategory = (): React.ReactNode => {
-		const { selectedTargetReference, filterBySelectedReferenceType} = this.props;
-		return this.buildFilterRow("Type:", "main", mainClasses, {
-			value: selectedTargetReference,
-			filterBy: filterBySelectedReferenceType,
-		});
+		const {selectedTargetReference, filterBySelectedReferenceType} = this.props;
+		return (
+			<this.FilterRow
+				header="Type:"
+				id="main"
+				items={mainClasses}
+				itemPostFix={ItemVisibilityButtonWrap}
+				content={{
+					value: selectedTargetReference,
+					filterBy: filterBySelectedReferenceType,
+				}}
+			/>
+		);
 	}
 	
 	private renderDocument = (): React.ReactNode|void => {
@@ -78,7 +93,15 @@ export class Filters extends React.Component<TFilters, IState> {
 				const list = [...baseItemsDocument,...this.state.documentsList];
 		
 				const { activeTargetReferenceDocument } = this.props;
-				return this.buildFilterRow("Document:","document", list, activeTargetReferenceDocument);
+				
+				return (
+					<this.FilterRow
+						header="Document:"
+						id="document"
+						items={list}
+						content={activeTargetReferenceDocument}
+					/>
+				);
 			}
 		}
 	}
@@ -101,9 +124,16 @@ export class Filters extends React.Component<TFilters, IState> {
 
 		const list = [...baseItemsLayer,...this.state.layersList];
 		
-		const { activeTargetLayerReference } = this.props;
-
-		return this.buildFilterRow("Layer:","layer", list, activeTargetLayerReference);
+		const {activeTargetLayerReference} = this.props;
+		
+		return (
+			<this.FilterRow
+				header="Layer:"
+				id="layer"
+				items={list}
+				content={activeTargetLayerReference}
+			/>
+		);
 	}
 
 	private renderChannel = (): React.ReactNode|void => {
@@ -112,7 +142,14 @@ export class Filters extends React.Component<TFilters, IState> {
 		const list = [...baseItemsChannel,...this.state.channelsList];
 
 		const { activeReferenceChannel } = this.props;
-		return this.buildFilterRow("Channel:","channel", list, activeReferenceChannel);
+		return (
+			<this.FilterRow
+				header="Channel:"
+				id="channel"
+				items={list}
+				content={activeReferenceChannel}
+			/>
+		);
 	}
 	
 	private renderPath = (): React.ReactNode|void => {
@@ -122,7 +159,14 @@ export class Filters extends React.Component<TFilters, IState> {
 
 		const { activeReferencePath } = this.props;
 
-		return this.buildFilterRow("Path:","path", list, activeReferencePath);
+		return (
+			<this.FilterRow
+				header="Path:"
+				id="path"
+				items={list}
+				content={activeReferencePath}
+			/>
+		);
 	}
 
 	private renderActionSet = (): React.ReactNode|void => {
@@ -132,7 +176,14 @@ export class Filters extends React.Component<TFilters, IState> {
 		const list = [...baseItemsActionCommon, ...this.state.actionSetsList];
 
 		
-		return this.buildFilterRow("Action set:","actionset", list, activeReferenceActionSet);
+		return (
+			<this.FilterRow
+				header="Action "
+				id="set"
+				items={list}
+				content={activeReferenceActionSet}
+			/>
+		);
 	}
 
 	private renderActionItem = (): React.ReactNode|void => {
@@ -142,7 +193,14 @@ export class Filters extends React.Component<TFilters, IState> {
 		if (!activeReferenceActionSet?.value) { return; }
 		const list = [...baseItemsActionCommon, ...this.state.actionItemsList];
 
-		return this.buildFilterRow("Action:","action", list, activeReferenceActionItem);
+		return (
+			<this.FilterRow
+				header="Action:"
+				id="action"
+				items={list}
+				content={activeReferenceActionItem}
+			/>
+		);
 	}
 
 	private renderCommand = (): React.ReactNode|void => {
@@ -152,7 +210,14 @@ export class Filters extends React.Component<TFilters, IState> {
 		if (!activeReferenceActionItem?.value || !activeReferenceActionSet?.value) { return; }
 		const list = [...baseItemsActionCommon,...this.state.actionCommandsList];
 
-		return this.buildFilterRow("Command:","command", list, activeReferenceCommand);
+		return (
+			<this.FilterRow
+				header="Command:"
+				id="command"
+				items={list}
+				content={activeReferenceCommand}
+			/>
+		);
 	}
 
 	private renderGuide = ():React.ReactNode|void => {
@@ -161,7 +226,14 @@ export class Filters extends React.Component<TFilters, IState> {
 		const list = [...baseItemsGuide,...this.state.guidesList];
 
 		const { activeReferenceGuide } = this.props;
-		return this.buildFilterRow("Guide:","guide", list, activeReferenceGuide);
+		return (
+			<this.FilterRow
+				header="Guide:"
+				id="guide"
+				items={list}
+				content={activeReferenceGuide}
+			/>
+		);
 	}
 
 	private renderHistory = (): React.ReactNode|void => {
@@ -170,7 +242,14 @@ export class Filters extends React.Component<TFilters, IState> {
 		const list = [...baseItemsDocument,...this.state.historyList];
 
 		const { activeReferenceHistory } = this.props;
-		return this.buildFilterRow("History:","history", list, activeReferenceHistory);
+		return (
+			<this.FilterRow
+				header="History:"
+				id="history"
+				items={list}
+				content={activeReferenceHistory}
+			/>
+		);
 	}
 
 	private renderSnapshots = (): React.ReactNode|void => {
@@ -179,9 +258,16 @@ export class Filters extends React.Component<TFilters, IState> {
 		const list = [...baseItemsDocument,...this.state.snapshotsList];
 
 		const { activeReferenceSnapshot } = this.props;
-		return this.buildFilterRow("Snapshots:","snapshot", list, activeReferenceSnapshot);
+		return (
+			<this.FilterRow
+				header="Snapshots:"
+				id="snapshot"
+				items={list}
+				content={activeReferenceSnapshot}
+			/>
+		);
 	}
-
+	/*
 	private renderCustomDescriptorCategory = (): React.ReactNode|void => {
 		if (this.props.selectedTargetReference !== "customDescriptor") {
 			return null;
@@ -208,13 +294,13 @@ export class Filters extends React.Component<TFilters, IState> {
 			</div>
 		);
 	}
-	
+	*/
 	private renderProperty = (): React.ReactNode|void => {
 		const { selectedTargetReference } = this.props;
 		const { propertySettings, activeReferenceProperty } = this.props;
 		
 		switch (selectedTargetReference) {
-			case "customDescriptor":
+			//case "customDescriptor":
 			case "featureData":
 			case "generator":
 			case "listener":
@@ -226,86 +312,72 @@ export class Filters extends React.Component<TFilters, IState> {
 
 		const foundSettings: IPropertySettings | undefined = propertySettings.find(p => p.type === selectedTargetReference);
 		if (!foundSettings) {throw new Error("Properties not found");}
-		
-		return this.buildFilterRow("Property:","property", foundSettings.list, {filterBy: activeReferenceProperty.filterBy, value: activeReferenceProperty.value});
-	/*
-		const foundNotSpecified = !!foundSettings.list.find(p => p.stringID === "notSpecified");
-		const defaultList: IFilterProperty<string>[] = foundSettings.list.filter(p => p.type === "default").map(f => ({ label: f.title, value: f.stringID }));
-		const hiddenList: IFilterProperty<string>[] = foundSettings.list.filter(p => p.type === "hidden").map(f => ({ label: f.title, value: f.stringID }));
-		const firstPartyList: IFilterProperty<string>[] = foundSettings.list.filter(p => p.type === "1st").map(f => ({ label: f.title, value: f.stringID }));
-		const optionalList: IFilterProperty<string>[] = foundSettings.list.filter(p => p.type === "optional").map(f => ({ label: f.title, value: f.stringID }));
-
-		const mapFc = (item: IFilterProperty<string>) => (
-			<SP.MenuItem
-				key={item.value}
-				value={item.value}
-				selected={activeReferenceProperty.value === item.value ? true : undefined}
-			>{item.label}</SP.MenuItem>
-		);
-
-		const notSpecified = foundNotSpecified && <SP.MenuItem
-			key={"notSpecified"}
-			value={"notSpecified"}
-			selected={activeReferenceProperty.value === "notSpecified" ? true : undefined}
-		>(not specified)</SP.MenuItem>;
-
-		const firstP = !!firstPartyList.length && (
-			<>
-				<SP.Divider />
-				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
-					<span slot="header">1st Party Only</span>
-					{firstPartyList.map(mapFc)}
-				</sp-menu-group>
-			</>
-		);
-		
-		const hidden = !!hiddenList.length && (
-			<>
-				<SP.Divider />
-				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
-					<span slot="header">Hidden</span>
-					{hiddenList.map(mapFc)}
-				</sp-menu-group>
-			</>
-		);
-
-		const optional = !!optionalList.length && (
-			<>
-				<SP.Divider />
-				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
-					<span slot="header">Optional</span>
-					{optionalList.map(mapFc)}
-				</sp-menu-group>
-			</>
-		);
-		const defaultEl = !!defaultList.length && (
-			<>
-				<SP.Divider />
-				<sp-menu-group size={SP.SpectrumComponetDefaults.defaultSize} >
-					<span slot="header">Default</span>
-					{defaultList.map(mapFc)}
-				</sp-menu-group>
-			</>
-		);
 
 		return (
-			<div className="filter">
-				<div className="label">Property:</div>
-				<div className="dropdownWrap">
-					<SP.Dropdown quiet={true}>
-						<SP.Menu slot="options" onChange={(e)=>this.onSetSubType("property",e)}>
-							{notSpecified}
-							{defaultEl}
-							{optional}
-							{hidden}
-							{firstP}
-						</SP.Menu>
-					</SP.Dropdown>
-					<FilterButton subtype="property" state={activeReferenceProperty.filterBy} onClick={(subtype,state) =>this.props.onSetFilter(this.props.selectedTargetReference,subtype,state)} />
-				</div>
-			</div>
+			<this.FilterRow
+				id="property"
+				header="Property:"
+				items={foundSettings.list}
+				showSearch={true}
+				content={{
+					filterBy: activeReferenceProperty.filterBy,
+					value: activeReferenceProperty.value,
+				}}
+			/>
 		);
-*/
+	}
+
+	private FilterRow = (filterProps: IFilterRowProps): JSX.Element => {
+		const {content,header,items,showSearch } = filterProps;
+		const id = filterProps.id as TSubTypes | "main";
+
+		return (
+			<AccDrop
+				selected={Array.isArray(content.value) ? content.value : [content.value]}
+				onSelect={(id, value) => this.onSetSubType(id as any, {target: {value}})}
+				onChange={() => this.dropdownClick(id)}
+				headerPostFix={
+					<FilterButton
+						subtype={id}
+						state={content.filterBy}
+						onClick={(subtype, state, e) => {
+							this.props.onSetFilter(this.props.selectedTargetReference, subtype, state);
+							e.stopPropagation();
+						}}
+					/>
+				}
+				{...filterProps}
+			/>
+		);
+	}
+
+	private renderListenerFilter = (): JSX.Element | void => {
+		switch (this.props.selectedTargetReference) {
+			case "listener":
+			case "notifier":
+				return <ListenerFilterContainer />;
+		}
+	}
+
+	public render(): JSX.Element {
+		return (
+			<>
+				{this.renderMainCategory()}
+				{this.renderListenerFilter()}
+				{this.renderDocument()}
+				{this.renderHistory()}
+				{this.renderSnapshots()}
+				{this.renderGuide()}
+				{this.renderChannel()}
+				{this.renderPath()}
+				{this.renderLayer()}
+				{/*this.renderCustomDescriptorCategory()*/}
+				{this.renderActionSet()}
+				{this.renderActionItem()}
+				{this.renderCommand()}
+				{this.renderProperty()}
+			</>
+		);
 	}
 
 	private dropdownClick = async (type: TSubTypes | "main") => {
@@ -354,70 +426,6 @@ export class Filters extends React.Component<TFilters, IState> {
 					snapshotsList: GetList.getSnapshots(),
 				});
 		}
-	}
-
-	// TODO refactor this
-	private buildFilterRow = (
-		label: string,
-		subType: TSubTypes | "main",
-		items: (IPropertyItem | IPropertyGroup)[],
-		content: {value: string, filterBy: TState},
-	): React.ReactNode => {
-
-		return (
-			<>
-				<AccDrop
-					items={items}
-					selected={Array.isArray(content.value) ? content.value : [content.value]}
-					header={label}
-					id={subType}
-					onSelect={(id, value) => this.onSetSubType(id as any, {target: {value}})}
-					onChange={() => this.dropdownClick(subType)}
-					showSearch={subType === "property"}
-					// show filter per item for main category
-					ItemPostFix={subType==="main" ? ItemVisibilityButtonWrap : undefined}
-					headerPostFix={
-						<FilterButton
-							subtype={subType}
-							state={content.filterBy}
-							onClick={(subtype, state, e) => {
-								this.props.onSetFilter(this.props.selectedTargetReference, subtype, state);
-								e.stopPropagation();
-							}}
-						/>
-					}
-				/>
-			</>
-		);
-	}
-
-	private renderListenerFilter = (): JSX.Element | void => {
-		switch (this.props.selectedTargetReference) {
-			case "listener":
-			case "notifier":
-				return <ListenerFilterContainer />;
-		}
-	}
-
-	public render(): JSX.Element {
-		return (
-			<>
-				{this.renderMainCategory()}
-				{this.renderListenerFilter()}
-				{this.renderDocument()}
-				{this.renderHistory()}
-				{this.renderSnapshots()}
-				{this.renderGuide()}
-				{this.renderChannel()}
-				{this.renderPath()}
-				{this.renderLayer()}
-				{this.renderCustomDescriptorCategory()}
-				{this.renderActionSet()}
-				{this.renderActionItem()}
-				{this.renderCommand()}
-				{this.renderProperty()}
-			</>
-		);
 	}
 }
 

@@ -73,7 +73,7 @@ export function getInitialState(): IInspectorState {
 					},
 				],
 			},
-			{
+			/*{
 				type: "customDescriptor",
 				data: [
 					{
@@ -81,7 +81,7 @@ export function getInitialState(): IInspectorState {
 						content: { value: "notSpecified", filterBy: "off" },
 					},
 				],
-			},
+			},*/
 			{
 				type: "history",
 				data: [
