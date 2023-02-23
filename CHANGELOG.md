@@ -1,54 +1,62 @@
 # Changelog
 
-## 2.2.0
+## 2.5.0
+
+- changes filter dropdowns into accordions
+- implements search field in properties
+- adds extra filter option in main categories (eye icons)
+- improved action titles. Descriptor list shows name of the target e.g. "make (layer)" or "make (annotation)" instead of just "make"
+- adds searching/filtering in descriptors content. So when you "get" whole application descriptor you can search for something specific in that huge object and filter it using search field in "tree view"
+- adds slider to set how much boilerplate code do you want to have in generated code
+- layout changes... settings was moved into sidebar so you can see in real time how changes will affect generated code
+- adds "Guide" support in "DOM (live)" tab
+- descriptors recorded by listener are now divided into playable and non-playable (events). Use "eye icon" to activate filter.
+  - when you replay recorded action using "play triangle button" then returned data are available in "replies" category
+- adds button to copy source code for selected items into clipboard
+- invisible layer ends are now reachable and listed in "Layer:" dropdown so you can read its properties
+- fixed autoscroll in descriptors list. Now it will scroll only when you are already scrolled at the bottom. So if you need to see something at the beginning of the list then scrollbar won't jump down.
+- descriptor items that failed will be shown grayed out in the list and also with prefix `[Error]` so you will see failed actions at first sight.
+- import and export options were moved into flyout menu
+- adds new main categories: Timeline, Animation and AnimationFrame
+- some properties were moved into "1st party" to let you know that those are intentionally restricted
 
 - add connection to CEP "Spy" plugin to get more events from Photoshop. This plugin is not distributed and enabled by default.
 
-adds these document properties
-cloudDocument
-compositor
-homeScreenReady // nope? - feature dependent?
-isCloudDoc
-overscrollMode // nope
-slices
-targetPathsVisibility // nope
-visible
-watchSuspension // nope?
+- Adds these document properties
+  - cloudDocument
+  - compositor
+  - isCloudDoc
+  - slices
+  - visible
 
-new path properties
-AGMStrokeStyleInfo
-symmetryPath
+- New path properties
+  - AGMStrokeStyleInfo
+  - symmetryPath
 
-new document properties
-layerGroup // nope
-layerGroupExpanded // nope
-layerTransformation // ???
-parentLayerID
-selection // ???
-text // ???
-AGMokeStyleInfo // nope
+- New layer properties
+  - parentLayerID
 
-new application properties
-active
-autoShowHomeScreen
-brushes
-brushSettingsLocks
-customPreference
-gridMinor
-hasMatchingOpenDoc // ??? needs aditional descriptor?
-homeScreenReady
-keyboardFocus
-$PnCK - paintCursorKind
-modalDialogLevel
-modalToolLevel
-mondoFilterLevel
-multiUndoEnabled
-numberOfActionSets
-pluginPrefs
-VMStatus
-springLoadedTools
-springLoadedToolsTimingSensitivity
-LoadedPluginsNames
+- New application properties
+  - active
+  - autoShowHomeScreen
+  - brushes
+  - brushSettingsLocks
+  - customPreference
+  - gridMinor
+  - hasMatchingOpenDoc // ??? needs additional descriptor?
+  - homeScreenReady
+  - keyboardFocus
+  - $PnCK - paintCursorKind
+  - modalDialogLevel
+  - modalToolLevel
+  - mondoFilterLevel
+  - multiUndoEnabled
+  - numberOfActionSets
+  - pluginPrefs
+  - VMStatus
+  - springLoadedTools
+  - springLoadedToolsTimingSensitivity
+  - LoadedPluginsNames
 
 
 Note: Use "reset alchemist state" to load these new properties.
