@@ -6,7 +6,7 @@
 	"manifestVersion": 5,
 	"host": {
 		"app": "PS",
-		"minVersion": "23.3"
+		"minVersion": "24.2"
 	},
 	"requiredPermissions": {
 		"allowCodeGenerationFromStrings": true,
