@@ -92,23 +92,40 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 
 		const { left, right, autoExpandLevels,onInspectPath,onSetAutoExpandLevel,path,expandedKeys } = this.props;
 		const delta = this.state.data;
+
+		let jsonTreeContent: JSX.Element;
+		
 		if (!delta && left && right) {
-			return (
+			jsonTreeContent = (
 				<div className="TreeDiff">
 					<div className="message">Content is same</div>
 				</div>
 			);
-		}
-
-		if (!this.state.data) {
-			return (
+		} else if (!this.state.data) {
+			jsonTreeContent = (
 				<div className="TreeDiff">
 					<div className="stateDiffEmpty message">
 						(states are equal or missing)
 					</div>
 				</div>
 			);
+		} else {
+			jsonTreeContent = (<div className="TreeDiffBox">
+				{left && right ? <JSONTree {...props} // node module
+					shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
+					expandClicked={this.expandClicked}
+					labelRenderer={this.labelRenderer}
+					data={this.state.data}
+					getItemString={this.getItemString}
+					valueRenderer={this.valueRenderer}
+					postprocessValue={prepareDelta}
+					isCustomNode={Array.isArray as any}
+					hideRoot={true}
+					sortObjectKeys={true}
+				/> : <div className="message">Select 2 descriptors. (Hold Ctrl + click on descriptor item)</div>}
+			</div>);
 		}
+
 
 		return (
 			<TabList className="tabsView" activeKey={this.props.viewType} onChange={this.props.onSetView}>
@@ -121,20 +138,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 							path={path}
 							allowInfinityLevels={true}
 						/>
-						<div className="TreeDiffBox">
-							{left && right ? <JSONTree {...props} // node module
-								shouldExpandNode={shouldExpandNode(expandedKeys,autoExpandLevels,true)}
-								expandClicked={this.expandClicked}
-								labelRenderer={this.labelRenderer}
-								data={this.state.data}
-								getItemString={this.getItemString}
-								valueRenderer={this.valueRenderer}
-								postprocessValue={prepareDelta}
-								isCustomNode={Array.isArray as any}
-								hideRoot={true}
-								sortObjectKeys={true}
-							/> : <div className="message">Select 2 descriptors. (Hold Ctrl + click on descriptor item)</div>}
-						</div>
+						{jsonTreeContent}
 					</div>
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
