@@ -9,6 +9,9 @@ export function objType(obj: any): TNodeType {
 		type = Object.prototype.toString.call(obj).slice(8, -1) as TNodeType;
 		
 	} catch (e) {
+		if (Array.isArray(obj)) {
+			return "Array";
+		}
 		return "Proxy";
 	}
 	if (type === "Object" && typeof obj[Symbol.iterator] === "function") {
