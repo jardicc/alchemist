@@ -180,8 +180,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		
 		return (
 			<this.FilterRow
-				header="Action "
-				id="set"
+				header="Action set:"
+				id="actionset"
 				items={list}
 				content={activeReferenceActionSet}
 			/>
