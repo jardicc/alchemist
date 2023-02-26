@@ -6,7 +6,7 @@ import { IDescriptor, ITargetReference, TSelectDescriptorOperation } from "../..
 import { getActiveTargetReference, getFilterBySelectedReferenceType, getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
 import React from "react";
 import "./DescriptorItem.less";
-import { IconLockLocked, IconPinDown } from "../../../shared/components/icons";
+import { IconBan, IconBolt, IconBrowser, IconChat, IconDocument, IconFlash, IconFork, IconGuides, IconImage, IconInfo, IconLayers, IconLockLocked, IconPinDown, IconPlayCircle, IconProject, IconScript, IconStar, IconTimer, IconVideo } from "../../../shared/components/icons";
 import { TState } from "../FilterButton/FilterButton";
 import { Dispatch } from "redux";
 import {default as SP} from "react-uxp-spectrum";
@@ -47,10 +47,14 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		});
 	}
 
+	private get hasError (): boolean {
+		return (this.props.descriptor.originalData as any)?.[0]?._obj === "error";
+	}
+
 	private generateClassName = () => {
 		const {descriptor} = this.props;
 		
-		const errorClass = ((descriptor.originalData as any)?.[0]?._obj === "error") ? " error" : "";
+		const errorClass = this.hasError ? " error" : "";
 
 		return "wrap" + (descriptor.selected ? " selected" : "") + (this.autoSelected ? " autoSelected" : "") + errorClass;
 	}
@@ -74,6 +78,80 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				this.rename();
 				break;
 		}
+	}
+
+	private Icon = ():JSX.Element => {
+		const type = this.props.descriptor.originalReference.type;
+		let  icon: JSX.Element = <IconDocument />;
+		switch (type) {
+			case "listener": {
+				icon = <IconStar />;
+				break;
+			}
+			case "notifier": {
+				icon = <IconInfo />;
+				break;
+			}
+			case "dispatcher": {
+				icon = <IconScript />;
+				break;
+			}
+			case "replies": {
+				icon = <IconChat />;
+				break;
+			}
+			case "application": {
+				icon = <IconBrowser />;
+				break;
+			}
+			case "document": {
+				icon = <IconImage />;
+				break;
+			}
+			case "layer": {
+				icon = <IconLayers />;
+				break;
+			}
+			case "channel": {
+				break;
+			}
+			case "path": {
+				icon = <IconFork />;
+				break;
+			}
+			case "action": {
+				icon = <IconPlayCircle />;
+				break;
+			}
+			case "guide": {
+				icon = <IconGuides />;
+				break;
+			}
+			case "history":
+			case "snapshot": {
+				icon = <IconTimer />;
+				break;
+			}
+			case "animation":
+			case "animationFrame": {
+				icon = <IconVideo />;
+				break;
+			}
+			case "timeline": {
+				icon = <IconProject />;
+				break;
+			}
+		}
+
+		if (this.hasError) {
+			icon = <IconBan />;
+		}
+
+		return (
+			<div className="titleIcon">
+				{icon}
+			</div>
+		);
 	}
 
 	private renderEditState = () => {
@@ -101,6 +179,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		const {descriptor:{locked,pinned,groupCount} } = this.props;
 		return (
 			<div className={"normalMode " + this.generateClassName()} onClick={this.select}>
+				<this.Icon />
 				<div className="name">{descriptor.title}</div>
 				<div className="spread"></div>
 				{(groupCount && groupCount > 1) && <div>{groupCount}×</div>}

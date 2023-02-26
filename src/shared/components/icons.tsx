@@ -121,9 +121,11 @@ export const IconArrowTop=():JSX.Element=>(
 //export const IconBadge=():JSX.Element=>(
 //
 //)
-//export const IconBan=():JSX.Element=>(
-//
-//)
+export const IconBan = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M4 0c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0 1c.66 0 1.26.21 1.75.56l-4.19 4.19c-.35-.49-.56-1.09-.56-1.75 0-1.66 1.34-3 3-3zm2.44 1.25c.35.49.56 1.09.56 1.75 0 1.66-1.34 3-3 3-.66 0-1.26-.21-1.75-.56l4.19-4.19z" />
+	</svg>
+);
 //export const IconBarChart=():JSX.Element=>(
 //
 //)
@@ -148,9 +150,11 @@ export const IconArrowTop=():JSX.Element=>(
 //export const IconBold=():JSX.Element=>(
 //
 //)
-//export const IconBolt=():JSX.Element=>(
-//
-//)
+export const IconBolt = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M3 0l-3 5h2v3l3-5h-2v-3z" transform="translate(1)" />
+	</svg>
+);
 //export const IconBook=():JSX.Element=>(
 //
 //)
@@ -166,9 +170,11 @@ export const IconArrowTop=():JSX.Element=>(
 //export const IconBritishPound=():JSX.Element=>(
 //
 //)
-//export const IconBrowser=():JSX.Element=>(
-//
-//)
+export const IconBrowser = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M.34 0a.5.5 0 0 0-.34.5v7a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.09 0 .5.5 0 0 0-.06 0zm1.16 1c.28 0 .5.22.5.5s-.22.5-.5.5-.5-.22-.5-.5.22-.5.5-.5zm2 0h3c.28 0 .5.22.5.5s-.22.5-.5.5h-3c-.28 0-.5-.22-.5-.5s.22-.5.5-.5zm-2.5 2h6v4h-6v-4z" />
+	</svg>
+);
 //export const IconBrush=():JSX.Element=>(
 //
 //)
@@ -296,9 +302,11 @@ export const IconCog = (): JSX.Element => (
 //export const IconDial=():JSX.Element=>(
 //
 //)
-//export const IconDocument=():JSX.Element=>(
-//
-//)
+export const IconDocument = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v8h7v-4h-4v-4h-3zm4 0v3h3l-3-3zm-3 2h1v1h-1v-1zm0 2h1v1h-1v-1zm0 2h4v1h-4v-1z" />
+	</svg>
+);
 //export const IconDollar=():JSX.Element=>(
 //
 //)
@@ -371,23 +379,32 @@ export const IconEye = (): JSX.Element => (
 //export const IconFlag=():JSX.Element=>(
 //
 //)
-//export const IconFlash=():JSX.Element=>(
-//
-//)
+export const IconFlash = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M1.5 0l-1.5 3h2l-.66 2h-1.34l1 3 3-3h-1.5l1.5-3h-2l1-2h-1.5z" transform="translate(2)" />
+	</svg>
+);
 export const IconFolder = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M0 0v2h8v-1h-5v-1h-3zm0 3v4.5c0 .28.22.5.5.5h7c.28 0 .5-.22.5-.5v-4.5h-8z" />
 	</svg>
 );
-//export const IconFork=():JSX.Element=>(
-//
-//)
+export const IconFork = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M1.5 0c-.83 0-1.5.67-1.5 1.5 0 .66.41 1.2 1 1.41v2.19c-.59.2-1 .75-1 1.41 0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5c0-.6-.34-1.1-.84-1.34.09-.09.21-.16.34-.16h2c.82 0 1.5-.68 1.5-1.5v-.59c.59-.2 1-.75 1-1.41 0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5c0 .66.41 1.2 1 1.41v.59c0 .28-.22.5-.5.5h-2c-.17 0-.35.04-.5.09v-1.19c.59-.2 1-.75 1-1.41 0-.83-.67-1.5-1.5-1.5z" />
+	</svg>
+);
 //export const IconFullscreenEnter=():JSX.Element=>(
 //
 //)
 //export const IconFullscreenExit=():JSX.Element=>(
 //
 //)
+export const IconGuides = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v7h1v-7h-1zm7 0v7h1v-7h 2v1h2v-1h-2z" />
+	</svg>
+);
 //export const IconGlobe=():JSX.Element=>(
 //
 //)
@@ -418,9 +435,11 @@ export const IconFolder = (): JSX.Element => (
 //export const IconHome=():JSX.Element=>(
 //
 //)
-//export const IconChat=():JSX.Element=>(
-//
-//)
+export const IconChat = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v5l1-1h1v-3h3v-1h-5zm3 2v4h4l1 1v-5h-5z" />
+	</svg>
+);
 export const IconCheck = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M6.41 0l-.69.72-2.78 2.78-.81-.78-.72-.72-1.41 1.41.72.72 1.5 1.5.69.72.72-.72 3.5-3.5.72-.72-1.44-1.41z" transform="translate(0 1)" />
@@ -442,18 +461,22 @@ export const IconChevronRight = (): JSX.Element => (
 //export const IconChevronTop=():JSX.Element=>(
 //
 //)
-//export const IconImage=():JSX.Element=>(
-//
-//)
+export const IconImage = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v8h8v-8h-8zm1 1h6v3l-1-1-1 1 2 2v1h-1l-4-4-1 1v-3z" />
+	</svg>
+);
 //export const IconInbox=():JSX.Element=>(
 //
 //)
 //export const IconInfinity=():JSX.Element=>(
 //
 //)
-//export const IconInfo=():JSX.Element=>(
-//
-//)
+export const IconInfo = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M3 0c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm-1.5 2.5c-.83 0-1.5.67-1.5 1.5h1c0-.28.22-.5.5-.5s.5.22.5.5-1 1.64-1 2.5c0 .86.67 1.5 1.5 1.5s1.5-.67 1.5-1.5h-1c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-.36 1-1.84 1-2.5 0-.81-.67-1.5-1.5-1.5z" transform="translate(2)" />
+	</svg>
+);
 //export const IconItalic=():JSX.Element=>(
 //
 //)
@@ -472,9 +495,11 @@ export const IconChevronRight = (): JSX.Element => (
 //export const IconLaptop=():JSX.Element=>(
 //
 //)
-//export const IconLayers=():JSX.Element=>(
-//
-//)
+export const IconLayers = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v4h4v-4h-4zm5 2v3h-3v1h4v-4h-1zm2 2v3h-3v1h4v-4h-1z" />
+	</svg>
+);
 //export const IconLightbulb=():JSX.Element=>(
 //
 //)
@@ -608,9 +633,11 @@ export const IconPinDown = (): JSX.Element => (
 		<path  d="M1.34 0a.5.5 0 0 0 .16 1h.5v2h-1c-.55 0-1 .45-1 1h3v3l.44 1 .56-1v-3h3c0-.55-.45-1-1-1h-1v-2h.5a.5.5 0 1 0 0-1h-4a.5.5 0 0 0-.09 0 .5.5 0 0 0-.06 0z" />
 	</svg>
 );
-//export const IconPlayCircle=():JSX.Element=>(
-//
-//)
+export const IconPlayCircle = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-1 2l3 2-3 2v-4z" />
+	</svg>
+);
 export const IconPlus = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z" />
@@ -622,9 +649,11 @@ export const IconPlus = (): JSX.Element => (
 //export const IconPrint=():JSX.Element=>(
 //
 //)
-//export const IconProject=():JSX.Element=>(
-//
-//)
+export const IconProject = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M0 0v7h1v-7h-1zm7 0v7h1v-7h-1zm-5 1v1h2v-1h-2zm1 2v1h2v-1h-2zm1 2v1h2v-1h-2z" />
+	</svg>
+);
 //export const IconPulse=():JSX.Element=>(
 //
 //)
@@ -658,9 +687,11 @@ export const IconPlus = (): JSX.Element => (
 //export const IconRssAlt=():JSX.Element=>(
 //
 //)
-//export const IconScript=():JSX.Element=>(
-//
-//)
+export const IconScript = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M3 0c-.55 0-1 .45-1 1v5.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-1.5h-1v2c0 .55.45 1 1 1h5c.55 0 1-.45 1-1v-3h-4v-2.5c0-.28.22-.5.5-.5s.5.22.5.5v1.5h4v-2c0-.55-.45-1-1-1h-4z" />
+	</svg>
+);
 //export const IconShare=():JSX.Element=>(
 //
 //)
@@ -685,9 +716,11 @@ export const IconPlus = (): JSX.Element => (
 //export const IconSpreadsheet=():JSX.Element=>(
 //
 //)
-//export const IconStar=():JSX.Element=>(
-//
-//)
+export const IconStar = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M4 0l-1 3h-3l2.5 2-1 3 2.5-2 2.5 2-1-3 2.5-2h-3l-1-3z" />
+	</svg>
+);
 //export const IconSun=():JSX.Element=>(
 //
 //)
@@ -718,9 +751,11 @@ export const IconPlus = (): JSX.Element => (
 //export const IconThumbUp=():JSX.Element=>(
 //
 //)
-//export const IconTimer=():JSX.Element=>(
-//
-//)
+export const IconTimer = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M2 0v1h1v.03c-1.7.24-3 1.71-3 3.47 0 1.93 1.57 3.5 3.5 3.5s3.5-1.57 3.5-3.5c0-.45-.1-.87-.25-1.25l-.91.38c.11.29.16.57.16.88 0 1.39-1.11 2.5-2.5 2.5s-2.5-1.11-2.5-2.5 1.11-2.5 2.5-2.5c.3 0 .59.05.88.16l.34-.94c-.23-.08-.47-.12-.72-.16v-.06h1v-1h-3zm5 1.16s-3.65 2.81-3.84 3c-.19.2-.19.49 0 .69.19.2.49.2.69 0 .2-.2 3.16-3.69 3.16-3.69z" />
+	</svg>
+);
 //export const IconTransfer=():JSX.Element=>(
 //
 //)
@@ -741,9 +776,11 @@ export const IconTrash = (): JSX.Element => (
 //export const IconVerticalAlignTop=():JSX.Element=>(
 //
 //)
-//export const IconVideo=():JSX.Element=>(
-//
-//)
+export const IconVideo = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M.5 0c-.28 0-.5.23-.5.5v4c0 .28.23.5.5.5h5c.28 0 .5-.22.5-.5v-1.5l1 1h1v-3h-1l-1 1v-1.5c0-.28-.22-.5-.5-.5h-5z" transform="translate(0 1)" />
+	</svg>
+);
 //export const IconVolumeHigh=():JSX.Element=>(
 //
 //)

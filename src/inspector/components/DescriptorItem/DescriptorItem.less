@@ -5,12 +5,16 @@
 	
 	border-top: 1px solid var(--divider);
 
+	.titleIcon{
+		margin-right: 0.5em;
+	}
+/*
 	.error::before{
 		content: "[Error]";
 		margin-right:1em;
 		text-decoration: none;
 	}
-
+*/
 	.error{
 		color: var(--textDim);
 		
@@ -38,13 +42,16 @@
 	
 		&:hover {
 			color: var(--hover);
+			fill: var(--hover);
 		}
 		
 		&.selected {
 			color: var(--active);
+			fill: var(--active);
 	
 			&:hover {
 				color: var(--hover);
+				fill: var(--hover);
 			}
 		}
 	
