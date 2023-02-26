@@ -26,6 +26,7 @@ module.exports = {
 		"no-unreachable-loop": [
 			"error",	
 		],
+		"@typescript-eslint/no-empty-interface": "off",
 		"no-promise-executor-return": [
 			"error",	
 		],
