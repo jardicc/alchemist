@@ -458,9 +458,11 @@ export const IconChevronRight = (): JSX.Element => (
 		<path d="M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z" transform="translate(1)" />
 	</svg>
 );
-//export const IconChevronTop=():JSX.Element=>(
-//
-//)
+export const IconChevronTop = (): JSX.Element => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+		<path d="M4 0l-4 4 1.5 1.5 2.5-2.5 2.5 2.5 1.5-1.5-4-4z" transform="translate(0 1)" />
+	</svg>
+);
 export const IconImage = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M0 0v8h8v-8h-8zm1 1h6v3l-1-1-1 1 2 2v1h-1l-4-4-1 1v-3z" />
