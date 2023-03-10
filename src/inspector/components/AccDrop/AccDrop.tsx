@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React, {ComponentType, ReactElement} from "react";
-import {IconChevronBottom, IconChevronRight} from "../../../shared/components/icons";
+import {IconChevronBottom, IconChevronRight, IconChevronTop} from "../../../shared/components/icons";
 import {IPropertyGroup, IPropertyItem} from "../../model/types";
 import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
+import {getIcon} from "../../helpers";
 
 export interface IAccDropPostFixProps{
 	value:string
+}
+
+export interface IAccDropIcons{	
+	[key: string]:JSX.Element
 }
 
 export interface IAccDropProps {
@@ -22,7 +27,9 @@ export interface IAccDropProps {
 	showSearch?: boolean
 	headerPostFix?: ReactElement
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
-	doNotCollapse?:boolean
+	doNotCollapse?: boolean
+	
+	icons?: boolean // exists only for main type
 }
 
 export interface IAccDropDispatch {
@@ -113,12 +120,14 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 		return (
 			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
-				<div className="chevron">
-					{this.state.expanded ? <IconChevronBottom />:<IconChevronRight />}
-
+				<div className="titleType">{header}</div>
+				<div className="group">
+					<div className="title">{this.getLabel()}</div>				
+					{headerPostFix}
+					<div className="chevron">
+						{this.state.expanded ? <IconChevronTop/>:<IconChevronBottom /> }
+					</div>
 				</div>
-				<span className="title">{header + " " + this.getLabel()}</span>				
-				{headerPostFix}
 			</div>
 		);
 	}
@@ -159,7 +168,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	}
 
 	private renderItem = (item: IPropertyItem) => {
-		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse} = this.props;
+		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse, icons} = this.props;
 		if (
 			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) || 
 			!showSearch
@@ -178,7 +187,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					data-selected={selected.includes(item.value) || undefined}
 				>
 					<div className="label">
-						{item.label}
+						{icons && <div className="icon">{getIcon(item.value as any)}</div>} <span>{item.label}</span>
 					</div>
 					{
 						ItemPostFix && <div 

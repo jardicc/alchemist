@@ -30,14 +30,25 @@
 		justify-content: center;
 		flex-grow: 1;
 	}
+
+	.divider{
+		height: 2px;
+		background: var(--divider);
+	}
 	
 	.search {
 		background-color: var(--sp-textfield-bg);
+		//border: 3px solid var(--bg);
 		display: flex;
 		flex-shrink: 0;
 		position: relative;
 		max-width: 100%;
 		flex-grow: 0;
+
+		.groupLabel{
+			font-family: sans-serif;
+			font-size: 0.9em;
+		}
 
 		sp-textfield{
 			flex-grow: 1;
@@ -54,6 +65,7 @@
 
 		sp-checkbox{
 			padding:0 0.3em;
+			padding-bottom: 0.3em;
 			margin:0;
 			flex-grow: 0;
 			align-self: center;

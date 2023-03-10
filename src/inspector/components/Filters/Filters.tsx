@@ -20,6 +20,7 @@ import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityBu
 interface IFilterRowProps{
 	id: string
 	items: (IPropertyItem | IPropertyGroup)[]
+	icons? :boolean
 	header: string | React.ReactElement
 	content: {value: string, filterBy: TState}
 	showSearch?: boolean
@@ -72,6 +73,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			<this.FilterRow
 				header="Type:"
 				id="main"
+				icons={true}
 				items={mainClasses}
 				ItemPostFix={ItemVisibilityButtonWrap}
 				doNotCollapse={true}
@@ -294,10 +296,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				items={foundSettings.list}
 				showSearch={true}
 				doNotCollapse={true}
-				content={{
-					filterBy: activeReferenceProperty.filterBy,
-					value: activeReferenceProperty.value,
-				}}
+				content={activeReferenceProperty}
 			/>
 		);
 	}

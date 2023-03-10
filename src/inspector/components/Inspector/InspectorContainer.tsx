@@ -1,7 +1,6 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
-import { setModeTabAction, replaceWholeStateAction, setColumnSizeAction, toggleSettingsAction } from "../../actions/inspectorActions";
+import { setModeTabAction, setColumnSizeAction, toggleSettingsAction } from "../../actions/inspectorActions";
 import { IRootState } from "../../../shared/store";
-import { Settings } from "../../classes/Settings";
 import { getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible } from "../../selectors/inspectorSelectors";
 
 import React from "react";
@@ -22,7 +21,6 @@ import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
 import {Pane} from "react-split-pane";
 import SplitPane from "react-split-pane";
 import { default as SP } from "react-uxp-spectrum";
-import {FiltersContainer} from "../Filters/Filters";
 import {ListenerClass} from "../../classes/Listener";
 
 

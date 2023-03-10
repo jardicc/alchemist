@@ -10,6 +10,7 @@ import { IconBan, IconBolt, IconBrowser, IconChat, IconDocument, IconFlash, Icon
 import { TState } from "../FilterButton/FilterButton";
 import { Dispatch } from "redux";
 import {default as SP} from "react-uxp-spectrum";
+import {getIcon} from "../../helpers";
 
 class DescriptorItem extends React.Component<TDescriptorItem,IState> { 
 	constructor(props: TDescriptorItem) {
@@ -82,70 +83,8 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 
 	private Icon = ():JSX.Element => {
 		const type = this.props.descriptor.originalReference.type;
-		let  icon: JSX.Element = <IconDocument />;
-		switch (type) {
-			case "listener": {
-				icon = <IconStar />;
-				break;
-			}
-			case "notifier": {
-				icon = <IconInfo />;
-				break;
-			}
-			case "dispatcher": {
-				icon = <IconScript />;
-				break;
-			}
-			case "replies": {
-				icon = <IconChat />;
-				break;
-			}
-			case "application": {
-				icon = <IconBrowser />;
-				break;
-			}
-			case "document": {
-				icon = <IconImage />;
-				break;
-			}
-			case "layer": {
-				icon = <IconLayers />;
-				break;
-			}
-			case "channel": {
-				break;
-			}
-			case "path": {
-				icon = <IconFork />;
-				break;
-			}
-			case "action": {
-				icon = <IconPlayCircle />;
-				break;
-			}
-			case "guide": {
-				icon = <IconGuides />;
-				break;
-			}
-			case "history":
-			case "snapshot": {
-				icon = <IconTimer />;
-				break;
-			}
-			case "animation":
-			case "animationFrame": {
-				icon = <IconVideo />;
-				break;
-			}
-			case "timeline": {
-				icon = <IconProject />;
-				break;
-			}
-		}
 
-		if (this.hasError) {
-			icon = <IconBan />;
-		}
+		const icon = getIcon(this.hasError ? "error" : type);
 
 		return (
 			<div className="titleIcon">
@@ -185,7 +124,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				{(groupCount && groupCount > 1) && <div>{groupCount}×</div>}
 				{locked && <div className="icon"><IconLockLocked/></div> }
 				{pinned && <div className="icon"><IconPinDown/></div>}
-				{descriptor.startTime===0 ? <div className="time">Event</div> : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
+				{descriptor.startTime===0 ? null : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
 			</div>
 		);
 	}
