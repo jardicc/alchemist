@@ -443,18 +443,6 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 			});
 			break;
 		}
-		case "REPLACE_WHOLE_STATE": {
-			if (action.payload &&
-				getInitialState().version[0] === action.payload.version[0] // load only compatible version
-			) {
-				action.payload.settings.autoUpdateListener = false;
-				action.payload.settings.autoUpdateInspector = false;
-				action.payload.settings.autoUpdateSpy = false;
-				action.payload.settings.isSpyInstalled = state.settings.isSpyInstalled;
-				state = action.payload;				
-			}
-			break;
-		}
 		case "SET_DISPATCHER_VALUE": {
 			state = produce(state, draft => {
 				draft.dispatcher.snippets[0].content = action.payload;

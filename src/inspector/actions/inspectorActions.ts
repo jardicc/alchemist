@@ -193,11 +193,6 @@ export interface IFilterEventNameAction{
 	}
 }
 
-export interface IReplaceWholeState{
-	type: "REPLACE_WHOLE_STATE",
-	payload: IInspectorState
-}
-
 export interface ISetDispatcherValueAction{
 	type: "SET_DISPATCHER_VALUE",
 	payload:string
@@ -437,13 +432,6 @@ export function setDispatcherValueAction(value:string): ISetDispatcherValueActio
 	return {
 		type: "SET_DISPATCHER_VALUE",
 		payload:value,
-	};
-}
-
-export function replaceWholeStateAction(state: IInspectorState):IReplaceWholeState {
-	return {
-		type: "REPLACE_WHOLE_STATE",
-		payload: state,
 	};
 }
 
@@ -703,7 +691,6 @@ export type TActions =
 	ISetListenerNotifierAction|
 	//IGroupSameAction |
 	IFilterEventNameAction |
-	IReplaceWholeState |
 	ISetDispatcherValueAction |
 	ISetRenameModeAction |
 	IRenameDescriptorAction |

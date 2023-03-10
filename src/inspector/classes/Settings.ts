@@ -1,7 +1,8 @@
 import { IDescriptor, IInspectorState, TFontSizeSettings } from "../model/types";
 import { alert } from "./Helpers";
 import type {uxp} from "../types/uxp";
-import { SpectrumComponetDefaults } from "react-uxp-spectrum";
+import {SpectrumComponetDefaults} from "react-uxp-spectrum";
+import { getInitialState} from "../inspInitialState";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
@@ -104,8 +105,21 @@ export class Settings{
 	public static importState(): IInspectorState | null {
 		try {
 			const text = readFileSync(`plugin-data:/${Settings.settingsFilename}`, {encoding: "utf-8"});
-			const result = JSON.parse(text);
+			const result: IInspectorState = JSON.parse(text);
+			
+			// if settings has different major version than version currently in use then reset all redux store content
+			if (getInitialState().version[0] !== result.version[0]) {
+				return null;
+			}
+
 			Settings.setSpectrumComponentSize(result.settings.fontSize);
+
+
+			// recordings should be off by default when plugin is loaded
+			result.settings.autoUpdateListener = false;
+			result.settings.autoUpdateInspector = false;
+			result.settings.autoUpdateSpy = false;
+
 			return result;
 		} catch (e) {
 			console.log("Error - with reading of settings! If you run this plugin for first time then settings file does not exist and that is fine. It will be created automatically later.");
