@@ -7,6 +7,7 @@ import { getContentPath } from "./inspectorContentSelectors";
 import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
 import stringifyObject from "stringify-object";
 import {ActionDescriptor, BatchPlayCommandOptions} from "photoshop/dom/CoreModules";
+import {js_beautify} from "js-beautify";
 
 type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?:boolean}
 
@@ -61,10 +62,10 @@ export const getGeneratedCode = createSelector([
 			if (regex.test(s)) {
 				result += "." + s;
 			} else if (typeof s === "number") {
-				result += "[" + s + "]";
+				result += `[${s}]`;
 			}
 			else {
-				result += "[\"" + s + "\"]";
+				result += `["${s}"]`;
 			}
 		}
 
@@ -207,6 +208,148 @@ export const getGeneratedCode = createSelector([
 	} else {
 		return "Add some descriptor";
 	}
+});
+
+// TODO ... not currently in use
+export const getGeneratedCode2 = createSelector([
+	getActiveDescriptors, getAutoActiveDescriptor, getContentPath,
+	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
+], (selected, autoActive, treePath, replayEnabled, descOptions, settings, tab) => {
+
+	function makeNicePropertyPath(segments: string[]): string {
+		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
+		
+		let result = "";
+
+		for (const s of segments) {
+			if (regex.test(s)) {
+				result += "." + s;
+			} else if (typeof s === "number") {
+				result += `[${s}]`;
+			}
+			else {
+				result += `["${s}"]`;
+			}
+		}
+
+		return result;
+	}
+
+	function addPerItemOptions(data: IDescriptor) {
+		if (data.descriptorSettings.dialogOptions) {
+			data = cloneDeep(data);
+			(data.calculatedReference as ActionDescriptor)._options = {
+				dialogOptions: data.descriptorSettings.dialogOptions,
+			} as IDescriptorSettings;
+		}
+		return data.calculatedReference;
+	}
+
+	function addCommonOptions(data: IDescriptor[]): BatchPlayCommandOptionsExtended {
+
+		const hasAnyAsync = data.some(item => item.descriptorSettings.synchronousExecution === false);
+		const hasAnySync = data.some(item => item.descriptorSettings.synchronousExecution === true);
+
+		const modalIsExecute = data.every(item => item.descriptorSettings.modalBehavior === "execute");
+		const modalIsWait = data.every(item => item.descriptorSettings.modalBehavior === "wait");
+		const modalIsDefault = data.every(item => !item.descriptorSettings.modalBehavior);
+
+		const res: BatchPlayCommandOptionsExtended = {};
+
+		if (hasAnySync) { res.synchronousExecution = true; }
+		else if (hasAnyAsync) { res.synchronousExecution = false; }
+
+		if (modalIsExecute) { res.modalBehavior = "execute"; }
+		else if (modalIsWait) { res.modalBehavior = "wait"; }
+		else if (!modalIsDefault) { res.modalBehavior = "fail"; }
+
+		return res;
+	}
+
+	// replaces quotes
+	function qts(str:string):string {
+		if (settings.singleQuotes) {
+			str = str.replaceAll(`"`, `'`);
+		}
+		return str;
+	}
+
+	const addModules = settings.codeImports === "require";
+	const wrappers = settings.codeWrappers;
+
+	if (selected.length >= 1 || autoActive) {
+		let data:any = null, iDesc: IDescriptor[] = [];
+
+		const stringifyOptions = {
+			singleQuotes: settings.singleQuotes,
+			indent: tab,
+		};
+
+		if (selected.length >= 1) {
+			iDesc = selected;
+		} else if (autoActive) {
+			iDesc = [autoActive];
+		}
+		if (iDesc.some(item => ["replies","notifier","dispatcher"].includes(item.originalReference.type))) {
+			return "// Alchemist can't generate code from replay reply, dispatched code. Notifiers are not supported to save your time because those are non-playable in 99.99% of cases";
+		}
+		data = iDesc.map(item => addPerItemOptions(item));
+		// adds raw data type support
+		data = cloneDeep(data);
+
+		if (Array.isArray(data)) {
+			data.forEach(d => {
+				if (settings.hideDontRecord) {
+					delete d.dontRecord;				
+				}
+				if (settings.hideForceNotify) {
+					delete d.forceNotify;				
+				}
+				if (settings.hide_isCommand) {
+					delete d._isCommand;
+				}				
+			});
+		}
+		
+		for (let i = 0; i < data.length; i++) {
+			const item = data[i];
+			RawDataConverter.convertFakeRawInCode(item,descOptions);
+		}
+
+		let strPinned = "";
+
+		if (treePath.length) {
+			// eslint-disable-next-line quotes
+			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
+		}
+		
+		const commandOptions = addCommonOptions(iDesc);
+
+		const strOptions = stringifyObject(commandOptions, stringifyOptions);
+		const strDesc: string = stringifyObject(data, stringifyOptions);
+		
+		const code = `
+		${addModules ? `const {executeAsModal} = require("photoshop").core;` : ''}
+		const {batchPlay} = require("photoshop").action;
+		
+		async function actionCommands() {
+		   const result = await batchPlay(
+			  ${strDesc},${strOptions}
+		   );
+		}
+		
+		async function runModalFunction() {
+		   await executeAsModal(actionCommands, {"commandName": "Action Commands"});
+		}
+		
+		await runModalFunction();
+`;		
+
+		return js_beautify(code,{preserve_newlines: true,brace_style: "preserve-inline",end_with_newline:true});
+	} else {
+		return "Add some descriptor";
+	}
+	return "";
 });
 
 export const getCodeContentTab = createSelector([all], t => {

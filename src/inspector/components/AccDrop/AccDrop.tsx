@@ -19,7 +19,7 @@ export interface IAccDropProps {
 	items: (IPropertyItem | IPropertyGroup)[]
 	header: string | React.ReactElement
 	
-	onSelect: (id: string, value: string) => void
+	onSelect: (id: string, value: string, toggle?:boolean) => void	
 	selected: string[]
 
 	className?: string
@@ -29,6 +29,7 @@ export interface IAccDropProps {
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
 	doNotCollapse?: boolean
 	
+	supportMultiSelect?:boolean
 	icons?: boolean // exists only for main type
 }
 
@@ -112,7 +113,16 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			this.props.selected.includes(item.value),
 		).map(item => item.label);
 
-		return labels.join(", ");
+		if (!labels.length) {
+			return "n/a";
+		}
+		else if (labels.length === 1) {
+			return labels[0];
+		}
+		else {
+			return `${labels[0]} +(${labels.length - 1})`;
+		}
+
 	}
 
 	private renderHeader = (): JSX.Element => {
@@ -178,11 +188,16 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					className="item"
 					key={"i_"+item.value+id}
 					onClick={(e) => {
-						onSelect(id, item.value);
 						e.stopPropagation();
-						if (!doNotCollapse) {
-							this.toggleExpanded();
+						if (e.ctrlKey || e.metaKey) {
+							onSelect(id, item.value, true);
+						} else {
+							onSelect(id, item.value);
+							if (!doNotCollapse) {
+								this.toggleExpanded();
+							}							
 						}
+
 					}}
 					data-selected={selected.includes(item.value) || undefined}
 				>

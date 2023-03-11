@@ -1,6 +1,6 @@
 import photoshop from "photoshop";
 import { cloneDeep } from "lodash";
-import { IDescriptor, TChannelReferenceValid, ITargetReference } from "../model/types";
+import { IDescriptor, TChannelReferenceValid, ITargetReference, IChannel, IProperty } from "../model/types";
 import { DocumentExtra } from "./DocumentExtra";
 import { getName } from "./GetName";
 import { getInitialState } from "../inspInitialState";
@@ -12,68 +12,60 @@ const PS = photoshop.app;
 
 
 export interface ITargetReferenceAM {
-	"_obj": string,
-	"_target": TReference[]
-	"expandSmartObjects"?: boolean,
-	"getTextStyles"?: boolean,
-	"getFullTextStyles"?: boolean,
-	"getDefaultLayerFX"?: boolean,
-	"layerID"?: number,
-	"getCompLayerSettings"?: boolean,
-	"getPathData"?: boolean,
-	"imageInfo"?: boolean,
-	"compInfo"?: boolean,
-	"layerInfo"?: boolean,
-	"includeAncestors"?: boolean,
+	_obj: string,
+	_target: TReference[]
+	expandSmartObjects?: boolean,
+	getTextStyles?: boolean,
+	getFullTextStyles?: boolean,
+	getDefaultLayerFX?: boolean,
+	layerID?: number,
+	getCompLayerSettings?: boolean,
+	getPathData?: boolean,
+	imageInfo?: boolean,
+	compInfo?: boolean,
+	layerInfo?: boolean,
+	includeAncestors?: boolean,
 	[prop: string]: any;
 }
 
 export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference|IndexReference
 
 export interface IDReference{
-	"_ref": string,
-	"_id": number
+	_ref: string,
+	_id: number
 }
 
 export interface IndexReference{
-	"_ref": string,
-	"_index": number
+	_ref: string,
+	_index: number
 }
 
 export interface INameReference{
-	"_ref": string,
-	"_name": string
+	_ref: string,
+	_name: string
 }
 
 export interface IPropertyReference{
-	"_property": string
+	_property: string
 }
 
 export interface IEnumReference{
-	"_ref": string
-	"_enum": string
-	"_value": string
+	_ref: string
+	_enum: string
+	_value: string
 }
 
 export class GetInfo {
-	
-	public static async getAM(originalRef: ITargetReference | null): Promise<IDescriptor | null> {
-		if (!originalRef) { return null;}
+
+	/** Does not include property */
+	public static async getReference(originalRef: ITargetReference): Promise<TReference[] | null>{
+
+		const rootT:TReference[] = [];
 		const t = cloneDeep(originalRef);
-		if (t.type === "generator") {
-			const result = await this.getFromGenerator(originalRef);
-			return result;
-		}
-		
-		const desc: ITargetReferenceAM = {
-			"_obj": "get",
-			"_target": [],
-		};
-		const rootT = desc._target;
 
 		const doc = t.data.find(i => i.subType === "document");		
 		const layer = t.data.find(i => i.subType === "layer");		
-		const channel = t.data.find(i => i.subType === "channel");		
+		const channel: IChannel | undefined = t.data.find(i => i.subType === "channel") as IChannel | undefined;
 		const path = t.data.find(i => i.subType === "path");		
 
 		const guide = t.data.find(i => i.subType === "guide");		
@@ -83,8 +75,7 @@ export class GetInfo {
 		const action = t.data.find(i => i.subType === "action");		
 		const actionset = t.data.find(i => i.subType === "actionset");		
 		const command = t.data.find(i => i.subType === "command");		
-
-		const property = t.data.find(i => i.subType === "property");		
+	
 
 		if (doc) {
 			const activeID = await this.getActiveDocumentID();
@@ -92,8 +83,8 @@ export class GetInfo {
 			
 			if (t.type !== "history" && t.type !== "snapshot") {
 				rootT.push({
-					"_ref": "document",
-					"_id": doc.content.value === "active" ? activeID : parseInt(doc.content.value as string),
+					_ref: "document",
+					_id: doc.content.value === "active" ? activeID : parseInt(doc.content.value as string),
 				});
 			}
 		}
@@ -107,31 +98,32 @@ export class GetInfo {
 				(t.type == "channel" && (channel?.content.value === "filterMask" || channel?.content.value === "mask"))
 			) {
 				rootT.push({
-					"_ref": "layer",
-					"_id": layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string),
+					_ref: "layer",
+					_id: layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string),
 				});
 			}
 		}
 
 		switch (t.type) {
+			
 			case "action": {
 
 				if (typeof actionset?.content?.value === "string") {
 					rootT.push({
-						"_ref": "actionSet",
-						"_id": parseInt(actionset.content.value), // TODO get index based on ID
+						_ref: "actionSet",
+						_id: parseInt(actionset.content.value), // TODO get index based on ID
 					});
 				}
 				if (typeof action?.content?.value === "string") {
 					rootT.push({
-						"_ref": "action",
-						"_id": parseInt(action.content.value),
+						_ref: "action",
+						_id: parseInt(action.content.value),
 					});
 				}
 				if (typeof command?.content?.value === "string" && typeof action?.content?.value === "string") {
 					rootT.push({
-						"_ref": "command",
-						"_index": this.getActionCommandIndexByID(parseInt(command.content.value),parseInt(action.content.value)),
+						_ref: "command",
+						_index: this.getActionCommandIndexByID(parseInt(command.content.value),parseInt(action.content.value)),
 					});
 				}
 
@@ -139,33 +131,33 @@ export class GetInfo {
 			}
 			case "application": {
 				rootT.push({
-					"_ref": "application",
-					"_enum": "ordinal",
-					"_value": "targetEnum",
+					_ref: "application",
+					_enum: "ordinal",
+					_value: "targetEnum",
 				});
 				break;
 			}
 			case "timeline": {
 				rootT.push({
-					"_ref": "timeline",
-					"_enum": "ordinal",
-					"_value": "targetEnum",
+					_ref: "timeline",
+					_enum: "ordinal",
+					_value: "targetEnum",
 				});
 				break;
 			}
 			case "animationFrame": {
 				rootT.push({
-					"_ref": "animationFrameClass",
-					"_enum": "ordinal",
-					"_value": "targetEnum",
+					_ref: "animationFrameClass",
+					_enum: "ordinal",
+					_value: "targetEnum",
 				});
 				break;
 			}
 			case "animation": {
 				rootT.push({
-					"_ref": "animationClass",
-					"_enum": "ordinal",
-					"_value": "targetEnum",
+					_ref: "animationClass",
+					_enum: "ordinal",
+					_value: "targetEnum",
 				});
 				break;
 			}
@@ -177,8 +169,8 @@ export class GetInfo {
 				if (channel.content.value === "active") {
 					if (typeof activeID === "number") {
 						rootT.push({
-							"_ref": "channel",
-							"_index": activeID,
+							_ref: "channel",
+							_index: activeID,
 						});						
 					} else {
 						rootT.push({
@@ -198,8 +190,8 @@ export class GetInfo {
 					const found = docInstance.userChannelIDsAndNames.find(item => item.value.toString() === channel.content.value);
 					if (!found) { return null;}
 					rootT.push({
-						"_ref": "channel",
-						"_index": found.index,
+						_ref: "channel",
+						_index: found.index,
 					});	
 				} else if (typeof channel.content.value === "string") {
 					rootT.push({
@@ -222,13 +214,13 @@ export class GetInfo {
 					});
 				} else if (activeID === "workPathIndex") {
 					rootT.push({
-						"_property": "workPath",
-						"_ref": "path",
+						_property: "workPath",
+						_ref: "path",
 					});
 				} else if (typeof path?.content.value === "string") {
 					rootT.push({
-						"_ref": "path",
-						"_id": path?.content.value === "active" ? activeID : parseInt(path?.content.value as string),
+						_ref: "path",
+						_id: path?.content.value === "active" ? activeID : parseInt(path?.content.value as string),
 					});
 				}
 				break;
@@ -237,8 +229,8 @@ export class GetInfo {
 				const activeID = await this.getActiveHistoryID();
 				if (activeID === null) { return null; }
 				rootT.push({
-					"_ref": "historyState",
-					"_id": history?.content.value === "active" ? activeID : parseInt(history?.content.value as string),
+					_ref: "historyState",
+					_id: history?.content.value === "active" ? activeID : parseInt(history?.content.value as string),
 				});
 				break;
 			}
@@ -246,33 +238,73 @@ export class GetInfo {
 				const activeID = await this.getActiveSnapshotID();
 				if (activeID === null) { return null; }
 				rootT.push({
-					"_ref": "snapshotClass",
-					"_id": snapshot?.content.value === "active" ? activeID : parseInt(snapshot?.content.value as string),
+					_ref: "snapshotClass",
+					_id: snapshot?.content.value === "active" ? activeID : parseInt(snapshot?.content.value as string),
 				});
 				break;
 			}
 			case "guide": {
 				rootT.push({
-					"_ref": "guide",
-					"_id": parseInt(guide?.content.value as string),
+					_ref: "guide",
+					_id: parseInt(guide?.content.value as string),
 				});
 				break;
 			}
 		}
 
-
-		// add property when demanded by user
-		if ((property) && property.content.value !== "notSpecified" && property.content.value !== "anySpecified" && typeof property.content.value === "string") {
-			rootT.push({
-				"_property": property.content.value,
-			});
+		return rootT.reverse();
+	}
+	
+	public static async getAM(originalRef: ITargetReference | null): Promise<IDescriptor | null> {
+		if (!originalRef) { return null;}
+		const t = cloneDeep(originalRef);
+		if (t.type === "generator") {
+			const result = await this.getFromGenerator(originalRef);
+			return result;
 		}
 
-		desc._target.reverse();
-		console.log("Get", desc);
+		const reference = await (GetInfo.getReference(t));
+
+		if (!reference) {
+			return null;
+		}
+
+		let descToPlay: ITargetReferenceAM;
+	
+		const property: IProperty | undefined = t.data.find(i => i.subType === "property") as IProperty;
+		
+		if(typeof property?.content.value.length === "number" && property?.content.value.length > 1) {
+			descToPlay = {
+				_obj: "multiGet",
+				_target: reference,
+				extendedReference: [
+					property?.content.value,
+					// {_obj: "layer", index: 1, count: 2},
+				],
+				options: {
+					failOnMissingProperty: false,
+					failOnMissingElement: true,
+				},
+			};
+		} else {
+			descToPlay = {
+				_obj: "get",
+				_target: reference,
+			};
+	
+			// add property when demanded by user
+			if ((property) && !property.content.value.includes("notSpecified") && property.content.value.length === 1) {
+				descToPlay._target.unshift({
+					_property: property.content.value[0],
+				});
+			}
+		} 
+
+
+		console.log("Get", descToPlay);
 		const startTime = Date.now();
-		const playResult = await photoshop.action.batchPlay([desc], {});
-		return this.buildReply(startTime, playResult, desc,originalRef);
+		const playResult = await photoshop.action.batchPlay([descToPlay], {});
+		return this.buildReply(startTime, playResult, descToPlay,originalRef);
 	}
 
 	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM, reply=false, reference=false): string => {
@@ -310,7 +342,7 @@ export class GetInfo {
 		return {
 			startTime,
 			endTime: Date.now(),
-			id: this.uuidv4(),
+			id: crypto.randomUUID(),
 			locked: false,
 			crc: crc(JSON.stringify(playResult)),
 			originalData: RawDataConverter.replaceArrayBuffer(playResult),
@@ -332,26 +364,26 @@ export class GetInfo {
 			return null;
 		}
 		const desc:ITargetReferenceAM = {
-			"_obj": "get",
-			"_target": [
+			_obj: "get",
+			_target: [
 				{
-					"_property": "json",
+					_property: "json",
 				}, {
-					"_ref": "document",
-					"_id": id,
+					_ref: "document",
+					_id: id,
 				},
 			],
-			"expandSmartObjects": true,
-			"getTextStyles": true,
-			"getFullTextStyles": true,
-			"getDefaultLayerFX": true,
-			"layerID": 0,
-			"getCompLayerSettings": true,
-			"getPathData": true,
-			"imageInfo": true,
-			"compInfo": true,
-			"layerInfo": true,
-			"includeAncestors": true,
+			expandSmartObjects: true,
+			getTextStyles: true,
+			getFullTextStyles: true,
+			getDefaultLayerFX: true,
+			layerID: 0,
+			getCompLayerSettings: true,
+			getPathData: true,
+			imageInfo: true,
+			compInfo: true,
+			layerInfo: true,
+			includeAncestors: true,
 		};
 		const playResult = await photoshop.action.batchPlay([desc], {});
 		playResult.forEach(d => d.json = JSON.parse(d.json));
@@ -364,8 +396,8 @@ export class GetInfo {
 			_obj: "get",
 			_target: [
 				{
-					"_ref": "historyState",
-					"_property": "currentHistoryState",
+					_ref: "historyState",
+					_property: "currentHistoryState",
 				},
 			],
 		};
@@ -383,8 +415,8 @@ export class GetInfo {
 				_obj: "get",
 				_target: [
 					{
-						"_ref": "historyState",
-						"_index": i,
+						_ref: "historyState",
+						_index: i,
 					},
 				],
 			});
@@ -426,12 +458,12 @@ export class GetInfo {
 			_obj: "get",
 			_target: [
 				{
-					"_ref": "action",
-					"_id": action.id,
+					_ref: "action",
+					_id: action.id,
 				},
 				{
-					"_ref": "actionSet",
-					"_id": action.parent.id,
+					_ref: "actionSet",
+					_id: action.parent.id,
 				},
 			],
 		};
@@ -447,16 +479,16 @@ export class GetInfo {
 				_obj: "get",
 				_target: [
 					{
-						"_ref": "command",
-						"_index": i, // get index based on ID
+						_ref: "command",
+						_index: i, // get index based on ID
 					},
 					{
-						"_ref": "action",
-						"_id": action.id,
+						_ref: "action",
+						_id: action.id,
 					},
 					{
-						"_ref": "actionSet",
-						"_id": action.parent.id,
+						_ref: "actionSet",
+						_id: action.parent.id,
 					},
 				],
 			});
@@ -549,15 +581,15 @@ export class GetInfo {
 
 		const result = batchPlaySync([
 			{
-				"_obj": "get",
-				"_target": [
+				_obj: "get",
+				_target: [
 					{
-						"_property": "buildNumber",
+						_property: "buildNumber",
 					},
 					{
-						"_ref": "application",
-						"_enum": "ordinal",
-						"_value": "targetEnum",
+						_ref: "application",
+						_enum: "ordinal",
+						_value: "targetEnum",
 					},
 				],
 			},
@@ -571,12 +603,12 @@ export class GetInfo {
 			_obj: "get",
 			_target: [
 				{
-					"_property": property,
+					_property: property,
 				},
 				{
-					"_ref": myClass as string,
-					"_enum": "ordinal",
-					"_value": "targetEnum",
+					_ref: myClass as string,
+					_enum: "ordinal",
+					_value: "targetEnum",
 				},
 			],
 		};
@@ -591,12 +623,12 @@ export class GetInfo {
 			_obj: "get",
 			_target: [
 				{
-					"_property": "mode",
+					_property: "mode",
 				},
 				{
-					"_ref": "document",
-					"_enum": "ordinal",
-					"_value": "targetEnum",
+					_ref: "document",
+					_enum: "ordinal",
+					_value: "targetEnum",
 				},
 			],
 		};
@@ -604,13 +636,6 @@ export class GetInfo {
 			desc,
 		],{});
 		return result[0].mode._value;
-	}
-
-	public static uuidv4():string {
-		return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-			const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
-			return v.toString(16);
-		});
 	}
 }
 

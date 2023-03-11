@@ -218,7 +218,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "IMPORT_ITEMS": {
 			state = produce(state, draft => {
 				if (action.payload.kind === "append") {
-					action.payload.items.forEach(desc => desc.id = GetInfo.uuidv4());
+					action.payload.items.forEach(desc => desc.id = crypto.randomUUID());
 					draft.descriptors = [...state.descriptors,...action.payload.items];
 				} else if (action.payload.kind === "replace") {
 					draft.descriptors = action.payload.items;

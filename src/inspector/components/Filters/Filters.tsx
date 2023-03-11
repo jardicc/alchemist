@@ -25,7 +25,8 @@ interface IFilterRowProps{
 	content: {value: string, filterBy: TState}
 	showSearch?: boolean
 	ItemPostFix?:ComponentType<IAccDropPostFixProps>
-	doNotCollapse?:boolean
+	doNotCollapse?: boolean
+	supportMultiSelect?:boolean
 }
 
 export class Filters extends React.Component<TFilters, IState> {
@@ -46,25 +47,40 @@ export class Filters extends React.Component<TFilters, IState> {
 	}
 
 	/** refactor into reducer? */
-	private onSetSubType = (subType: TSubTypes | "main", value: any) => {
+	private onSetSubType = (subType: TSubTypes | "main", value: TTargetReference, toggle:boolean) => {
 		if (subType === "main") {
 			this.onSetMainCategory(value);
 			return;
 		}
 		const {onSetTargetReference, activeTargetReference} = this.props;
-		const found = cloneDeep(activeTargetReference);
+		if (!activeTargetReference) {
+			return;
+		}
+		const activeRefClone = cloneDeep(activeTargetReference);
 		
-		if (found) {
-			const content = found?.data?.find(i => i.subType === subType)?.content;
-			if (content) {
-				content.value = value.target.value;
-				onSetTargetReference(found);
+		const subTypeData = activeRefClone?.data?.find(i => i.subType === subType);
+		if (subTypeData) {
+			if (subTypeData.subType === "property") {
+				const {content} = subTypeData;
+				if (toggle) { // support multiGet
+					const foundIndex = content.value.indexOf(value);
+					if (foundIndex === -1) {
+						content.value.push(value);
+					} else {
+						content.value.splice(foundIndex, 1);
+					}
+				} else {
+					content.value = [value];					
+				}
+			} else {
+				subTypeData.content.value = value;
 			}
+			onSetTargetReference(activeRefClone);
 		}
 	}
 
-	private onSetMainCategory = (value: React.ChangeEvent<HTMLSelectElement>) => {
-		this.props.onSetSelectedReferenceType(value.target.value as TTargetReference);
+	private onSetMainCategory = (value: TTargetReference) => {
+		this.props.onSetSelectedReferenceType(value);
 	}
 
 	private renderMainCategory = (): React.ReactNode => {
@@ -294,9 +310,12 @@ export class Filters extends React.Component<TFilters, IState> {
 				id="property"
 				header="Property:"
 				items={foundSettings.list}
+				
 				showSearch={true}
 				doNotCollapse={true}
 				content={activeReferenceProperty}
+
+				supportMultiSelect={true}
 			/>
 		);
 	}
@@ -308,7 +327,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<AccDrop
 				selected={Array.isArray(content.value) ? content.value : [content.value]}
-				onSelect={(id, value) => this.onSetSubType(id as any, {target: {value}})}
+				onSelect={(id, value, toggleProperty) => this.onSetSubType(id as TSubTypes, value as TTargetReference, !!toggleProperty)}
 				onHeaderClick={() => this.updateList(id)}
 				headerPostFix={
 					<FilterButton

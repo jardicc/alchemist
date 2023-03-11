@@ -69,7 +69,7 @@ export function getInitialState(): IInspectorState {
 				data: [
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -78,7 +78,7 @@ export function getInitialState(): IInspectorState {
 				data: [
 					{
 						subType: "category",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},*/
@@ -95,7 +95,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -112,7 +112,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -129,7 +129,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -150,7 +150,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -171,7 +171,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -184,7 +184,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -201,7 +201,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -222,7 +222,7 @@ export function getInitialState(): IInspectorState {
 					},
 					{
 						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
+						content: { value: ["notSpecified"], filterBy: "off" },
 					},
 				],
 			},
@@ -235,7 +235,7 @@ export function getInitialState(): IInspectorState {
 				data: [
 					{
 						subType: "property",
-						content: { value: "", filterBy: "off" },
+						content: { value: [""], filterBy: "off" },
 					},
 				],
 			},
@@ -244,7 +244,7 @@ export function getInitialState(): IInspectorState {
 				data: [
 					{
 						subType: "property",
-						content: { value: "", filterBy: "off" },
+						content: { value: [""], filterBy: "off" },
 					},
 				],
 			},
@@ -253,7 +253,7 @@ export function getInitialState(): IInspectorState {
 				data: [
 					{
 						subType: "property",
-						content: { value: "", filterBy: "off" },
+						content: { value: [""], filterBy: "off" },
 					},
 				],
 			},

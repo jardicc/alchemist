@@ -30,9 +30,8 @@ export type TImportItems = "append" | "replace";
 //export type TActiveTargetReference = null|Record<string unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
 
 export type TPath = (string)[];
-//export type TCustomDescriptorReference = "notSpecified" | "anySpecified";
-export type TBaseProperty = "notSpecified" | "anySpecified" | "";
-export type TCategoryReference = "notSpecified" | "anySpecified";
+export type TBaseProperty = "notSpecified" | "";
+export type TCategoryReference = "notSpecified";
 export type THistoryReference = "active" | string;
 export type TSnapshotReference = "active" | string;
 export type TDocumentReference = "active" | string;
@@ -109,7 +108,7 @@ export interface ICategory{
 }
 export interface IProperty{
 	subType:"property"
-	content: IContentWrapper<TBaseProperty>
+	content: IContentWrapper<(TBaseProperty|string)[]>
 }
 /*
 export interface ICustomDescriptor{
