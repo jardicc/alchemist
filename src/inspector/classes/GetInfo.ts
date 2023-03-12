@@ -28,7 +28,7 @@ export interface ITargetReferenceAM {
 	[prop: string]: any;
 }
 
-export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference|IndexReference
+export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference | IndexReference;
 
 export interface IDReference{
 	_ref: string,
@@ -78,14 +78,23 @@ export class GetInfo {
 	
 
 		if (doc) {
-			const activeID = await this.getActiveDocumentID();
-			if (activeID === null) { return null;}
-			
-			if (t.type !== "history" && t.type !== "snapshot") {
+			if (doc?.content.value === "all") {
 				rootT.push({
-					_ref: "document",
-					_id: doc.content.value === "active" ? activeID : parseInt(doc.content.value as string),
+					_ref: "application",
+					_enum: "ordinal",
+					_value: "targetEnum",
 				});
+				allRef(t.type, rootT);
+			} else {
+				const activeID = await this.getActiveDocumentID();
+				if (activeID === null) { return null;}
+				
+				if (t.type !== "history" && t.type !== "snapshot") {
+					rootT.push({
+						_ref: "document",
+						_id: doc.content.value === "active" ? activeID : parseInt(doc.content.value as string),
+					});
+				}				
 			}
 		}
 		if (t.type === "layer" || t.type === "path" || t.type === "channel") {
@@ -97,10 +106,15 @@ export class GetInfo {
 				(t.type === "path" && path?.content.value === "vectorMask") ||
 				(t.type == "channel" && (channel?.content.value === "filterMask" || channel?.content.value === "mask"))
 			) {
-				rootT.push({
-					_ref: "layer",
-					_id: layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string),
-				});
+				if (layer?.content.value === "all") {
+					allRef(t.type, rootT);
+				} else {
+					rootT.push({
+						_ref: "layer",
+						_id: layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string),
+					});					
+				}
+
 			}
 		}
 
@@ -162,9 +176,15 @@ export class GetInfo {
 				break;
 			}
 			case "channel": {
+				if (!channel?.content?.value) {return null;}
+				
+				if (channel.content.value === "all") {
+					allRef(t.type, rootT);
+					break;
+				}
+
 				const activeID = await this.getActiveChannelID();
 				if (activeID === null) { return null; }
-				if (!channel?.content?.value) { return null;}
 
 				if (channel.content.value === "active") {
 					if (typeof activeID === "number") {
@@ -203,6 +223,12 @@ export class GetInfo {
 				break;
 			}
 			case "path": {
+				/*
+				if (path?.content.value === "all") {
+					allRef(t.type, rootT);
+					break;
+				}
+				*/
 				const activeID = await this.getActivePathID();
 				if (activeID === null) { return null; }
 
@@ -226,6 +252,17 @@ export class GetInfo {
 				break;
 			}
 			case "history": {
+				/*
+				if (history?.content.value === "all") {
+					rootT.push({
+						_ref: "application",
+						_enum: "ordinal",
+						_value: "targetEnum",
+					});
+					allRef(t.type, rootT);
+					break;
+				}
+				*/
 				const activeID = await this.getActiveHistoryID();
 				if (activeID === null) { return null; }
 				rootT.push({
@@ -244,12 +281,24 @@ export class GetInfo {
 				break;
 			}
 			case "guide": {
+				if (guide?.content.value === "all") {
+					allRef(t.type, rootT);
+					break;
+				}
 				rootT.push({
 					_ref: "guide",
 					_id: parseInt(guide?.content.value as string),
 				});
 				break;
 			}
+		}
+
+		function allRef(_ref: string, root: TReference[]) {
+			root.push({
+				_ref,
+				_enum: "alchemist",
+				_value: "all",
+			});
 		}
 
 		return rootT.reverse();
@@ -265,8 +314,15 @@ export class GetInfo {
 
 		const reference = await (GetInfo.getReference(t));
 
-		if (!reference) {
+		if (!reference?.length) {
 			return null;
+		}
+
+		const firstRef = reference[0];
+		// this tell us to get all items
+		const shouldGetAll = "_enum" in firstRef && firstRef._enum === "alchemist" && firstRef._value === "all";
+		if (shouldGetAll) {
+			reference.shift();
 		}
 
 		let descToPlay: ITargetReferenceAM;
@@ -279,7 +335,8 @@ export class GetInfo {
 				_target: reference,
 				extendedReference: [
 					property?.content.value,
-					// {_obj: "layer", index: 1, count: 2},
+					// conditionally add range
+					...(shouldGetAll ? [{_obj: firstRef._ref, index: 1, count: -1}]:[]),
 				],
 				options: {
 					failOnMissingProperty: false,
