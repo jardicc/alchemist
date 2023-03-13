@@ -283,7 +283,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				selected: false,
 				renameMode: false,
 				calculatedReference: descriptors,
-				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true),
+				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM),
 				descriptorSettings: this.props.settings.initialDescriptorSettings,
 			};
 

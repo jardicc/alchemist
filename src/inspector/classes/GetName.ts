@@ -11,11 +11,10 @@ export function getName(refs: TReference[]): IGetNameOutput[] {
 
 	while (copyRef.length) {
 		if ("_property" in copyRef[0]) {
-			nameParts.push({ typeRef: "property", value: copyRef[0]._property, typeTitle: "PR" });
+			nameParts.push({ typeRef: "property", value: copyRef[0]._property});
 		} else if ("_ref" in copyRef[0]) {
 			nameParts.push({
 				typeRef: copyRef[0]._ref,
-				typeTitle:getTypeTitle(copyRef[0]._ref),
 				value: getNameProp(copyRef),
 			});
 		}
@@ -24,26 +23,6 @@ export function getName(refs: TReference[]): IGetNameOutput[] {
 	}
 	
 	return nameParts.reverse();
-}
-
-function getTypeTitle(str: string): string{
-	switch (str) {
-		case "actionSet": return "AS";
-		case "action": return "AC";
-		case "command": return "CM";
-		case "layer": return "L";
-		case "historyState": return "H";
-		case "snapshotClass":return "S";
-		case "path": return "PH";
-		case "channel": return "CH";
-		case "document": return "D";
-		case "guide":
-		case "timeline":
-		case "animationFrame":
-		case "animation":
-		case "application": return str;
-		default: return str;		
-	}
 }
 
 function getNameProp(refs: TReference[]):string|null {
@@ -107,8 +86,4 @@ channelName
 title - document,
 name - action, layer, snapshot, history, actionset, command
 n/a - guide, app
-
-
-
-
 */

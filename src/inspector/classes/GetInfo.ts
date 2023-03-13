@@ -364,7 +364,7 @@ export class GetInfo {
 		return this.buildReply(startTime, playResult, descToPlay,originalRef);
 	}
 
-	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM, reply=false, reference=false): string => {
+	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM): string => {
 		switch (originalReference.type) {
 			case "replies": {
 				return "Reply: " + calculatedReference._obj;
@@ -390,8 +390,7 @@ export class GetInfo {
 			}
 		}
 		const parts = getName(calculatedReference._target);
-		//parts.push(...subs.map(d => d.subType + ": " + d.content.value));
-		const names = parts.map(p => /*p.typeTitle +*/ ((p.value) ? (/*": "*/ p.value) : p.typeTitle));
+		const names = parts.map(p => p.value ?? "N/A");
 		return names.join(" / ");
 	}
 

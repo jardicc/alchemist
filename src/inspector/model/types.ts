@@ -313,6 +313,5 @@ export interface IDescriptor{
 
 export interface IGetNameOutput{
 	typeRef: string
-	typeTitle: string
 	value: string|null
 }
