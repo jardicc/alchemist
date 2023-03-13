@@ -1,6 +1,5 @@
-import { TReference, GetInfo } from "./GetInfo";
+import { TReference } from "./GetInfo";
 import { cloneDeep } from "lodash";
-import photoshop from "photoshop";
 import { IGetNameOutput } from "../model/types";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { batchPlaySync } from "../../shared/helpers";
@@ -51,9 +50,10 @@ function getNameProp(refs: TReference[]):string|null {
 		case "timeline":
 		case "animationFrameClass":
 		case "animationClass":
+		case "animationFrame":
+		case "animation":
 		case "application":
-			propName = null;
-			break;
+			return refs[0]._ref;
 		default:
 			propName = "n/a";
 	}
