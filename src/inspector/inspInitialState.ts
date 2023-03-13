@@ -290,7 +290,6 @@ export function getInitialState(): IInspectorState {
 			autoUpdateListener: false,
 			// Don't worry Spy is helper tool to get additional data from PS if it is turned on
 			autoUpdateSpy:false,
-			isSpyInstalled: false,
 			lastSelectedItem: null,
 			dontShowMarketplaceInfo: false,
 			activeDescriptors: [],

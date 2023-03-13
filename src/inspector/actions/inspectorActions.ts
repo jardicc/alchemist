@@ -155,10 +155,6 @@ export interface ISpyAction{
 	type:"SET_SPY",
 	payload:boolean
 }
-export interface ISpyInstalledAction{
-	type:"SET_SPY_INSTALLED",
-	payload:boolean
-}
 export interface IAutoInspectorAction{
 	type:"SET_AUTO_INSPECTOR",
 	payload:boolean
@@ -447,12 +443,6 @@ export function setSpyAction(enabled:boolean):ISpyAction{
 		payload:enabled,
 	};
 }
-export function setSpyInstalledAction(enabled:boolean):ISpyInstalledAction{
-	return{
-		type:"SET_SPY_INSTALLED",
-		payload:enabled,
-	};
-}
 export function setAutoInspectorAction(enabled:boolean):IAutoInspectorAction{
 	return{
 		type:"SET_AUTO_INSPECTOR",
@@ -707,6 +697,5 @@ export type TActions =
 	ISetSettingsAction |
 	IToggleAccordionAction |
 	ISetSearchContentKeywordAction |
-	ISpyInstalledAction |
 	ISpyAction |
 	ISetCategoryItemVisibilityAction

@@ -26,7 +26,10 @@ class Footer extends React.Component<TFooter,Record<string,unknown>> {
 			mode = "DEV";
 		}
 		if (Main.isFirstParty) {
-			mode = "1ST";
+			mode = "⚡";
+		}
+		if (Main.privileged) {
+			mode += " 💥";
 		}
 
 		return (

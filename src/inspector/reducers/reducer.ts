@@ -618,12 +618,6 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 			});
 			break;
 		}
-		case "SET_SPY_INSTALLED": {
-			state = produce(state, draft => {
-				draft.settings.isSpyInstalled = action.payload;
-			});
-			break;
-		}
 		case "SET_CATEGORY_ITEM_VISIBILITY": {
 			state = produce(state, draft => {
 				const set = new Set(state.explicitlyVisibleTopCategories);

@@ -19,11 +19,14 @@
 		"sourceMap": true,
 		"target": "ES2021",
 		"disableSizeLimit": false,
+		"resolveJsonModule": true,
 		"typeRoots": [
+			"./src/types",
 			"./src/inspector/model",
 			"./node_modules/@types"
 		]
 	},
+
 
 	"exclude": [
 		"node_modules"

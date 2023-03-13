@@ -137,6 +137,55 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	/**
+	 * Listen to more PS events
+	 * TODO: duplicated code with listener, consider refactor
+	 */
+	public spy = async (event: string, descriptor: any): Promise<void> => {
+		if (this.props.settings.neverRecordActionNames.includes(event)) {
+			return;
+		}
+
+		const category = descriptor?._isCommand ? "listener" : "notifier";
+
+		// if (category === "notifier") {debugger;}
+
+		// delete because it will be added as a first later
+		delete descriptor._obj;
+
+		console.log(event);
+		const originalReference:ITargetReference = {
+			type: category,
+			data: [],
+		};
+		const descWithEvent: ITargetReferenceAM = {
+			_obj:event,
+			...descriptor,
+		};
+
+		const descCrc = crc(JSON.stringify(descWithEvent));
+		const originalData = RawDataConverter.replaceArrayBuffer(descWithEvent);
+
+		const result: IDescriptor = {
+			endTime: 0,
+			startTime: 0,
+			crc: descCrc,
+			id: Helpers.uuidv4(),
+			locked: false,
+			originalData,
+			originalReference,
+			pinned: false,
+			selected: false,
+			renameMode: false,
+			calculatedReference: descWithEvent,
+			title: "[S] " + GetInfo.generateTitle(originalReference, descWithEvent),
+			descriptorSettings: this.props.settings.initialDescriptorSettings,
+		};
+
+		//this.props.setLastHistoryID;
+		this.props.onAddDescriptor(result);
+	}
+
+	/**
 	 * Attaches the simple listener to the app.
 	 */
 	private attachListener = async () => {
@@ -169,7 +218,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		if (autoUpdateSpy) {
 			ListenerClass.stopSpy();
 		} else {
-			ListenerClass.startSpy(this.props.settings.neverRecordActionNames, this.props.settings.initialDescriptorSettings, this.props.onAddDescriptor);
+			ListenerClass.startSpy(this.spy);
 		}
 		this.props.setSpy(!autoUpdateSpy);
 	}
@@ -276,7 +325,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	public render(): JSX.Element {
 		const { addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
 			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
-			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors,autoUpdateSpy, isSpyInstalled },
+			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors,autoUpdateSpy },
 			onClear, onClearView, onClearNonExistent, allDescriptors,copyToClipboardEnabled,
 		} = this.props;
 		return (
@@ -328,7 +377,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
 						{
 							// helper tool to listen to more events
-							isSpyInstalled && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
+							Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
 						}
 						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
 					</div>

@@ -1,7 +1,6 @@
 import { legacy_createStore as createStore, applyMiddleware, combineReducers } from "redux";
 import { inspectorReducer } from "../inspector/reducers/reducer";
 import { IInspectorState } from "../inspector/model/types";
-import {Main} from "./classes/Main";
 
 /*
  * We're giving State interface to create store
@@ -19,4 +18,4 @@ const rootReducer = combineReducers<IRootState>({
 export const rootStore = createStore(rootReducer, applyMiddleware());
 console.log(rootStore.getState());
 
-(window as any)._rootStore = rootStore;
+window._rootStore = rootStore;
