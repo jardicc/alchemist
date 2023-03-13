@@ -60,8 +60,7 @@ export class GetDOM{
 	*/
 	
 	private static getAppDom():Photoshop {
-		const appDom = new photoshop.app.Photoshop();
-		return appDom;
+		return photoshop.app;
 	}
 
 	private static getDocumentDom(doc: number):Document|null {
