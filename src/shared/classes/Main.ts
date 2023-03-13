@@ -5,8 +5,7 @@ import {core} from "photoshop";
 import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
 import { renderSorcererUI } from "../../sorcerer/components/sorcererIndex";
 import {FlyoutMenu} from "../../inspector/classes/Flyoutmenu";
-
-import {id as pluginID} from "./../../../uxp/manifest.json";
+import manifest from "./../../../uxp/manifest.json";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const uxp = require("uxp");
@@ -16,7 +15,7 @@ export class Main{
 	public static plugin: any = null;
 
 	static {
-		const plugin = [...uxp.pluginManager.plugins].find(p => p.id.endsWith(pluginID));
+		const plugin = [...uxp.pluginManager.plugins].find(p => p.id.endsWith(manifest.id));
 		const symbols = Object.getOwnPropertySymbols(plugin);
 		const pluginBaseSymbol = symbols.find(s => s.toString() === "Symbol(pluginBase)");
 

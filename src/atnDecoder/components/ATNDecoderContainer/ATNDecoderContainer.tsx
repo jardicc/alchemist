@@ -3,7 +3,7 @@ import { IRootState, rootStore } from "../../../shared/store";
 
 import React from "react";
 
-import "./../../../shared/ThemeVars.css";
+import "./../../../shared/ThemeVars.less";
 import "./../../../shared/styles.less";
 import "./ATNDecoderContainer.less";
 
