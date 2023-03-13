@@ -5,10 +5,6 @@ export class Helpers{
 
 	private static widthChecked = false;
 
-	public static uuidv4():string {
-		return crypto.randomUUID();
-	}
-
 	public static uuidCustom(): string {
 		return "s_" + crypto.randomUUID().replaceAll("-", "");
 	}

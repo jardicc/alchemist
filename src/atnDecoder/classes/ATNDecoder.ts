@@ -18,18 +18,18 @@ const formats = require("uxp").storage.formats;
 function addUUIDs(arg:IActionSet) :IActionSetUUID{
 	
 	const data: IActionSetUUID = arg as IActionSetUUID;
-	data.__uuid__ = Helpers.uuidv4();
+	data.__uuid__ = crypto.randomUUID();
 
 	data.actionItems?.forEach(item => {
 		
-		item.__uuid__ = Helpers.uuidv4();
+		item.__uuid__ = crypto.randomUUID();
 		item.__uuidParentSet__ = data.__uuid__;
 
 		item.commands?.forEach(command => {
 			
 			command.__uuidParentAction__ = item.__uuid__;
 			command.__uuidParentSet__ = data.__uuid__;
-			command.__uuid__ = Helpers.uuidv4();
+			command.__uuid__ = crypto.randomUUID();
 
 		});
 	});

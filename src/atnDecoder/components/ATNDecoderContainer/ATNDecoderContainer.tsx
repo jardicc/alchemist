@@ -76,7 +76,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 					synchronousExecution: false,
 				},
 				endTime: 0,
-				id: Helpers.uuidv4(),
+				id: crypto.randomUUID(),
 				locked: false,
 				originalData: command.descriptor,
 				originalReference: {

@@ -135,7 +135,7 @@ export function makeSorPanel(): IEntrypointPanel {
 		preferredDockedSize: { height: 300, width: 200 },
 		preferredFloatingSize: { height: 300, width: 200 },
 		$$$snippetUUIDs: [],
-		$$$uuid: Helpers.uuidv4(),
+		$$$uuid: crypto.randomUUID(),
 	};
 }
 
@@ -145,6 +145,6 @@ export function makeSorCommand(): IEntrypointCommand {
 		id: "commandID",
 		label: { default: "Menu command text" },
 		$$$snippetUUID: null,
-		$$$uuid: Helpers.uuidv4(),
+		$$$uuid: crypto.randomUUID(),
 	};
 }

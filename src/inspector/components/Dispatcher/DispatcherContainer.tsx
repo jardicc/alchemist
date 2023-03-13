@@ -64,7 +64,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 			const result: IDescriptor = {
 				endTime,
 				startTime,
-				id: Helpers.uuidv4(),
+				id: crypto.randomUUID(),
 				locked: false,
 				//crc:Date.now()+Math.random(),
 				crc:crc(JSON.stringify(data||"__empty__")),
