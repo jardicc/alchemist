@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import type { ITargetReferenceAM } from "../classes/GetInfo";
-import { TState } from "../components/FilterButton/FilterButton";
+import { TFilterState } from "../components/FilterButton/FilterButton";
 import { IActionSetUUID, IATNConverterState } from "../../atnDecoder/atnModel";
 import { ISorcererState } from "../../sorcerer/sorModel";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
@@ -10,10 +11,10 @@ export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "s
 
 export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" |
 	"layer" | "path" | "property" | "snapshot";
-export type TTargetReference = "listener" | /*"customDescriptor" | */"featureData" | "generator" | "overkill" |
+export type TTargetReference = "listener" | /*"customDescriptor" | "featureData" |*/ "generator" | /*"overkill" |*/
 	"dispatcher" | "notifier" | "replies" | TPropertyClass;
-export type TPropertyClass = "application" | "history" | "snapshot" | "layer" | "path" | "channel" | "document" | "guide" |
-	"action" | "timeline" | "animationFrame" | "animation"
+export type TPropertyClass = "application" | "historyState" | "snapshotClass" | "layer" | "path" | "channel" | "document" | "guide" |
+	"actions" | "timeline" | "animationFrameClass" | "animationClass"
 export type TPropertyType = "hidden" | "optional" | "default" | "1st";
 export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"
 export type TActiveInspectorTab = ITreeDataTabs;
@@ -25,12 +26,8 @@ export type TCodeViewType = "generated" | "options";
 export type TExportItems = "selected" | "all";
 export type TImportItems = "append" | "replace";
 
-//export type TAllTabs = TActiveSection|TActiveInspectorTab
-
-//export type TActiveTargetReference = null|Record<string unknown>|ITargetReferenceApplication|ITargetReferenceCustomDescriptor|ITargetReferenceHistory|ITargetReferenceSnapshot|ITargetReferenceLayer|ITargetReferencePath|ITargetReferenceChannel|ITargetReferenceDocument|ITargetReferenceGuide|ITargetReferenceAction 
-
 export type TPath = (string)[];
-export type TBaseProperty = "notSpecified" | "";
+export type TBaseProperty = "notSpecified" | "none";
 export type TCategoryReference = "notSpecified";
 export type THistoryReference = "active" | string;
 export type TSnapshotReference = "active" | string;
@@ -38,20 +35,43 @@ export type TDocumentReference = "active" | string;
 export type TLayerReference = "active" | string;
 export type TPathReference = "active" | "vectorMask" | "workPathIndex" | string;
 export type TGeneratorReference = "full"
-export type TChannelReference = "active" | TChannelReferenceValid;
-export type TChannelReferenceValid = "composite" | "RGB" | "red" | "green" | "blue" | "CMYK" | "black" | "cyan" | "magenta" | "yellow" | "lab" | "lightness" | "a" | "b" | "gray" | "monotone" | "duotone" | "tritone" | "quadtone" | "mask" | "transparencyEnum" | "filterMask" | string;
-export type TGuideReference = "" | string;
-export type TActionSet = "" | string;
-export type TActionItem = "" | string;
-export type TActionCommand = "" | string;
+export type TChannelReference = "active" | "all" | TChannelReferenceValid;
+export type TChannelReferenceValid =
+	| number 
+	| "composite" 
+	| "RGB" 
+	| "red" 
+	| "green" 
+	| "blue" 
+	| "CMYK" 
+	| "black" 
+	| "cyan" 
+	| "magenta" 
+	| "yellow" 
+	| "lab" 
+	| "lightness" 
+	| "a" 
+	| "b" 
+	| "gray" 
+	| "monotone" 
+	| "duotone" 
+	| "tritone" 
+	| "quadtone" 
+	| "mask" 
+	| "transparencyEnum" 
+	| "filterMask";
+export type TGuideReference = "none" | string;
+export type TActionSet = "none" | string;
+export type TActionItem = "none" | string;
+export type TActionCommand = "none" | string;
 
-export type TTimeline = "" | string;
-export type TActionFrame = "" | string;
-export type TAnimation = "" | string;
+export type TTimeline = "none" | string;
+export type TActionFrame = "none" | string;
+export type TAnimation = "none" | string;
 
 export type TFilterEvents = "none" | "include" | "exclude";
 
-export type TSelectDescriptorOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
+export type TSelectDescriptorOperation = "replace" | "add" | "subtract" | "addContinuous" | "subtractContinuous" | "none";
 
 export type TProtoMode = "none" | "uxp" | "advanced" | "all";
 export type TDescriptorsGrouping = "none" | "eventName"
@@ -61,9 +81,10 @@ export type TDescriptorsGrouping = "none" | "eventName"
 export interface IInspectorState {
 	version: [number, number, number]
 	selectedReferenceType: TTargetReference
-	filterBySelectedReferenceType: TState
+	filterBySelectedReferenceType: TFilterState
 	descriptorsGrouping: TDescriptorsGrouping
-	targetReference: ITargetReference[]
+	//targetReference: ITargetReference[]
+	targetReference: ITargetReference2
 	settings:ISettings
 	inspector:IInspector
 	descriptors: IDescriptor[]
@@ -75,9 +96,164 @@ export interface IInspectorState {
 	explicitlyVisibleTopCategories:TTargetReference[]
 }
 
-export interface ITargetReference {
-	type: TTargetReference
-	data: TAllReferenceSubtypes[]
+export type TAllTargetReferences = 
+| IRefListener
+| IRefDispatcher
+| IRefNotifier
+| IRefReplies
+| IRefGenerator
+| IRefApplication
+| IRefDocument
+| IRefLayer
+| IRefPath
+| IRefChannel
+| IRefActions
+| IRefTimeline
+| IRefAnimationFrameClass
+| IRefAnimationClass
+| IRefHistoryState
+| IRefSnapshotClass
+| IRefGuide
+
+export interface ITargetReference2 {
+	listener: IRefListener
+	dispatcher: IRefDispatcher
+	notifier: IRefNotifier
+	replies: IRefReplies
+	generator: IRefGenerator
+	application: IRefApplication
+	document: IRefDocument
+	layer: IRefLayer
+	path: IRefPath
+	channel: IRefChannel
+	actions: IRefActions
+	timeline: IRefTimeline
+	animationFrameClass: IRefAnimationFrameClass
+	animationClass: IRefAnimationClass
+	historyState: IRefHistoryState
+	snapshotClass: IRefSnapshotClass
+	guide: IRefGuide
+}
+
+export interface IRefListener{
+	type: "listener"	
+}
+export interface IRefDispatcher{
+	type: "dispatcher"	
+}
+export interface IRefNotifier{
+	type: "notifier"	
+}
+export interface IRefReplies{
+	type: "replies"	
+}
+export interface IRefGenerator{
+	type: "generator"	
+}
+
+export interface IRefApplication{
+	type: "application"	
+	properties: string[]
+	filterProp: TFilterState
+}
+
+export interface IRefDocument{
+	type: "document"	
+	documentID: number | "selected" | "all"
+	properties: string[]
+	filterDoc: TFilterState
+	filterProp: TFilterState
+}
+
+export interface IRefLayer{
+	type: "layer"	
+	layerID: number | "selected" | "all"
+	documentID: number | "selected"
+	properties: string[]
+	filterLayer: TFilterState
+	filterDoc: TFilterState
+	filterProp: TFilterState
+}
+
+export interface IRefPath{
+	type: "path"	
+	pathID: number | "selected" | "all" | "workPath" | "vectorMask"
+	layerID: number | "selected" | "none"
+	documentID: number | "selected"
+	properties: string[]
+
+	filterPath: TFilterState
+	filterLayer: TFilterState
+	filterDoc: TFilterState
+	filterProp: TFilterState
+}
+
+export interface IRefChannel{
+	type: "channel"	
+	channelID: number | "selected" | "all" | TChannelReferenceValid
+	layerID: number | "selected" | "none"
+	documentID: number | "selected"
+	properties: string[]
+	
+	filterChannel: TFilterState
+	filterLayer: TFilterState
+	filterDoc: TFilterState
+	filterProp: TFilterState
+}
+
+export interface IRefActions{
+	type: "actions"	
+	actionSetID: number | "none"
+	actionID: number | "none"
+	commandIndex: number | "none"
+	properties: string[]
+
+	filterActionSet: TFilterState
+	filterAction: TFilterState
+	filterCommand: TFilterState
+	filterProp: TFilterState
+}
+export interface IRefTimeline{
+	type: "timeline"	
+	properties: string[]
+	filterProp: TFilterState
+}
+export interface IRefAnimationFrameClass{
+	type: "animationFrameClass"	
+	properties: string[]
+	filterProp: TFilterState
+}
+export interface IRefAnimationClass{
+	type: "animationClass"	
+	properties: string[]
+	filterProp: TFilterState
+}
+export interface IRefHistoryState{
+	type: "historyState"
+	historyID: number | "selected"
+	filterHistory:TFilterState
+
+
+	properties: string[]
+	filterProp: TFilterState
+}
+export interface IRefSnapshotClass{
+	type: "snapshotClass"	
+	snapshotID: number | "selected"
+	filterSnapshot:TFilterState
+
+	properties: string[]
+	filterProp: TFilterState
+}
+export interface IRefGuide{
+	type: "guide"	
+	guideID: number | "none" | "all"
+	documentID: number | "selected"
+	properties: string[]
+
+	filterDoc: TFilterState
+	filterGuide: TFilterState
+	filterProp: TFilterState
 }
 
 export interface IDispatcher{
@@ -96,94 +272,6 @@ export interface IFilterProperty<T>{
 	label: string
 	value:T
 }
-
-export interface IContentWrapper<T>{
-	value: T
-	filterBy: TState
-}
-
-export interface ICategory{
-	subType:"category"
-	content: IContentWrapper<TCategoryReference>
-}
-export interface IProperty{
-	subType:"property"
-	content: IContentWrapper<(TBaseProperty|string)[]>
-}
-/*
-export interface ICustomDescriptor{
-	subType:"customDescriptor"
-	content: IContentWrapper<TCustomDescriptorReference>
-}
-*/
-export interface IHistory{
-	subType:"history"
-	content: IContentWrapper<THistoryReference>
-}
-export interface ISnapshot{
-	subType:"snapshot"
-	content: IContentWrapper<TSnapshotReference>
-}
-export interface ILayer{
-	subType:"layer"
-	content: IContentWrapper<TLayerReference>
-}
-export interface IPath{
-	subType:"path"
-	content: IContentWrapper<TPathReference>
-}
-export interface IChannel{
-	subType:"channel"
-	content: IContentWrapper<TChannelReference>
-}
-export interface IDocument{
-	subType:"document"
-	content: IContentWrapper<TDocumentReference>
-}
-export interface IGuide{
-	subType:"guide"
-	content: IContentWrapper<TGuideReference>
-}
-export interface IActionSet{
-	subType:"actionset"
-	content: IContentWrapper<TActionSet>
-}
-export interface IActionItem{
-	subType:"action"
-	content: IContentWrapper<TActionItem>
-}
-export interface IActionCommand{
-	subType:"command"
-	content: IContentWrapper<TActionCommand>
-}
-export interface IGenerator{
-	subType:"generator"
-	content: IContentWrapper<TGeneratorReference>
-}
-export interface ITimeline{
-	subType: "timeline"
-	content: IContentWrapper<TTimeline>
-}
-export interface IActionFrame{
-	subType: "animationFrame"
-	content: IContentWrapper<TActionFrame>
-}
-export interface IAnimation{
-	subType: "animationClass"
-	content: IContentWrapper<TAnimation>
-}
-
-export type TFilterContent =
-	IContentWrapper<TCategoryReference> | IContentWrapper<TBaseProperty> |
-	//IContentWrapper<TCustomDescriptorReference> | IContentWrapper<THistoryReference> |
-	IContentWrapper<TSnapshotReference> | IContentWrapper<TLayerReference> | 
-	IContentWrapper<TPathReference> | IContentWrapper<TChannelReference> | 
-	IContentWrapper<TDocumentReference> | IContentWrapper<TGuideReference> | 
-	IContentWrapper<TActionSet> | IContentWrapper<TActionItem> | IContentWrapper<TActionCommand> |
-	IContentWrapper<TGeneratorReference>|IContentWrapper<TTimeline>
-
-export type TAllReferenceSubtypes = ICategory | IProperty | /*ICustomDescriptor | */IHistory | ISnapshot | ILayer | IPath | IChannel | IDocument |
-	IGuide | IActionSet | IActionItem | IActionCommand | IGenerator | ITimeline | IActionFrame | IAnimation
 
 /////
 
@@ -302,7 +390,7 @@ export interface IDescriptor{
 	renameMode:boolean
 	title:string
 	/** filter settings */
-	originalReference: ITargetReference
+	originalReference: TAllTargetReferences
 	/** used for AM */
 	calculatedReference: ITargetReferenceAM|ActionDescriptor[]|null
 	/** content */

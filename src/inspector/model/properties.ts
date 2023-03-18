@@ -3,20 +3,6 @@ import {
 	TGuideReference, TActionSet, TActionItem, TActionCommand, IFilterProperty,
 } from "./types";
 
-export type TBaseItems = (
-	IFilterProperty<TTargetReference> |
-	IFilterProperty<TBaseProperty> |
-	IFilterProperty<TDocumentReference> |
-	IFilterProperty<TLayerReference> |
-	IFilterProperty<TPathReference> |
-	IFilterProperty<TChannelReference> |
-	IFilterProperty<TGuideReference> |
-	IFilterProperty<TActionSet> |
-	IFilterProperty<TActionItem> |
-	IFilterProperty<TActionCommand>
-)[]
-
-
 export const mainClasses: IFilterProperty<TTargetReference>[] = [
 	{label: "Listener - Playable", value: "listener"},
 	{label: "Listener - Events", value: "notifier"},
@@ -28,12 +14,12 @@ export const mainClasses: IFilterProperty<TTargetReference>[] = [
 	{label: "Layer", value: "layer"},
 	{label: "Channel", value: "channel"},
 	{label: "Path", value: "path"},
-	{label: "Action", value: "action"},
+	{label: "Action", value: "actions"},
 	{label: "Guide", value: "guide"},
-	{label: "History", value: "history"},
-	{label: "Snapshot", value: "snapshot"},
-	{label: "Animation", value: "animation"},
-	{label: "Animation Frame", value: "animationFrame"},
+	{label: "History", value: "historyState"},
+	{label: "Snapshot", value: "snapshotClass"},
+	{label: "Animation", value: "animationClass"},
+	{label: "Animation Frame", value: "animationFrameClass"},
 	{label: "Timeline", value: "timeline"},
 	{label: "Generator", value: "generator"},
 	// { label: "Overkill", value: "overkill" },

@@ -1,73 +1,87 @@
-import photoshop from "photoshop";
-import {TDocumentReference, IContentWrapper, TLayerReference, TChannelReference, TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference, THistoryReference, IFilterProperty } from "../model/types";
+import {app, action} from "photoshop";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
+import {batchPlaySync} from "../../shared/helpers";
+import {
+	TDocumentReference, TLayerReference, TChannelReference,
+	TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference,
+	THistoryReference, IFilterProperty, IRefDocument, IRefLayer, IRefChannel, IRefPath, IRefGuide,
+} from "../model/types";
 
 import { DocumentExtra } from "./DocumentExtra";
 import { GetInfo } from "./GetInfo";
 
-const PS = photoshop.app;
 
 export class GetList {
 	public static async getDocuments(): Promise<IFilterProperty<TDocumentReference>[]> {
 		console.log("get docs");
-		const documents = PS.documents.map(d => new DocumentExtra(d));
-		const docs = documents.map(async d => ({ value: d.id.toString(), label: await d.$title() }));
+		const documents = app.documents.map(d => new DocumentExtra(d));
+		const docs = documents.map(async d => ({value: d.id.toString(), label: await d.$title()}));
 		const result = await Promise.all(docs);
 		return result;
 	}
 
-	private static getDocumentExtra(arg: IContentWrapper<TDocumentReference>): DocumentExtra | null {
-		let docID: number;
-		if (arg.value === "active") {
-			docID = PS?.activeDocument?.id;
-		} else {
-			docID = parseInt(arg.value);
-		}
-		if (!docID) { return null; }
-		const docE = new DocumentExtra(new PS.Document(docID));
-		return docE;
-	}
-
-	public static getLayers(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TLayerReference>[] {
-		const docE = this.getDocumentExtra(arg);
+	public static getLayers(docID: number | "selected"): IFilterProperty<TLayerReference>[] {
+		const docE = this.getDocumentExtra(docID);
 		if (!docE) {return [];}
-		const layers = docE.allLayers.reverse().map(d => ({ value: d.layerID.toString(), label: d.name }));
+		const layers = docE.allLayers.reverse().map(d => ({
+			value: d.layerID.toString(),
+			label: d.name,
+		}));
 		return layers;
 	}
 
-	public static getChannels(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TChannelReference>[] {
-		const docE = this.getDocumentExtra(arg);
-		if (!docE) { return []; }
-		const pairs: IFilterProperty<TChannelReference>[] = docE.userChannelIDsAndNames.map(p => ({ value: p.value.toString(), label: p.label })); // remove index
+	public static getChannels(docID: number | "selected"): IFilterProperty<TChannelReference>[] {
+		const docE = this.getDocumentExtra(docID);
+		if (!docE) {return [];}
+		const pairs: IFilterProperty<TChannelReference>[] = docE.userChannelIDsAndNames.map(p => ({
+			value: p.value,
+			label: p.label,
+		})); // remove index
 		return pairs;
 	}
 
-	public static getPaths(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TPathReference>[] {
-		const docE = this.getDocumentExtra(arg);
-		if (!docE) { return []; }
-		const pairs: IFilterProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p => ({ value: p.value.toString(), label: p.label }));
+	public static getPaths(docID: number | "selected"): IFilterProperty<TPathReference>[] {
+		const docE = this.getDocumentExtra(docID);
+		if (!docE) {return [];}
+		const pairs: IFilterProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p => ({
+			value: p.value.toString(),
+			label: p.label,
+		}));
 		return pairs;
 	}
 
-	public static getGuides(arg: IContentWrapper<TDocumentReference>): IFilterProperty<TGuideReference>[] {
-		const docE = this.getDocumentExtra(arg);
-		if (!docE) { return []; }
-		const pairs: IFilterProperty<TPathReference>[] = docE.guidesIDs.map(p => ({ value: p.value.toString(), label: p.label }));
+	public static getGuides(docID: number | "selected"): IFilterProperty<TGuideReference>[] {
+		const docE = this.getDocumentExtra(docID);
+		if (!docE) {return [];}
+		const pairs: IFilterProperty<TPathReference>[] = docE.guidesIDs.map(p => ({
+			value: p.value.toString(),
+			label: p.label,
+		}));
 		return pairs;
 	}
 	public static getHistory(): IFilterProperty<THistoryReference>[] {
-		const pairs = GetInfo.getHistory();
-		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => p.snapshot === false).map(p => ({ value: p.value.toString(), label: p.label })); // remove snapshot
+		const pairs = this.getHistoryList();
+		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => !p.snapshot).map(p => ({
+			value: p.value.toString(),
+			label: p.label,
+		})); // remove snapshot
 		return result;
 	}
 
 	public static getSnapshots(): IFilterProperty<THistoryReference>[] {
-		const pairs = GetInfo.getHistory();
-		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => p.snapshot === true).map(p => ({ value: p.value.toString(), label: p.label })); // remove snapshot
+		const pairs = this.getHistoryList();
+		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => p.snapshot).map(p => ({
+			value: p.value.toString(),
+			label: p.label,
+		})); // remove snapshot
 		return result;
 	}
 
 	public static getActionSets(): IFilterProperty<TActionSet>[] {
-		const actionSets: IFilterProperty<TActionSet>[] = PS.actionTree.map(item => ({ value: item.id.toString(), label: item.name }));
+		const actionSets: IFilterProperty<TActionSet>[] = app.actionTree.map(item => ({
+			value: item.id.toString(),
+			label: item.name,
+		}));
 		return actionSets;
 	}
 
@@ -75,8 +89,11 @@ export class GetList {
 		if (Number.isNaN(actionSetID)) {
 			return [];
 		}
-		const actionSet = new PS.ActionSet(actionSetID);
-		const action: IFilterProperty<TActionItem>[] = actionSet.actions.map(item => ({ value: item.id.toString(), label: item.name }));
+		const actionSet = new app.ActionSet(actionSetID);
+		const action: IFilterProperty<TActionItem>[] = actionSet.actions.map(item => ({
+			value: item.id.toString(),
+			label: item.name,
+		}));
 		return action;
 	}
 
@@ -84,9 +101,119 @@ export class GetList {
 		if (Number.isNaN(actionItemID)) {
 			return [];
 		}
-		const result2 = GetInfo.getAllCommandsOfAction(actionItemID);
+		const result2 = this.getAllCommandsOfAction(actionItemID);
 
-		const final: IFilterProperty<TActionCommand>[] = result2.map(item => ({ value: item.ID.toString(), label: item.name }));
+		const final: IFilterProperty<TActionCommand>[] = result2.map(item => ({
+			value: item.ID.toString(),
+			label: item.name,
+		}));
 		return final;
 	}
+
+	// active document only
+	public static getHistoryList(): {value: number, label: string, snapshot: boolean}[] {
+		const len = this.historyCount;
+		const desc: ActionDescriptor[] = [];
+		for (let i = 1; i <= len; i++) {
+			desc.push({
+				_obj: "get",
+				_target: [
+					{
+						_ref: "historyState",
+						_index: i,
+					},
+				],
+			});
+		}
+
+		const desResult = batchPlaySync(desc);
+
+		const pairs = desResult.map((d) => ({
+			value: d.ID,
+			label: d.name,
+			snapshot: !d.auto,
+		}));
+	
+		return pairs;
+	}
+
+	public static getAllCommandsOfAction(actionItemID: number):ActionDescriptor[] {
+		console.log("action command");
+		const action = new app.Action(actionItemID);
+
+		const desc = {
+			_obj: "get",
+			_target: [
+				{
+					_ref: "action",
+					_id: action.id,
+				},
+				{
+					_ref: "actionSet",
+					_id: action.parent.id,
+				},
+			],
+		};
+		const result = batchPlaySync([
+			desc,
+		]);
+
+		
+		const childCount = result[0].numberOfChildren;
+		const desc2: ActionDescriptor[] = [];
+		for (let i = 1; i <= childCount; i++){
+			desc2.push({
+				_obj: "get",
+				_target: [
+					{
+						_ref: "command",
+						_index: i, // get index based on ID
+					},
+					{
+						_ref: "action",
+						_id: action.id,
+					},
+					{
+						_ref: "actionSet",
+						_id: action.parent.id,
+					},
+				],
+			});
+		}
+		const result2 = batchPlaySync(desc2);
+		return result2;
+	}
+
+	// PRIVATE
+
+	private static getDocumentExtra(docID: number | "selected"): DocumentExtra | null {
+		let res: number;
+		if (docID === "selected") {
+			res = app?.activeDocument?.id;
+		} else {
+			res = docID;
+		}
+		if (!docID) {return null;}
+		const docE = new DocumentExtra(new app.Document(res));
+		return docE;
+	}
+
+	private static get historyCount(): number{
+		//return this.getPropertySync("numberOfGuides"); TODO
+		const desc = {
+			_obj: "get",
+			_target: [
+				{
+					_ref: "historyState",
+					_property: "currentHistoryState",
+				},
+			],
+		};
+		const result = batchPlaySync([
+			desc,
+		]);
+		return result[0].count;
+	}
+
+
 }

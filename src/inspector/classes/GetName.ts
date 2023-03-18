@@ -1,8 +1,8 @@
-import { TReference } from "./GetInfo";
 import { cloneDeep } from "lodash";
 import { IGetNameOutput } from "../model/types";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { batchPlaySync } from "../../shared/helpers";
+import {TReference} from "./Reference";
 
 export function getName(refs: TReference[]): IGetNameOutput[] {
 	const copyRef = cloneDeep(refs);

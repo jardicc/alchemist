@@ -14,7 +14,7 @@
     "@types/jest": "^27.5.2",
     "@types/js-beautify": "^1.13.3",
     "@types/lodash": "^4.14.155",
-    "@types/photoshop": "^23.0.0",
+    "@types/photoshop": "^24.3.0",
     "@types/react": "^17.0.52",
     "@types/react-dom": "^17.0.18",
     "@types/react-json-tree": "^0.6.11",

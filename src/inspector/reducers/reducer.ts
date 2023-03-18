@@ -4,7 +4,6 @@ import produce from "immer";
 import { getInitialState } from "../inspInitialState";
 import { TActions } from "../actions/inspectorActions";
 import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType } from "../model/types";
-import { GetInfo } from "../classes/GetInfo";
 import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
@@ -29,10 +28,13 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		}
 		case "SET_TARGET_REFERENCE": {
 			state = produce(state, draft => {
-				const found = draft.targetReference.find(r => action.payload.type === r.type);
-				if (found) {
-					found.data = action.payload.data;
-				}
+
+				const type = action.payload.type;
+				
+				draft.targetReference[type] = {
+					...state.targetReference[type] as any, // TS is not that smart to find a match :-/
+					...action.payload,
+				};
 			});
 			break;
 		}
@@ -249,7 +251,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_FILTER_STATE": {
 			state = produce(state, draft => {
 				const { payload: { state, subType, type } } = action;
-				const found = draft.targetReference.find(r => r.type === type);
+				const found = draft.targetReference[type];
 
 				if (subType === "main") {
 					if (state === "on") {

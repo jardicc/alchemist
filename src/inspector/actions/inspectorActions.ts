@@ -1,5 +1,5 @@
-import { TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter } from "../model/types";
-import { TState } from "../components/FilterButton/FilterButton";
+import { TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter, TAllTargetReferences } from "../model/types";
+import { TFilterState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 
 
@@ -10,7 +10,7 @@ export interface ISetModeTab {
 
 export interface ISetTargetReference {
 	type: "SET_TARGET_REFERENCE"
-	payload: ITargetReference
+	payload: TAllTargetReferences
 }
 
 export interface IAddDescriptorAction {
@@ -108,7 +108,7 @@ export interface ISetFilterStateAction {
 	payload: {
 		type: TTargetReference,
 		subType: TSubTypes | "main",
-		state: TState
+		state: TFilterState
 	}
 }
 
@@ -486,7 +486,7 @@ export function setInspectorPathContentAction(path:string[],mode:"replace"|"add"
 		},
 	};
 }
-export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main",state: TState): ISetFilterStateAction {
+export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main",state: TFilterState): ISetFilterStateAction {
 	return {
 		type: "SET_FILTER_STATE",
 		payload: {
@@ -500,7 +500,7 @@ export function setModeTabAction(id:TActiveInspectorTab):ISetModeTab{
 		payload: id,
 	};
 }
-export function setTargetReferenceAction(arg:ITargetReference):ISetTargetReference{
+export function setTargetReferenceAction(arg:TAllTargetReferences):ISetTargetReference{
 	return {
 		type: "SET_TARGET_REFERENCE",
 		payload: arg,

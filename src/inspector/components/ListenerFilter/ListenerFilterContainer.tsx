@@ -1,10 +1,10 @@
 import { IRootState } from "../../../shared/store";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
-import { getSelectedTargetReference, getActiveTargetReference, getListenerNotifierFilterSettings } from "../../selectors/inspectorSelectors";
+import { getSelectedTargetReference, getActiveRef, getListenerNotifierFilterSettings } from "../../selectors/inspectorSelectors";
 import { setFilterStateAction, setTargetReferenceAction, setListenerNotifierFilterAction } from "../../actions/inspectorActions";
 import React from "react";
 import { TSubTypes, TTargetReference, ITargetReference, IListenerNotifierFilter } from "../../model/types";
-import { TState } from "../FilterButton/FilterButton";
+import { TFilterState } from "../FilterButton/FilterButton";
 import SP from "react-uxp-spectrum";
 
 class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> { 
@@ -95,11 +95,11 @@ interface IListenerFilterProps{
 const mapStateToProps = (state: IRootState): IListenerFilterProps => ({
 	settings: getListenerNotifierFilterSettings(state),
 	selectedTargetReference: getSelectedTargetReference(state),		
-	activeTargetReference: getActiveTargetReference(state),
+	activeTargetReference: getActiveRef(state),
 });
 
 interface IListenerFilterDispatch {
-	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TState) => void
+	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => void
 	onSetTargetReference: (arg: ITargetReference) => void
 	onSetNotifierListenerFilter: (arg: Partial<IListenerNotifierFilter>) => void
 }

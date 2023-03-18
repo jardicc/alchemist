@@ -3,11 +3,11 @@ import cloneDeep from "lodash/cloneDeep";
 import { IRootState } from "../../../shared/store";
 import { selectDescriptorAction, renameDescriptorAction, setRenameModeAction } from "../../actions/inspectorActions";
 import { IDescriptor, ITargetReference, TSelectDescriptorOperation } from "../../model/types";
-import { getActiveTargetReference, getFilterBySelectedReferenceType, getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
+import { getActiveRef, getFilterBySelectedReferenceType, getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
 import React from "react";
 import "./DescriptorItem.less";
 import { IconBan, IconBolt, IconBrowser, IconChat, IconDocument, IconFlash, IconFork, IconGuides, IconImage, IconInfo, IconLayers, IconLockLocked, IconPinDown, IconPlayCircle, IconProject, IconScript, IconStar, IconTimer, IconVideo } from "../../../shared/components/icons";
-import { TState } from "../FilterButton/FilterButton";
+import { TFilterState } from "../FilterButton/FilterButton";
 import { Dispatch } from "redux";
 import {default as SP} from "react-uxp-spectrum";
 import {getIcon} from "../../helpers";
@@ -154,13 +154,13 @@ interface IDescriptorItemProps {
 	descriptor: IDescriptor
 	autoSelected: string[]
 	activeTargetReference: ITargetReference | null;
-	filterBySelectedReferenceType:TState
+	filterBySelectedReferenceType:TFilterState
 }
 
 const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProps => ({
 	descriptor: cloneDeep(ownProps.descriptor),
 	autoSelected: getAutoSelectedUUIDs(state),
-	activeTargetReference: getActiveTargetReference(state),
+	activeTargetReference: getActiveRef(state),
 	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),
 });
 

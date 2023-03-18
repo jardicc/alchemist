@@ -1,6 +1,8 @@
-import photoshop from "photoshop";
+/* eslint-disable no-fallthrough */
+/* eslint-disable no-duplicate-case */
+import {app, action} from "photoshop";
 import { cloneDeep } from "lodash";
-import { IDescriptor, TChannelReferenceValid, ITargetReference, IChannel, IProperty } from "../model/types";
+import { IDescriptor, TAllTargetReferences} from "../model/types";
 import { DocumentExtra } from "./DocumentExtra";
 import { getName } from "./GetName";
 import { getInitialState } from "../inspInitialState";
@@ -8,7 +10,9 @@ import { RawDataConverter } from "./RawDataConverter";
 import { str as crc } from "crc-32";
 import { batchPlaySync } from "../../shared/helpers";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
-const PS = photoshop.app;
+import {Reference, TReference} from "./Reference";
+import {IDBySelected} from "./GetIDBySelected";
+import {GetList} from "./GetList";
 
 
 export interface ITargetReferenceAM {
@@ -28,315 +32,206 @@ export interface ITargetReferenceAM {
 	[prop: string]: any;
 }
 
-export type TReference = INameReference | IDReference | IPropertyReference | IEnumReference | IndexReference;
-
-export interface IDReference{
-	_ref: string,
-	_id: number
-}
-
-export interface IndexReference{
-	_ref: string,
-	_index: number
-}
-
-export interface INameReference{
-	_ref: string,
-	_name: string
-}
-
-export interface IPropertyReference{
-	_property: string
-}
-
-export interface IEnumReference{
-	_ref: string
-	_enum: string
-	_value: string
-}
-
 export class GetInfo {
 
 	/** Does not include property */
-	public static async getReference(originalRef: ITargetReference): Promise<TReference[] | null>{
+	public static async getReference(_originalRef: TAllTargetReferences): Promise<Reference | null>{
 
-		const rootT:TReference[] = [];
-		const t = cloneDeep(originalRef);
+		const ref = new Reference([]);
+		const origRef = cloneDeep(_originalRef);
 
-		const doc = t.data.find(i => i.subType === "document");		
-		const layer = t.data.find(i => i.subType === "layer");		
-		const channel: IChannel | undefined = t.data.find(i => i.subType === "channel") as IChannel | undefined;
-		const path = t.data.find(i => i.subType === "path");		
-
-		const guide = t.data.find(i => i.subType === "guide");		
-		const history = t.data.find(i => i.subType === "history");		
-		const snapshot = t.data.find(i => i.subType === "snapshot");		
-		
-		const action = t.data.find(i => i.subType === "action");		
-		const actionset = t.data.find(i => i.subType === "actionset");		
-		const command = t.data.find(i => i.subType === "command");		
-	
-
-		if (doc) {
-			if (doc?.content.value === "all") {
-				rootT.push({
-					_ref: "application",
-					_enum: "ordinal",
-					_value: "targetEnum",
-				});
-				allRef(t.type, rootT);
-			} else {
-				const activeID = await this.getActiveDocumentID();
-				if (activeID === null) { return null;}
-				
-				if (t.type !== "history" && t.type !== "snapshot") {
-					rootT.push({
-						_ref: "document",
-						_id: doc.content.value === "active" ? activeID : parseInt(doc.content.value as string),
-					});
-				}				
-			}
-		}
-		if (t.type === "layer" || t.type === "path" || t.type === "channel") {
-			const activeID = await this.getActiveLayerID();
-			if (activeID === null) { return null; }
-			
-			if (
-				(t.type === "layer") ||
-				(t.type === "path" && path?.content.value === "vectorMask") ||
-				(t.type == "channel" && (channel?.content.value === "filterMask" || channel?.content.value === "mask"))
-			) {
-				if (layer?.content.value === "all") {
-					allRef(t.type, rootT);
+		// set document
+		switch (origRef.type) {
+			case "document":
+			case "layer":
+			case "channel":
+			case "path":
+			case "guide": {
+				if (origRef.documentID === "all") {
+					ref.setApplication();
+					ref.allFlag = true;
+				} else if (origRef.documentID === "selected") {
+					const activeID = app.activeDocument?.id ?? null;
+					if (activeID === null) {return null;}
+					ref.setDocument(activeID);
 				} else {
-					rootT.push({
-						_ref: "layer",
-						_id: layer?.content.value === "active" ? activeID : parseInt(layer?.content.value as string),
-					});					
+					ref.setDocument(origRef.documentID);
 				}
+				break;
+			}
+			default: {
+				if("documentID" in origRef) throw new Error(origRef.type);
+			}
+			
+		}
 
+		// set layer
+		switch (origRef.type) {
+			case "layer": 
+			case "channel":
+			case "path": {
+				if (origRef.type === "channel" && !(origRef.channelID === "filterMask" || origRef.channelID === "mask")) {
+					break;
+				}
+				if (origRef.type === "path" && !(origRef.pathID === "vectorMask")) {
+					break;
+				}
+				if (origRef.layerID === "none") {
+					break;
+				} else if (origRef.layerID === "all") {
+					ref.allFlag;
+				} else if (origRef.layerID === "selected") {
+					const activeID = await IDBySelected.layer();
+					if (activeID === null) {return null;}
+					ref.setLayer(activeID);			
+				} else {
+					ref.setLayer(origRef.layerID);
+				}
+				break;
+			}
+			default: {
+				if("layerID" in origRef) throw new Error(origRef.type);
 			}
 		}
 
-		switch (t.type) {
-			
-			case "action": {
+		switch (origRef.type) {
+			case "actions": {
 
-				if (typeof actionset?.content?.value === "string") {
-					rootT.push({
-						_ref: "actionSet",
-						_id: parseInt(actionset.content.value), // TODO get index based on ID
-					});
-				}
-				if (typeof action?.content?.value === "string") {
-					rootT.push({
-						_ref: "action",
-						_id: parseInt(action.content.value),
-					});
-				}
-				if (typeof command?.content?.value === "string" && typeof action?.content?.value === "string") {
-					rootT.push({
-						_ref: "command",
-						_index: this.getActionCommandIndexByID(parseInt(command.content.value),parseInt(action.content.value)),
-					});
+				if (origRef.actionSetID === "none") {
+					return null;
 				}
 
-				break;
-			}
-			case "application": {
-				rootT.push({
-					_ref: "application",
-					_enum: "ordinal",
-					_value: "targetEnum",
-				});
-				break;
-			}
-			case "timeline": {
-				rootT.push({
-					_ref: "timeline",
-					_enum: "ordinal",
-					_value: "targetEnum",
-				});
-				break;
-			}
-			case "animationFrame": {
-				rootT.push({
-					_ref: "animationFrameClass",
-					_enum: "ordinal",
-					_value: "targetEnum",
-				});
-				break;
-			}
-			case "animation": {
-				rootT.push({
-					_ref: "animationClass",
-					_enum: "ordinal",
-					_value: "targetEnum",
-				});
+				let commandIndex: number | null = null;
+				const actionIDs = origRef.actionID === "none" ? null : origRef.actionID;
+				if (origRef.commandIndex !== "none" && origRef.actionID !== "none") {
+					commandIndex = this.getActionCommandIndexByID(origRef.commandIndex, origRef.actionID);
+				}
+
+				ref.setAction(origRef.actionSetID, actionIDs, commandIndex);
 				break;
 			}
 			case "channel": {
-				if (!channel?.content?.value) {return null;}
 				
-				if (channel.content.value === "all") {
-					allRef(t.type, rootT);
+				if (origRef.channelID === "all") {
+					ref.allFlag = true;
 					break;
 				}
 
-				const activeID = await this.getActiveChannelID();
-				if (activeID === null) { return null; }
+				if (!ref.document) {throw new Error("It should have document reference");}
 
-				if (channel.content.value === "active") {
-					if (typeof activeID === "number") {
-						rootT.push({
-							_ref: "channel",
-							_index: activeID,
-						});						
-					} else {
-						rootT.push({
-							_enum: "channel",
-							_ref: "channel",
-							_value: activeID,
-						});
-					}
-				} else if (Number.isInteger(parseInt(channel.content.value))) {
-					let docInstance: DocumentExtra;
-					if (!doc?.content) { return null;}
-					if (doc.content.value === "active") {
-						docInstance = new DocumentExtra(PS.activeDocument);
-					} else {
-						docInstance = new DocumentExtra(new PS.Document(parseInt(doc.content.value as string)));
-					}
-					const found = docInstance.userChannelIDsAndNames.find(item => item.value.toString() === channel.content.value);
-					if (!found) { return null;}
-					rootT.push({
-						_ref: "channel",
-						_index: found.index,
-					});	
-				} else if (typeof channel.content.value === "string") {
-					rootT.push({
-						_enum: "channel",
-						_ref: "channel",
-						_value: channel.content.value,
-					});
+				if (origRef.channelID === "selected") {
+					const activeID = await IDBySelected.channel(ref.document._id);
+					if (activeID === null) {return null;}
+					ref.setChannel(activeID);
+				} else if (typeof origRef.channelID === "number") {
+					ref.setChannel(origRef.channelID);
+				} else {
+					ref.setChannel(origRef.channelID);
 				}
 				break;
 			}
 			case "path": {
-				/*
-				if (path?.content.value === "all") {
-					allRef(t.type, rootT);
-					break;
+				if (origRef.pathID === "all") {
+					ref.allFlag = true;
+					throw new Error("Not implemented");
 				}
-				*/
-				const activeID = await this.getActivePathID();
-				if (activeID === null) { return null; }
+				let pathV: number | "vectorMask" | "workPath";
 
-				if (activeID === "vectorMask") {
-					rootT.push({
-						_enum: "path",
-						_ref: "path",
-						_value: activeID,
-					});
-				} else if (activeID === "workPathIndex") {
-					rootT.push({
-						_property: "workPath",
-						_ref: "path",
-					});
-				} else if (typeof path?.content.value === "string") {
-					rootT.push({
-						_ref: "path",
-						_id: path?.content.value === "active" ? activeID : parseInt(path?.content.value as string),
-					});
+				if (origRef.pathID === "selected") {
+					const activeID = await IDBySelected.path(); // !! can be work path and mask
+					if (activeID === null) { return null; }
+					pathV = activeID;
+				} else {
+					pathV = origRef.pathID;
+				}
+
+				if (pathV === "vectorMask") {
+					ref.setVectorMask();
+				} else if (pathV === "workPath") {
+					ref.setWorkPath();
+				} else {
+					ref.setPath(pathV);
 				}
 				break;
 			}
-			case "history": {
-				/*
-				if (history?.content.value === "all") {
-					rootT.push({
-						_ref: "application",
-						_enum: "ordinal",
-						_value: "targetEnum",
-					});
-					allRef(t.type, rootT);
-					break;
-				}
-				*/
-				const activeID = await this.getActiveHistoryID();
-				if (activeID === null) { return null; }
-				rootT.push({
-					_ref: "historyState",
-					_id: history?.content.value === "active" ? activeID : parseInt(history?.content.value as string),
-				});
+			case "application": {
+				ref.setApplication();
 				break;
 			}
-			case "snapshot": {
-				const activeID = await this.getActiveSnapshotID();
-				if (activeID === null) { return null; }
-				rootT.push({
-					_ref: "snapshotClass",
-					_id: snapshot?.content.value === "active" ? activeID : parseInt(snapshot?.content.value as string),
-				});
+			case "timeline": {
+				ref.setTimeline();
+				break;
+			}
+			case "animationFrameClass": {
+				ref.setAnimationFrame();
+				break;
+			}
+			case "animationClass": {
+				ref.setAnimation();
+				break;
+			}
+			case "historyState": {
+				if (origRef.historyID === "selected") {
+					const activeID = await IDBySelected.history();
+					if (activeID === null) {return null;}
+					ref.setSnapshot(activeID);
+				} else {
+					ref.setSnapshot(origRef.historyID);
+				}
+				break;
+			}
+			case "snapshotClass": {
+				if (origRef.snapshotID === "selected") {
+					const activeID = await IDBySelected.snapshot();
+					if (activeID === null) {return null;}
+					ref.setSnapshot(activeID);
+				} else {
+					ref.setSnapshot(origRef.snapshotID);
+				}
 				break;
 			}
 			case "guide": {
-				if (guide?.content.value === "all") {
-					allRef(t.type, rootT);
+				if (origRef.guideID === "all") {
+					ref.allFlag = true;
+					break;
+				} else if (origRef.guideID === "none") {
+					break;
+				} else {
+					ref.setGuide(origRef.guideID);					
 					break;
 				}
-				rootT.push({
-					_ref: "guide",
-					_id: parseInt(guide?.content.value as string),
-				});
-				break;
 			}
 		}
 
-		function allRef(_ref: string, root: TReference[]) {
-			root.push({
-				_ref,
-				_enum: "alchemist",
-				_value: "all",
-			});
-		}
-
-		return rootT.reverse();
+		return ref;
 	}
 	
-	public static async getAM(originalRef: ITargetReference | null): Promise<IDescriptor | null> {
-		if (!originalRef) { return null;}
-		const t = cloneDeep(originalRef);
-		if (t.type === "generator") {
-			const result = await this.getFromGenerator(originalRef);
+	public static async getAM(_originalRef: TAllTargetReferences | null): Promise<IDescriptor | null> {
+		if (!_originalRef) { return null;}
+		const origRef = cloneDeep(_originalRef);
+		if (origRef.type === "generator") {
+			const result = await this.getFromGenerator(_originalRef);
 			return result;
 		}
 
-		const reference = await (GetInfo.getReference(t));
+		const reference = await (GetInfo.getReference(origRef));
 
-		if (!reference?.length) {
+		if (!reference?.refsOnly?.length) {
 			return null;
-		}
-
-		const firstRef = reference[0];
-		// this tell us to get all items
-		const shouldGetAll = "_enum" in firstRef && firstRef._enum === "alchemist" && firstRef._value === "all";
-		if (shouldGetAll) {
-			reference.shift();
 		}
 
 		let descToPlay: ITargetReferenceAM;
 	
-		const property: IProperty | undefined = t.data.find(i => i.subType === "property") as IProperty;
+		const property = ("properties" in origRef) && origRef?.properties;
 		
-		if(typeof property?.content.value.length === "number" && property?.content.value.length > 1) {
+		if(property && property.length > 1) {
 			descToPlay = {
 				_obj: "multiGet",
-				_target: reference,
+				_target: reference.amCode,
 				extendedReference: [
-					property?.content.value,
+					property,
 					// conditionally add range
-					...(shouldGetAll ? [{_obj: firstRef._ref, index: 1, count: -1}]:[]),
+					...(reference.allFlag ? [{_obj: reference.refsOnly[0], index: 1, count: -1}]:[]),
 				],
 				options: {
 					failOnMissingProperty: false,
@@ -346,25 +241,29 @@ export class GetInfo {
 		} else {
 			descToPlay = {
 				_obj: "get",
-				_target: reference,
+				_target: reference.amCode,
 			};
 	
 			// add property when demanded by user
-			if ((property) && !property.content.value.includes("notSpecified") && property.content.value.length === 1) {
+			if (property && !property.includes("notSpecified") && property.length === 1) {
 				descToPlay._target.unshift({
-					_property: property.content.value[0],
+					_property: property[0],
 				});
 			}
-		} 
-
+		}
 
 		console.log("Get", descToPlay);
 		const startTime = Date.now();
-		const playResult = await photoshop.action.batchPlay([descToPlay], {});
-		return this.buildReply(startTime, playResult, descToPlay,originalRef);
+		const playResult = await action.batchPlay([descToPlay], {});
+		return this.buildReply(startTime, playResult, descToPlay,_originalRef);
 	}
 
-	public static generateTitle = (originalReference:ITargetReference, calculatedReference:ITargetReferenceAM): string => {
+
+
+	public static generateTitle = (originalReference: TAllTargetReferences | null, calculatedReference: ITargetReferenceAM): string => {
+		if (!originalReference) {
+			return "Error - autoinspector n/a";
+		}
 		switch (originalReference.type) {
 			case "replies": {
 				return "Reply: " + calculatedReference._obj;
@@ -373,7 +272,7 @@ export class GetInfo {
 
 				let postfix = "";
 
-				const target:any = calculatedReference._target || calculatedReference.null;
+				const target: any = calculatedReference._target || calculatedReference.null;
 				if (Array.isArray(target)) {
 					postfix += target.reduceRight((str, current) => {
 						return (str + " " + current?._ref ?? "");
@@ -394,7 +293,7 @@ export class GetInfo {
 		return names.join(" / ");
 	}
 
-	private static buildReply(startTime:number,playResult:ActionDescriptor[],desc: ITargetReferenceAM, originalRef: ITargetReference):IDescriptor {
+	private static buildReply(startTime:number,playResult:ActionDescriptor[],desc: ITargetReferenceAM, originalRef: TAllTargetReferences):IDescriptor {
 		return {
 			startTime,
 			endTime: Date.now(),
@@ -413,9 +312,9 @@ export class GetInfo {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	private static async getFromGenerator(originalRef: ITargetReference): Promise<any>{
+	private static async getFromGenerator(originalRef: TAllTargetReferences): Promise<any>{
 		const startTime = Date.now();
-		const id = await this.getActiveDocumentID();
+		const id = app.activeDocument?.id ?? null;
 		if (id === null) {
 			return null;
 		}
@@ -441,196 +340,18 @@ export class GetInfo {
 			layerInfo: true,
 			includeAncestors: true,
 		};
-		const playResult = await photoshop.action.batchPlay([desc], {});
+		const playResult = await action.batchPlay([desc], {});
 		playResult.forEach(d => d.json = JSON.parse(d.json));
 		return this.buildReply(startTime, playResult, desc,originalRef);
 	}
 
-	public static get historyCount(): number{
-		//return this.getPropertySync("numberOfGuides"); TODO
-		const desc = {
-			_obj: "get",
-			_target: [
-				{
-					_ref: "historyState",
-					_property: "currentHistoryState",
-				},
-			],
-		};
-		const result = batchPlaySync([
-			desc,
-		]);
-		return result[0].count;
-	}
-
-	public static getHistory():{value:number,label:string,snapshot:boolean}[] {
-		const len = this.historyCount;
-		const desc: ActionDescriptor[] = [];
-		for (let i = 1; i <= len; i++){
-			desc.push({
-				_obj: "get",
-				_target: [
-					{
-						_ref: "historyState",
-						_index: i,
-					},
-				],
-			});
-		}
-
-		const desResult = batchPlaySync(desc);
-
-		const pairs = desResult.map((d) => ({
-			value: d.ID,
-			label: d.name,
-			snapshot: !d.auto,
-		}));
-	
-		return pairs;
-	}
-
-	public static async getActiveLayerID(): Promise<number | null> {
-		const result = await this.getProperty("layerID", "layer");
-		if ("layerID" in result) {
-			return result.layerID as number;
-		}
-		return null;
-	}
-
 	public static getActionCommandIndexByID(commandID:number,actionItemID: number):number {
-		const all = this.getAllCommandsOfAction(actionItemID);
+		const all = GetList.getAllCommandsOfAction(actionItemID);
 		const found = all.find(desc => desc.ID === commandID);
 		if (!found) {
 			return NaN;
 		}
 		return found.itemIndex;
-	}
-
-	public static getAllCommandsOfAction(actionItemID: number):ActionDescriptor[] {
-		console.log("action command");
-		const action = new PS.Action(actionItemID);
-
-		const desc = {
-			_obj: "get",
-			_target: [
-				{
-					_ref: "action",
-					_id: action.id,
-				},
-				{
-					_ref: "actionSet",
-					_id: action.parent.id,
-				},
-			],
-		};
-		const result = batchPlaySync([
-			desc,
-		]);
-
-		
-		const childCount = result[0].numberOfChildren;
-		const desc2: ActionDescriptor[] = [];
-		for (let i = 1; i <= childCount; i++){
-			desc2.push({
-				_obj: "get",
-				_target: [
-					{
-						_ref: "command",
-						_index: i, // get index based on ID
-					},
-					{
-						_ref: "action",
-						_id: action.id,
-					},
-					{
-						_ref: "actionSet",
-						_id: action.parent.id,
-					},
-				],
-			});
-		}
-		const result2 = batchPlaySync(desc2);
-		return result2;
-	}
-
-	public static async getActiveChannelID(): Promise<number | null | TChannelReferenceValid> {
-		
-		const resultItemIndex = await this.getProperty("itemIndex", "channel");
-		if ("itemIndex" in resultItemIndex) {
-			return resultItemIndex.itemIndex as number;
-		}
-
-		const itemIndex = (await this.getProperty("itemIndex", "channel")).itemIndex;
-		const mode = await this.getActiveDocumentColorMode();
-		switch (mode) {
-			case "CMYKColorEnum":
-				switch (itemIndex) {
-					case 1: return "cyan";
-					case 2: return "magenta";
-					case 3: return "yellow";
-					case 4: return "black";
-				}
-				break;
-			case "RGBColor":
-				switch (itemIndex) {
-					case 1: return "red";
-					case 2: return "green";
-					case 3: return "blue";
-				}
-				break;
-			case "labColor":
-				switch (itemIndex) {
-					case 1: return "lightness";
-					case 2: return "a";
-					case 3: return "b";
-				}
-				break;
-			case "grayScale":
-				switch (itemIndex) {
-					case 1: return "gray";
-				}
-				break;
-			default:
-				return "RGB"; // can we return composite channel instead?
-			
-		}
-		return "RGB"; // can we return composite channel instead?
-	}
-
-	public static async getActiveDocumentID(): Promise<number | null> {
-		const result = await this.getProperty("documentID", "document");
-		if ("documentID" in result) {
-			return result.documentID as number;
-		}
-		return null;
-	}
-
-	public static async getActiveHistoryID(): Promise<number | null> {
-		const result = await this.getProperty("ID", "historyState");
-		if ("ID" in result) {
-			return result.ID as number;
-		}
-		return null;
-	}
-
-	public static async getActiveSnapshotID(): Promise<number | null> {
-		const result = await this.getProperty("ID", "snapshotClass");
-		if ("ID" in result) {
-			return result.ID as number;
-		}
-		return null;
-	}
-
-	public static async getActivePathID(): Promise<"vectorMask" | "workPathIndex" | number | null> {
-		const pathKind = (await GetInfo.getProperty("kind", "path")).kind._value;
-		if (pathKind === "workPathIndex" || pathKind === "vectorMask") {
-			return pathKind;
-		}
-		const result = await GetInfo.getProperty("ID", "path");
-		if ("ID" in result) {
-			return result.ID as number;
-		}
-		return null;
 	}
 
 	public static getBuildString(): string {
@@ -652,46 +373,6 @@ export class GetInfo {
 		]);
 
 		return result?.[0]?.["buildNumber"] ?? "n/a";
-	}
-
-	public static async getProperty(property: string, myClass: "application" | "channel" | "document" | "guide" | "historyState" | "snapshotClass" | "layer" | "path"):Promise<ActionDescriptor> {
-		const desc = {
-			_obj: "get",
-			_target: [
-				{
-					_property: property,
-				},
-				{
-					_ref: myClass as string,
-					_enum: "ordinal",
-					_value: "targetEnum",
-				},
-			],
-		};
-		const result = await photoshop.action.batchPlay([
-			desc,
-		],{});
-		return result[0];
-	}
-
-	private static async getActiveDocumentColorMode():Promise<"grayScale"|"RGBColor"|"HSBColorEnum"|"CMYKColorEnum"|"labColor"|"bitmap"|"indexedColor"|"multichannel"|"duotone"|"useICCProfile"> {
-		const desc = {
-			_obj: "get",
-			_target: [
-				{
-					_property: "mode",
-				},
-				{
-					_ref: "document",
-					_enum: "ordinal",
-					_value: "targetEnum",
-				},
-			],
-		};
-		const result = await photoshop.action.batchPlay([
-			desc,
-		],{});
-		return result[0].mode._value;
 	}
 }
 
