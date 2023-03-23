@@ -217,7 +217,7 @@ export class Reference {
 			_ref: "historyState",
 			_id: id,
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	public setLayer(id: number) {
@@ -228,7 +228,7 @@ export class Reference {
 			_ref: "layer",
 			_id: id,
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	public setSnapshot(id: number) {
@@ -241,7 +241,7 @@ export class Reference {
 			_ref: "snapshotClass",
 			_id: id,
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	public setDocument(id: number) {
@@ -255,7 +255,7 @@ export class Reference {
 			_ref: "document",
 			_id: id,
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	public setGuide(id: number) {
@@ -265,7 +265,7 @@ export class Reference {
 			_ref: "guide",
 			_id: id,
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	public setVectorMask() {
@@ -277,7 +277,7 @@ export class Reference {
 			_ref: "path",
 			_value: "vectorMask",
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	public setWorkPath() {
@@ -288,7 +288,7 @@ export class Reference {
 			_ref: "path",
 			_property: "workPath",
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	public setPath(id: number) {
@@ -299,7 +299,7 @@ export class Reference {
 			_ref: "path",
 			_id: id,
 		};
-		this.ref.splice(index + 1, 0, r);
+		this.ref.splice(index, 0, r);
 	}
 
 	private findIndexForPath(): number{
@@ -327,14 +327,14 @@ export class Reference {
 				_ref: "channel",
 				_id: id,
 			};			
-			this.ref.splice(index + 1, 0, r);
+			this.ref.splice(index, 0, r);
 		} else {
 			const r:IEnumReference<"channel"> = {
 				_ref: "channel",
 				_enum: "channel",
 				_value: id,
 			};			
-			this.ref.splice(index + 1, 0, r);
+			this.ref.splice(index, 0, r);
 		}
 	}
 

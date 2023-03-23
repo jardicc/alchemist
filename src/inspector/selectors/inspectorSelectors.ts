@@ -151,17 +151,30 @@ export const getDescriptorsListView = createSelector([
 		}
 		*/
 		if (activeRef.type !== "listener") {
-			for (let i = 0, len = activeRef.data.length; i < len; i++) {
-				if (activeRef.data[i].content.filterBy === "off") {
-					return true;
-				}
-				if (activeRef.type !== origRef.type) {
-					return false;
-				}
-				if (activeRef.data[i].content.value !== origRef.data[i].content.value) {
+			//for (let i = 0, len = activeRef.data.length; i < len; i++) {
+			// TODO add more
+			if ("documentID" in activeRef && activeRef.filterDoc === "off") {
+				return true;
+			}
+			/*
+			if (activeRef.data[i].content.filterBy === "off") {
+				return true;
+			}
+			*/
+			if (activeRef.type !== origRef.type) {
+				return false;
+			}
+			if ("documentID" in activeRef && "documentID" in origRef) {
+				if (activeRef.documentID !== origRef.documentID) {
 					return false;
 				}
 			}
+			/*
+			if (activeRef.data[i].content.value !== origRef.data[i].content.value) {
+				return false;
+			}
+			*/
+			//}
 		}
 		return true;
 	});

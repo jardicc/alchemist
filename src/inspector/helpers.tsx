@@ -48,7 +48,7 @@ export function getIcon(type: TTargetReference | "error") {
 			icon = <IconFork />;
 			break;
 		}
-		case "action": {
+		case "actions": {
 			icon = <IconPlayCircle />;
 			break;
 		}
@@ -56,13 +56,13 @@ export function getIcon(type: TTargetReference | "error") {
 			icon = <IconGuides />;
 			break;
 		}
-		case "history":
-		case "snapshot": {
+		case "historyState":
+		case "snapshotClass": {
 			icon = <IconTimer />;
 			break;
 		}
-		case "animation":
-		case "animationFrame": {
+		case "animationClass":
+		case "animationFrameClass": {
 			icon = <IconVideo />;
 			break;
 		}

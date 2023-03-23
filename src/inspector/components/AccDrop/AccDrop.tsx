@@ -19,8 +19,8 @@ export interface IAccDropProps {
 	items: (IPropertyItem | IPropertyGroup)[]
 	header: string | React.ReactElement
 	
-	onSelect: (id: string, value: string, toggle?:boolean) => void	
-	selected: string[]
+	onSelect: (id: string, value: string|number, toggle?:boolean) => void	
+	selected: (string|number)[]
 
 	className?: string
 	onHeaderClick?: (id: string, expanded: boolean) => void
@@ -205,9 +205,10 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 						{icons && <div className="icon">{getIcon(item.value as any)}</div>} <span>{item.label}</span>
 					</div>
 					{
+						// filter within main category dropdown
 						ItemPostFix && <div 
 							className="itemPostFix"
-						><ItemPostFix value={item.value} /></div>
+						><ItemPostFix value={item.value.toString()} /></div>
 					}
 				</div>
 			);			

@@ -2,12 +2,11 @@ import { connect} from "react-redux";
 import cloneDeep from "lodash/cloneDeep";
 import { IRootState } from "../../../shared/store";
 import { selectDescriptorAction, renameDescriptorAction, setRenameModeAction } from "../../actions/inspectorActions";
-import { IDescriptor, ITargetReference, TSelectDescriptorOperation } from "../../model/types";
-import { getActiveRef, getFilterBySelectedReferenceType, getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
+import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
+import { getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
 import React from "react";
 import "./DescriptorItem.less";
-import { IconBan, IconBolt, IconBrowser, IconChat, IconDocument, IconFlash, IconFork, IconGuides, IconImage, IconInfo, IconLayers, IconLockLocked, IconPinDown, IconPlayCircle, IconProject, IconScript, IconStar, IconTimer, IconVideo } from "../../../shared/components/icons";
-import { TFilterState } from "../FilterButton/FilterButton";
+import { IconLockLocked, IconPinDown } from "../../../shared/components/icons";
 import { Dispatch } from "redux";
 import {default as SP} from "react-uxp-spectrum";
 import {getIcon} from "../../helpers";
@@ -153,15 +152,11 @@ interface IState{
 interface IDescriptorItemProps {
 	descriptor: IDescriptor
 	autoSelected: string[]
-	activeTargetReference: ITargetReference | null;
-	filterBySelectedReferenceType:TFilterState
 }
 
 const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProps => ({
 	descriptor: cloneDeep(ownProps.descriptor),
 	autoSelected: getAutoSelectedUUIDs(state),
-	activeTargetReference: getActiveRef(state),
-	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),
 });
 
 interface IDescriptorItemDispatch {

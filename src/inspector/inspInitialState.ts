@@ -71,12 +71,12 @@ export function getInitialState(): IInspectorState {
 			application:{
 				type: "application",
 				filterProp: "off",
-				properties:[],
+				properties:["notSpecified"],
 			},
 			document:{
 				type: "document",
 				filterProp: "off",
-				properties:[],
+				properties:["notSpecified"],
 				
 				documentID: "selected",
 				filterDoc: "off",
@@ -86,7 +86,7 @@ export function getInitialState(): IInspectorState {
 			layer:{
 				type: "layer",
 				filterProp: "off",
-				properties:[],
+				properties:["notSpecified"],
 				
 				documentID: "selected",
 				filterDoc: "off",
@@ -97,7 +97,7 @@ export function getInitialState(): IInspectorState {
 			path:{
 				type: "path",
 				filterProp: "off",
-				properties:[],
+				properties:["notSpecified"],
 				
 				documentID: "selected",
 				filterDoc: "off",
@@ -111,7 +111,7 @@ export function getInitialState(): IInspectorState {
 			channel:{
 				type: "channel",
 				filterProp: "off",
-				properties:[],
+				properties:["notSpecified"],
 				
 				documentID: "selected",
 				filterDoc: "off",
@@ -125,7 +125,7 @@ export function getInitialState(): IInspectorState {
 			actions:{
 				type: "actions",
 				filterProp: "off",
-				properties:[],
+				properties:["notSpecified"],
 
 				actionID: "none",
 				filterAction: "off",
@@ -157,7 +157,7 @@ export function getInitialState(): IInspectorState {
 			historyState:{
 				type: "historyState",
 				filterProp: "off",
-				properties: [],
+				properties: ["notSpecified"],
 				
 				filterHistory: "off",
 				historyID: "selected",
@@ -165,7 +165,7 @@ export function getInitialState(): IInspectorState {
 			snapshotClass:{
 				type: "snapshotClass",
 				filterProp: "off",
-				properties: [],
+				properties: ["notSpecified"],
 				
 				filterSnapshot:"off",
 				snapshotID: "selected",
@@ -173,7 +173,7 @@ export function getInitialState(): IInspectorState {
 			guide:{
 				type: "guide",
 				filterProp: "off",
-				properties:[],
+				properties:["notSpecified"],
 				
 				documentID: "selected",
 				filterDoc: "off",

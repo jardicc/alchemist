@@ -29,21 +29,21 @@ export const baseItemsProperty: IFilterProperty<TBaseProperty>[] = [
 ];
 export const baseItemsDocument: IFilterProperty<TDocumentReference>[] = [
 	{label: "(all)", value: "all"},
-	{label: "(active)", value: "active"},
+	{label: "(active)", value: "selected"},
 ];
 export const baseItemsLayer: IFilterProperty<TLayerReference>[] = [
 	{label: "(all)", value: "all"},
-	{label: "(active)", value: "active"},
+	{label: "(active)", value: "selected"},
 ];
 export const baseItemsPath: IFilterProperty<TPathReference>[] = [
 	// {label: "(all)", value: "all"}, // -1 index is broken... user has to provide correct count
-	{label: "(active)", value: "active"},
+	{label: "(active)", value: "selected"},
 	{label: "(vector mask)", value: "vectorMask"},
 	{label: "(work path)", value: "workPathIndex"},
 ];
 export const baseItemsChannel: IFilterProperty<TChannelReference>[] = [
 	{label: "(all)", value: "all"},
-	{label: "(active)", value: "active"},
+	{label: "(active)", value: "selected"},
 	{label: "(composite)", value: "composite"},
 	{label: "(Mask)", value: "mask"},
 	{label: "(Filter mask)", value: "filterMask"},
@@ -70,9 +70,9 @@ export const baseItemsChannel: IFilterProperty<TChannelReference>[] = [
 ];
 export const baseItemsGuide: IFilterProperty<TGuideReference>[] = [
 	{label: "(all)", value: "all"},
-	{label: "(undefined)", value: ""},
+	{label: "(undefined)", value: "none"},
 ];
 export const baseItemsActionCommon: (IFilterProperty<TActionSet> | IFilterProperty<TActionItem> | IFilterProperty<TActionCommand>)[] = [
 	// {label: "(all)", value: "all"}, // I couldn't find a support
-	{label: "(undefined)", value: ""},
+	{label: "(undefined)", value: "none"},
 ];

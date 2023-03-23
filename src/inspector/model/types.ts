@@ -8,10 +8,11 @@ import { ActionDescriptor } from "photoshop/dom/CoreModules";
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
 export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "size-bigger" | "size-big" | "size-youMustBeJoking"
+/** These will build up reference */
+export type TSubTypes = "actionID" | "actionSetID" | "channelID" | "documentID" | "guideID" | "historyID" | "layerID" | "pathID" | "snapshotID"	| "commandIndex"
 
-export type TSubTypes = "action" | "actionset" | "category" | "channel" | "command" | "document" | "guide" | "history" | "kind" |
-	"layer" | "path" | "property" | "snapshot";
-export type TTargetReference = "listener" | /*"customDescriptor" | "featureData" |*/ "generator" | /*"overkill" |*/
+
+export type TTargetReference = "listener" |  "generator" | 
 	"dispatcher" | "notifier" | "replies" | TPropertyClass;
 export type TPropertyClass = "application" | "historyState" | "snapshotClass" | "layer" | "path" | "channel" | "document" | "guide" |
 	"actions" | "timeline" | "animationFrameClass" | "animationClass"
@@ -29,13 +30,13 @@ export type TImportItems = "append" | "replace";
 export type TPath = (string)[];
 export type TBaseProperty = "notSpecified" | "none";
 export type TCategoryReference = "notSpecified";
-export type THistoryReference = "active" | string;
-export type TSnapshotReference = "active" | string;
-export type TDocumentReference = "active" | string;
-export type TLayerReference = "active" | string;
-export type TPathReference = "active" | "vectorMask" | "workPathIndex" | string;
+export type THistoryReference = "selected" | number;
+export type TSnapshotReference = "selected" | number;
+export type TDocumentReference = "selected" | "all" | number;
+export type TLayerReference = "selected" | "all" | number;
+export type TPathReference = "selected" | "vectorMask" | "workPathIndex" | number;
 export type TGeneratorReference = "full"
-export type TChannelReference = "active" | "all" | TChannelReferenceValid;
+export type TChannelReference = "selected" | "all" | TChannelReferenceValid;
 export type TChannelReferenceValid =
 	| number 
 	| "composite" 
@@ -60,14 +61,14 @@ export type TChannelReferenceValid =
 	| "mask" 
 	| "transparencyEnum" 
 	| "filterMask";
-export type TGuideReference = "none" | string;
-export type TActionSet = "none" | string;
-export type TActionItem = "none" | string;
-export type TActionCommand = "none" | string;
+export type TGuideReference = "none" | "all" | number;
+export type TActionSet = "none" | number;
+export type TActionItem = "none" | number;
+export type TActionCommand = "none" | number;
 
-export type TTimeline = "none" | string;
-export type TActionFrame = "none" | string;
-export type TAnimation = "none" | string;
+export type TTimeline = "none" | number;
+export type TActionFrame = "none" | number;
+export type TAnimation = "none" | number;
 
 export type TFilterEvents = "none" | "include" | "exclude";
 
@@ -338,7 +339,7 @@ export interface IPropertyGroup{
 
 export interface IPropertyItem {
 	label: string
-	value: string
+	value: string|number
 }
 
 export interface IInspector{
@@ -402,4 +403,15 @@ export interface IDescriptor{
 export interface IGetNameOutput{
 	typeRef: string
 	value: string|null
+}
+
+export const enum DocumentMode {
+    BITMAP = "bitmapMode",
+    CMYK = "CMYKColorMode",
+    DUOTONE = "duotoneMode",
+    GRAYSCALE = "grayscaleMode",
+    INDEXEDCOLOR = "indexedColorMode",
+    LAB = "labColorMode",
+    MULTICHANNEL = "multichannelMode",
+    RGB = "RGBColorMode"
 }

@@ -1,21 +1,23 @@
-import {app, action} from "photoshop";
+import {app} from "photoshop";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 import {batchPlaySync} from "../../shared/helpers";
 import {
 	TDocumentReference, TLayerReference, TChannelReference,
 	TPathReference, TActionSet, TActionItem, TActionCommand, TGuideReference,
-	THistoryReference, IFilterProperty, IRefDocument, IRefLayer, IRefChannel, IRefPath, IRefGuide,
+	THistoryReference, IFilterProperty,
 } from "../model/types";
 
 import { DocumentExtra } from "./DocumentExtra";
-import { GetInfo } from "./GetInfo";
 
 
 export class GetList {
 	public static async getDocuments(): Promise<IFilterProperty<TDocumentReference>[]> {
 		console.log("get docs");
 		const documents = app.documents.map(d => new DocumentExtra(d));
-		const docs = documents.map(async d => ({value: d.id.toString(), label: await d.$title()}));
+		const docs = documents.map(async d => ({
+			value: d.id,
+			label: await d.$title(),
+		}));
 		const result = await Promise.all(docs);
 		return result;
 	}
@@ -24,8 +26,8 @@ export class GetList {
 		const docE = this.getDocumentExtra(docID);
 		if (!docE) {return [];}
 		const layers = docE.allLayers.reverse().map(d => ({
-			value: d.layerID.toString(),
-			label: d.name,
+			value: d.layerID,
+			label: `${d.name} (${d.layerID})`,
 		}));
 		return layers;
 	}
@@ -44,7 +46,7 @@ export class GetList {
 		const docE = this.getDocumentExtra(docID);
 		if (!docE) {return [];}
 		const pairs: IFilterProperty<TPathReference>[] = docE.userPathsIDsAndNames.map(p => ({
-			value: p.value.toString(),
+			value: p.value,
 			label: p.label,
 		}));
 		return pairs;
@@ -53,8 +55,8 @@ export class GetList {
 	public static getGuides(docID: number | "selected"): IFilterProperty<TGuideReference>[] {
 		const docE = this.getDocumentExtra(docID);
 		if (!docE) {return [];}
-		const pairs: IFilterProperty<TPathReference>[] = docE.guidesIDs.map(p => ({
-			value: p.value.toString(),
+		const pairs: IFilterProperty<TGuideReference>[] = docE.guidesIDs.map(p => ({
+			value: p.value,
 			label: p.label,
 		}));
 		return pairs;
@@ -62,7 +64,7 @@ export class GetList {
 	public static getHistory(): IFilterProperty<THistoryReference>[] {
 		const pairs = this.getHistoryList();
 		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => !p.snapshot).map(p => ({
-			value: p.value.toString(),
+			value: p.value,
 			label: p.label,
 		})); // remove snapshot
 		return result;
@@ -71,7 +73,7 @@ export class GetList {
 	public static getSnapshots(): IFilterProperty<THistoryReference>[] {
 		const pairs = this.getHistoryList();
 		const result: IFilterProperty<THistoryReference>[] = pairs.filter(p => p.snapshot).map(p => ({
-			value: p.value.toString(),
+			value: p.value,
 			label: p.label,
 		})); // remove snapshot
 		return result;
@@ -79,7 +81,7 @@ export class GetList {
 
 	public static getActionSets(): IFilterProperty<TActionSet>[] {
 		const actionSets: IFilterProperty<TActionSet>[] = app.actionTree.map(item => ({
-			value: item.id.toString(),
+			value: item.id,
 			label: item.name,
 		}));
 		return actionSets;
@@ -91,20 +93,20 @@ export class GetList {
 		}
 		const actionSet = new app.ActionSet(actionSetID);
 		const action: IFilterProperty<TActionItem>[] = actionSet.actions.map(item => ({
-			value: item.id.toString(),
+			value: item.id,
 			label: item.name,
 		}));
 		return action;
 	}
 
-	public static getActionCommand(actionItemID: number): IFilterProperty<TActionCommand>[] {
+	public static getActionCommands(actionItemID: number): IFilterProperty<TActionCommand>[] {
 		if (Number.isNaN(actionItemID)) {
 			return [];
 		}
 		const result2 = this.getAllCommandsOfAction(actionItemID);
 
 		const final: IFilterProperty<TActionCommand>[] = result2.map(item => ({
-			value: item.ID.toString(),
+			value: item.ID,
 			label: item.name,
 		}));
 		return final;

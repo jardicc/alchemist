@@ -1,10 +1,9 @@
 import { IRootState } from "../../../shared/store";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
-import { getSelectedTargetReference, getActiveRef, getListenerNotifierFilterSettings } from "../../selectors/inspectorSelectors";
-import { setFilterStateAction, setTargetReferenceAction, setListenerNotifierFilterAction } from "../../actions/inspectorActions";
+import { getListenerNotifierFilterSettings } from "../../selectors/inspectorSelectors";
+import { setListenerNotifierFilterAction } from "../../actions/inspectorActions";
 import React from "react";
-import { TSubTypes, TTargetReference, ITargetReference, IListenerNotifierFilter } from "../../model/types";
-import { TFilterState } from "../FilterButton/FilterButton";
+import { IListenerNotifierFilter } from "../../model/types";
 import SP from "react-uxp-spectrum";
 
 class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> { 
@@ -88,25 +87,17 @@ type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
 
 interface IListenerFilterProps{
 	settings: IListenerNotifierFilter
-	selectedTargetReference: TTargetReference
-	activeTargetReference: ITargetReference | null;
 }
 
 const mapStateToProps = (state: IRootState): IListenerFilterProps => ({
 	settings: getListenerNotifierFilterSettings(state),
-	selectedTargetReference: getSelectedTargetReference(state),		
-	activeTargetReference: getActiveRef(state),
 });
 
 interface IListenerFilterDispatch {
-	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => void
-	onSetTargetReference: (arg: ITargetReference) => void
 	onSetNotifierListenerFilter: (arg: Partial<IListenerNotifierFilter>) => void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IListenerFilterDispatch, Record<string, unknown>> = (dispatch): IListenerFilterDispatch => ({
-	onSetFilter: (type, subType, state) => dispatch(setFilterStateAction(type, subType, state)),
-	onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
 	onSetNotifierListenerFilter: (arg) => dispatch(setListenerNotifierFilterAction(arg)),
 });
 

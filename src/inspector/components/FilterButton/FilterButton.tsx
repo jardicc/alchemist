@@ -8,8 +8,8 @@ export type TFilterState = "on" | "off" | "semi";
 
 export interface IFilterButtonProps {
 	state:TFilterState
-	subtype: TSubTypes | "main"
-	onClick: (id: TSubTypes | "main", state: TFilterState, e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+	subtype: TSubTypes | "main" | "property"
+	onClick: (id: TSubTypes | "main" | "property", state: TFilterState, e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
 export interface IFilterButtonDispatch {

@@ -81,7 +81,6 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				originalData: command.descriptor,
 				originalReference: {
 					type: "listener",
-					data: [],
 				},
 				pinned: false,
 				renameMode: false,

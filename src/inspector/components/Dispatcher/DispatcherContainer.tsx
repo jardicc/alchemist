@@ -8,7 +8,7 @@ import { getInspectorSettings } from "../../selectors/inspectorSelectors";
 import React from "react";
 import "./Dispatcher.less";
 import { Helpers } from "../../classes/Helpers";
-import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
+import { IDescriptor, IRefDispatcher, ISettings } from "../../model/types";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import { getInitialState } from "../../inspInitialState";
 import { str as crc } from "crc-32";
@@ -57,9 +57,8 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 			}
 			const endTime = Date.now();
 
-			const originalReference: ITargetReference = {
+			const originalReference:IRefDispatcher  = {
 				type: "dispatcher",
-				data: [],
 			};
 			const result: IDescriptor = {
 				endTime,

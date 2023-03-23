@@ -253,6 +253,8 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				const { payload: { state, subType, type } } = action;
 				const found = draft.targetReference[type];
 
+				// TODO
+				/*
 				if (subType === "main") {
 					if (state === "on") {
 						draft.filterBySelectedReferenceType = "off";
@@ -279,6 +281,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 						});
 					}
 				}
+				*/
 			});
 			break;
 		}

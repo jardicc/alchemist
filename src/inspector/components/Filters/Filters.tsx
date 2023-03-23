@@ -9,7 +9,7 @@ import {
 	IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference,
 	TChannelReference, TTargetReference, TSubTypes, TActionSet, TActionItem, TActionCommand,
 	THistoryReference, TSnapshotReference, IFilterProperty, IPropertyItem,
-	IPropertyGroup, TAllTargetReferences,
+	IPropertyGroup, TAllTargetReferences, TChannelReferenceValid,
 } from "../../model/types";
 import { FilterButton, TFilterState } from "../FilterButton/FilterButton";
 import { GetList } from "../../classes/GetList";
@@ -28,7 +28,7 @@ import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityBu
 
 
 interface IFilterRowProps{
-	id: string
+	id: TSubTypes | "main" | "property"
 	items: (IPropertyItem | IPropertyGroup)[]
 	icons? :boolean
 	header: string | React.ReactElement
@@ -57,37 +57,102 @@ export class Filters extends React.Component<TFilters, IState> {
 		};
 	}
 
-	/** refactor into reducer? */
-	private onSetSubType = (subType: TSubTypes | "main", value: TTargetReference, toggle:boolean) => {
-		if (subType === "main") {
-			this.onSetMainCategory(value);
-			return;
-		}
-		const {onSetTargetReference, activeRef: activeTargetReference} = this.props;
-		if (!activeTargetReference) {
-			return;
-		}
-		const activeRefClone = cloneDeep(activeTargetReference);
-		
-		const subTypeData = activeRefClone?.data?.find(i => i.subType === subType);
-		if (subTypeData) {
-			if (subTypeData.subType === "property") {
-				const {content} = subTypeData;
-				if (toggle) { // support multiGet
-					const foundIndex = content.value.indexOf(value);
-					if (foundIndex === -1) {
-						content.value.push(value);
-					} else {
-						content.value.splice(foundIndex, 1);
-					}
+	private setProperty = (value: string, toggle: boolean) => {
+
+		const {onSetTargetReference, activeRef} = this.props;
+		const activeRefClone = cloneDeep(activeRef);
+
+		if ("properties" in activeRefClone && typeof value === "string") {
+			if (toggle) { // support multiGet
+				const foundIndex = activeRefClone.properties.indexOf(value);
+				if (foundIndex === -1) {
+					activeRefClone.properties.push(value);
 				} else {
-					content.value = [value];					
+					activeRefClone.properties.splice(foundIndex, 1);
 				}
 			} else {
-				subTypeData.content.value = value;
+				activeRefClone.properties = [value];					
 			}
-			onSetTargetReference(activeRefClone);
 		}
+
+		onSetTargetReference(activeRefClone);
+	}
+
+
+
+	/** refactor into reducer? */
+	private onSetSubType = (subType: TSubTypes | "main" | "property", value: string | number, toggle: boolean) => {
+
+		const {onSetTargetReference, activeRef} = this.props;
+		const activeRefClone = cloneDeep(activeRef);
+		
+		switch (subType) {
+			case "main":{
+				this.onSetMainCategory(value as TTargetReference);
+				return;
+			} 
+			case "property": {
+				this.setProperty(value as string, toggle);
+				return;
+			}
+			// Any chance to make it shorter and keep TS happy? :-/
+			case "actionID":
+				if (subType in activeRefClone) {
+					activeRefClone[subType] = value as number | "none";
+				}
+				break;
+			case "actionSetID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "none";
+				}
+				break;
+			case "channelID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | TChannelReferenceValid  | "selected" | "all";
+				}
+				break;
+			case "commandIndex": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "none";
+				}
+				break;
+			case "documentID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "selected" | "all";
+				}
+				break;
+			case "guideID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "none";
+				}
+				break;
+			case "historyID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "selected";
+				}
+				break;
+			case "layerID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "none";
+				}
+				break;
+			case "pathID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "all" | "vectorMask" | "selected" | "workPath";
+				}
+				break;
+			case "snapshotID": 
+				if(subType in activeRefClone){
+					activeRefClone[subType] = value as number | "selected";
+				}
+				break;
+			default: {
+				const check: never = subType;
+				throw new Error("Unhandled subtype: " + check);
+			}
+		}
+
+		onSetTargetReference(activeRefClone);
 	}
 
 	private onSetMainCategory = (value: TTargetReference) => {
@@ -124,7 +189,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				return (
 					<this.FilterRow
 						header="Document:"
-						id="document"
+						id="documentID"
 						items={list}
 						filterBy={activeRef.filterDoc}
 						content={activeRef.documentID}
@@ -155,7 +220,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="Layer:"
-				id="layer"
+				id="layerID"
 				items={list}
 				filterBy={activeRef.filterLayer}
 				content={activeRef.layerID}
@@ -166,12 +231,12 @@ export class Filters extends React.Component<TFilters, IState> {
 	private renderChannel = (): React.ReactNode | void => {
 		const {activeRef} = this.props;
 		if (activeRef.type !== "channel") {return;}
-		const list = [...baseItemsChannel, ...this.state.channelsList];
+		const list:IPropertyItem[] = [...baseItemsChannel, ...this.state.channelsList] as IPropertyItem[];
 
 		return (
 			<this.FilterRow
 				header="Channel:"
-				id="channel"
+				id="channelID"
 				items={list}
 				filterBy={activeRef.filterChannel}
 				content={activeRef.channelID}
@@ -187,7 +252,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="Path:"
-				id="path"
+				id="pathID"
 				items={list}
 				filterBy={activeRef.filterPath}
 				content={activeRef.pathID}
@@ -204,7 +269,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="Action set:"
-				id="actionset"
+				id="actionSetID"
 				items={list}
 				filterBy={activeRef.filterAction}
 				content={activeRef.actionSetID}
@@ -220,7 +285,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="Action:"
-				id="action"
+				id="actionID"
 				items={list}
 				filterBy={activeRef.filterAction}
 				content={activeRef.actionID}
@@ -239,7 +304,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="Command:"
-				id="command"
+				id="commandIndex"
 				items={list}
 				filterBy={activeRef.filterCommand}
 				content={activeRef.commandIndex}
@@ -255,7 +320,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="Guide:"
-				id="guide"
+				id="guideID"
 				items={list}
 				filterBy={activeRef.filterGuide}
 				content={activeRef.guideID}
@@ -271,7 +336,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="History:"
-				id="history"
+				id="historyID"
 				items={list}
 				filterBy={activeRef.filterHistory}
 				content={activeRef.historyID}
@@ -287,7 +352,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		return (
 			<this.FilterRow
 				header="Snapshots:"
-				id="snapshot"
+				id="snapshotID"
 				items={list}
 				filterBy={activeRef.filterSnapshot}
 				content={activeRef.snapshotID}
@@ -327,19 +392,18 @@ export class Filters extends React.Component<TFilters, IState> {
 
 	private FilterRow = (filterProps: IFilterRowProps): JSX.Element => {
 		const {content, filterBy} = filterProps;
-		const id = filterProps.id as TSubTypes | "main";
-		let newContent: string[];
+		const id = filterProps.id;
+		let newContent: (string|number)[];
 		if(!Array.isArray(content)) {
-			newContent = [content.toString()];
+			newContent = [content];
 		} else {
 			newContent = content;
 		}
-		newContent = newContent.map(c => c.toString());
 		
 		return (
 			<AccDrop
 				selected={newContent}
-				onSelect={(id, value, toggleProperty) => this.onSetSubType(id as TSubTypes, value as TTargetReference, !!toggleProperty)}
+				onSelect={(id, value, toggleProperty) => this.onSetSubType(id as TSubTypes, value, !!toggleProperty)}
 				onHeaderClick={() => this.updateList(id)}
 				headerPostFix={
 					<FilterButton
@@ -384,12 +448,15 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	}
 
-	private updateList = async (type: TSubTypes | "main") => {
+	/**
+	 * Document IDs are intentional because we don't always need items for active document
+	 */
+	private updateList = async (type: TSubTypes | "main" | "property") => {
 		console.log("click");
 		const {activeRef} = this.props;
 
 		switch (type) {
-			case "layer":
+			case "layerID":
 				if ("documentID" in activeRef && activeRef.documentID !== "all") {
 					return this.setState({
 						...this.state,
@@ -397,33 +464,33 @@ export class Filters extends React.Component<TFilters, IState> {
 					});
 				}
 				break;
-			case "document":
+			case "documentID":
 				return this.setState({
 					...this.state,
 					documentsList: await GetList.getDocuments(),
 				});
-			case "action":
-				if ("actionID" in activeRef && activeRef.actionID !== "none") {
+			case "actionID":
+				if (activeRef.type === "actions" && activeRef.actionSetID !== "none") {
 					return this.setState({
 						...this.state,
-						actionItemsList: GetList.getActionItem(activeRef.actionID),
+						actionItemsList: GetList.getActionItem(activeRef.actionSetID),
 					});
 				}
 				break;
-			case "actionset":
+			case "actionSetID":
 				return this.setState({
 					...this.state,
 					actionSetsList: GetList.getActionSets(),
 				});
-			case "command":
-				if ("commandIndex" in activeRef && activeRef.commandIndex !== "none") {
+			case "commandIndex":
+				if (activeRef.type === "actions" && activeRef.actionID !== "none") {
 					return this.setState({
 						...this.state,
-						actionCommandsList: GetList.getActionCommand(activeRef.commandIndex),
+						actionCommandsList: GetList.getActionCommands(activeRef.actionID),
 					});
 				}
 				break;
-			case "channel":
+			case "channelID":
 				if ("documentID" in activeRef && activeRef.documentID !== "all") {
 					return this.setState({
 						...this.state,
@@ -431,7 +498,7 @@ export class Filters extends React.Component<TFilters, IState> {
 					});
 				}
 				break;
-			case "path":
+			case "pathID":
 				if ("documentID" in activeRef && activeRef.documentID !== "all") {
 					return this.setState({
 						...this.state,
@@ -439,7 +506,7 @@ export class Filters extends React.Component<TFilters, IState> {
 					});
 				}
 				break;
-			case "guide":
+			case "guideID":
 				if ("documentID" in activeRef && activeRef.documentID !== "all") {
 					return this.setState({
 						...this.state,
@@ -447,12 +514,12 @@ export class Filters extends React.Component<TFilters, IState> {
 					});
 				}
 				break;
-			case "history":
+			case "historyID":
 				return this.setState({
 					...this.state,
 					historyList: GetList.getHistory(),
 				});
-			case "snapshot":
+			case "snapshotID":
 				return this.setState({
 					...this.state,
 					snapshotsList: GetList.getSnapshots(),
@@ -493,7 +560,7 @@ const mapStateToProps = (state: IRootState): IFiltersProps => ({
 interface IFiltersDispatch {
 	onSetTargetReference: (arg: TAllTargetReferences) => void
 	onSetSelectedReferenceType: (type: TTargetReference) => void
-	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => void
+	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main" | "property", state: TFilterState) => void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IFiltersDispatch, Record<string, unknown>> = (dispatch: Dispatch): IFiltersDispatch => ({
