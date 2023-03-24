@@ -24,13 +24,20 @@ export const mainClasses: IFilterProperty<TTargetReference>[] = [
 	{label: "Generator", value: "generator"},
 	// { label: "Overkill", value: "overkill" },
 ];
-export const baseItemsDocument: IFilterProperty<TDocumentReference>[] = [
-	{label: "(all)", value: "all"},
-	{label: "(active)", value: "selected"},
-];
+// TODO rework into selector?
+export const baseItemsDocument = (mainCategory: TTargetReference): IFilterProperty<TDocumentReference>[] => {
+	const res:IFilterProperty<TDocumentReference>[] = [
+		{label: "(active)", value: "selected"},
+	];
+	// only document main category can get all documents in multiGet
+	if (mainCategory === "document") {
+		res.push({label: "(all)", value: "all"});
+	}
+	return res;
+};
 export const baseItemsLayer: IFilterProperty<TLayerReference>[] = [
-	{label: "(all)", value: "all"},
 	{label: "(active)", value: "selected"},
+	{label: "(all)", value: "all"},
 ];
 export const baseItemsPath: IFilterProperty<TPathReference>[] = [
 	// {label: "(all)", value: "all"}, // -1 index is broken... user has to provide correct count
@@ -39,8 +46,8 @@ export const baseItemsPath: IFilterProperty<TPathReference>[] = [
 	{label: "(work path)", value: "workPathIndex"},
 ];
 export const baseItemsChannel: IFilterProperty<TChannelReference>[] = [
-	{label: "(all)", value: "all"},
 	{label: "(active)", value: "selected"},
+	{label: "(all)", value: "all"},
 	{label: "(composite)", value: "composite"},
 	{label: "(Mask)", value: "mask"},
 	{label: "(Filter mask)", value: "filterMask"},
@@ -66,8 +73,8 @@ export const baseItemsChannel: IFilterProperty<TChannelReference>[] = [
 
 ];
 export const baseItemsGuide: IFilterProperty<TGuideReference>[] = [
-	{label: "(all)", value: "all"},
 	{label: "(undefined)", value: "none"},
+	{label: "(all)", value: "all"},
 ];
 export const baseItemsActionCommon: (IFilterProperty<TActionSet> | IFilterProperty<TActionItem> | IFilterProperty<TActionCommand>)[] = [
 	// {label: "(all)", value: "all"}, // I couldn't find a support

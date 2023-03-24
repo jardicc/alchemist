@@ -3,7 +3,7 @@
 import produce from "immer";
 import { getInitialState } from "../inspInitialState";
 import { TActions } from "../actions/inspectorActions";
-import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType } from "../model/types";
+import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType, TSubTypes } from "../model/types";
 import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
@@ -13,6 +13,8 @@ import { atnReducer } from "../../atnDecoder/atnReducer";
 import { TSorActions } from "../../sorcerer/sorActions";
 import { sorReducer } from "../../sorcerer/sorReducer";
 import {ListenerClass} from "../classes/Listener";
+import {TFilterState} from "../components/FilterButton/FilterButton";
+import {TClasses} from "../classes/Reference";
 
 export type TAllActions = TActions | TAtnActions|TSorActions;
 
@@ -253,35 +255,78 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				const { payload: { state, subType, type } } = action;
 				const found = draft.targetReference[type];
 
-				// TODO
-				/*
+				// :-(
+
+				// order matter
+				const filterClasses = [
+					"filterDoc",
+					"filterChannel",
+					"filterPath",
+					"filterLayer",
+					"filterActionSet",
+					"filterAction",
+					"filterCommand",
+					"filterGuide",
+					"filterHistory",
+					"filterSnapshot",
+					"filterProp",
+				] as const;
+
+				// order matter
+				const classes: (TSubTypes | "property")[] = [
+					"documentID",
+					"channelID",
+					"pathID",
+					"layerID",
+					"actionSetID",
+					"actionID",
+					"commandIndex",
+					"guideID",
+					"historyID",
+					"snapshotID",
+					"property",
+				];
+
+				// map object to array based on sorted arrays above
+				const map = filterClasses.map((c,index) => ({
+					filterClass: c,
+					className:classes[index],
+					assign: (str: TFilterState) => {
+						(found as any)[c] = str;
+					},
+				}));
+
+				function disableAllNonMain() {
+					map.forEach(item => item.assign("off"));
+				}
+				
 				if (subType === "main") {
 					if (state === "on") {
 						draft.filterBySelectedReferenceType = "off";
 					} else {
 						draft.filterBySelectedReferenceType = "on";
 					}
-					found?.data.forEach(d => d.content.filterBy = "off");
+					disableAllNonMain();
 				} else {
 					if (state === "on") {
-						found?.data.forEach(d => d.content.filterBy = "off");
+						disableAllNonMain();
 						draft.filterBySelectedReferenceType = "off";
 					} else {
 						let foundIndex: number | null = null;
-						found?.data.forEach((d, i) => {
-							if (d.subType === subType) {
-								foundIndex = i;
-								d.content.filterBy = "on";
+						map.forEach((item, index) => {
+							if (item.className === subType) {
+								foundIndex = index;
+								item.assign("on");
 								draft.filterBySelectedReferenceType = "semi";
 							} else if (foundIndex === null) {
-								d.content.filterBy = "semi";
+								item.assign("semi");
 							} else {
-								d.content.filterBy = "off";
+								item.assign("off");
 							}
 						});
 					}
 				}
-				*/
+				
 			});
 			break;
 		}

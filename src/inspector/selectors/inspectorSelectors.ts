@@ -156,6 +156,9 @@ export const getDescriptorsListView = createSelector([
 			if ("documentID" in activeRef && activeRef.filterDoc === "off") {
 				return true;
 			}
+			if ("layerID" in activeRef && activeRef.filterLayer === "off") {
+				return true;
+			}
 			/*
 			if (activeRef.data[i].content.filterBy === "off") {
 				return true;

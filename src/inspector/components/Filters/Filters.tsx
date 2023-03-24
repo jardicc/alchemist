@@ -184,7 +184,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			case "guide":
 			case "layer":
 			case "path": {
-				const list = [...baseItemsDocument, ...this.state.documentsList];
+				const list = [...baseItemsDocument(activeRef.type), ...this.state.documentsList];
 				
 				return (
 					<this.FilterRow
@@ -331,7 +331,7 @@ export class Filters extends React.Component<TFilters, IState> {
 	private renderHistory = (): React.ReactNode | void => {
 		const {activeRef} = this.props;
 		if (activeRef.type !== "historyState") {return;}
-		const list = [...baseItemsDocument, ...this.state.historyList];
+		const list = [...baseItemsDocument(activeRef.type), ...this.state.historyList];
 
 		return (
 			<this.FilterRow
@@ -347,7 +347,7 @@ export class Filters extends React.Component<TFilters, IState> {
 	private renderSnapshots = (): React.ReactNode | void => {
 		const {activeRef} = this.props;
 		if (activeRef.type !== "snapshotClass") {return;}
-		const list = [...baseItemsDocument, ...this.state.snapshotsList];
+		const list = [...baseItemsDocument(activeRef.type), ...this.state.snapshotsList];
 
 		return (
 			<this.FilterRow
