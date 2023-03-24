@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { Main } from "../../shared/classes/Main";
-import { action } from "../../shared/imports";
 import {events} from "./StringIDs";
+import {action} from "photoshop";
 
 export type TNotificationListenerCb = (event: string, descriptor: ActionDescriptor) => Promise<void>
 

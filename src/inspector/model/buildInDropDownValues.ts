@@ -1,5 +1,5 @@
 import {
-	TTargetReference, TBaseProperty, TDocumentReference, TLayerReference, TPathReference, TChannelReference,
+	TTargetReference, TDocumentReference, TLayerReference, TPathReference, TChannelReference,
 	TGuideReference, TActionSet, TActionItem, TActionCommand, IFilterProperty,
 } from "./types";
 
@@ -23,9 +23,6 @@ export const mainClasses: IFilterProperty<TTargetReference>[] = [
 	{label: "Timeline", value: "timeline"},
 	{label: "Generator", value: "generator"},
 	// { label: "Overkill", value: "overkill" },
-];
-export const baseItemsProperty: IFilterProperty<TBaseProperty>[] = [
-	{label: "(not specified)", value: "notSpecified"},
 ];
 export const baseItemsDocument: IFilterProperty<TDocumentReference>[] = [
 	{label: "(all)", value: "all"},

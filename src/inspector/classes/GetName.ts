@@ -4,6 +4,7 @@ import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { batchPlaySync } from "../../shared/helpers";
 import {TReference} from "./Reference";
 
+/** Name to be shown in descriptor list as title */
 export function getName(refs: TReference[]): IGetNameOutput[] {
 	const copyRef = cloneDeep(refs);
 	const nameParts:IGetNameOutput[] = [];
@@ -24,6 +25,7 @@ export function getName(refs: TReference[]): IGetNameOutput[] {
 	return nameParts.reverse();
 }
 
+/** We will ask item for its name but different classes are using different property names for name */
 function getNameProp(refs: TReference[]):string|null {
 	let propName: string | null;
 	if ("_property" in refs[0]) { return null;}
@@ -53,6 +55,7 @@ function getNameProp(refs: TReference[]):string|null {
 		case "animationFrame":
 		case "animation":
 		case "application":
+			// these classes have no property with name so just return class name
 			return refs[0]._ref;
 		default:
 			propName = "n/a";
@@ -62,6 +65,7 @@ function getNameProp(refs: TReference[]):string|null {
 		return null;
 	}
 
+	// Ask Photoshop for element name
 	const desc:ActionDescriptor = {
 		_obj: "get",
 		_target: [

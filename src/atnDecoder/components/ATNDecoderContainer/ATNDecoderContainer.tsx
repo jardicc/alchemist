@@ -3,8 +3,6 @@ import { IRootState, rootStore } from "../../../shared/store";
 
 import React from "react";
 
-import "./../../../shared/ThemeVars.less";
-import "./../../../shared/styles.less";
 import "./ATNDecoderContainer.less";
 
 import { decodeATN } from "../../../atnDecoder/classes/ATNDecoder";

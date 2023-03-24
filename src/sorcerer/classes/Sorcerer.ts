@@ -1,4 +1,4 @@
-import { uxp } from "../../inspector/types/uxp";
+import { uxp } from "../../types/uxp";
 import { rootStore,IRootState} from "../../shared/store"
 import { generateHtmlFileCode, generateScriptFileCode, getAllPanels, getManifestCode, getManifestGeneric } from "../sorSelectors";
 import Zip from "jszip";

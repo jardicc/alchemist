@@ -3,7 +3,6 @@
 import {app, action} from "photoshop";
 import { cloneDeep } from "lodash";
 import { IDescriptor, TAllTargetReferences} from "../model/types";
-import { DocumentExtra } from "./DocumentExtra";
 import { getName } from "./GetName";
 import { getInitialState } from "../inspInitialState";
 import { RawDataConverter } from "./RawDataConverter";

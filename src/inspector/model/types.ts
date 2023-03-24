@@ -16,7 +16,7 @@ export type TTargetReference = "listener" |  "generator" |
 	"dispatcher" | "notifier" | "replies" | TPropertyClass;
 export type TPropertyClass = "application" | "historyState" | "snapshotClass" | "layer" | "path" | "channel" | "document" | "guide" |
 	"actions" | "timeline" | "animationFrameClass" | "animationClass"
-export type TPropertyType = "hidden" | "optional" | "default" | "1st";
+export type TPropertyGroup = "hidden" | "optional" | "default" | "1st";
 export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"
 export type TActiveInspectorTab = ITreeDataTabs;
 
@@ -27,8 +27,7 @@ export type TCodeViewType = "generated" | "options";
 export type TExportItems = "selected" | "all";
 export type TImportItems = "append" | "replace";
 
-export type TPath = (string)[];
-export type TBaseProperty = "notSpecified" | "none";
+export type TPath = string[];
 export type TCategoryReference = "notSpecified";
 export type THistoryReference = "selected" | number;
 export type TSnapshotReference = "selected" | number;

@@ -1,5 +1,6 @@
 import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
 import "./../index.less";
+import "./../ThemeVars.less";
 import { Settings } from "../../inspector/classes/Settings";
 import {core} from "photoshop";
 import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";

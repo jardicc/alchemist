@@ -1,24 +1,15 @@
 import { IDescriptor, IInspectorState, TFontSizeSettings } from "../model/types";
 import { alert } from "./Helpers";
-import type {uxp} from "../types/uxp";
+import type {uxp} from "../../types/uxp";
 import {SpectrumComponetDefaults} from "react-uxp-spectrum";
 import { getInitialState} from "../inspInitialState";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs: any = require("fs");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const readFileSync:any = require("fs").readFileSync;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const writeFileSync:any = require("fs").writeFileSync;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const lstatSync:any = require("fs").lstatSync;
 
 export class Settings{
-
-	// public static loaded = false;
-
 	private static readonly settingsFilename = "settings.json";
 	private static saveTimeout: number;
 

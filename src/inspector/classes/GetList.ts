@@ -201,7 +201,6 @@ export class GetList {
 	}
 
 	private static get historyCount(): number{
-		//return this.getPropertySync("numberOfGuides"); TODO
 		const desc = {
 			_obj: "get",
 			_target: [

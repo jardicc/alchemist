@@ -1,7 +1,7 @@
 import { decode } from "iconv-lite";
 import { Base64 } from "../../inspector/classes/Base64";
 import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
-import { uxp } from "../../inspector/types/uxp";
+import { uxp } from "../../types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
 import { IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../atnModel";

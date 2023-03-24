@@ -6,7 +6,6 @@ import { getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings
 import React from "react";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
-import "./../../../shared/ThemeVars.less";
 import "./Inspector.less";
 import { TActiveInspectorTab, TFontSizeSettings } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";

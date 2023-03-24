@@ -3,8 +3,6 @@ import { IRootState } from "../../../shared/store";
 
 import React from "react";
 
-import "./../../../shared/ThemeVars.less";
-import "./../../../shared/styles.less";
 import "./SorcererContainer.less";
 
 import SP from "react-uxp-spectrum";

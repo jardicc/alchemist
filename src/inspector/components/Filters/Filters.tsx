@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 import {
 	baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument,
 	baseItemsLayer, mainClasses,
-} from "../../model/properties";
+} from "../../model/buildInDropDownValues";
 import {
 	IPropertySettings, TDocumentReference, TLayerReference, TGuideReference, TPathReference,
 	TChannelReference, TTargetReference, TSubTypes, TActionSet, TActionItem, TActionCommand,
