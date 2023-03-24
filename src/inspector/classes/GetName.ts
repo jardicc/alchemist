@@ -11,7 +11,10 @@ export function getName(refs: TReference[]): IGetNameOutput[] {
 
 	while (copyRef.length) {
 		if ("_property" in copyRef[0]) {
-			nameParts.push({ typeRef: "property", value: copyRef[0]._property});
+			nameParts.push({
+				typeRef: "property",
+				value: copyRef[0]._property,
+			});
 		} else if ("_ref" in copyRef[0]) {
 			nameParts.push({
 				typeRef: copyRef[0]._ref,
@@ -26,9 +29,9 @@ export function getName(refs: TReference[]): IGetNameOutput[] {
 }
 
 /** We will ask item for its name but different classes are using different property names for name */
-function getNameProp(refs: TReference[]):string|null {
-	let propName: string | null;
-	if ("_property" in refs[0]) { return null;}
+function getNameProp(refs: TReference[]):string {
+	let propName = "N/A";
+	if ("_property" in refs[0]) { return propName;}
 
 	switch (refs[0]._ref) {
 		case "actionSet":
@@ -57,12 +60,6 @@ function getNameProp(refs: TReference[]):string|null {
 		case "application":
 			// these classes have no property with name so just return class name
 			return refs[0]._ref;
-		default:
-			propName = "n/a";
-	}
-
-	if (!propName) {
-		return null;
 	}
 
 	// Ask Photoshop for element name

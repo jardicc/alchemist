@@ -83,8 +83,7 @@ export interface IInspectorState {
 	selectedReferenceType: TTargetReference
 	filterBySelectedReferenceType: TFilterState
 	descriptorsGrouping: TDescriptorsGrouping
-	//targetReference: ITargetReference[]
-	targetReference: ITargetReference2
+	targetReference: ITargetReference
 	settings:ISettings
 	inspector:IInspector
 	descriptors: IDescriptor[]
@@ -115,7 +114,7 @@ export type TAllTargetReferences =
 | IRefSnapshotClass
 | IRefGuide
 
-export interface ITargetReference2 {
+export interface ITargetReference {
 	listener: IRefListener
 	dispatcher: IRefDispatcher
 	notifier: IRefNotifier
@@ -401,7 +400,7 @@ export interface IDescriptor{
 
 export interface IGetNameOutput{
 	typeRef: string
-	value: string|null
+	value: string
 }
 
 export const enum DocumentMode {

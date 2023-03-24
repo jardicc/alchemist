@@ -40,18 +40,19 @@ export interface IApplicationReference{
 	_value: "targetEnum"
 }
 
+/** Semi-automated reference builder intended for references used in `get` action */
 export class Reference {
 
 	private ref: TReference[];
 
-	public allFlag = false;
+	public allClass: TClasses | false = false;
 
 	constructor(ref: TReference[]) {
 		this.ref = ref;
 	}
 
 	public get exists(): boolean{
-		return isValidRef(this.ref);
+		return isValidRef(this.refsOnly);
 	}
 
 	public get length(): number{
@@ -64,6 +65,11 @@ export class Reference {
 
 	public get amCode(){
 		return this.ref;
+	}
+
+	public get propertiesOnly(): IPropertyReference[]{
+		const res = this.ref.filter(v => ("_property" in v)) as IPropertyReference[];
+		return res;
 	}
 
 	public get refsOnly(): TReferenceNonProp[]{
@@ -207,6 +213,21 @@ export class Reference {
 		}
 	}
 
+	/** We do allow multiple properties due to multiGet but PS does not allow it */
+	public addProperty(property: string) {
+		this.ref.unshift({
+			_property: property,
+		});
+	}
+
+	private addAtIndex(index: number, r: TReferenceNonProp) {
+		if (index === -1) {
+			this.ref.push(r);
+		} else {
+			this.ref.splice(index, 0, r);			
+		}
+	}
+
 	public setHistory(id: number) {
 		// document can't coexist with history reference
 		this.removeAllClasses("document");
@@ -217,7 +238,7 @@ export class Reference {
 			_ref: "historyState",
 			_id: id,
 		};
-		this.ref.splice(index, 0, r);
+		this.addAtIndex(index, r);
 	}
 
 	public setLayer(id: number) {
@@ -241,7 +262,7 @@ export class Reference {
 			_ref: "snapshotClass",
 			_id: id,
 		};
-		this.ref.splice(index, 0, r);
+		this.addAtIndex(index, r);
 	}
 
 	public setDocument(id: number) {
@@ -255,7 +276,7 @@ export class Reference {
 			_ref: "document",
 			_id: id,
 		};
-		this.ref.splice(index, 0, r);
+		this.addAtIndex(index, r);
 	}
 
 	public setGuide(id: number) {
@@ -380,6 +401,10 @@ export class Reference {
 		this.removeAllClasses("guide");
 	}
 
+	public removeAllProperties() {
+		this.ref = this.ref.filter(r => !("_property" in r));
+	}
+
 	private getClassIndex(myClass: TClasses) { 
 		const index = this.ref.findIndex(r => ("_ref" in r) && r._ref === myClass);
 		return index;
@@ -389,8 +414,6 @@ export class Reference {
 		this.ref = this.ref.filter(r => (("_ref" in r) && r._ref === myClass) === false);
 	}
 
-	private removeAllProperties() {
-		this.ref = this.ref.filter(r => !("_property" in r));
-	}
+
 
 }

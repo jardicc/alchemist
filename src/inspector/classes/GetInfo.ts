@@ -48,7 +48,7 @@ export class GetInfo {
 			case "guide": {
 				if (origRef.documentID === "all") {
 					ref.setApplication();
-					ref.allFlag = true;
+					ref.allClass = "document";
 				} else if (origRef.documentID === "selected") {
 					const activeID = app.activeDocument?.id ?? null;
 					if (activeID === null) {return null;}
@@ -78,7 +78,7 @@ export class GetInfo {
 				if (origRef.layerID === "none") {
 					break;
 				} else if (origRef.layerID === "all") {
-					ref.allFlag;
+					ref.allClass = "layer";
 				} else if (origRef.layerID === "selected") {
 					const activeID = await IDBySelected.layer();
 					if (activeID === null) {return null;}
@@ -112,7 +112,7 @@ export class GetInfo {
 			case "channel": {
 				
 				if (origRef.channelID === "all") {
-					ref.allFlag = true;
+					ref.allClass = "channel";
 					break;
 				}
 
@@ -131,7 +131,7 @@ export class GetInfo {
 			}
 			case "path": {
 				if (origRef.pathID === "all") {
-					ref.allFlag = true;
+					ref.allClass = "path";
 					throw new Error("Not implemented");
 				}
 				let pathV: number | "vectorMask" | "workPath";
@@ -191,7 +191,7 @@ export class GetInfo {
 			}
 			case "guide": {
 				if (origRef.guideID === "all") {
-					ref.allFlag = true;
+					ref.allClass = "guide";
 					break;
 				} else if (origRef.guideID === "none") {
 					break;
@@ -200,6 +200,16 @@ export class GetInfo {
 					break;
 				}
 			}
+		}
+
+		// Add properties
+		if ("properties" in origRef) {
+			origRef.properties.forEach(p => {
+				if (p === "notSpecified") {
+					return;
+				}
+				ref.addProperty(p);					
+			});
 		}
 
 		return ref;
@@ -220,17 +230,18 @@ export class GetInfo {
 		}
 
 		let descToPlay: ITargetReferenceAM;
-	
-		const property = ("properties" in origRef) && origRef?.properties;
 		
-		if(property && property.length > 1) {
+		if (reference.propertiesOnly.length > 1 || reference.allClass) {
+
+			const target = [...reference.refsOnly];
+
 			descToPlay = {
 				_obj: "multiGet",
-				_target: reference.amCode,
+				_target: target,
 				extendedReference: [
-					property,
+					reference.propertiesOnly.map(p => p._property),
 					// conditionally add range
-					...(reference.allFlag ? [{_obj: reference.refsOnly[0], index: 1, count: -1}]:[]),
+					...(reference.allClass ? [{_obj: reference.allClass, index: 1, count: -1}] : []),
 				],
 				options: {
 					failOnMissingProperty: false,
@@ -242,19 +253,12 @@ export class GetInfo {
 				_obj: "get",
 				_target: reference.amCode,
 			};
-	
-			// add property when demanded by user
-			if (property && !property.includes("notSpecified") && property.length === 1) {
-				descToPlay._target.unshift({
-					_property: property[0],
-				});
-			}
 		}
 
 		console.log("Get", descToPlay);
 		const startTime = Date.now();
 		const playResult = await action.batchPlay([descToPlay], {});
-		return this.buildReply(startTime, playResult, descToPlay,_originalRef);
+		return this.buildReply(startTime, playResult, descToPlay, _originalRef);
 	}
 
 

@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { GetDOM } from "../classes/GetDOM";
+import { ReferenceToDOM } from "../classes/GetDOM";
 import { ITargetReferenceAM } from "../classes/GetInfo";
 import { all, getSelectedDescriptors, getSelectedTargetReference, getAutoActiveDescriptor } from "./inspectorSelectors";
 
@@ -29,7 +29,7 @@ export const getTreeDom = createSelector([getSelectedDescriptors, getDomPath, ge
 
 export const getTreeDomInstance = createSelector([getTreeDom], (t) => {
 	if (t.ref) {
-		let sub:any = GetDOM.getDom(t.ref);
+		let sub:any = new ReferenceToDOM(t.ref).getDom();
 		
 		const paths = t.path;
 		for (const part of paths) {
