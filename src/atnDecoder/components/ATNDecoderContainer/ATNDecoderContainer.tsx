@@ -65,7 +65,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 			const descCrc = crc(JSON.stringify(command.descriptor));
 
 			const desc: IDescriptor = {
-				calculatedReference: command.descriptor as any,
+				playAbleData: command.descriptor as any,
 				crc: descCrc,
 				descriptorSettings: {
 					dialogOptions: command.showDialogs ? "display" : "dontDisplay",
@@ -76,7 +76,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				endTime: 0,
 				id: crypto.randomUUID(),
 				locked: false,
-				originalData: command.descriptor,
+				recordedData: command.descriptor,
 				originalReference: {
 					type: "listener",
 				},

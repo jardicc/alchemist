@@ -21,7 +21,7 @@ export const getTreeDom = createSelector([getSelectedDescriptors, getDomPath, ge
 	}
 	const ref = {
 		// selected desc or auto selected
-		ref: (selectedDesc?.[0]?.calculatedReference as ITargetReferenceAM)?._target ?? (autoSelectedDesc ?.calculatedReference as ITargetReferenceAM)?._target,
+		ref: (selectedDesc?.[0]?.playAbleData as ITargetReferenceAM)?._target ?? (autoSelectedDesc ?.playAbleData as ITargetReferenceAM)?._target,
 		path: domPath,
 	};
 	return ref;

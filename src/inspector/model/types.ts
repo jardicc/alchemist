@@ -378,24 +378,24 @@ export interface IReference {
 	showOptionalDocumentReference: boolean
 }
 
-export interface IDescriptor{
+export interface IDescriptor {
 	id: string
 	selected: boolean
-	crc:number
+	crc: number
 	startTime: number
 	endTime: number
 	pinned: boolean
 	locked: boolean
-	renameMode:boolean
-	title:string
+	renameMode: boolean
+	title: string
 	/** filter settings */
 	originalReference: TAllTargetReferences
 	/** used for AM */
-	calculatedReference: ITargetReferenceAM|ActionDescriptor[]|null
+	playAbleData: ITargetReferenceAM | ActionDescriptor[] | null
 	/** content */
-	originalData: ActionDescriptor[] | ActionDescriptor|null
+	recordedData: ActionDescriptor[] | ActionDescriptor | null
 	descriptorSettings: IDescriptorSettings
-	groupCount?:number
+	groupCount?: number
 }
 
 export interface IGetNameOutput{

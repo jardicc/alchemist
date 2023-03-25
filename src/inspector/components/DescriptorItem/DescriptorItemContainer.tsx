@@ -48,7 +48,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 	}
 
 	private get hasError (): boolean {
-		return (this.props.descriptor.originalData as any)?.[0]?._obj === "error";
+		return (this.props.descriptor.recordedData as any)?.[0]?._obj === "error";
 	}
 
 	private generateClassName = () => {

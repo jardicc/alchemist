@@ -90,13 +90,13 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			id: crypto.randomUUID(),
 			locked: false,
 			crc: crc(JSON.stringify(playResult)),
-			originalData: RawDataConverter.replaceArrayBuffer(playResult),
+			recordedData: RawDataConverter.replaceArrayBuffer(playResult),
 			originalReference,
 			pinned: false,
 			renameMode: false,
 			selected: false,
 			title: GetInfo.generateTitle(originalReference, calculatedReference),
-			calculatedReference,
+			playAbleData: calculatedReference,
 			descriptorSettings: this.props.settings.initialDescriptorSettings,
 		};
 
@@ -135,12 +135,12 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			crc: descCrc,
 			id: crypto.randomUUID(),
 			locked: false,
-			originalData,
+			recordedData: originalData,
 			originalReference,
 			pinned: false,
 			selected: false,
 			renameMode: false,
-			calculatedReference: descWithEvent,
+			playAbleData: descWithEvent,
 			title: (spy ? "[S] " : "") + GetInfo.generateTitle(originalReference, descWithEvent),
 			descriptorSettings: this.props.settings.initialDescriptorSettings,
 		};
@@ -229,7 +229,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			const startTime = Date.now();
 			let descriptors:ActionDescriptor[]|null;
 			try {
-				descriptors = await replayDescriptor(item.calculatedReference as ActionDescriptor);				
+				descriptors = await replayDescriptor(item.playAbleData as ActionDescriptor);				
 			} catch (e:any) {
 				NotificationManager.error(e.message,"Replay failed", 5000);
 				console.error("error");
@@ -247,13 +247,13 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				id: crypto.randomUUID(),
 				locked: false,
 				crc: crc(JSON.stringify(descriptors)),
-				originalData: descriptors ? RawDataConverter.replaceArrayBuffer(descriptors) : null,
+				recordedData: descriptors ? RawDataConverter.replaceArrayBuffer(descriptors) : null,
 				originalReference,
 				pinned: false,
 				selected: false,
 				renameMode: false,
-				calculatedReference: descriptors,
-				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM),
+				playAbleData: descriptors,
+				title: GetInfo.generateTitle(originalReference, item.playAbleData as ITargetReferenceAM),
 				descriptorSettings: this.props.settings.initialDescriptorSettings,
 			};
 

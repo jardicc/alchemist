@@ -16,7 +16,7 @@ export function filterNonExistent(descriptors: IDescriptor[]):IDescriptor[] {
 				return true;
 			}
 			default: {
-				res = isValidRef((desc.calculatedReference as ActionDescriptor)._target);
+				res = isValidRef((desc.playAbleData as ActionDescriptor)._target);
 				return res;
 			}
 		}

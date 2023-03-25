@@ -75,11 +75,11 @@ export const getGeneratedCode = createSelector([
 	function addPerItemOptions(data: IDescriptor) {
 		if (data.descriptorSettings.dialogOptions) {
 			data = cloneDeep(data);
-			(data.calculatedReference as ActionDescriptor)._options = {
+			(data.playAbleData as ActionDescriptor)._options = {
 				dialogOptions: data.descriptorSettings.dialogOptions,
 			} as IDescriptorSettings;
 		}
-		return data.calculatedReference;
+		return data.playAbleData;
 	}
 
 	function addCommonOptions(data: IDescriptor[]): BatchPlayCommandOptionsExtended {
@@ -238,11 +238,11 @@ export const getGeneratedCode2 = createSelector([
 	function addPerItemOptions(data: IDescriptor) {
 		if (data.descriptorSettings.dialogOptions) {
 			data = cloneDeep(data);
-			(data.calculatedReference as ActionDescriptor)._options = {
+			(data.playAbleData as ActionDescriptor)._options = {
 				dialogOptions: data.descriptorSettings.dialogOptions,
 			} as IDescriptorSettings;
 		}
-		return data.calculatedReference;
+		return data.playAbleData;
 	}
 
 	function addCommonOptions(data: IDescriptor[]): BatchPlayCommandOptionsExtended {

@@ -207,11 +207,11 @@ export const getDescriptorsListView = createSelector([
 		const filterSettings: IListenerNotifierFilter = (activeRef.type === "listener") ? listenerFilter : notifierFilter;
 		if (filterSettings.type === "exclude" && filterSettings.exclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				!filterSettings.exclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				!filterSettings.exclude.some(str => (item.recordedData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		} else if (filterSettings.type === "include" && filterSettings.include.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				filterSettings.include.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				filterSettings.include.some(str => (item.recordedData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		}
 	}

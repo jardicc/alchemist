@@ -1,5 +1,3 @@
-/* eslint-disable no-fallthrough */
-/* eslint-disable no-duplicate-case */
 import {app, action} from "photoshop";
 import { cloneDeep } from "lodash";
 import { IDescriptor, TAllTargetReferences} from "../model/types";
@@ -34,7 +32,7 @@ export interface ITargetReferenceAM {
 export class GetInfo {
 
 	/** Does not include property */
-	public static async getReference(_originalRef: TAllTargetReferences): Promise<Reference | null>{
+	public static async getReference(_originalRef: TAllTargetReferences): Promise<Reference | null> {
 
 		const ref = new Reference([]);
 		const origRef = cloneDeep(_originalRef);
@@ -59,14 +57,14 @@ export class GetInfo {
 				break;
 			}
 			default: {
-				if("documentID" in origRef) throw new Error(origRef.type);
+				if ("documentID" in origRef) throw new Error(origRef.type);
 			}
 			
 		}
 
 		// set layer
 		switch (origRef.type) {
-			case "layer": 
+			case "layer":
 			case "channel":
 			case "path": {
 				if (origRef.type === "channel" && !(origRef.channelID === "filterMask" || origRef.channelID === "mask")) {
@@ -82,14 +80,14 @@ export class GetInfo {
 				} else if (origRef.layerID === "selected") {
 					const activeID = await IDBySelected.layer();
 					if (activeID === null) {return null;}
-					ref.setLayer(activeID);			
+					ref.setLayer(activeID);
 				} else {
 					ref.setLayer(origRef.layerID);
 				}
 				break;
 			}
 			default: {
-				if("layerID" in origRef) throw new Error(origRef.type);
+				if ("layerID" in origRef) throw new Error(origRef.type);
 			}
 		}
 
@@ -138,7 +136,7 @@ export class GetInfo {
 
 				if (origRef.pathID === "selected") {
 					const activeID = await IDBySelected.path(); // !! can be work path and mask
-					if (activeID === null) { return null; }
+					if (activeID === null) {return null;}
 					pathV = activeID;
 				} else {
 					pathV = origRef.pathID;
@@ -196,7 +194,7 @@ export class GetInfo {
 				} else if (origRef.guideID === "none") {
 					break;
 				} else {
-					ref.setGuide(origRef.guideID);					
+					ref.setGuide(origRef.guideID);
 					break;
 				}
 			}
@@ -208,7 +206,7 @@ export class GetInfo {
 				if (p === "notSpecified") {
 					return;
 				}
-				ref.addProperty(p);					
+				ref.addProperty(p);
 			});
 		}
 
@@ -216,7 +214,7 @@ export class GetInfo {
 	}
 	
 	public static async getAM(_originalRef: TAllTargetReferences | null): Promise<IDescriptor | null> {
-		if (!_originalRef) { return null;}
+		if (!_originalRef) {return null;}
 		const origRef = cloneDeep(_originalRef);
 		if (origRef.type === "generator") {
 			const result = await this.getFromGenerator(_originalRef);
@@ -296,32 +294,32 @@ export class GetInfo {
 		return names.join(" / ");
 	}
 
-	private static buildReply(startTime:number,playResult:ActionDescriptor[],desc: ITargetReferenceAM, originalRef: TAllTargetReferences):IDescriptor {
+	private static buildReply(startTime: number, playResult: ActionDescriptor[], playAbleData: ITargetReferenceAM, originalRef: TAllTargetReferences): IDescriptor {
 		return {
 			startTime,
 			endTime: Date.now(),
 			id: crypto.randomUUID(),
 			locked: false,
 			crc: crc(JSON.stringify(playResult)),
-			originalData: RawDataConverter.replaceArrayBuffer(playResult),
+			recordedData: RawDataConverter.replaceArrayBuffer(playResult),
 			originalReference: originalRef,
 			pinned: false,
 			selected: false,
-			calculatedReference: desc,
+			playAbleData: playAbleData,
 			renameMode: false,
-			title: this.generateTitle(originalRef, desc),
+			title: this.generateTitle(originalRef, playAbleData),
 			descriptorSettings: getInitialState().settings.initialDescriptorSettings,
 		};
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	private static async getFromGenerator(originalRef: TAllTargetReferences): Promise<any>{
+	private static async getFromGenerator(originalRef: TAllTargetReferences): Promise<any> {
 		const startTime = Date.now();
 		const id = app.activeDocument?.id ?? null;
 		if (id === null) {
 			return null;
 		}
-		const desc:ITargetReferenceAM = {
+		const desc: ITargetReferenceAM = {
 			_obj: "get",
 			_target: [
 				{
@@ -345,10 +343,10 @@ export class GetInfo {
 		};
 		const playResult = await action.batchPlay([desc], {});
 		playResult.forEach(d => d.json = JSON.parse(d.json));
-		return this.buildReply(startTime, playResult, desc,originalRef);
+		return this.buildReply(startTime, playResult, desc, originalRef);
 	}
 
-	public static getActionCommandIndexByID(commandID:number,actionItemID: number):number {
+	public static getActionCommandIndexByID(commandID: number, actionItemID: number): number {
 		const all = GetList.getAllCommandsOfAction(actionItemID);
 		const found = all.find(desc => desc.ID === commandID);
 		if (!found) {
