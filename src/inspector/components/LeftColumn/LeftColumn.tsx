@@ -78,7 +78,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			_target: descriptor._target,
 		};
 		const playResult = await photoshop.action.batchPlay([calculatedReference], {});
-		const originalReference = guessOriginalReference(calculatedReference._target);
+		const originalReference = guessOriginalReference(descriptor._target);
 		if (!originalReference) {
 			console.error("Can't identify: ", calculatedReference);
 			return;

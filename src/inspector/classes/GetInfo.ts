@@ -32,7 +32,7 @@ export interface ITargetReferenceAM {
 export class GetInfo {
 
 	/** Does not include property */
-	public static async getReference(_originalRef: TAllTargetReferences): Promise<Reference | null> {
+	private static async getReference(_originalRef: TAllTargetReferences): Promise<Reference | null> {
 
 		const ref = new Reference([]);
 		const origRef = cloneDeep(_originalRef);
@@ -346,7 +346,7 @@ export class GetInfo {
 		return this.buildReply(startTime, playResult, desc, originalRef);
 	}
 
-	public static getActionCommandIndexByID(commandID: number, actionItemID: number): number {
+	private static getActionCommandIndexByID(commandID: number, actionItemID: number): number {
 		const all = GetList.getAllCommandsOfAction(actionItemID);
 		const found = all.find(desc => desc.ID === commandID);
 		if (!found) {
