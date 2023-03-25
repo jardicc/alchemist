@@ -1,9 +1,9 @@
 /* eslint-disable comma-dangle */
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
-import { IDescriptor, IInspectorState, IListenerNotifierFilter, TTargetReference } from "../model/types";
+import { IDescriptor, IInspectorState, IListenerNotifierFilter, TSubTypes, TTargetReference } from "../model/types";
 import { Helpers } from "../classes/Helpers";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
@@ -50,11 +50,8 @@ export const getActiveRef = createSelector([getTargetReference, getSelectedTarge
 
 export const getCategoryItemsVisibility = createSelector([all, getActiveRef], (s, activeRef) => {
 	// adds currently selected category into visibility even though is not explicitly set to visible
-	if (activeRef?.type) {
-		const res: TTargetReference[] = [...new Set([...s.explicitlyVisibleTopCategories, activeRef.type])];
-		return res;
-	}
-	return s.explicitlyVisibleTopCategories;
+	const res: TTargetReference[] = [...new Set([...s.explicitlyVisibleTopCategories, activeRef.type])];
+	return res;
 });
 
 export const getInspectorSettings = createSelector([all], (s) => {
@@ -115,7 +112,7 @@ export const getDescriptorsListView = createSelector([
 	activeRef,
 	rootFilter,
 	settings,
-	categoryVisibility,
+	visibleMainCategories,
 ) => {	
 	const pinned:IDescriptor[] = allDesc.filter(i => i.pinned);
 	const notPinned: IDescriptor[] = allDesc.filter(i => !i.pinned);
@@ -137,50 +134,75 @@ export const getDescriptorsListView = createSelector([
 
 	
 	let filtered = reordered.filter((desc: IDescriptor) => {
+		// show all if none filter is active
 		if (rootFilter === "off") {
 			return true;
 		}
 	
-		const origRef = desc.originalReference;
-		if (!activeRef || !origRef || !categoryVisibility.includes(origRef.type)) {
+		// hide items from inactive categories
+		if (!visibleMainCategories.includes(desc.originalReference.type)) {
 			return false;
 		}
-		/*
-		if (activeRefFilter.type !== origRefFilter.type) {
-			return false;
+
+		// skip categories with no further filter options... just to make it easier
+		switch (activeRef.type) {
+			case "generator":
+			case "listener":
+			case "dispatcher":
+			case "notifier":
+			case "replies":
+				return true;
 		}
-		*/
-		if (activeRef.type !== "listener") {
-			//for (let i = 0, len = activeRef.data.length; i < len; i++) {
-			// TODO add more
-			if ("documentID" in activeRef && activeRef.filterDoc === "off") {
-				return true;
+		
+		// order matter
+		const filterClasses = [
+			"filterDoc",
+			"filterChannel",
+			"filterPath",
+			"filterLayer",
+			"filterActionSet",
+			"filterAction",
+			"filterCommand",
+			"filterGuide",
+			"filterHistory",
+			"filterSnapshot",
+			"filterProp",
+		] as const;
+		
+		// order matter
+		const classes: (TSubTypes | "properties")[] = [
+			"documentID",
+			"channelID",
+			"pathID",
+			"layerID",
+			"actionSetID",
+			"actionID",
+			"commandIndex",
+			"guideID",
+			"historyID",
+			"snapshotID",
+			"properties",
+		];
+		
+		//console.log(desc.title, activeRef, origRefClone);
+		const activeRefClone = cloneDeep(activeRef);
+		const origRefClone = cloneDeep(desc.originalReference);
+		// reduce properties only to those that matters and compare them
+		filterClasses.forEach((className, index) => {
+			if ((activeRefClone as any)?.[className] === "off") {
+				delete (activeRefClone as any)[classes[index]];
+				delete (origRefClone as any)[classes[index]];
 			}
-			if ("layerID" in activeRef && activeRef.filterLayer === "off") {
-				return true;
-			}
-			/*
-			if (activeRef.data[i].content.filterBy === "off") {
-				return true;
-			}
-			*/
-			if (activeRef.type !== origRef.type) {
-				return false;
-			}
-			if ("documentID" in activeRef && "documentID" in origRef) {
-				if (activeRef.documentID !== origRef.documentID) {
-					return false;
-				}
-			}
-			/*
-			if (activeRef.data[i].content.value !== origRef.data[i].content.value) {
-				return false;
-			}
-			*/
-			//}
-		}
-		return true;
+			delete (origRefClone as any)[className];
+			delete (activeRefClone as any)[className];
+		});
+		// allows to compare when multiple main categories are set to be visible
+		delete (origRefClone as any).type;
+		delete (activeRefClone as any).type;
+		console.log(desc.title,activeRefClone, origRefClone);
+		return isEqual(activeRefClone, origRefClone);
 	});
+
 	if (activeRef.type === "listener" || activeRef.type === "notifier") {
 		const filterSettings: IListenerNotifierFilter = (activeRef.type === "listener") ? listenerFilter : notifierFilter;
 		if (filterSettings.type === "exclude" && filterSettings.exclude.join(";").trim().length) {

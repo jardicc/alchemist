@@ -252,7 +252,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		*/
 		case "SET_FILTER_STATE": {
 			state = produce(state, draft => {
-				const { payload: { state, subType, type } } = action;
+				const { payload: { state: filterState, subType, type } } = action;
 				const found = draft.targetReference[type];
 
 				// :-(
@@ -273,7 +273,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				] as const;
 
 				// order matter
-				const classes: (TSubTypes | "property")[] = [
+				const classes: (TSubTypes | "properties")[] = [
 					"documentID",
 					"channelID",
 					"pathID",
@@ -284,7 +284,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 					"guideID",
 					"historyID",
 					"snapshotID",
-					"property",
+					"properties",
 				];
 
 				// map object to array based on sorted arrays above
@@ -292,7 +292,9 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 					filterClass: c,
 					className:classes[index],
 					assign: (str: TFilterState) => {
-						(found as any)[c] = str;
+						if (c in found) {
+							(found as any)[c] = str;							
+						}
 					},
 				}));
 
@@ -301,14 +303,14 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				}
 				
 				if (subType === "main") {
-					if (state === "on") {
+					if (filterState === "on") {
 						draft.filterBySelectedReferenceType = "off";
 					} else {
 						draft.filterBySelectedReferenceType = "on";
 					}
 					disableAllNonMain();
 				} else {
-					if (state === "on") {
+					if (filterState === "on") {
 						disableAllNonMain();
 						draft.filterBySelectedReferenceType = "off";
 					} else {

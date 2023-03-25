@@ -107,7 +107,7 @@ export interface ISetFilterStateAction {
 	type: "SET_FILTER_STATE"
 	payload: {
 		type: TTargetReference,
-		subType: TSubTypes | "main"|"property",
+		subType: TSubTypes | "main"|"properties",
 		state: TFilterState
 	}
 }
@@ -486,7 +486,7 @@ export function setInspectorPathContentAction(path:string[],mode:"replace"|"add"
 		},
 	};
 }
-export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main"|"property",state: TFilterState): ISetFilterStateAction {
+export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main"|"properties",state: TFilterState): ISetFilterStateAction {
 	return {
 		type: "SET_FILTER_STATE",
 		payload: {

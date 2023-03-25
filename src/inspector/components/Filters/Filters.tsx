@@ -28,7 +28,7 @@ import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityBu
 
 
 interface IFilterRowProps{
-	id: TSubTypes | "main" | "property"
+	id: TSubTypes | "main" | "properties"
 	items: (IPropertyItem | IPropertyGroup)[]
 	icons? :boolean
 	header: string | React.ReactElement
@@ -81,7 +81,7 @@ export class Filters extends React.Component<TFilters, IState> {
 
 
 	/** refactor into reducer? */
-	private onSetSubType = (subType: TSubTypes | "main" | "property", value: string | number, toggle: boolean) => {
+	private onSetSubType = (subType: TSubTypes | "main" | "properties", value: string | number, toggle: boolean) => {
 
 		const {onSetTargetReference, activeRef} = this.props;
 		const activeRefClone = cloneDeep(activeRef);
@@ -91,7 +91,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				this.onSetMainCategory(value as TTargetReference);
 				return;
 			} 
-			case "property": {
+			case "properties": {
 				this.setProperty(value as string, toggle);
 				return;
 			}
@@ -376,7 +376,7 @@ export class Filters extends React.Component<TFilters, IState> {
 
 		return (
 			<this.FilterRow
-				id="property"
+				id="properties"
 				header="Property:"
 				items={activeRefProperties.list}
 				
@@ -451,7 +451,7 @@ export class Filters extends React.Component<TFilters, IState> {
 	/**
 	 * Document IDs are intentional because we don't always need items for active document
 	 */
-	private updateList = async (type: TSubTypes | "main" | "property") => {
+	private updateList = async (type: TSubTypes | "main" | "properties") => {
 		console.log("click");
 		const {activeRef} = this.props;
 
@@ -560,7 +560,7 @@ const mapStateToProps = (state: IRootState): IFiltersProps => ({
 interface IFiltersDispatch {
 	onSetTargetReference: (arg: TAllTargetReferences) => void
 	onSetSelectedReferenceType: (type: TTargetReference) => void
-	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main" | "property", state: TFilterState) => void
+	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main" | "properties", state: TFilterState) => void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IFiltersDispatch, Record<string, unknown>> = (dispatch: Dispatch): IFiltersDispatch => ({
