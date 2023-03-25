@@ -9,7 +9,7 @@ export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
 export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "size-bigger" | "size-big" | "size-youMustBeJoking"
 /** These will build up reference */
-export type TSubTypes = "actionID" | "actionSetID" | "channelID" | "documentID" | "guideID" | "historyID" | "layerID" | "pathID" | "snapshotID"	| "commandIndex"
+export type TSubTypes = "actionID" | "actionSetID" | "channelID" | "documentID" | "guideID" | "historyID" | "layerID" | "pathID" | "snapshotID" | "commandIndex" | "properties"
 
 
 export type TTargetReference = "listener" |  "generator" | 

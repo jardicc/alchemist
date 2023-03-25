@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 import React, {ComponentType, ReactElement} from "react";
 import {IconChevronBottom, IconChevronRight, IconChevronTop} from "../../../shared/components/icons";
 import {IPropertyGroup, IPropertyItem} from "../../model/types";
@@ -23,7 +22,7 @@ export interface IAccDropProps {
 	selected: (string|number)[]
 
 	className?: string
-	onHeaderClick?: (id: string, expanded: boolean) => void
+	onHeaderClick?: (id: string, expanded: boolean) => Promise<void>
 	showSearch?: boolean
 	headerPostFix?: ReactElement
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
@@ -78,9 +77,9 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		return height;
 	}
 
-	private headerClick = () => {
+	private headerClick = async () => {
 		if(this.props.onHeaderClick){
-			this.props.onHeaderClick(this.props.id, !this.state.expanded);
+			await this.props.onHeaderClick(this.props.id, !this.state.expanded);
 		}
 		this.toggleExpanded();
 	}

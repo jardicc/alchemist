@@ -170,7 +170,7 @@ export const getDescriptorsListView = createSelector([
 		] as const;
 		
 		// order matter
-		const classes: (TSubTypes | "properties")[] = [
+		const classes: TSubTypes[] = [
 			"documentID",
 			"channelID",
 			"pathID",

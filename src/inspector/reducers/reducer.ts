@@ -31,7 +31,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_TARGET_REFERENCE": {
 			state = produce(state, draft => {
 
-				const type = action.payload.type;
+				const type = state.selectedReferenceType;
 				
 				draft.targetReference[type] = {
 					...state.targetReference[type] as any, // TS is not that smart to find a match :-/
@@ -273,7 +273,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				] as const;
 
 				// order matter
-				const classes: (TSubTypes | "properties")[] = [
+				const classes: TSubTypes[] = [
 					"documentID",
 					"channelID",
 					"pathID",

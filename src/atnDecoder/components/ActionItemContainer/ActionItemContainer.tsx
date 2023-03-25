@@ -104,12 +104,11 @@ interface IActionItemProps{
 	parentSet:IActionSetUUID
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IActionItemProps => (state = state as IRootState,{
+const mapStateToProps = (state: IRootState, ownProps: IOwn): IActionItemProps => ({
 	actionItem: ownProps.actionItem,
 	parentSet: ownProps.parent,
 	expandedItems: getExpandedItemsAction(state),
 	selectedItems: getSelectedItemsAction(state),
-	
 });
 
 interface IActionItemDispatch {

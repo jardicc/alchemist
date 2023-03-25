@@ -10,7 +10,7 @@ export interface ISetModeTab {
 
 export interface ISetTargetReference {
 	type: "SET_TARGET_REFERENCE"
-	payload: TAllTargetReferences
+	payload: Partial<TAllTargetReferences>
 }
 
 export interface IAddDescriptorAction {
@@ -500,7 +500,7 @@ export function setModeTabAction(id:TActiveInspectorTab):ISetModeTab{
 		payload: id,
 	};
 }
-export function setTargetReferenceAction(arg:TAllTargetReferences):ISetTargetReference{
+export function setTargetReferenceAction(arg:Partial<TAllTargetReferences>):ISetTargetReference{
 	return {
 		type: "SET_TARGET_REFERENCE",
 		payload: arg,
