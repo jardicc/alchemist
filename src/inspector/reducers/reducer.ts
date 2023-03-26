@@ -14,7 +14,6 @@ import { TSorActions } from "../../sorcerer/sorActions";
 import { sorReducer } from "../../sorcerer/sorReducer";
 import {ListenerClass} from "../classes/Listener";
 import {TFilterState} from "../components/FilterButton/FilterButton";
-import {TClasses} from "../classes/Reference";
 
 export type TAllActions = TActions | TAtnActions|TSorActions;
 
@@ -104,6 +103,27 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_SELECTED_REFERENCE_TYPE_ACTION": {
 			state = produce(state, draft => {
 				draft.selectedReferenceType = action.payload;
+			});
+			break;
+		}
+		case "SET_PROPERTY": {
+			state = produce(state, draft => {
+				const {value, toggle} = action.payload;
+
+				const activeRef = draft.targetReference[state.selectedReferenceType];
+		
+				if ("properties" in activeRef && typeof value === "string") {
+					if (toggle) { // support multiGet
+						const foundIndex = activeRef.properties.indexOf(value);
+						if (foundIndex === -1) {
+							activeRef.properties.push(value);
+						} else {
+							activeRef.properties.splice(foundIndex, 1);
+						}
+					} else {
+						activeRef.properties = [value];
+					}
+				}
 			});
 			break;
 		}

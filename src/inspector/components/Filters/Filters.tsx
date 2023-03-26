@@ -17,7 +17,7 @@ import {
 import { Dispatch } from "redux";
 import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityButton";
 import {FilterRowContainer} from "../FilterRow/FilterRow";
-import {setSelectedReferenceTypeAction, setTargetReferenceAction} from "../../actions/inspectorActions";
+import {setProperty, setSelectedReferenceTypeAction, setTargetReferenceAction} from "../../actions/inspectorActions";
 import {cloneDeep} from "lodash";
 import {GetList} from "../../classes/GetList";
 
@@ -263,7 +263,7 @@ export class Filters extends React.Component<TFilters, IState> {
 	}
 	
 	private Property = (): JSX.Element | null => {
-		const {activeRef, activeRefProperties} = this.props;
+		const {activeRef, activeRefProperties, onSetProperty} = this.props;
 		
 		switch (activeRef.type) {
 			case "generator":
@@ -288,33 +288,10 @@ export class Filters extends React.Component<TFilters, IState> {
 				value={activeRef.properties}
 
 				supportMultiSelect={true}
-				onSelect={this.setProperty}
+				onSelect={onSetProperty}
 			/>
 		);
 	}
-
-	// move to reducer?
-	private setProperty = (value: string | number, toggle: boolean) => {
-
-		const {onSetTargetReference, activeRef} = this.props;
-		const activeRefClone = cloneDeep(activeRef);
-
-		if ("properties" in activeRefClone && typeof value === "string") {
-			if (toggle) { // support multiGet
-				const foundIndex = activeRefClone.properties.indexOf(value);
-				if (foundIndex === -1) {
-					activeRefClone.properties.push(value);
-				} else {
-					activeRefClone.properties.splice(foundIndex, 1);
-				}
-			} else {
-				activeRefClone.properties = [value];
-			}
-		}
-
-		onSetTargetReference(activeRefClone);
-	}
-
 
 	private ListenerFilter = (): JSX.Element | null => {
 		switch (this.props.activeRef.type) {
@@ -367,11 +344,13 @@ const mapStateToProps = (state: IRootState): IFiltersProps => ({
 interface IFiltersDispatch {
 	onSetSelectedReferenceType: (type: TTargetReference) => void
 	onSetTargetReference: (arg: Partial<TAllTargetReferences>) => void
+	onSetProperty: (value: string | number, toggle: boolean) => void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<IFiltersDispatch, Record<string, unknown>> = (dispatch: Dispatch): IFiltersDispatch => ({
 	onSetSelectedReferenceType: (type) => dispatch(setSelectedReferenceTypeAction(type)),
 	onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
+	onSetProperty: (value,toggle) => dispatch(setProperty(value,toggle)),
 });
 
 export const FiltersContainer = connect<IFiltersProps, IFiltersDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Filters);

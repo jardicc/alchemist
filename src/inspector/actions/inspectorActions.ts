@@ -291,6 +291,24 @@ export interface ISetCategoryItemVisibilityAction{
 	}
 }
 
+export interface ISetPropertyAction {
+	type: "SET_PROPERTY",
+	payload: {
+		value: string | number
+		toggle?: boolean
+	}
+}
+
+export function setProperty(value: string | number, toggle: boolean): ISetPropertyAction {
+	return {
+		type: "SET_PROPERTY",
+		payload: {
+			value,
+			toggle,
+		},
+	};
+}
+
 export function setCategoryItemVisibilityAction(value:TTargetReference, operation: "add" | "remove"): ISetCategoryItemVisibilityAction{
 	return {
 		type: "SET_CATEGORY_ITEM_VISIBILITY",
@@ -698,4 +716,5 @@ export type TActions =
 	IToggleAccordionAction |
 	ISetSearchContentKeywordAction |
 	ISpyAction |
-	ISetCategoryItemVisibilityAction
+	ISetCategoryItemVisibilityAction |
+	ISetPropertyAction
