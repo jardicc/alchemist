@@ -26,7 +26,7 @@ class FilterRow extends React.Component<TFilterRow,IFilterRowState> {
 	}
 
 	public render(): React.ReactNode {
-		const {value: content, subtype, filterBy, onSelect,onUpdateList} = this.props;
+		const {value: content, subtype, filterBy, onSelect,onUpdateList,initialItems,items} = this.props;
 		let newContent: (string|number)[];
 		if(!Array.isArray(content)) {
 			newContent = [content];
@@ -48,7 +48,7 @@ class FilterRow extends React.Component<TFilterRow,IFilterRowState> {
 					const list = await onUpdateList() || [];
 					this.setList(list);
 				}}
-				items={this.state.list}
+				items={items || this.state.list}
 				headerPostFix={
 					<FilterButton
 						subtype={subtype}
@@ -70,6 +70,7 @@ interface IFilterRowState{
 interface IOwn{
 	subtype: TSubTypes | "main"
 	initialItems?: (IPropertyItem | IPropertyGroup)[]
+	items?: (IPropertyItem | IPropertyGroup)[]
 	icons? :boolean
 	header: string | React.ReactElement
 	filterBy: TFilterState

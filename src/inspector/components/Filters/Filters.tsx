@@ -280,7 +280,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			<FilterRowContainer
 				subtype="properties"
 				header="Property:"
-				initialItems={activeRefProperties.list}
+				items={activeRefProperties.list}
 				
 				showSearch={true}
 				doNotCollapse={true}
