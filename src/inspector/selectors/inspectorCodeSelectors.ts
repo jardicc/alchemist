@@ -131,13 +131,16 @@ export const getGeneratedCode = createSelector([
 			indent: tab,
 		};
 
+		const playAbleInfo = "// Alchemist can't generate code from the reply of replay and from dispatched code.";
+		const notifierWarning = "// Events recognized as notifiers are not re-playable in most of the cases. There is high chance that generated code won't work.\n\n";
+
 		if (selected.length >= 1) {
 			iDesc = selected;
 		} else if (autoActive) {
 			iDesc = [autoActive];
 		}
-		if (iDesc.some(item => ["replies","notifier","dispatcher"].includes(item.originalReference.type))) {
-			return "// Alchemist can't generate code from replay reply, dispatched code. Notifiers are not supported to save your time because those are non-playable in 99.99% of cases";
+		if (iDesc.some(item => ["replies","dispatcher"].includes(item.originalReference.type))) {
+			return playAbleInfo;
 		}
 		data = iDesc.map(item => addPerItemOptions(item));
 		// adds raw data type support
@@ -183,25 +186,36 @@ export const getGeneratedCode = createSelector([
 
 		const strCall = qts(`async function runModalFunction() {\n${tab}await executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);
 
-		
+		let banner = "";
+		if (iDesc.some(item => item.originalReference.type === "notifier")) {
+			banner = notifierWarning;
+		}
 			
 		
 		if (wrappers==="batchPlay") {
 			return (
+				banner +
 				strBatchPlayImport +
 				strBatchPlay
 			);
 		} else if (wrappers==="modal") {
 			return (
+				banner +
 				strExecModalImport +
 				strBatchPlayImport +
 				strActionCommand +
 				strCall
 			);
 		} else if (wrappers === "array") {
-			return strDesc;
+			return (
+				banner +
+				strDesc
+			);
 		} else if (wrappers === "objects") {
-			return udt(strDesc.slice(2, -2));
+			return (
+				banner +
+				udt(strDesc.slice(2, -2))
+			);
 		}
 
 		return "";
