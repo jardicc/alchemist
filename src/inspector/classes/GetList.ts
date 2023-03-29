@@ -195,7 +195,7 @@ export class GetList {
 		} else {
 			res = docID;
 		}
-		if (!docID) {return null;}
+		if (!Number.isInteger(res)) {return null;}
 		const docE = new DocumentExtra(new app.Document(res));
 		return docE;
 	}
