@@ -10,6 +10,7 @@ import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import {Reference, TReference} from "./Reference";
 import {IDBySelected} from "./GetIDBySelected";
 import {GetList} from "./GetList";
+import {ReferenceToDOM} from "./GetDOM";
 
 
 export interface ITargetReferenceAM {
@@ -130,7 +131,7 @@ export class GetInfo {
 			case "path": {
 				if (origRef.pathID === "all") {
 					ref.allClass = "path";
-					throw new Error("Not implemented");
+					break;
 				}
 				let pathV: number | "vectorMask" | "workPath";
 
@@ -233,13 +234,36 @@ export class GetInfo {
 
 			const target = [...reference.refsOnly];
 
+			// TODO make this range exceptions cleaner?
+			const range = {_obj: reference.allClass, index: 1, count: -1};
+			if (reference.allClass === "layer") {
+				if (reference.document) {
+					const hasBg = new app.Document(reference.document._id).backgroundLayer;
+					if (hasBg) {
+						range.index = 0;						
+					}
+				} else if(app.activeDocument.backgroundLayer){
+					range.index = 0;
+				}
+			}
+			if (reference.allClass === "path") {
+				if (reference.document) {
+					const doc = new app.Document(reference.document._id);
+					range.count = doc.pathItems.length;						
+				} else if(app.activeDocument){
+					range.count = app.activeDocument.pathItems.length;
+				} else {
+					range.count = 0;
+				}
+			}
+
 			descToPlay = {
 				_obj: "multiGet",
 				_target: target,
 				extendedReference: [
 					reference.propertiesOnly.map(p => p._property),
 					// conditionally add range
-					...(reference.allClass ? [{_obj: reference.allClass, index: 1, count: -1}] : []),
+					...(reference.allClass ? [range] : []),
 				],
 				options: {
 					failOnMissingProperty: false,

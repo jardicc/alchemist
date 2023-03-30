@@ -40,14 +40,14 @@ export const baseItemsLayer: IFilterProperty<TLayerReference>[] = [
 	{label: "(all)", value: "all"},
 ];
 export const baseItemsPath: IFilterProperty<TPathReference>[] = [
-	// {label: "(all)", value: "all"}, // -1 index is broken... user has to provide correct count
 	{label: "(active)", value: "selected"},
+	{label: "(all)", value: "all"}, // -1 index is broken... user has to provide correct count
 	{label: "(vector mask)", value: "vectorMask"},
 	{label: "(work path)", value: "workPathIndex"},
 ];
 export const baseItemsChannel: IFilterProperty<TChannelReference>[] = [
 	{label: "(active)", value: "selected"},
-	{label: "(all)", value: "all"},
+	{label: "(all*)", value: "all"},
 	{label: "(composite)", value: "composite"},
 	{label: "(Mask)", value: "mask"},
 	{label: "(Filter mask)", value: "filterMask"},
