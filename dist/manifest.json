@@ -1,13 +1,17 @@
 {
+	"manifestVersion": 5,
 	"name": "Alchemist",
 	"id": "2bcdb900",
-	"main": "index.html",
-	"version": "2.5.0",
-	"manifestVersion": 5,
+	"version": "2.6.0",
 	"host": {
 		"app": "PS",
-		"minVersion": "24.2"
+		"minVersion": "24.2",
+		"data":{
+			"apiVersion": 2,
+			"loadEvent": "use"
+		}
 	},
+	"main": "index.html",
 	"requiredPermissions": {
 		"allowCodeGenerationFromStrings": true,
 		"clipboard": "readAndWrite",
@@ -49,7 +53,7 @@
 				"height": 23,
 				"path": "icons/light.png",
 				"scale": [1, 2],
-				"theme": ["darkest", "dark", "medium"]
+				"theme": ["darkest", "dark"]
 			}, {
 				"width": 23,
 				"height": 23,
@@ -85,7 +89,7 @@
 				"height": 23,
 				"path": "icons/light.png",
 				"scale": [1, 2],
-				"theme": ["darkest", "dark", "medium"]
+				"theme": ["darkest", "dark"]
 			}, {
 				"width": 23,
 				"height": 23,
@@ -121,7 +125,7 @@
 				"height": 23,
 				"path": "icons/light.png",
 				"scale": [1, 2],
-				"theme": ["darkest", "dark", "medium"]
+				"theme": ["darkest", "dark"]
 			}, {
 				"width": 23,
 				"height": 23,
@@ -143,7 +147,7 @@
 		"height": 48,
 		"path": "icons/lightPlugin.png",
 		"scale": [1, 2],
-		"theme": ["darkest", "dark", "medium"],
+		"theme": ["darkest", "dark"],
 		"species": ["pluginList"]
 	}, {
 		"width": 48,
