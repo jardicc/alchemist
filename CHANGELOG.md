@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.6.0
+
+- adds icons to the recorded descriptors in descriptors list
+- fixes Action Set
+- in DOM (live) tab you can now browse proxies (e.g. layers, documents, ...)
+- fixes problem where user can stuck in pinned diff tree property
+- improves filters readability and styling
+- fixes issues with initial state load
+- improves multiGet feature and fixes some issues
+- fixes multiGet for all layers if background layer is present
+- adds multiGet support for all paths
+- fixes descriptor naming
+- improves generated code warning... now it will warn you but generate code anyway for non-replay-able events
+- internal refactoring
+
 ## 2.5.0
 
 - changes filter dropdowns into accordions
