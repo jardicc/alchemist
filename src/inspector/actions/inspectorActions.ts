@@ -1,5 +1,5 @@
-import { TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, ITargetReference, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter } from "../model/types";
-import { TState } from "../components/FilterButton/FilterButton";
+import { TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter, TAllTargetReferences } from "../model/types";
+import { TFilterState } from "../components/FilterButton/FilterButton";
 import { IRootState } from "../../shared/store";
 
 
@@ -10,7 +10,7 @@ export interface ISetModeTab {
 
 export interface ISetTargetReference {
 	type: "SET_TARGET_REFERENCE"
-	payload: ITargetReference
+	payload: Partial<TAllTargetReferences>
 }
 
 export interface IAddDescriptorAction {
@@ -107,8 +107,8 @@ export interface ISetFilterStateAction {
 	type: "SET_FILTER_STATE"
 	payload: {
 		type: TTargetReference,
-		subType: TSubTypes | "main",
-		state: TState
+		subType: TSubTypes | "main"|"properties",
+		state: TFilterState
 	}
 }
 
@@ -155,10 +155,6 @@ export interface ISpyAction{
 	type:"SET_SPY",
 	payload:boolean
 }
-export interface ISpyInstalledAction{
-	type:"SET_SPY_INSTALLED",
-	payload:boolean
-}
 export interface IAutoInspectorAction{
 	type:"SET_AUTO_INSPECTOR",
 	payload:boolean
@@ -191,11 +187,6 @@ export interface IFilterEventNameAction{
 		kind: "include" | "exclude",
 		operation: "add" | "remove"
 	}
-}
-
-export interface IReplaceWholeState{
-	type: "REPLACE_WHOLE_STATE",
-	payload: IInspectorState
 }
 
 export interface ISetDispatcherValueAction{
@@ -298,6 +289,24 @@ export interface ISetCategoryItemVisibilityAction{
 		operation: "add" | "remove"
 		value: TTargetReference
 	}
+}
+
+export interface ISetPropertyAction {
+	type: "SET_PROPERTY",
+	payload: {
+		value: string | number
+		toggle?: boolean
+	}
+}
+
+export function setProperty(value: string | number, toggle: boolean): ISetPropertyAction {
+	return {
+		type: "SET_PROPERTY",
+		payload: {
+			value,
+			toggle,
+		},
+	};
 }
 
 export function setCategoryItemVisibilityAction(value:TTargetReference, operation: "add" | "remove"): ISetCategoryItemVisibilityAction{
@@ -440,13 +449,6 @@ export function setDispatcherValueAction(value:string): ISetDispatcherValueActio
 	};
 }
 
-export function replaceWholeStateAction(state: IInspectorState):IReplaceWholeState {
-	return {
-		type: "REPLACE_WHOLE_STATE",
-		payload: state,
-	};
-}
-
 export function setListenerAction(enabled:boolean):IListenerAction{
 	return{
 		type:"SET_LISTENER",
@@ -456,12 +458,6 @@ export function setListenerAction(enabled:boolean):IListenerAction{
 export function setSpyAction(enabled:boolean):ISpyAction{
 	return{
 		type:"SET_SPY",
-		payload:enabled,
-	};
-}
-export function setSpyInstalledAction(enabled:boolean):ISpyInstalledAction{
-	return{
-		type:"SET_SPY_INSTALLED",
 		payload:enabled,
 	};
 }
@@ -508,7 +504,7 @@ export function setInspectorPathContentAction(path:string[],mode:"replace"|"add"
 		},
 	};
 }
-export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main",state: TState): ISetFilterStateAction {
+export function setFilterStateAction(type: TTargetReference,subType: TSubTypes|"main"|"properties",state: TFilterState): ISetFilterStateAction {
 	return {
 		type: "SET_FILTER_STATE",
 		payload: {
@@ -522,7 +518,7 @@ export function setModeTabAction(id:TActiveInspectorTab):ISetModeTab{
 		payload: id,
 	};
 }
-export function setTargetReferenceAction(arg:ITargetReference):ISetTargetReference{
+export function setTargetReferenceAction(arg:Partial<TAllTargetReferences>):ISetTargetReference{
 	return {
 		type: "SET_TARGET_REFERENCE",
 		payload: arg,
@@ -703,7 +699,6 @@ export type TActions =
 	ISetListenerNotifierAction|
 	//IGroupSameAction |
 	IFilterEventNameAction |
-	IReplaceWholeState |
 	ISetDispatcherValueAction |
 	ISetRenameModeAction |
 	IRenameDescriptorAction |
@@ -720,6 +715,6 @@ export type TActions =
 	ISetSettingsAction |
 	IToggleAccordionAction |
 	ISetSearchContentKeywordAction |
-	ISpyInstalledAction |
 	ISpyAction |
-	ISetCategoryItemVisibilityAction
+	ISetCategoryItemVisibilityAction |
+	ISetPropertyAction

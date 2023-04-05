@@ -1,7 +1,6 @@
 
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
-import { Store, CombinedState, AnyAction } from "redux";
-import { IDescriptorSettings, IInspectorState } from "../model/types";
+import { IDescriptorSettings } from "../model/types";
 import { getInspectorSettings } from "../selectors/inspectorSelectors";
 import { Base64} from "./Base64";
 
@@ -25,7 +24,7 @@ export class RawDataConverter{
 	}
 
 	public static replaceArrayBuffer(obj: ActionDescriptor[]|ActionDescriptor): ActionDescriptor[]|ActionDescriptor {
-		const store:Store<CombinedState<{inspector: IInspectorState;}>, AnyAction> = (window as any)._rootStore;
+		const store = window._rootStore;
 		const settings = getInspectorSettings(store.getState());
 		if (!settings.makeRawDataEasyToInspect) {
 			return obj;

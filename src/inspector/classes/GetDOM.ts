@@ -1,104 +1,134 @@
-import photoshop from "photoshop";
-import { TReference, IDReference } from "./GetInfo";
-import { DocumentExtra } from "./DocumentExtra";
-import { LayerExtra } from "./LayerExtra";
+import {app} from "photoshop";
 import { Action, ActionSet } from "photoshop/dom/Actions";
 import { Layer } from "photoshop/dom/Layer";
 import { Photoshop } from "photoshop/dom/Photoshop";
 import { Document } from "photoshop/dom/Document";
 import {Guide} from "photoshop/dom/Guide";
+import {Reference, TReference} from "./Reference";
 
-export class GetDOM{
-	public static getDom(ref: TReference[]): Photoshop | Layer | Document | ActionSet | Action | Guide | null {
-		const res: IDReference[] = ref?.filter(v => ("_ref" in v)) as IDReference[];
-		if (!res) {
+export class ReferenceToDOM extends Reference{
+
+	constructor(ref: TReference[]) {
+		super(ref);
+	}
+	
+	public getDom(): Photoshop | Layer | Document | ActionSet | Action | Guide | null {
+		
+		if (!this.targetClass) {
 			return null;
 		}
 
-		switch (res[0]._ref) {
+		switch (this.targetClass) {
 			case "historyState":
-			case "snapshot":
-				return GetDOM.getHistoryDom(res[0]._id, res[1]?._id);
+				return this.getHistoryDom();
+			case "snapshotClass":
+				return this.getHistoryDom();
 			case "application":
-				return GetDOM.getAppDom();
-			case "layer": {
-				if (res.length === 1) {
-					return GetDOM.getLayerDom(res[0]._id, null);
-				}
-				return GetDOM.getLayerDom(res[0]._id, res[1]._id);
-			}
+				return this.getAppDom();
+			case "layer": 
+				return this.getLayerDom();
 			case "document": 
-				return GetDOM.getDocumentDom(res[0]._id);
+				return this.getDocumentDom();
 			case "actionSet": 
-				return GetDOM.actionSetDom(res[0]._id);
+				return this.actionSetDom();
 			case "action": 
-				return GetDOM.actionItemDom(res[0]._id);
-			case "guide":{
-				const guides = GetDOM.getDocumentDom(res[1]._id)?.guides;
-				const found:Guide|null = (guides as any)?.find((g: Guide) => g.id === res[0]._id);
-				if (!found) {return null;}
-				return found;
-			}
+				return this.actionItemDom();
+			case "guide":
+				return this.getGuideDom();
+			case "channel": 
+				return this.getChannelDom();
+			case "path":
+				return this.getPathDom();
 		}
 		return null;
 	}
 
-	private static sanitizeDocId(docId: number|null) {
-		if (typeof docId !== "number") {
-			if (!photoshop.app.activeDocument) {
-				return null;
-			}
-			docId = photoshop.app.activeDocument.id;
-		}
-		return docId;
-	}
-
-	/*
-	private static getGuideDom(): Guide{
-		const guide = new photoshop.app.
-	}
-	*/
-	
-	private static getAppDom():Photoshop {
-		const appDom = new photoshop.app.Photoshop();
-		return appDom;
-	}
-
-	private static getDocumentDom(doc: number):Document|null {
-		const docDom = new photoshop.app.Document(doc);
-		if (!docDom) { return null;}
-		const extraDom = new DocumentExtra(docDom);
-		if (!extraDom.exists) {
+	private getGuideDom(): Guide | null{
+		this.sanitizeDocRef();
+		if (!this.document || !this.guide || !this.exists) {
 			return null;
 		}
+		const guideDom = new app.Guide(this.guide._id, this.document._id);
+		return guideDom;
+	}
+	
+	
+	private getAppDom():Photoshop {
+		return app;
+	}
+
+	private getDocumentDom(): Document | null {
+		if (!this.document || !this.exists) {
+			return null;
+		}
+		const docDom = new app.Document(this.document._id);
 		return docDom;
 	}
 
-	private static getLayerDom(layer: number, docId: number|null): Layer|null {
-		docId = GetDOM.sanitizeDocId(docId);
-		if (!docId) { return null;}
-		const layerDom = new photoshop.app.Layer(layer, docId);
-		const layerExtra = new LayerExtra(layerDom);
-		if (!layerExtra.exists) {
+	private getLayerDom(): Layer|null {
+		this.sanitizeDocRef();
+		if (!this.document || !this.layer || !this.exists) {
 			return null;
 		}
+		const layerDom = new app.Layer(this.layer._id, this.document._id);
 		return layerDom;
 	}
 
-	private static getHistoryDom(historyId: number, docId: number|null) {
-		docId = GetDOM.sanitizeDocId(docId);
-		if (!docId) { return null;}
-		const doc = GetDOM.getDocumentDom(docId);
-		const found = (doc as any).historyStates.find((h: any) => historyId === h.id) || null;
-		return found;
+	private getHistoryDom() {
+		const doc = app.activeDocument;
+		// In DOM both are the same but Alchemist makes a difference
+		const historyItem = this.historyState || this.snapshotClass;
+		if (!doc || !historyItem || !this.exists) {
+			return null;
+		}
+		// TODO improve once constructor will be exposed in Photoshop class
+		const history = new (doc.activeHistoryState as any).constructor(historyItem._id, doc.id);
+		return history;
 	}
 
-	private static actionSetDom(actionSetID: number):ActionSet {
-		const docDom = new photoshop.app.ActionSet(actionSetID);
+	private getChannelDom() {
+		this.sanitizeDocRef();
+		const doc = this.getDocumentDom();
+		if (!doc || !this.channel || !this.exists) {
+			return null;
+		}
+		// TODO improve once constructor will be exposed in Photoshop class
+		if ("_enum" in this.channel) {
+			const compositeChannel = new (doc.compositeChannels[0] as any).constructor(doc.id, this.channel._value);			
+			return compositeChannel;
+		} else {
+			console.error("Not implemented");
+			// throw new Error("Not implemented");
+		}
+	}
+
+	private getPathDom() {
+		console.error("Not implemented");
+		return null;
+	}
+
+	private actionSetDom(): ActionSet | null {
+		if (!this.actionSet || !this.exists) {
+			return null;
+		}
+		const docDom = new app.ActionSet(this.actionSet._id);
 		return docDom;
 	}
-	private static actionItemDom(actionItemID: number):Action {
-		const docDom = new photoshop.app.Action(actionItemID);
+
+	private actionItemDom(): Action | null {
+		if (!this.action || !this.exists) {
+			return null;
+		}
+		const docDom = new app.Action(this.action._id);
 		return docDom;
+	}
+
+	/** Uses existing Document reference otherwise adds active document reference */
+	private sanitizeDocRef() {
+		const id = this?.document?._id || app.activeDocument?.id || undefined;
+		if (typeof id !== "number") {
+			return;
+		}
+		this.setDocument(id);
 	}
 }

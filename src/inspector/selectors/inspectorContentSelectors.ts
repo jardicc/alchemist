@@ -21,7 +21,7 @@ export const getSearchContentKeyword = createSelector([getInspectorContentTab], 
 export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, getContentPath, getAutoActiveDescriptor], (t, d,autoActive) => {
 	const path = cloneDeep(d);
 	// selected or auto-selected
-	let data: any = cloneDeep(t?.[0]?.originalData ?? autoActive?.originalData);
+	let data: any = cloneDeep(t?.[0]?.recordedData ?? autoActive?.recordedData);
 
 	for (const part of path) {
 		data = (data)?.[part];
@@ -37,10 +37,10 @@ export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, 
 
 export const getActiveDescriptorContent = createSelector([getActiveDescriptors, getAutoActiveDescriptor,getSearchContentKeyword], (selected, autoActive,keyword) => {
 	if (selected.length >= 1) {
-		const toSend = selected.map(item => filter(item.originalData,keyword));
+		const toSend = selected.map(item => filter(item.recordedData,keyword));
 		return JSON.stringify(toSend.length === 1 ? toSend[0] : toSend, null, 3);
 	} else if (autoActive) {
-		return JSON.stringify(autoActive.originalData, null, 3);
+		return JSON.stringify(autoActive.recordedData, null, 3);
 	} else {
 		return "Add some descriptor";
 	}	
@@ -54,7 +54,7 @@ export const getContentExpandLevel = createSelector([getInspectorContentTab], (t
 	return t?.autoExpandLevels ?? 0;
 });
 
-// TODO do not add array item by property name e.g. do not search by index ["5"]
+// TODO do not add array item by property name e.g. do not search by index ["4"]
 export const getTreeContent = createSelector([getTreeContentUnfiltered, getSearchContentKeyword], (tree,keyword) => {
 	return filter(tree, keyword);
 });

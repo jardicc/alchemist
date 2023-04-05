@@ -4,12 +4,12 @@ import "./FilterButton.less";
 import { TSubTypes } from "../../model/types";
 import { IconEye } from "../../../shared/components/icons";
 
-export type TState = "on" | "off" | "semi";
+export type TFilterState = "on" | "off" | "semi";
 
 export interface IFilterButtonProps {
-	state:TState
-	subtype: TSubTypes | "main"
-	onClick: (id: TSubTypes | "main", state: TState, e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+	state:TFilterState
+	subtype: TSubTypes | "main" | "properties"
+	onClick: (id: TSubTypes | "main" | "properties", state: TFilterState, e:React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
 export interface IFilterButtonDispatch {

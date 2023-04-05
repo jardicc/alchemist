@@ -1,47 +1,69 @@
-import { ITargetReference, TTargetReference, TAllReferenceSubtypes } from "../model/types";
-import { IPropertyReference, TReference } from "./GetInfo";
-import { Reference } from "./Reference";
+import { IRefChannel, IRefDocument, IRefHistoryState, IRefLayer, IRefPath, IRefSnapshotClass, TAllTargetReferences, TChannelReferenceValid } from "../model/types";
+import { Reference, TReference } from "./Reference";
 import { getInitialState } from "../inspInitialState";
 
-export const guessOrinalReference = (refAM: TReference[]): ITargetReference => {
+// used for auto inspector
+export const guessOriginalReference = (refAM: TReference[]): TAllTargetReferences|null => {
 	const r = new Reference(refAM);
-	const type = getType(r);
+	const init = getInitialState().targetReference;
 
-	const result: ITargetReference = {
-		type,
-		data: generateData(type,r),
-	};
+	// TODO - fix this. Add mechanism to convert any reference to ID reference
 
-	return result;
-};
 
-function getType(r: Reference): TTargetReference {
-	if (r.hasApplication) { return "application"; }
-	if (r.hasChannel) { return "channel"; }
-	if (r.hasPath) { return "path"; }
-	if (r.actionSet) { return "action"; }
-	if (r.hasLayer) { return "layer"; }
-	if (r.hasGuide) { return "guide"; }
-	if (r.hasHistoryState) { return "history";}
-	if (r.hasSnapshotClass) { return "snapshot"; }
-	if (r.hasDocument) { return "document"; }
-	throw new Error("Unkown type: " + JSON.stringify(r.amCode, null, 3));
-}
-
-function generateData(type: TTargetReference,r:Reference):TAllReferenceSubtypes[] {
-	
-	const found = getInitialState().targetReference.find(item => item.type === type);
-	if (!found) {
-		throw new Error("Unkown type: " + type);
+	if (!r.targetClass) {
+		return null;
 	}
 
-	if (r.hasProperty) {
-		const foundProperty = found.data.find(item => item.subType === "property");
-		if (foundProperty) {
-			foundProperty.content.value = (r.property as IPropertyReference)._property;
+	switch (r.targetClass) {
+		case "layer": {
+			const res: IRefLayer = {
+				...init.layer,
+				documentID: r.document?._id ?? init.layer.documentID,
+				layerID: r.layer?._id ?? init.layer.layerID,
+			};
+			return res;
+		}
+		case "document": {
+			const res: IRefDocument = {
+				...init.document,
+				documentID: r.document?._id ?? init.document.documentID,
+			};
+			return res;
+		}
+		case "path": {
+			const res: IRefPath = {
+				...init.path,
+				documentID: r.document?._id ?? init.path.documentID,
+				layerID: r.layer?._id ?? init.path.layerID,
+				pathID: r.path?._id ?? init.path.pathID,
+			};
+			return res;
+		}
+		case "historyState": {
+			const res: IRefHistoryState = {
+				...init.historyState,
+				historyID: r.historyState?._id ?? init.historyState.historyID,
+			};
+			return res;
+		}
+		case "snapshotClass": {
+			const res: IRefSnapshotClass = {
+				...init.snapshotClass,
+				snapshotID: r.snapshotClass?._id ?? init.snapshotClass.snapshotID,
+			};
+			return res;
+		}
+		case "channel": {
+			const channel = r.channel;
+			const res: IRefChannel = {
+				...init.channel,
+				documentID: r.document?._id ?? init.channel.documentID,
+				layerID: r.layer?._id ?? init.channel.layerID,
+				channelID: (channel && "_enum" in channel) ? channel._value as TChannelReferenceValid: channel?._id ?? init.channel.layerID as TChannelReferenceValid,
+			};
+			return res;
 		}
 	}
 
-
-	return found.data || [];
-}
+	return null;
+};

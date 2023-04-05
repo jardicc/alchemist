@@ -1,9 +1,9 @@
 /* eslint-disable comma-dangle */
 import { createSelector } from "reselect";
 import { IRootState } from "../../shared/store";
-import { IDescriptor, IInspectorState, IListenerNotifierFilter, TTargetReference } from "../model/types";
+import { IDescriptor, IInspectorState, IListenerNotifierFilter, TSubTypes, TTargetReference } from "../model/types";
 import { Helpers } from "../classes/Helpers";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 export const all = (state:IRootState):IInspectorState => state.inspector;
@@ -22,18 +22,36 @@ export const getLockedSelection = createSelector([getSelectedDescriptors], s => 
 export const getPinnedSelection = createSelector([getSelectedDescriptors], s => s.some(d => d.pinned));
 export const getRemovableSelection = createSelector([getLockedSelection], s => !s);
 
-export const getActiveTargetReference = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
-	const result = targets?.find(item => item.type === selected);
-	return (result || null);
+export const getActiveRef = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
+	switch (selected) {
+		case "listener": return targets.listener;
+		case "dispatcher": return targets.dispatcher;
+		case "notifier": return targets.notifier;
+		case "replies": return targets.replies;
+		case "generator": return targets.generator;
+		case "application": return targets.application;
+		case "document": return targets.document;
+		case "layer": return targets.layer;
+		case "path": return targets.path;
+		case "channel": return targets.channel;
+		case "actions": return targets.actions; //
+		case "timeline": return targets.timeline;
+		case "animationFrameClass": return targets.animationFrameClass; //
+		case "animationClass": return targets.animationClass; //
+		case "historyState": return targets.historyState; //
+		case "snapshotClass": return targets.snapshotClass; //
+		case "guide": return targets.guide;
+		default: {
+			const exhaustiveCheck: never = selected;
+			throw new Error(exhaustiveCheck);
+		}
+	}
 });
 
-export const getCategoryItemsVisibility = createSelector([all, getActiveTargetReference], (s, target) => {
+export const getCategoryItemsVisibility = createSelector([all, getActiveRef], (s, activeRef) => {
 	// adds currently selected category into visibility even though is not explicitly set to visible
-	if (target?.type) {
-		const res: TTargetReference[] = [...new Set([...s.explicitlyVisibleTopCategories, target.type])];
-		return res;
-	}
-	return s.explicitlyVisibleTopCategories;
+	const res: TTargetReference[] = [...new Set([...s.explicitlyVisibleTopCategories, activeRef.type])];
+	return res;
 });
 
 export const getInspectorSettings = createSelector([all], (s) => {
@@ -56,18 +74,23 @@ export const getRightColumnWidth = createSelector([getInspectorSettings], (s) =>
 	return s.rightColumnWidthPx;
 });
 
+export const getPropertiesListForActiveRef = createSelector([getPropertySettings, getActiveRef], (propertySettings, activeRef) => {
+	const foundSettings = propertySettings.find(p => p.type === activeRef.type);
+	return foundSettings;
+});
+
 export const getNeverRecordActionNames = createSelector([getInspectorSettings], s => s.neverRecordActionNames);
 
 // will exclude undefined objects in array
-export const getActiveTargetReferenceForAM = createSelector([getTargetReference, getSelectedTargetReference], (targets, selected) => {
-	const result = targets?.find(item => item.type === selected);
-	if (!result) { return null; }
+/*
+export const getActiveTargetReferenceForAM = createSelector([getActiveRef], (activeRef) => {
 	const newRes = {
 		...result,
 		data: result.data.filter(ref => ref.content.value !== ""),
 	};
 	return (newRes || null);
 });
+*/
 
 export const getListenerNotifierFilterSettings = createSelector([all], (all) => {
 	if (all.selectedReferenceType === "listener") {
@@ -80,16 +103,16 @@ export const getListenerNotifierFilterSettings = createSelector([all], (all) => 
 
 export const getDescriptorsListView = createSelector([
 	getAllDescriptors,
-	getActiveTargetReference,
+	getActiveRef,
 	getFilterBySelectedReferenceType,
 	getInspectorSettings,
 	getCategoryItemsVisibility,
 ], (
 	allDesc,
-	activeRefFilter,
+	activeRef,
 	rootFilter,
 	settings,
-	categoryVisibility,
+	visibleMainCategories,
 ) => {	
 	const pinned:IDescriptor[] = allDesc.filter(i => i.pinned);
 	const notPinned: IDescriptor[] = allDesc.filter(i => !i.pinned);
@@ -101,7 +124,7 @@ export const getDescriptorsListView = createSelector([
 	} 
 
 	/*
-	if (rootFilter === "off" && activeRefFilter?.type !== "listener") {
+	if (rootFilter === "off" && activeRefFilter.type !== "listener") {
 		// handle this!!
 		return reordered;
 	}
@@ -111,48 +134,87 @@ export const getDescriptorsListView = createSelector([
 
 	
 	let filtered = reordered.filter((desc: IDescriptor) => {
+		// show all if none filter is active
 		if (rootFilter === "off") {
 			return true;
 		}
 	
-		const origRefFilter = desc.originalReference;
-		if (!activeRefFilter || !categoryVisibility.includes(origRefFilter.type)) {
+		// hide items from inactive categories
+		if (!visibleMainCategories.includes(desc.originalReference.type)) {
 			return false;
 		}
-		/*
-		if (activeRefFilter?.type !== origRefFilter.type) {
-			return false;
+
+		// skip categories with no further filter options... just to make it easier
+		switch (activeRef.type) {
+			case "generator":
+			case "listener":
+			case "dispatcher":
+			case "notifier":
+			case "replies":
+				return true;
 		}
-		*/
-		if (activeRefFilter?.type !== "listener") {
-			for (let i = 0, len = activeRefFilter.data.length; i < len; i++) {
-				if (activeRefFilter.data[i].content.filterBy === "off") {
-					return true;
-				}
-				if (activeRefFilter?.type !== origRefFilter.type) {
-					return false;
-				}
-				if (activeRefFilter.data[i].content.value !== origRefFilter.data[i].content.value) {
-					return false;
-				}
+		
+		// order matter
+		const filterClasses = [
+			"filterDoc",
+			"filterChannel",
+			"filterPath",
+			"filterLayer",
+			"filterActionSet",
+			"filterAction",
+			"filterCommand",
+			"filterGuide",
+			"filterHistory",
+			"filterSnapshot",
+			"filterProp",
+		] as const;
+		
+		// order matter
+		const classes: TSubTypes[] = [
+			"documentID",
+			"channelID",
+			"pathID",
+			"layerID",
+			"actionSetID",
+			"actionID",
+			"commandIndex",
+			"guideID",
+			"historyID",
+			"snapshotID",
+			"properties",
+		];
+		
+		//console.log(desc.title, activeRef, origRefClone);
+		const activeRefClone = cloneDeep(activeRef);
+		const origRefClone = cloneDeep(desc.originalReference);
+		// reduce properties only to those that matters and compare them
+		filterClasses.forEach((className, index) => {
+			if ((activeRefClone as any)?.[className] === "off") {
+				delete (activeRefClone as any)[classes[index]];
+				delete (origRefClone as any)[classes[index]];
 			}
-		}
-		return true;
+			delete (origRefClone as any)[className];
+			delete (activeRefClone as any)[className];
+		});
+		// allows to compare when multiple main categories are set to be visible
+		delete (origRefClone as any).type;
+		delete (activeRefClone as any).type;
+		console.log(desc.title,activeRefClone, origRefClone);
+		return isEqual(activeRefClone, origRefClone);
 	});
-	if (activeRefFilter?.type === "listener" || activeRefFilter?.type === "notifier") {
-		const filterSettings: IListenerNotifierFilter = (activeRefFilter?.type === "listener") ? listenerFilter : notifierFilter;
+
+	if (activeRef.type === "listener" || activeRef.type === "notifier") {
+		const filterSettings: IListenerNotifierFilter = (activeRef.type === "listener") ? listenerFilter : notifierFilter;
 		if (filterSettings.type === "exclude" && filterSettings.exclude.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				!filterSettings.exclude.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				!filterSettings.exclude.some(str => (item.recordedData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		} else if (filterSettings.type === "include" && filterSettings.include.join(";").trim().length) {
 			filtered = filtered.filter(item => 
-				filterSettings.include.some(str => (item.originalData as ActionDescriptor)?._obj?.includes(str.trim())),
+				filterSettings.include.some(str => (item.recordedData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		}
 	}
-
-	console.log("!!!");
 
 	if (settings.groupDescriptors === "strict") {
 		filtered = cloneDeep(filtered);
@@ -176,33 +238,6 @@ export const getDescriptorsListView = createSelector([
 
 
 	return filtered;
-});
-export const getActiveReferenceProperty = createSelector([getActiveTargetReference], (t) => {	
-	return t?.data.find(i => i.subType === "property")?.content;	
-});
-export const getActiveReferenceGuide = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "guide")?.content;
-});
-export const getActiveReferencePath = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "path")?.content;
-});
-export const getActiveReferenceChannel = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "channel")?.content;
-});
-export const getActiveReferenceActionSet = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "actionset")?.content;
-});
-export const getActiveReferenceActionItem = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "action")?.content;
-});
-export const getActiveReferenceCommand = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "command")?.content;
-});
-export const getActiveReferenceHistory = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "history")?.content;
-});
-export const getActiveReferenceSnapshot = createSelector([getActiveTargetReference], (t) => {
-	return t?.data.find(i => i.subType === "snapshot")?.content;
 });
 
 export const getActiveDescriptors = createSelector([all], s => {
@@ -244,19 +279,6 @@ export const getHasAutoActiveDescriptor = createSelector([getAutoActiveDescripto
 	return !!d;
 });
 
-/*
-export const getPlayableReference = createSelector([getActiveDescriptorCalculatedReference], (reference) => {
-	if (selected.length > 1) {
-		return "Select 1 descriptor";
-	} else if (selected.length === 1) {
-		return JSON.stringify(selected[0].calculatedReference, null, 3);		
-	} else if (autoActive) {
-		return JSON.stringify(autoActive.calculatedReference, null, 3);
-	} else {
-		return "Add some descriptor";
-	}	
-});*/
-
 export const getActiveDescriptorOriginalReference = createSelector([getActiveDescriptors, getAutoActiveDescriptor], (selected, autoActive) => {
 	if (selected.length > 1) {
 		return "Select 1 descriptor";
@@ -267,23 +289,6 @@ export const getActiveDescriptorOriginalReference = createSelector([getActiveDes
 	} else {
 		return "Add some descriptor";
 	}
-});
-
-
-
-
-export const getActiveTargetDocument = createSelector([getActiveTargetReference], (t) => {
-	if (!t) { return null;}
-	const result = t.data.find(i => i.subType === "document")?.content;
-
-	return (result===undefined) ? null : result;
-});
-
-export const getActiveTargetLayer = createSelector([getActiveTargetReference], (t) => {
-	if (!t) { return null;}
-	const result = t.data.find(i => i.subType === "layer")?.content;
-
-	return (result===undefined) ? null : result;
 });
 
 export const getReplayEnabled = createSelector([getActiveDescriptors], (selected) => {
@@ -309,31 +314,21 @@ export const getRanameEnabled = createSelector([getDescriptorsListView], (all) =
 	return (!selected[0].groupCount || selected[0].groupCount === 1);
 });
 
-export const getAddAllowed = createSelector([getActiveTargetReference, getActiveReferenceProperty], (s, property) => { 
-	if (property?.value === "") {
+export const getAddAllowed = createSelector([getActiveRef], (activeRef) => {
+	if ("properties" in activeRef && activeRef.properties.includes("none")) {
 		return false;
 	}
-	if (s) {
-		if (s.type === "generator") {
-			return true;
-		}
-		if ((["listener","dispatcher","notifier","replies"] as TTargetReference[]).includes(s.type)) {
-			return false;
-		}
-		for (const key in s.data) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			if ((s.data as any)[key] === "undefined") {
-				return false;
-			}
-		}
+	if (activeRef.type === "generator") {
 		return true;
 	}
-	return false;
+	if ((["listener", "dispatcher", "notifier", "replies"] as TTargetReference[]).includes(activeRef.type)) {
+		return false;
+	}
+	if (activeRef.type === "guide" && activeRef.guideID === "none") {
+		return false;
+	}
+	if (activeRef.type === "actions" && activeRef.actionSetID === "none") {
+		return false;
+	}
+	return true;
 });
-
-/*export const getColumnSizesPercentage = createSelector([getInspectorSettings], (s) => {
-	debugger;
-	const leftColumnPerc = Helpers.pxToPanelWidthPercentage("inspector", s.leftColumnWidthPx);
-
-	return [leftColumnPerc,100-leftColumnPerc] as [number,number];
-});*/

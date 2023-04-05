@@ -8,7 +8,7 @@ import { getInspectorSettings } from "../../selectors/inspectorSelectors";
 import React from "react";
 import "./Dispatcher.less";
 import { Helpers } from "../../classes/Helpers";
-import { ITargetReference, IDescriptor, ISettings } from "../../model/types";
+import { IDescriptor, IRefDispatcher, ISettings } from "../../model/types";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import { getInitialState } from "../../inspInitialState";
 import { str as crc } from "crc-32";
@@ -57,23 +57,22 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 			}
 			const endTime = Date.now();
 
-			const originalReference: ITargetReference = {
+			const originalReference:IRefDispatcher  = {
 				type: "dispatcher",
-				data: [],
 			};
 			const result: IDescriptor = {
 				endTime,
 				startTime,
-				id: Helpers.uuidv4(),
+				id: crypto.randomUUID(),
 				locked: false,
 				//crc:Date.now()+Math.random(),
 				crc:crc(JSON.stringify(data||"__empty__")),
-				originalData: RawDataConverter.replaceArrayBuffer(data),
+				recordedData: RawDataConverter.replaceArrayBuffer(data),
 				originalReference,
 				pinned: false,
 				selected: false,
 				renameMode: false,
-				calculatedReference: data,
+				playAbleData: data,
 				title: "Dispatched",
 				descriptorSettings: this.props.settings.initialDescriptorSettings,
 			};

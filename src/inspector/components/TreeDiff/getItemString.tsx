@@ -51,14 +51,18 @@ function getText(type: any, data: any, isWideLayout: boolean, isDiff: boolean) {
 
 		return `{ ${str} }`;
 	} else if (type === "Array") {
-		if (!isWideLayout) return data.length ? "[…]" : "[]";
-
-		const str = data
-			.slice(0, 4)
-			.map((val:any) => getShortTypeString(val, isDiff))
-			.concat(data.length > 4 ? ["…"] : []).join(", ");
-
-		return `[${str}]`;
+		try {
+			if (!isWideLayout) return data.length ? "[…]" : "[]";
+	
+			const str = data
+				.slice(0, 4)
+				.map((val:any) => getShortTypeString(val, isDiff))
+				.concat(data.length > 4 ? ["…"] : []).join(", ");
+	
+			return `[${str}]`;			
+		}catch(e:any){
+			return "!!! ERROR !!! " + (e.message || "");
+		}
 	} else {
 		return type;
 	}

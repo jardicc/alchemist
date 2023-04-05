@@ -1,13 +1,11 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
-import { setModeTabAction, replaceWholeStateAction, setColumnSizeAction, toggleSettingsAction } from "../../actions/inspectorActions";
+import { setModeTabAction, setColumnSizeAction, toggleSettingsAction } from "../../actions/inspectorActions";
 import { IRootState } from "../../../shared/store";
-import { Settings } from "../../classes/Settings";
 import { getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible } from "../../selectors/inspectorSelectors";
 
 import React from "react";
 import { TabList } from "../Tabs/TabList";
 import { TabPanel } from "../Tabs/TabPanel";
-import "./../../../shared/ThemeVars.css";
 import "./Inspector.less";
 import { TActiveInspectorTab, TFontSizeSettings } from "../../model/types";
 import { FooterContainer } from "../Footer/FooterContainer";
@@ -21,9 +19,6 @@ import { IconCog, IconX} from "../../../shared/components/icons";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
 import {Pane} from "react-split-pane";
 import SplitPane from "react-split-pane";
-import { default as SP } from "react-uxp-spectrum";
-import {FiltersContainer} from "../Filters/Filters";
-import {ListenerClass} from "../../classes/Listener";
 
 
 class Inspector extends React.Component<TInspector, IInspectorState> { 
@@ -36,7 +31,6 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 			message: "",
 			link:"",
 		};
-		ListenerClass.getSpyInstalled();
 	}
 
 	private closeMessage = () => {

@@ -41,7 +41,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 
 		this.state = {
 			expanded: false,
-			uuid: Helpers.uuidv4(),
+			uuid: crypto.randomUUID(),
 			listHeight: 0,
 			listWidth: 0,
 			contentWidth:0,

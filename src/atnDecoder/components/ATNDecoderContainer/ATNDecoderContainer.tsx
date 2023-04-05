@@ -3,8 +3,6 @@ import { IRootState, rootStore } from "../../../shared/store";
 
 import React from "react";
 
-import "./../../../shared/ThemeVars.css";
-import "./../../../shared/styles.less";
 import "./ATNDecoderContainer.less";
 
 import { decodeATN } from "../../../atnDecoder/classes/ATNDecoder";
@@ -67,7 +65,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 			const descCrc = crc(JSON.stringify(command.descriptor));
 
 			const desc: IDescriptor = {
-				calculatedReference: command.descriptor as any,
+				playAbleData: command.descriptor as any,
 				crc: descCrc,
 				descriptorSettings: {
 					dialogOptions: command.showDialogs ? "display" : "dontDisplay",
@@ -76,12 +74,11 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 					synchronousExecution: false,
 				},
 				endTime: 0,
-				id: Helpers.uuidv4(),
+				id: crypto.randomUUID(),
 				locked: false,
-				originalData: command.descriptor,
+				recordedData: command.descriptor,
 				originalReference: {
 					type: "listener",
-					data: [],
 				},
 				pinned: false,
 				renameMode: false,

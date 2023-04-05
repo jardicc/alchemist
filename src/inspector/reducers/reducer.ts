@@ -3,8 +3,7 @@
 import produce from "immer";
 import { getInitialState } from "../inspInitialState";
 import { TActions } from "../actions/inspectorActions";
-import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType } from "../model/types";
-import { GetInfo } from "../classes/GetInfo";
+import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType, TSubTypes } from "../model/types";
 import { addMoreKeys } from "../../shared/helpers";
 import { Settings } from "../classes/Settings";
 import { getDescriptorsListView } from "../selectors/inspectorSelectors";
@@ -14,6 +13,7 @@ import { atnReducer } from "../../atnDecoder/atnReducer";
 import { TSorActions } from "../../sorcerer/sorActions";
 import { sorReducer } from "../../sorcerer/sorReducer";
 import {ListenerClass} from "../classes/Listener";
+import {TFilterState} from "../components/FilterButton/FilterButton";
 
 export type TAllActions = TActions | TAtnActions|TSorActions;
 
@@ -29,10 +29,13 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		}
 		case "SET_TARGET_REFERENCE": {
 			state = produce(state, draft => {
-				const found = draft.targetReference.find(r => action.payload.type === r.type);
-				if (found) {
-					found.data = action.payload.data;
-				}
+
+				const type = state.selectedReferenceType;
+				
+				draft.targetReference[type] = {
+					...state.targetReference[type] as any, // TS is not that smart to find a match :-/
+					...action.payload,
+				};
 			});
 			break;
 		}
@@ -100,6 +103,27 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_SELECTED_REFERENCE_TYPE_ACTION": {
 			state = produce(state, draft => {
 				draft.selectedReferenceType = action.payload;
+			});
+			break;
+		}
+		case "SET_PROPERTY": {
+			state = produce(state, draft => {
+				const {value, toggle} = action.payload;
+
+				const activeRef = draft.targetReference[state.selectedReferenceType];
+		
+				if ("properties" in activeRef && typeof value === "string") {
+					if (toggle) { // support multiGet
+						const foundIndex = activeRef.properties.indexOf(value);
+						if (foundIndex === -1) {
+							activeRef.properties.push(value);
+						} else {
+							activeRef.properties.splice(foundIndex, 1);
+						}
+					} else {
+						activeRef.properties = [value];
+					}
+				}
 			});
 			break;
 		}
@@ -218,7 +242,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "IMPORT_ITEMS": {
 			state = produce(state, draft => {
 				if (action.payload.kind === "append") {
-					action.payload.items.forEach(desc => desc.id = GetInfo.uuidv4());
+					action.payload.items.forEach(desc => desc.id = crypto.randomUUID());
 					draft.descriptors = [...state.descriptors,...action.payload.items];
 				} else if (action.payload.kind === "replace") {
 					draft.descriptors = action.payload.items;
@@ -248,35 +272,83 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		*/
 		case "SET_FILTER_STATE": {
 			state = produce(state, draft => {
-				const { payload: { state, subType, type } } = action;
-				const found = draft.targetReference.find(r => r.type === type);
+				const { payload: { state: filterState, subType, type } } = action;
+				const found = draft.targetReference[type];
 
+				// :-(
+
+				// order matter
+				const filterClasses = [
+					"filterDoc",
+					"filterChannel",
+					"filterPath",
+					"filterLayer",
+					"filterActionSet",
+					"filterAction",
+					"filterCommand",
+					"filterGuide",
+					"filterHistory",
+					"filterSnapshot",
+					"filterProp",
+				] as const;
+
+				// order matter
+				const classes: TSubTypes[] = [
+					"documentID",
+					"channelID",
+					"pathID",
+					"layerID",
+					"actionSetID",
+					"actionID",
+					"commandIndex",
+					"guideID",
+					"historyID",
+					"snapshotID",
+					"properties",
+				];
+
+				// map object to array based on sorted arrays above
+				const map = filterClasses.map((c,index) => ({
+					filterClass: c,
+					className:classes[index],
+					assign: (str: TFilterState) => {
+						if (c in found) {
+							(found as any)[c] = str;							
+						}
+					},
+				}));
+
+				function disableAllNonMain() {
+					map.forEach(item => item.assign("off"));
+				}
+				
 				if (subType === "main") {
-					if (state === "on") {
+					if (filterState === "on") {
 						draft.filterBySelectedReferenceType = "off";
 					} else {
 						draft.filterBySelectedReferenceType = "on";
 					}
-					found?.data.forEach(d => d.content.filterBy = "off");
+					disableAllNonMain();
 				} else {
-					if (state === "on") {
-						found?.data.forEach(d => d.content.filterBy = "off");
+					if (filterState === "on") {
+						disableAllNonMain();
 						draft.filterBySelectedReferenceType = "off";
 					} else {
 						let foundIndex: number | null = null;
-						found?.data.forEach((d, i) => {
-							if (d.subType === subType) {
-								foundIndex = i;
-								d.content.filterBy = "on";
+						map.forEach((item, index) => {
+							if (item.className === subType) {
+								foundIndex = index;
+								item.assign("on");
 								draft.filterBySelectedReferenceType = "semi";
 							} else if (foundIndex === null) {
-								d.content.filterBy = "semi";
+								item.assign("semi");
 							} else {
-								d.content.filterBy = "off";
+								item.assign("off");
 							}
 						});
 					}
 				}
+				
 			});
 			break;
 		}
@@ -441,18 +513,6 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				}
 
 			});
-			break;
-		}
-		case "REPLACE_WHOLE_STATE": {
-			if (action.payload &&
-				getInitialState().version[0] === action.payload.version[0] // load only compatible version
-			) {
-				action.payload.settings.autoUpdateListener = false;
-				action.payload.settings.autoUpdateInspector = false;
-				action.payload.settings.autoUpdateSpy = false;
-				action.payload.settings.isSpyInstalled = state.settings.isSpyInstalled;
-				state = action.payload;				
-			}
 			break;
 		}
 		case "SET_DISPATCHER_VALUE": {
@@ -627,12 +687,6 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_SEARCH_CONTENT_KEYWORD": {
 			state = produce(state, draft => {
 				draft.inspector.content.search = action.payload;
-			});
-			break;
-		}
-		case "SET_SPY_INSTALLED": {
-			state = produce(state, draft => {
-				draft.settings.isSpyInstalled = action.payload;
 			});
 			break;
 		}

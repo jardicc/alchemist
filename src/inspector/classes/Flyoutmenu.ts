@@ -2,7 +2,9 @@ import { rootStore } from "../../shared/store";
 import { importItemsAction, importStateAction } from "../actions/inspectorActions";
 import { TExportItems, TImportItems } from "../model/types";
 import { getAllDescriptors, getSelectedDescriptors } from "../selectors/inspectorSelectors";
-import { Settings } from "./Settings";
+import {Settings} from "./Settings";
+import manifest from "../../../uxp/manifest.json";
+import {Main} from "../../shared/classes/Main";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { entrypoints } = require("uxp");
@@ -42,7 +44,18 @@ export class FlyoutMenu {
 			case "reload":
 				location.reload();
 				break;
+			case "showAll":
+				FlyoutMenu.showAll();
+				break;
 		}
+	}
+
+	private static showAll = async () => {
+		manifest.entrypoints.forEach(e => {
+			if (e.type === "panel") {
+				Main.plugin.showPanel(e.id);
+			}
+		});
 	}
 
 	private static exportState = () => {
@@ -71,6 +84,16 @@ export class FlyoutMenu {
 	}
 
 	public static setup(): void {
+
+		const repairSubMenu = {
+			id: "groupProblem", label: "Repair",
+			submenu: [
+				{id: "reload", label: "Reload"},
+				{id: "reset", label: "Reset settings"},
+				{id: "showAll", label: "Show all panels"},
+			],
+		};
+
 		entrypoints.setup({
 			panels: {
 				inspector: {
@@ -96,13 +119,7 @@ export class FlyoutMenu {
 							],
 						},
 						{id: "spacer", label: "-"}, // SPACER
-						{
-							id: "groupProblem", label: "Repair",
-							submenu: [
-								{id: "reload", label: "Reload"},
-								{id: "reset", label: "Reset settings"},
-							],
-						},
+						repairSubMenu,
 						{id: "spacer2", label: "-"}, // SPACER
 					],
 					invokeMenu(id: string) {

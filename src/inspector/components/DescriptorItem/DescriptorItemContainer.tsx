@@ -2,14 +2,14 @@ import { connect} from "react-redux";
 import cloneDeep from "lodash/cloneDeep";
 import { IRootState } from "../../../shared/store";
 import { selectDescriptorAction, renameDescriptorAction, setRenameModeAction } from "../../actions/inspectorActions";
-import { IDescriptor, ITargetReference, TSelectDescriptorOperation } from "../../model/types";
-import { getActiveTargetReference, getFilterBySelectedReferenceType, getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
+import { IDescriptor, TSelectDescriptorOperation } from "../../model/types";
+import { getAutoSelectedUUIDs } from "../../selectors/inspectorSelectors";
 import React from "react";
 import "./DescriptorItem.less";
 import { IconLockLocked, IconPinDown } from "../../../shared/components/icons";
-import { TState } from "../FilterButton/FilterButton";
 import { Dispatch } from "redux";
 import {default as SP} from "react-uxp-spectrum";
+import {getIcon} from "../../helpers";
 
 class DescriptorItem extends React.Component<TDescriptorItem,IState> { 
 	constructor(props: TDescriptorItem) {
@@ -47,10 +47,14 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		});
 	}
 
+	private get hasError (): boolean {
+		return (this.props.descriptor.recordedData as any)?.[0]?._obj === "error";
+	}
+
 	private generateClassName = () => {
 		const {descriptor} = this.props;
 		
-		const errorClass = ((descriptor.originalData as any)?.[0]?._obj === "error") ? " error" : "";
+		const errorClass = this.hasError ? " error" : "";
 
 		return "wrap" + (descriptor.selected ? " selected" : "") + (this.autoSelected ? " autoSelected" : "") + errorClass;
 	}
@@ -74,6 +78,18 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				this.rename();
 				break;
 		}
+	}
+
+	private Icon = ():JSX.Element => {
+		const type = this.props.descriptor.originalReference.type;
+
+		const icon = getIcon(this.hasError ? "error" : type);
+
+		return (
+			<div className="titleIcon">
+				{icon}
+			</div>
+		);
 	}
 
 	private renderEditState = () => {
@@ -101,12 +117,13 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		const {descriptor:{locked,pinned,groupCount} } = this.props;
 		return (
 			<div className={"normalMode " + this.generateClassName()} onClick={this.select}>
+				<this.Icon />
 				<div className="name">{descriptor.title}</div>
 				<div className="spread"></div>
 				{(groupCount && groupCount > 1) && <div>{groupCount}×</div>}
 				{locked && <div className="icon"><IconLockLocked/></div> }
 				{pinned && <div className="icon"><IconPinDown/></div>}
-				{descriptor.startTime===0 ? <div className="time">Event</div> : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
+				{descriptor.startTime===0 ? null : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
 			</div>
 		);
 	}
@@ -135,15 +152,11 @@ interface IState{
 interface IDescriptorItemProps {
 	descriptor: IDescriptor
 	autoSelected: string[]
-	activeTargetReference: ITargetReference | null;
-	filterBySelectedReferenceType:TState
 }
 
 const mapStateToProps = (state: IRootState, ownProps: IOwn): IDescriptorItemProps => ({
 	descriptor: cloneDeep(ownProps.descriptor),
 	autoSelected: getAutoSelectedUUIDs(state),
-	activeTargetReference: getActiveTargetReference(state),
-	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),
 });
 
 interface IDescriptorItemDispatch {

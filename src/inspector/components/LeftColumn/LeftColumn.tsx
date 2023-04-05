@@ -2,12 +2,12 @@ import React from "react";
 import "./LeftColumn.less";
 import { GetInfo, ITargetReferenceAM } from "../../classes/GetInfo";
 import { DescriptorItemContainer } from "../DescriptorItem/DescriptorItemContainer";
-import { IDescriptor, ITargetReference, ISettings, TSelectDescriptorOperation } from "../../model/types";
+import { IDescriptor, IRefListener, IRefNotifier, IRefReplies, ISettings, TAllTargetReferences, TSelectDescriptorOperation } from "../../model/types";
 import { IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop, IconClipboard } from "../../../shared/components/icons";
 import { ListenerClass } from "../../classes/Listener";
 import photoshop from "photoshop";
-import { Helpers, replayDescriptor } from "../../classes/Helpers";
-import { guessOrinalReference } from "../../classes/guessOriginalReference";
+import { replayDescriptor } from "../../classes/Helpers";
+import { guessOriginalReference } from "../../classes/guessOriginalReference";
 import { RawDataConverter } from "../../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
 import { str as crc } from "crc-32";
@@ -16,8 +16,20 @@ import SP from "react-uxp-spectrum";
 import { Main } from "../../../shared/classes/Main";
 import { MapDispatchToPropsFunction, connect } from "react-redux";
 import { IRootState } from "../../../shared/store";
-import { addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction, setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction, selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction, clearViewAction, importItemsAction, setSpyAction } from "../../actions/inspectorActions";
-import { getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID, getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView, getHasAutoActiveDescriptor, getActiveTargetReferenceForAM, getInspectorSettings, getSelectedDescriptors, getReplayEnabled, getRanameEnabled, getAllDescriptors, getCopyToClipboardEnabled } from "../../selectors/inspectorSelectors";
+import {
+	addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction,
+	setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction,
+	selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction,
+	clearViewAction, importItemsAction, setSpyAction,
+} from "../../actions/inspectorActions";
+import {
+	getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID,
+	getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView,
+	getHasAutoActiveDescriptor, getInspectorSettings,
+	getSelectedDescriptors, getReplayEnabled, getRanameEnabled, getAllDescriptors,
+	getCopyToClipboardEnabled,
+	getActiveRef,
+} from "../../selectors/inspectorSelectors";
 import { Dispatch } from "redux";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import { ButtonMenu } from "../ButtonMenu/ButtonMenu";
@@ -45,11 +57,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 
 	private getDescriptor = async (): Promise<void> => {
-		const { activeTargetReferenceForAM } = this.props;
+		const { activeRef } = this.props;
 		if (!this.props.addAllowed) {
 			return;
 		}
-		const result = await GetInfo.getAM(activeTargetReferenceForAM);
+		const result = await GetInfo.getAM(activeRef);
 		if (result === null) {
 			NotificationManager.error("Please make sure that item you want to add exists in Photoshop","Failed", 3500);
 			return;
@@ -66,21 +78,25 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			_target: descriptor._target,
 		};
 		const playResult = await photoshop.action.batchPlay([calculatedReference], {});
-		const originalReference: ITargetReference = guessOrinalReference(calculatedReference._target);
+		const originalReference = guessOriginalReference(descriptor._target);
+		if (!originalReference) {
+			console.error("Can't identify: ", calculatedReference);
+			return;
+		}
 
-		const result: IDescriptor = {			
+		const result: IDescriptor = {
 			endTime: Date.now(),
 			startTime: startTime,
-			id: Helpers.uuidv4(),
+			id: crypto.randomUUID(),
 			locked: false,
 			crc: crc(JSON.stringify(playResult)),
-			originalData: RawDataConverter.replaceArrayBuffer(playResult),
+			recordedData: RawDataConverter.replaceArrayBuffer(playResult),
 			originalReference,
 			pinned: false,
 			renameMode: false,
 			selected: false,
-			title: GetInfo.generateTitle(originalReference,calculatedReference),
-			calculatedReference,
+			title: GetInfo.generateTitle(originalReference, calculatedReference),
+			playAbleData: calculatedReference,
 			descriptorSettings: this.props.settings.initialDescriptorSettings,
 		};
 
@@ -91,22 +107,19 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	/**
 	 * Listener to be attached to all Photoshop notifications.
 	 */
-	public listener = async (event: string, descriptor: any): Promise<void> => {
+	public listener = async (event: string, descriptor: any, spy = false): Promise<void> => {
 		if (this.props.settings.neverRecordActionNames.includes(event)) {
 			return;
 		}
 
 		const category = descriptor?._isCommand ? "listener" : "notifier";
 
-		// if (category === "notifier") {debugger;}
-
 		// delete because it will be added as a first later
 		delete descriptor._obj;
 
 		console.log(event);
-		const originalReference:ITargetReference = {
+		const originalReference: IRefListener | IRefNotifier = {
 			type: category,
-			data: [],
 		};
 		const descWithEvent: ITargetReferenceAM = {
 			_obj:event,
@@ -120,20 +133,27 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			endTime: 0,
 			startTime: 0,
 			crc: descCrc,
-			id: Helpers.uuidv4(),
+			id: crypto.randomUUID(),
 			locked: false,
-			originalData,
+			recordedData: originalData,
 			originalReference,
 			pinned: false,
 			selected: false,
 			renameMode: false,
-			calculatedReference: descWithEvent,
-			title: GetInfo.generateTitle(originalReference, descWithEvent),
+			playAbleData: descWithEvent,
+			title: (spy ? "[S] " : "") + GetInfo.generateTitle(originalReference, descWithEvent),
 			descriptorSettings: this.props.settings.initialDescriptorSettings,
 		};
 
 		//this.props.setLastHistoryID;
 		this.props.onAddDescriptor(result);
+	}
+
+	/**
+	 * Listen to more PS events
+	 */
+	public spy = async (event: string, descriptor: any): Promise<void> => {
+		await this.listener(event, descriptor, true);
 	}
 
 	/**
@@ -169,7 +189,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		if (autoUpdateSpy) {
 			ListenerClass.stopSpy();
 		} else {
-			ListenerClass.startSpy(this.props.settings.neverRecordActionNames, this.props.settings.initialDescriptorSettings, this.props.onAddDescriptor);
+			ListenerClass.startSpy(this.spy);
 		}
 		this.props.setSpy(!autoUpdateSpy);
 	}
@@ -209,7 +229,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			const startTime = Date.now();
 			let descriptors:ActionDescriptor[]|null;
 			try {
-				descriptors = await replayDescriptor(item.calculatedReference as ActionDescriptor);				
+				descriptors = await replayDescriptor(item.playAbleData as ActionDescriptor);				
 			} catch (e:any) {
 				NotificationManager.error(e.message,"Replay failed", 5000);
 				console.error("error");
@@ -217,24 +237,23 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			}
 			const endTime = Date.now();
 
-			const originalReference: ITargetReference = {
+			const originalReference: IRefReplies = {
 				type: "replies",
-				data: [],
 			};
 
 			const result: IDescriptor = {
 				endTime,
 				startTime,
-				id: Helpers.uuidv4(),
+				id: crypto.randomUUID(),
 				locked: false,
 				crc: crc(JSON.stringify(descriptors)),
-				originalData: descriptors ? RawDataConverter.replaceArrayBuffer(descriptors) : null,
+				recordedData: descriptors ? RawDataConverter.replaceArrayBuffer(descriptors) : null,
 				originalReference,
 				pinned: false,
 				selected: false,
 				renameMode: false,
-				calculatedReference: descriptors,
-				title: GetInfo.generateTitle(originalReference, item.calculatedReference as ITargetReferenceAM, true),
+				playAbleData: descriptors,
+				title: GetInfo.generateTitle(originalReference, item.playAbleData as ITargetReferenceAM),
 				descriptorSettings: this.props.settings.initialDescriptorSettings,
 			};
 
@@ -276,17 +295,16 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	public render(): JSX.Element {
 		const { addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
 			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
-			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors,autoUpdateSpy, isSpyInstalled },
+			settings: { autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors,autoUpdateSpy },
 			onClear, onClearView, onClearNonExistent, allDescriptors,copyToClipboardEnabled,
 		} = this.props;
 		return (
 			<div className="Filters LeftColumn">
 				<div className="oneMore">
 					<FiltersContainer />
-					
 					<div className="search">
 						<SP.Textfield placeholder="Search..." onInput={(e: any) => this.onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
-						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}>Group</SP.Checkbox>
+						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}> <span className="groupLabel">Group</span></SP.Checkbox>
 					</div>
 					<div className="descriptorsWrapper" ref={this.wrapperDescRef} onClick={() => this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}
@@ -329,7 +347,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
 						{
 							// helper tool to listen to more events
-							isSpyInstalled && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
+							Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
 						}
 						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
 					</div>
@@ -349,7 +367,7 @@ interface IState{
 type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
 
 export interface ILeftColumnProps{
-	activeTargetReferenceForAM: ITargetReference | null;
+	activeRef: TAllTargetReferences;
 	addAllowed:boolean
 	allDescriptors:IDescriptor[]
 	allInViewDescriptors: IDescriptor[]
@@ -364,12 +382,11 @@ export interface ILeftColumnProps{
 	copyToClipboardEnabled: boolean
 	selectedDescriptors: IDescriptor[]
 	selectedDescriptorsUUIDs: string[]
-	settings:ISettings	
-	targetReference: ITargetReference[]
+	settings:ISettings
 }
 
 const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
-	activeTargetReferenceForAM: getActiveTargetReferenceForAM(state),
+	activeRef: getActiveRef(state),
 	copyToClipboardEnabled: getCopyToClipboardEnabled(state),
 	addAllowed: getAddAllowed(state),
 	allDescriptors: getAllDescriptors(state),
@@ -385,7 +402,6 @@ const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
 	selectedDescriptors: getSelectedDescriptors(state),
 	selectedDescriptorsUUIDs: getSelectedDescriptorsUUID(state),
 	settings: getInspectorSettings(state),
-	targetReference: getTargetReference(state),
 });
 
 interface ILeftColumnDispatch {

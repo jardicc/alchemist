@@ -1,11 +1,11 @@
 //import photoshop from "photoshop";
 //import Document from "photoshop/dist/dom/Document";
-import { IDReference } from "./GetInfo";
 //import { action } from "../../shared/imports";
 import { Document } from "photoshop/dom/Document";
 import { action, app } from "photoshop";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
-import { batchPlaySync, validateReference } from "../../shared/helpers";
+import { batchPlaySync, isValidRef } from "../../shared/helpers";
+import {IDReference} from "./Reference";
 
 export class DocumentExtra extends app.Document{
 
@@ -16,7 +16,7 @@ export class DocumentExtra extends app.Document{
 		}
 	}
 
-	public get amReference():IDReference {
+	public get amReference():IDReference<"document"> {
 		return ({
 			"_ref": "document",
 			"_id": this.id,
@@ -24,7 +24,7 @@ export class DocumentExtra extends app.Document{
 	}
 
 	public get exists(): boolean{
-		return validateReference([this.amReference]);
+		return isValidRef([this.amReference]);
 	}
 
 	public get colorMode(): number{

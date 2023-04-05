@@ -1,12 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 import React, {ComponentType, ReactElement} from "react";
-import {IconChevronBottom, IconChevronRight} from "../../../shared/components/icons";
+import {IconChevronBottom, IconChevronRight, IconChevronTop} from "../../../shared/components/icons";
 import {IPropertyGroup, IPropertyItem} from "../../model/types";
 import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
+import {getIcon} from "../../helpers";
 
 export interface IAccDropPostFixProps{
 	value:string
+}
+
+export interface IAccDropIcons{	
+	[key: string]:JSX.Element
 }
 
 export interface IAccDropProps {
@@ -14,15 +18,18 @@ export interface IAccDropProps {
 	items: (IPropertyItem | IPropertyGroup)[]
 	header: string | React.ReactElement
 	
-	onSelect: (id: string, value: string) => void
-	selected: string[]
+	onSelect: (id: string, value: string|number, toggle?:boolean) => void	
+	selected: (string|number)[]
 
 	className?: string
-	onHeaderClick?: (id: string, expanded: boolean) => void
+	onHeaderClick?: (id: string, expanded: boolean) => Promise<void>
 	showSearch?: boolean
 	headerPostFix?: ReactElement
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
-	doNotCollapse?:boolean
+	doNotCollapse?: boolean
+	
+	supportMultiSelect?:boolean
+	icons?: boolean // exists only for main type
 }
 
 export interface IAccDropDispatch {
@@ -70,9 +77,9 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		return height;
 	}
 
-	private headerClick = () => {
+	private headerClick = async () => {
 		if(this.props.onHeaderClick){
-			this.props.onHeaderClick(this.props.id, !this.state.expanded);
+			await this.props.onHeaderClick(this.props.id, !this.state.expanded);
 		}
 		this.toggleExpanded();
 	}
@@ -105,7 +112,16 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			this.props.selected.includes(item.value),
 		).map(item => item.label);
 
-		return labels.join(", ");
+		if (!labels.length) {
+			return "n/a";
+		}
+		else if (labels.length === 1) {
+			return labels[0];
+		}
+		else {
+			return `${labels[0]} +(${labels.length - 1})`;
+		}
+
 	}
 
 	private renderHeader = (): JSX.Element => {
@@ -113,12 +129,14 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 		return (
 			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
-				<div className="chevron">
-					{this.state.expanded ? <IconChevronBottom />:<IconChevronRight />}
-
+				<div className="titleType">{header}</div>
+				<div className="group">
+					<div className="title">{this.getLabel()}</div>				
+					{headerPostFix}
+					<div className="chevron">
+						{this.state.expanded ? <IconChevronTop/>:<IconChevronBottom /> }
+					</div>
 				</div>
-				<span className="title">{header + " " + this.getLabel()}</span>				
-				{headerPostFix}
 			</div>
 		);
 	}
@@ -159,7 +177,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	}
 
 	private renderItem = (item: IPropertyItem) => {
-		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse} = this.props;
+		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse, icons} = this.props;
 		if (
 			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) || 
 			!showSearch
@@ -169,21 +187,27 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					className="item"
 					key={"i_"+item.value+id}
 					onClick={(e) => {
-						onSelect(id, item.value);
 						e.stopPropagation();
-						if (!doNotCollapse) {
-							this.toggleExpanded();
+						if (e.ctrlKey || e.metaKey) {
+							onSelect(id, item.value, true);
+						} else {
+							onSelect(id, item.value);
+							if (!doNotCollapse) {
+								this.toggleExpanded();
+							}							
 						}
+
 					}}
 					data-selected={selected.includes(item.value) || undefined}
 				>
 					<div className="label">
-						{item.label}
+						{icons && <div className="icon">{getIcon(item.value as any)}</div>} <span>{item.label}</span>
 					</div>
 					{
+						// filter within main category dropdown
 						ItemPostFix && <div 
 							className="itemPostFix"
-						><ItemPostFix value={item.value} /></div>
+						><ItemPostFix value={item.value.toString()} /></div>
 					}
 				</div>
 			);			

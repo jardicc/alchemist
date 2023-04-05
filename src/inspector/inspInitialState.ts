@@ -7,7 +7,7 @@ import { getSorInitialState } from "../sorcerer/sorInitialState";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [11, 0, 0],
+		version: [12, 0, 0],
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
 		descriptorsGrouping: "eventName",
@@ -47,217 +47,141 @@ export function getInitialState(): IInspectorState {
 
 		explicitlyVisibleTopCategories:["listener","dispatcher","replies"],
 
-		targetReference: [
-			{
+		targetReference: {
+			listener: {
 				type: "listener",
-				data: [],
+
 			},
-			{
+			dispatcher: {
 				type: "dispatcher",
-				data: [],
+
 			},
-			{
+			notifier: {
 				type: "notifier",
-				data: [],
+
 			},
-			{
+			replies: {
 				type: "replies",
-				data: [],
+
 			},
-			{
-				type: "application",
-				data: [
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			/*{
-				type: "customDescriptor",
-				data: [
-					{
-						subType: "category",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},*/
-			{
-				type: "history",
-				data: [
-					{
-						subType: "document",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "history",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
-				type: "snapshot",
-				data: [
-					{
-						subType: "document",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "snapshot",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
-				type: "layer",
-				data: [
-					{
-						subType: "document",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "layer",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
-				type: "path",
-				data: [
-					{
-						subType: "document",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "path",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "layer",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
-				type: "channel",
-				data: [
-					{
-						subType: "document",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "channel",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "layer",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
-				type: "document",
-				data: [
-					{
-						subType: "document",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
-				type: "guide",
-				data: [
-					{
-						subType: "document",
-						content: { value: "active", filterBy: "off" },
-					},
-					{
-						subType: "guide",
-						content: { value: "", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
-				type: "action",
-				data: [
-					{
-						subType: "actionset",
-						content: { value: "", filterBy: "off" },
-					},
-					{
-						subType: "action",
-						content: { value: "", filterBy: "off" },
-					},
-					{
-						subType: "command",
-						content: { value: "", filterBy: "off" },
-					},
-					{
-						subType: "property",
-						content: { value: "notSpecified", filterBy: "off" },
-					},
-				],
-			},
-			{
+			generator: {
 				type: "generator",
-				data: [],
+
 			},
-			{
+			application:{
+				type: "application",
+				filterProp: "off",
+				properties:["notSpecified"],
+			},
+			document:{
+				type: "document",
+				filterProp: "off",
+				properties:["notSpecified"],
+				
+				documentID: "selected",
+				filterDoc: "off",
+
+
+			},
+			layer:{
+				type: "layer",
+				filterProp: "off",
+				properties:["notSpecified"],
+				
+				documentID: "selected",
+				filterDoc: "off",
+
+				filterLayer: "off",
+				layerID: "selected",
+			},
+			path:{
+				type: "path",
+				filterProp: "off",
+				properties:["notSpecified"],
+				
+				documentID: "selected",
+				filterDoc: "off",
+
+				filterLayer: "off",
+				layerID: "selected",
+
+				filterPath: "off",
+				pathID: "selected",
+			},
+			channel:{
+				type: "channel",
+				filterProp: "off",
+				properties:["notSpecified"],
+				
+				documentID: "selected",
+				filterDoc: "off",
+
+				filterLayer: "off",
+				layerID: "selected",
+
+				channelID: "selected",
+				filterChannel: "off",
+			},
+			actions:{
+				type: "actions",
+				filterProp: "off",
+				properties:["notSpecified"],
+
+				actionID: "none",
+				filterAction: "off",
+
+				actionSetID: "none",
+				filterActionSet: "off",
+
+				commandIndex: "none",
+				filterCommand: "off",
+			},
+			timeline:{
 				type: "timeline",
-				data: [
-					{
-						subType: "property",
-						content: { value: "", filterBy: "off" },
-					},
-				],
+				filterProp: "off",
+				properties:[],
+
 			},
-			{
-				type: "animationFrame",
-				data: [
-					{
-						subType: "property",
-						content: { value: "", filterBy: "off" },
-					},
-				],
+			animationFrameClass:{
+				type: "animationFrameClass",
+				filterProp: "off",
+				properties:[],
+
 			},
-			{
-				type: "animation",
-				data: [
-					{
-						subType: "property",
-						content: { value: "", filterBy: "off" },
-					},
-				],
+			animationClass:{
+				type: "animationClass",
+				filterProp: "off",
+				properties:[],
+
 			},
-		],
+			historyState:{
+				type: "historyState",
+				filterProp: "off",
+				properties: ["notSpecified"],
+				
+				filterHistory: "off",
+				historyID: "selected",
+			},
+			snapshotClass:{
+				type: "snapshotClass",
+				filterProp: "off",
+				properties: ["notSpecified"],
+				
+				filterSnapshot:"off",
+				snapshotID: "selected",
+			},
+			guide:{
+				type: "guide",
+				filterProp: "off",
+				properties:["notSpecified"],
+				
+				documentID: "selected",
+				filterDoc: "off",
+
+				guideID: "none",
+				filterGuide: "off",
+			},
+		},
 		settings: {
 			settingsVisible:false,
 			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
@@ -290,7 +214,6 @@ export function getInitialState(): IInspectorState {
 			autoUpdateListener: false,
 			// Don't worry Spy is helper tool to get additional data from PS if it is turned on
 			autoUpdateSpy:false,
-			isSpyInstalled: false,
 			lastSelectedItem: null,
 			dontShowMarketplaceInfo: false,
 			activeDescriptors: [],
@@ -462,7 +385,7 @@ export function getInitialState(): IInspectorState {
 					],
 				},
 				{
-					type: "history",
+					type: "historyState",
 					list: [
 						{ label: "(not specified)", value: "notSpecified"},
 						{ label: "ID", value: "ID" },
@@ -475,7 +398,7 @@ export function getInitialState(): IInspectorState {
 					],
 				},
 				{
-					type: "snapshot",
+					type: "snapshotClass",
 					list: [
 						{ label: "(not specified)", value: "notSpecified"},
 						{ label: "ID", value: "ID" },
@@ -720,7 +643,7 @@ export function getInitialState(): IInspectorState {
 					],
 				},
 				{
-					type: "action",
+					type: "actions",
 					list: [
 						{ label: "(not specified)", value: "notSpecified"},
 						{ label: "ID", value: "ID" },
@@ -748,14 +671,14 @@ export function getInitialState(): IInspectorState {
 					],
 				},
 				{
-					type: "animationFrame",
+					type: "animationFrameClass",
 					list: [
 						{ label: "animationFrameDelay", value: "animationFrameDelay" },
 						{ label: "animationFrameReplace", value: "animationFrameReplace" },
 					],
 				},
 				{
-					type: "animation",
+					type: "animationClass",
 					list: [
 						{ label: "enabled", value: "enabled" },
 						{ label: "currentFrame", value: "currentFrame" },

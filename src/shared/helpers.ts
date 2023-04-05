@@ -1,7 +1,6 @@
 import { TProtoMode } from "../inspector/model/types";
 import {action} from "photoshop";
-import { ActionDescriptor, BatchPlayCommandOptions } from "photoshop/dom/CoreModules";
-import { TReference } from "../inspector/classes/GetInfo";
+import { ActionDescriptor, ActionReference, BatchPlayCommandOptions } from "photoshop/dom/CoreModules";
 
 export function addMoreKeys(protoMode: TProtoMode, collection: any): string[] {
 	if (protoMode === "none") {
@@ -29,7 +28,7 @@ export function batchPlaySync(desc: ActionDescriptor[], options: BatchPlayComman
 	return res;
 }
 
-export function validateReference(ref:TReference[]):boolean {
-	const res = (action as any).validateReference(ref);
+export function isValidRef(ref:any):boolean {
+	const res = action.validateReference(ref);
 	return res;
 }

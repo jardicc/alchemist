@@ -17,7 +17,7 @@ export const getDiffActiveView = createSelector([getInspectorDifferenceTab], t =
 export const getLeftTreeDiff = createSelector([getSelectedDescriptors, getDiffPath, getAutoActiveDescriptor], (t, diffPath,autoDesc) => {
 	const path = cloneDeep(diffPath);
 	//path.shift();
-	let data:any = cloneDeep(t?.[0]?.originalData ?? autoDesc?.originalData);
+	let data:any = cloneDeep(t?.[0]?.recordedData ?? autoDesc?.recordedData);
 	for (const part of path) {
 		data = (data)?.[part];
 	}
@@ -27,7 +27,7 @@ export const getLeftTreeDiff = createSelector([getSelectedDescriptors, getDiffPa
 export const getRightTreeDiff  = createSelector([getSelectedDescriptors,getDiffPath,getSecondaryAutoActiveDescriptor],(t,diffPath,autoDesc)=>{
 	const path = cloneDeep(diffPath);
 	//path.shift();
-	let data:any = cloneDeep(t?.[1]?.originalData ?? autoDesc?.originalData);
+	let data:any = cloneDeep(t?.[1]?.recordedData ?? autoDesc?.recordedData);
 	for (const part of path) {
 		data = (data)?.[part];
 	}
@@ -35,12 +35,12 @@ export const getRightTreeDiff  = createSelector([getSelectedDescriptors,getDiffP
 });
 
 export const getLeftRawDiff = createSelector([getSelectedDescriptors, getAutoActiveDescriptor], (t, autoDesc) => {
-	const data:any = t?.[0]?.originalData ?? autoDesc?.originalData;
+	const data:any = t?.[0]?.recordedData ?? autoDesc?.recordedData;
 	return data;
 });
 
 export const getRightRawDiff = createSelector([getSelectedDescriptors, getSecondaryAutoActiveDescriptor], (t, autoDesc) => {
-	const data:any = t?.[1]?.originalData ?? autoDesc?.originalData;
+	const data:any = t?.[1]?.recordedData ?? autoDesc?.recordedData;
 	return data;
 });
 
