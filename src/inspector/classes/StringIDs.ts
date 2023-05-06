@@ -23,6 +23,7 @@ export const events = [
 	"9AA9D7D6-C209-494A-BED9-4E7D926DA69F",
 	"9D3174CE-045C-4B87-B7AE-40D8C3319780",
 	"a0754df2-9c60-4b64-a940-6a2bb1102652", // Delete All Empty Layers
+	"autoCutout",
 	"accentedEdges", // Accented Edges
 	"adaptCorrect", // Shadow/Highlight
 	"adaptCorrectTones", // Parameters
