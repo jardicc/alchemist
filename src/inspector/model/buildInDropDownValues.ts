@@ -77,6 +77,6 @@ export const baseItemsGuide: IFilterProperty<TGuideReference>[] = [
 	{label: "(all)", value: "all"},
 ];
 export const baseItemsActionCommon: (IFilterProperty<TActionSet> | IFilterProperty<TActionItem> | IFilterProperty<TActionCommand>)[] = [
-	// {label: "(all)", value: "all"}, // I couldn't find a support
+	{label: "(all)", value: "all"}, // I couldn't find a support
 	{label: "(undefined)", value: "none"},
 ];

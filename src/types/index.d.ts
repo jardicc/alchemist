@@ -10,4 +10,22 @@ declare global {
 		Main: Main;
 		_rootStore: Store<EmptyObject & IRootState, AnyAction>
 	}
+
+	namespace JSX {
+		interface IntrinsicElements {
+			"sp-menu-group": any;
+			"sp-action-group": any;
+			"sp-split-button": any;
+			"sp-popover": any;
+			"p-action-group>": any;
+			"sp-action-menu": any;
+			"sp-search": any;
+			"sp-switch": any;
+			"sp-tab": any;
+			"sp-tab-list": any;
+			"sp-tags": any;
+			"sp-tag": any;
+			"sp-tooltip": any;
+		}
+	}
 }

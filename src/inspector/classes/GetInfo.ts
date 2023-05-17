@@ -104,7 +104,12 @@ export class GetInfo {
 				if (origRef.commandIndex !== "none" && origRef.actionID !== "none") {
 					commandIndex = this.getActionCommandIndexByID(origRef.commandIndex, origRef.actionID);
 				}
-
+				if (origRef.actionSetID === "all") {
+					ref.setApplication();
+					ref.allClass = "actionSet";
+					ref.setAction(undefined, actionIDs, commandIndex);
+					break;
+				}
 				ref.setAction(origRef.actionSetID, actionIDs, commandIndex);
 				break;
 			}

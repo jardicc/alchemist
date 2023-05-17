@@ -1,8 +1,10 @@
 
-import {action, app} from "photoshop";
+import {action, app, constants} from "photoshop";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
-import {TChannelReferenceValid,DocumentMode} from "../model/types";
+import {TChannelReferenceValid} from "../model/types";
+import * as c from "photoshop/dom/Constants";
 
+const DocumentMode = constants.DocumentMode;
 
 export class IDBySelected {
 
@@ -92,12 +94,12 @@ export class IDBySelected {
 	}
 
 
-	private static getActiveDocumentColorMode(docID?:number): DocumentMode{
+	private static getActiveDocumentColorMode(docID?:number): c.DocumentMode{
 		if (typeof docID === "number") {
 			const doc = new app.Document(docID);
-			return doc.mode as any;
+			return doc.mode;
 		} else {
-			return app.activeDocument.mode as any;			
+			return app.activeDocument.mode;			
 		}
 	}
 

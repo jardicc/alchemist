@@ -1,4 +1,5 @@
 export const events = [
+	"$LqFy", // liquify
 	" JPEG 2000", // JPEG2000
 	"08E8421B-976E-4E81-A964-AD754EDB4381",
 	"0B71D221-F8CE-11d2-B21B-0008C75B322C", // "N/A"

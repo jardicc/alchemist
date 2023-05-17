@@ -166,6 +166,10 @@ export class Filters extends React.Component<TFilters, IState> {
 
 		const id = activeRef.actionSetID;
 
+		if (id === "all") {
+			return null;
+		}
+
 		return (
 			<FilterRowContainer
 				header="Action:"

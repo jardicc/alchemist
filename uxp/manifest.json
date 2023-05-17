@@ -8,7 +8,8 @@
 		"minVersion": "24.2",
 		"data":{
 			"apiVersion": 2,
-			"loadEvent": "use"
+			"loadEvent": "use",
+			"addToPluginMenu": true
 		}
 	},
 	"main": "index.html",

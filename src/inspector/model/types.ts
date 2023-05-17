@@ -61,7 +61,7 @@ export type TChannelReferenceValid =
 	| "transparencyEnum" 
 	| "filterMask";
 export type TGuideReference = "none" | "all" | number;
-export type TActionSet = "none" | number;
+export type TActionSet = "none" | "all" | number;
 export type TActionItem = "none" | number;
 export type TActionCommand = "none" | number;
 
@@ -202,7 +202,7 @@ export interface IRefChannel{
 
 export interface IRefActions{
 	type: "actions"	
-	actionSetID: number | "none"
+	actionSetID: number | "none" | "all"
 	actionID: number | "none"
 	commandIndex: number | "none"
 	properties: string[]

@@ -187,9 +187,9 @@ export class Reference {
 		this.ref = [];
 	}
 
-	public setAction(set: number, action?: number | null, command?: number | null) {
+	public setAction(set?: number | null, action?: number | null, command?: number | null) {
 		if (this.refsOnly.length) {
-			throw new Error("Can't set action because Reference is not empty");
+			// throw new Error("Can't set action because Reference is not empty");
 		}
 		if (command) {
 			this.ref.push({
