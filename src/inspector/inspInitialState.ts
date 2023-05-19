@@ -269,6 +269,7 @@ export function getInitialState(): IInspectorState {
 								{ label: "homeScreenVisibility", value: "homeScreenVisibility" },
 								{ label: "hostName", value: "hostName" },
 								{ label: "hostVersion", value: "hostVersion" },
+								{ label: "imageProcessingPrefs", value: "imageProcessingPrefs" },
 								{ label: "interfaceBevelHighlight", value: "interfaceBevelHighlight" },
 								{ label: "interfaceBevelShadow", value: "interfaceBevelShadow" },
 								{ label: "interfaceBlack", value: "interfaceBlack" },
