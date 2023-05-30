@@ -1,4 +1,4 @@
-import "./ActionSetContainer.less"
+import "./ActionSetContainer.less";
 
 import React, { MouseEventHandler } from "react";
 import { connect } from "react-redux";
@@ -48,7 +48,7 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 			}
 		} 
 		this.props.setSelectedItem(this.combinedUUID, operation);
-	}
+	};
 
 	private get isExpanded() {
 		const { actionSet, expandedItems } = this.props;
@@ -61,7 +61,7 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 		const { actionSet } = this.props;
 		const recursive = (e.ctrlKey || e.metaKey);
 		this.props.setExpandedItem([actionSet.__uuid__], !this.isExpanded,recursive);
-	}
+	};
 
 	public render(): React.ReactNode {
 		

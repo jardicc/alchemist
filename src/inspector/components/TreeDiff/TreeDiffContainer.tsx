@@ -61,7 +61,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 
 	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
-	}
+	};
 
 	public componentDidMount():void {
 		this.updateData();
@@ -85,7 +85,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 
 	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.state.data);
-	}
+	};
 
 	public render():React.ReactNode {
 		const { ...props } = this.props;
@@ -153,7 +153,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 
 	public getItemString = (type: any, data: any): JSX.Element => (
 		getItemString(type, data, this.props.isWideLayout, true)
-	)
+	);
 
 	public valueRenderer = (raw:any, value:any) => {
 		const { /*styling,*/ isWideLayout } = this.props;
@@ -190,7 +190,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		}
 
 		return raw;
-	}
+	};
 }
 
 

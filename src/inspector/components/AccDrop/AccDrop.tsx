@@ -82,7 +82,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			await this.props.onHeaderClick(this.props.id, !this.state.expanded);
 		}
 		this.toggleExpanded();
-	}
+	};
 
 	private toggleExpanded = () => {
 		this.setState({
@@ -94,7 +94,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				(this.searchRef as any)?.current?.focus();
 			}
 		}*/);
-	}
+	};
 
 	private getLabel = () => {
 
@@ -122,13 +122,13 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			return `${labels[0]} +(${labels.length - 1})`;
 		}
 
-	}
+	};
 
 	private renderHeader = (): JSX.Element => {
 		const {id, className, header, headerPostFix} = this.props;
 
 		return (
-			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
+			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={void this.headerClick}>
 				<div className="titleType">{header}</div>
 				<div className="group">
 					<div className="title">{this.getLabel()}</div>				
@@ -139,7 +139,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				</div>
 			</div>
 		);
-	}
+	};
 
 	private renderGroup = (group: IPropertyGroup) => {
 		return (
@@ -152,7 +152,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				</div>
 			</React.Fragment>
 		);
-	}
+	};
 
 	private renderSearchField = () => {
 		if (!this.props.showSearch || !this.state.expanded) {
@@ -174,7 +174,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				/>
 			</div>
 		);
-	}
+	};
 
 	private renderItem = (item: IPropertyItem) => {
 		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse, icons} = this.props;
@@ -213,7 +213,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			);			
 		}
 		return null;
-	}
+	};
 
 	private renderContent = (): React.ReactNode => {
 		const {id, items} = this.props;
@@ -245,7 +245,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				</div>
 			</div>
 		);
-	}
+	};
 	
 	
 	componentDidUpdate(prevProps: Readonly<TAccDrop>, prevState: Readonly<IAccDropState>, snapshot?: any): void {

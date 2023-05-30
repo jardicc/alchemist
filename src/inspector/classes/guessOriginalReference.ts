@@ -63,7 +63,8 @@ export const guessOriginalReference = (refAM: TReference[]): TAllTargetReference
 			};
 			return res;
 		}
+		default: {
+			return null;
+		}
 	}
-
-	return null;
 };

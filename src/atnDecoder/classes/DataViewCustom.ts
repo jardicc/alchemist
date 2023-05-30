@@ -4,7 +4,7 @@ import { charIDToStringID } from "./CharIDToStringID";
 export class DataViewCustom extends DataView{
 	
 	public offset: number;
-	private littleEndian:boolean
+	private littleEndian:boolean;
 	
 	constructor(buffer: ArrayBufferLike|number[],  littleEndian:boolean, byteOffset?: number, byteLength?: number) {
 		

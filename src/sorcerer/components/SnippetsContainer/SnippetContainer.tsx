@@ -67,7 +67,7 @@ interface ISnippetContainerDispatch {
 
 const mapDispatchToProps = (dispatch:Dispatch):ISnippetContainerDispatch => ({
 	//setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
-	onSet:(uuid,value)=>dispatch(setSnippetAction(value,uuid))
+	onSet:(uuid,value)=>dispatch(setSnippetAction(value,uuid)),
 });
 
 export const SnippetContainer = connect<ISnippetContainerProps, ISnippetContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(Snippet);

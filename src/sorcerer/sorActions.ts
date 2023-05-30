@@ -90,8 +90,8 @@ export interface ISetSorcererPresetAction{
 export function setPresetAction(data: ISorcererState): ISetSorcererPresetAction{
 	return {
 		type: "[SOR] SET_PRESET",
-		payload: data
-	}
+		payload: data,
+	};
 }
 
 export function setSelectAction(type: "panel" | "command" | "snippet" | "general", uuid: null | string = null): ISelectAction {
@@ -163,7 +163,7 @@ export function assignSnippetToPanelAction(operation:"on"|"off", uuid:string, sn
 			operation,
 			uuid,
 			snippetUuid,
-		}
+		},
 	};
 }
 
@@ -172,9 +172,9 @@ export function setHostApp(app: "PS"|"XD", arg: TSetPanelHostActionPayload):ISet
 		type: "[SOR] SET_HOST_APP",
 		payload: {
 			app,
-			arg
-		}
-	}
+			arg,
+		},
+	};
 }
 
 export type TSorActions = ISelectAction | IMakeAction | IRemoveAction | ISetMainAction | ISetPanelAction |

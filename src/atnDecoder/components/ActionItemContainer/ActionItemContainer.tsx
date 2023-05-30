@@ -49,7 +49,7 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 			}
 		} 
 		this.props.setSelectedItem(this.combinedUUID, operation);
-	}
+	};
 
 	private get isExpanded() {
 		const { actionItem, expandedItems } = this.props;
@@ -61,7 +61,7 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 		e.stopPropagation();
 		const { actionItem, parentSet: parent } = this.props;
 		this.props.setExpandedItem([parent.__uuid__, actionItem.__uuid__], !this.isExpanded);
-	}
+	};
 
 	public render(): React.ReactNode {
 		

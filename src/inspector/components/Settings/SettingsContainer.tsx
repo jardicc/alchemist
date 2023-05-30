@@ -26,7 +26,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		} else {
 			onSetOptions(selected.map(item => item.id), options);
 		}
-	}
+	};
 
 	private renderOptionsScope = (): React.ReactNode => {
 		const auto = this.props.autoSelectedUUIDs;
@@ -38,7 +38,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		} else {
 			return (<>Will change {this.props.selected?.length ?? 0} selected item(s)</>);
 		}
-	}
+	};
 
 	private onSynchronousExecution = (e: any) => {
 		let value = e.currentTarget.value;
@@ -48,27 +48,27 @@ class Settings extends Component<TSettings, ISettingsState> {
 			value = value === "true";
 		}
 		this.common({synchronousExecution: value});
-	}
+	};
 
 	private onSetDialogOptions = (e: any) => {
 		const value = e.currentTarget.value;
 		this.common({dialogOptions: (value === "default" ? null : value)});
-	}
+	};
 
 	private onSetModalBehavior = (e: any) => {
 		const value = e.currentTarget.value;
 		this.common({modalBehavior: (value === "default" ? null : value)});
-	}
+	};
 	
 	private onSetSupportRawDataType = (e: any) => {
 		const value = e.target.checked;
 		this.common({supportRawDataType: !!value});
-	}
+	};
 
 	private onSetIndent = (e: any) => {
 		const value = e.currentTarget.value;
 		this.props.onSetGlobalOptions({indent: value});
-	}
+	};
 
 	private onSetCodeWrappers = (e:any) => {
 		if (this.levelDelay) {
@@ -81,7 +81,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 				codeWrappers:value,
 			});
 		}, 50);
-	}
+	};
 
 	private get wrappersValue():number {
 		switch (this.props.settings.codeWrappers) {
@@ -124,7 +124,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 	private onSetImports = (e:any) => {
 		this.props.onSetGlobalOptions({codeImports:e.target?.checked ? "require" : "none"});
-	}
+	};
 	
 	public render(): React.ReactNode {
 		const {settings: {makeRawDataEasyToInspect: ignoreRawData, maximumItems, fontSize, neverRecordActionNames, accordionExpandedIDs}, onSetRecordRaw, onSetFontSize, onNeverRecordActionNamesChanged} = this.props;

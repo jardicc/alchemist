@@ -22,15 +22,15 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 	
 	private labelRenderer:TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable): JSX.Element => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
-	}
+	};
 
 	public getItemString = (type: any, data: any): JSX.Element => {
 		return getItemString(type, data, true, false);
-	}
+	};
 
 	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
-	}
+	};
 
 	private renderSearchField = () => {
 		return (
@@ -42,7 +42,7 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 				onInput={(e)=>this.props.onSetSearch(e.target?.value ?? "")}
 			/>
 		);
-	}
+	};
 	
 	
 	public render(): React.ReactNode {

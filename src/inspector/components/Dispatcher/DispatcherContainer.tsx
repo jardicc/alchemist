@@ -26,7 +26,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 
 	private change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		this.props.setDispatcherValue(e.currentTarget.value);
-	}
+	};
 
 	private send = async () => {
 		try {
@@ -82,7 +82,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 		} catch (e) {
 			console.error(e);
 		}
-	}
+	};
 
 
 	public render(): JSX.Element {

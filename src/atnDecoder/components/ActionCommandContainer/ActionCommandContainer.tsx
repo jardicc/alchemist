@@ -49,7 +49,7 @@ export class ActionCommand extends React.Component<TActionCommand, IActionComman
 			}
 		} 
 		this.props.setSelectedItem(this.combinedUUID, operation);
-	}
+	};
 
 	public render():React.ReactNode {
 		const {actionCommand } = this.props;

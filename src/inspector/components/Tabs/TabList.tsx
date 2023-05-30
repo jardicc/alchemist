@@ -49,7 +49,7 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 			);
 		}
 		return null;
-	}
+	};
 
 	private renderTabContent = (): React.ReactNode => {
 		const { activeKey, children } = this.props;
@@ -68,7 +68,7 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 			}
 		}
 		return <div className={clsName}>not array</div>;
-	}
+	};
 
 	public render(): JSX.Element {
 		

@@ -54,7 +54,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		if (wrapperElement.scrollHeight - wrapperElement.offsetHeight - wrapperElement.scrollTop <= 20) {
 			itemElement.scrollIntoView();			
 		}
-	}
+	};
 
 	private getDescriptor = async (): Promise<void> => {
 		const { activeRef } = this.props;
@@ -68,7 +68,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		}
 		this.props.onAddDescriptor(result);
 
-	}
+	};
 
 	public autoInspector = async (event: string, descriptor: any): Promise<void> => {
 		if (event !== "select") { return; }
@@ -102,7 +102,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 		//this.props.setLastHistoryID;
 		this.props.onAddDescriptor(result);
-	}
+	};
 
 	/**
 	 * Listener to be attached to all Photoshop notifications.
@@ -147,14 +147,14 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 		//this.props.setLastHistoryID;
 		this.props.onAddDescriptor(result);
-	}
+	};
 
 	/**
 	 * Listen to more PS events
 	 */
 	public spy = async (event: string, descriptor: any): Promise<void> => {
 		await this.listener(event, descriptor, true);
-	}
+	};
 
 	/**
 	 * Attaches the simple listener to the app.
@@ -182,7 +182,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			
 		}
 		this.props.setListener(!autoUpdateListener);
-	}
+	};
 
 	private attachSpy = async () => {
 		const { settings:{autoUpdateSpy}} = this.props;
@@ -192,7 +192,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			ListenerClass.startSpy(this.spy);
 		}
 		this.props.setSpy(!autoUpdateSpy);
-	}
+	};
 
 	private attachAutoInspector = async () => {
 		const {settings:{autoUpdateInspector} } = this.props;
@@ -204,7 +204,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			ListenerClass.startInspector(this.autoInspector);
 		}
 		this.props.setAutoInspector(!autoUpdateInspector);
-	}
+	};
 
 	private renderDescriptorsList = (): React.ReactNode => {
 		const { allInViewDescriptors } = this.props;
@@ -217,11 +217,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				);
 			})
 		);
-	}
+	};
 
 	private onSearch = (e: string) => {
 		this.props.setSearchTerm(e);
-	}
+	};
 
 	private onPlaySeparated = async () => {
 		const toPlay = this.props.selectedDescriptors;
@@ -260,14 +260,14 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			//this.props.setLastHistoryID;
 			this.props.onAddDescriptor(result);
 		}
-	}
+	};
 
 	private rename = () => {
 		const { setRenameMode, selectedDescriptorsUUIDs } = this.props;
 		if (selectedDescriptorsUUIDs.length) {
 			setRenameMode(selectedDescriptorsUUIDs[0], true);			
 		}
-	}
+	};
 
 	private renderMarketplaceDialog = () => {
 		const { onSetDontShowMarketplaceInfo } = this.props;
@@ -286,11 +286,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				</footer>
 			</form>
 		</dialog>);
-	}
+	};
 
 	private copyToClipboard = () => {
 		(navigator.clipboard as any).setContent({"text/plain": this.props.generatedCode});
-	}
+	};
 
 	public render(): JSX.Element {
 		const { addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
@@ -333,7 +333,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						*/}
 						<div title="Rename" className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={this.rename}><IconPencil /></div>
 						<div title="Copy to clipboard"  className={"clipboard buttonIcon " + (copyToClipboardEnabled ? "allowed" : "disallowed")} onClick={this.copyToClipboard}><IconClipboard/></div>
-						<div title="Replay" className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
+						<div title="Replay" className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={void this.onPlaySeparated}><IconPlayIcon /></div>
 						<div title="(Un)lock" className={"lock buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
 							{selectedDescriptors.some(desc => desc.locked) ? <IconLockUnlocked /> : <IconLockLocked />}
 						</div>
@@ -343,13 +343,13 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<div title="Remove" className={"remove buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onRemove(selectedDescriptorsUUIDs); }}><IconTrash /></div>
 					</div>
 					<div className="filterButtons">
-						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}><IconPlus /> Add</div>
-						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
+						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={void this.getDescriptor}><IconPlus /> Add</div>
+						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={void this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
 						{
 							// helper tool to listen to more events
-							Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
+							Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={void this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
 						}
-						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
+						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={void this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
 					</div>
 				</div>
 				{this.renderMarketplaceDialog()}

@@ -6,6 +6,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const ZipPlugin = require("zip-webpack-plugin");
 const WatchExternalFilesPlugin = require("webpack-watch-external-files-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
 
 module.exports = (env) => {
 	
@@ -54,6 +55,9 @@ module.exports = (env) => {
 			],
 		},
 		plugins: [
+			new ESLintPlugin(
+				{files: ["src/**/*.ts", "src/**/*.tsx"]},
+			),
 			new CleanWebpackPlugin(),
 			new CopyPlugin({
 				patterns: [

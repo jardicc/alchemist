@@ -1,39 +1,39 @@
 // eslint-disable-next-line no-undef
 module.exports = {
-	"env": {
-		"browser": true,
-		"es2020": true,
+	env: {
+		browser: true,
+		es2020: true,
 	},
-	"extends": [
+	extends: [
 		"eslint:recommended",
 		"plugin:react/recommended",
-		"plugin:@typescript-eslint/recommended",
 	],
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"ecmaFeatures": {
-			"jsx": true,
+	parser: "@typescript-eslint/parser",
+	parserOptions: {
+		ecmaFeatures: {
+			jsx: true,
 		},
-		"ecmaVersion": 11,
-		"sourceType": "module",
+		ecmaVersion: 2022,
+		sourceType: "module",
 	},
-	"plugins": [
+	plugins: [
 		"react",
 		"@typescript-eslint",
 	],
-	"rules": {
-		"no-empty-interface": 0,
+	rules: {
+		"no-async-promise-executor": ["error"],
+		"prefer-promise-reject-errors": ["error"],
+		"require-await": ["error"],
 		"no-unreachable-loop": [
-			"error",	
+			"error",
 		],
-		"@typescript-eslint/no-empty-interface": "off",
 		"no-promise-executor-return": [
-			"error",	
+			"error",
 		],
 		"indent": [
 			"error",
 			"tab",
-			{ "SwitchCase": 1},
+			{"SwitchCase": 1},
 		],
 		"linebreak-style": [
 			"error",
@@ -52,4 +52,21 @@ module.exports = {
 			"always",
 		],
 	},
+	overrides: [{
+		files: ["*.ts", "*.tsx"],
+		extends: [
+			"plugin:@typescript-eslint/recommended",
+		],
+		parserOptions: {
+			project: ["./tsconfig.json"], // Specify it only for TypeScript files
+		},
+		rules: {
+			"@typescript-eslint/no-floating-promises": "error",
+			"@typescript-eslint/no-misused-promises": "error",
+			"@typescript-eslint/promise-function-async": "error",
+			"@typescript-eslint/switch-exhaustiveness-check": "error",
+
+			"@typescript-eslint/no-empty-interface": "off",
+		},
+	}],
 };

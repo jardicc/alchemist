@@ -39,7 +39,7 @@ function addUUIDs(arg:IActionSet) :IActionSetUUID{
 
 export async function decodeATN():Promise<IActionSetUUID[]> {
 	const dataViews = await loadFile();
-	if(!dataViews){return []}
+	if(!dataViews){return [];}
 	const parsed = dataViews.map(dataView => addUUIDs(parse(dataView)));
 	return parsed;
 }

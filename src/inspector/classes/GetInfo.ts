@@ -321,7 +321,7 @@ export class GetInfo {
 		const parts = getName(calculatedReference._target);
 		const names = parts.map(p => p.value ?? "N/A");
 		return names.join(" / ");
-	}
+	};
 
 	private static buildReply(startTime: number, playResult: ActionDescriptor[], playAbleData: ITargetReferenceAM, originalRef: TAllTargetReferences): IDescriptor {
 		return {

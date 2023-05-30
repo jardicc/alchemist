@@ -40,7 +40,7 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 
 	private onHeaderClick = () => {
 		this.props.onChange(this.props.id, !this.isExpanded);
-	}
+	};
 
 	private renderHeader = (): JSX.Element => {
 		return (
@@ -49,7 +49,7 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 				<span className="title">{this.props.header}</span>
 			</div>
 		);
-	}
+	};
 
 	private renderContent = (): React.ReactNode => {
 		const {children} = this.props;
@@ -62,7 +62,7 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 				{children}
 			</div>
 		);
-	}
+	};
 
 	public render(): JSX.Element {
 		

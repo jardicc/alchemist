@@ -38,9 +38,10 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 			...this.state,
 			showMessage: false,
 		});
-	}
+	};
 
 	public componentDidMount():void {		
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		(async () => {
 			const res = await fetch("http://alchemist.bereza.cz/alchemist-message.json");
 			if (res.status !== 200) {
@@ -53,7 +54,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 				link: data.link,
 				showMessage:true,
 			});
-			console.log("fetch",data);			
+			console.log("fetch",data);
 		})();
 	}
 

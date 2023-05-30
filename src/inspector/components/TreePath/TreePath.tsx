@@ -33,7 +33,7 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 	private renderPath = () => {
 		const { path, onInspectPath } = this.props;
 		return renderPath(path, onInspectPath);
-	}
+	};
 
 	private throttleSlider = (e: any) => {
 		if (this.levelDelay) {
@@ -44,7 +44,7 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 		this.levelDelay = window.setTimeout(() => {
 			this.props.onSetAutoExpandLevel(value);
 		}, 50);
-	}
+	};
 	
 	public render(): React.ReactNode {
 		const {  autoExpandLevels, allowInfinityLevels} = this.props;

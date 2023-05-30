@@ -20,15 +20,15 @@ export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 	
 	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
-	}
+	};
 
 	public getItemString = (type: any, data: any): JSX.Element => {
 		return getItemString(type, data, true, false);
-	}
+	};
 
 	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
-	}
+	};
 	
 	public render(): React.ReactNode {
 		const { content, protoMode, onInspectPath,autoExpandLevels,onSetAutoExpandLevel } = this.props;

@@ -23,7 +23,7 @@ class FilterRow extends React.Component<TFilterRow,IFilterRowState> {
 			...this.state,
 			list: [...(initialItems || []), ...list],
 		});
-	}
+	};
 
 	public render(): React.ReactNode {
 		const {value: content, subtype, filterBy, onSelect,onUpdateList,initialItems,items} = this.props;
@@ -80,7 +80,7 @@ interface IOwn{
 	doNotCollapse?: boolean
 	supportMultiSelect?: boolean
 	onSelect: (value: string | number, toggle: boolean) => void
-	onUpdateList?: () => Promise<(IPropertyItem | IPropertyGroup)[]>
+	onUpdateList?: () => Promise<(IPropertyItem | IPropertyGroup)[]> | (IPropertyItem | IPropertyGroup)[]
 }
 
 export type TFilterRow = IFilterRowProps & IFilterRowDispatch

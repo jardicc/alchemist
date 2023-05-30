@@ -43,7 +43,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				<ActionSetContainer actionSet={set} key={i} />
 			))
 		);
-	}
+	};
 
 	private pass = (replace=false) => {
 		// eslint-disable-next-line prefer-const
@@ -91,7 +91,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 			onPassSelected(desc, cleanOld);
 		});
 
-	}
+	};
 
 	private renderAddButton = () => (
 		<div className="button" onClick={async (e) => {
@@ -101,7 +101,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		}}>
 			Read .ATN file
 		</div>
-	)
+	);
 
 
 	public render(): JSX.Element {

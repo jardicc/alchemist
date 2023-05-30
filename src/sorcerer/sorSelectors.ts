@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { cloneDeep } from "lodash";
 import { createSelector } from "reselect";
 import { getIndentString } from "../inspector/selectors/inspectorCodeSelectors";
@@ -116,7 +117,7 @@ export const generateScriptFileCode = createSelector([getAllCommands, getAllPane
 		${snippets.map(s => {
 			return `
 			// ${s.label.default}
-			[...document.body.querySelectorAll('[data-snippet="${s.$$$uuid}"]')].forEach(button => button.addEventListener("click",${s.$$$uuid}));`
+			[...document.body.querySelectorAll('[data-snippet="${s.$$$uuid}"]')].forEach(button => button.addEventListener("click",${s.$$$uuid}));`;
 		}).join("\n")}
 	}
 
@@ -125,9 +126,9 @@ export const generateScriptFileCode = createSelector([getAllCommands, getAllPane
 	`/** ${snippet?.label.default ?? ""} */
 	async function ${snippet?.$$$uuid ?? ""}(){
 		${snippet?.code ?? "" }
-	}\n\t`
+	}\n\t`,
 	).join("")}
-	`
+	`;
 	return str;
 });
 
@@ -145,7 +146,7 @@ export const generateHtmlFileCode = createSelector([getAllPanels,getAllSnippets]
 				}
 			}).join("\n")}
 		</uxp-panel>
-		`
+		`;
 
 		return str;
 	}
@@ -180,6 +181,6 @@ export const generateHtmlFileCode = createSelector([getAllPanels,getAllSnippets]
 		${panels.map(p => generatePanel(p)).join("\n")}
 	</body>
 	</html>
-	`
+	`;
 	return html;
-})
+});

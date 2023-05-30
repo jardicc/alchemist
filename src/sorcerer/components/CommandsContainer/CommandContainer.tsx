@@ -36,7 +36,7 @@ export class Command extends React.Component<TCommandContainer, ICommandContaine
 				<div className="row">
 					Assigned snippet:
 					<SP.Dropdown>
-						<SP.Menu slot="options" onChange={(e:any) => { onSet(activeCommand.$$$uuid,{$$$snippetUUID:e.target.value}) }}>
+						<SP.Menu slot="options" onChange={(e:any) => { onSet(activeCommand.$$$uuid,{$$$snippetUUID:e.target.value}); }}>
 							{snippets.map(item => (
 								<SP.MenuItem
 									key={item.$$$uuid}

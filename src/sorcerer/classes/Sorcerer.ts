@@ -1,20 +1,22 @@
 import { uxp } from "../../types/uxp";
-import { rootStore,IRootState} from "../../shared/store"
+import {rootStore, IRootState} from "../../shared/store";
 import { generateHtmlFileCode, generateScriptFileCode, getAllPanels, getManifestCode, getManifestGeneric } from "../sorSelectors";
 import Zip from "jszip";
-import { ISorcererState } from "../sorModel";
+import {ISorcererState} from "../sorModel";
 
-//const fs = require("storage");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs:uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const storage = require("uxp").storage;
 
 export class SorcererBuilder{
 	constructor() {
-		
+		//
 	}
 
 	public static async buildPlugin(): Promise<void> {
 		
-		const state: IRootState = rootStore.getState()
+		const state: IRootState = rootStore.getState();
 		
 		const pluginName = getManifestGeneric(state).name;
 		const manifestContent = getManifestCode(state);
@@ -68,15 +70,15 @@ export class SorcererBuilder{
 		//
 
 		const manifestFile = await targetFolder.createFile("manifest.json", { overwrite: true });
-		await manifestFile.write(manifestContent, { append: false, format: require("uxp").storage.formats.utf8 });
+		await manifestFile.write(manifestContent, { append: false, format: storage.formats.utf8 });
 
 		const indexFile = await targetFolder.createFile("index.html", { overwrite: true });
 		const htmlContent = generateHtmlFileCode(state);
-		await indexFile.write(htmlContent, { append: false, format: require("uxp").storage.formats.utf8 });
+		await indexFile.write(htmlContent, { append: false, format: storage.formats.utf8 });
 
 		const scriptFile = await targetFolder.createFile("index.js", { overwrite: true });
 		const scriptContent = generateScriptFileCode(state);
-		await scriptFile.write(scriptContent, { append: false, format: require("uxp").storage.formats.utf8 });
+		await scriptFile.write(scriptContent, { append: false, format: storage.formats.utf8 });
 
 		const zip = new Zip();
 		zip.file("manifest.json", manifestContent);
@@ -90,7 +92,7 @@ export class SorcererBuilder{
 
 		});
 		const zipFile = await folder.createFile(pluginName + ".ccx", { overwrite: true });
-		zipFile.write(zipResult, { append: false, format: require("uxp").storage.formats.binary });
+		await zipFile.write(zipResult, { append: false, format: storage.formats.binary });
 	}
 
 	public static async exportPreset() {

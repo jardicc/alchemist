@@ -15,19 +15,19 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 		this.props.onSetNotifierListenerFilter({
 			exclude: e.currentTarget.value.split(";"),
 		});
-	}
+	};
 
 	private setInclude = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.props.onSetNotifierListenerFilter({
 			include: e.currentTarget.value.split(";"),
 		});
-	}
+	};
 
 	private onSetFilterEventsType = (e: any) => {
 		this.props.onSetNotifierListenerFilter({
 			type: e.target.value,
 		});
-	}
+	};
 
 	private renderFilterFields = ():JSX.Element|null => {
 		const {exclude,include,type} = this.props.settings;
@@ -46,9 +46,11 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 					</>
 				);
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
-	}
+	};
 
 	public render(): JSX.Element {
 		const {type} = this.props.settings;

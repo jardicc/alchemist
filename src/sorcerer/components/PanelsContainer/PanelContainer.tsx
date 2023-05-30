@@ -79,7 +79,7 @@ interface IPanelContainerDispatch {
 const mapDispatchToProps = (dispatch: Dispatch): IPanelContainerDispatch => ({
 	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
 	onSet: (uuid, value) => dispatch(setPanelAction(value, uuid)),
-	onAssignSnippet:(uuid,operation,snippetUuid)=>dispatch(assignSnippetToPanelAction(operation,uuid,snippetUuid))
+	onAssignSnippet:(uuid,operation,snippetUuid)=>dispatch(assignSnippetToPanelAction(operation,uuid,snippetUuid)),
 });
 
 export const PanelContainer = connect<IPanelContainerProps, IPanelContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(Panel);

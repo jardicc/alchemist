@@ -16,13 +16,13 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 	}
 
 	private renderHostInfo = () => {
-		const { manifestGeneric: { host },onSetHost } = this.props;
+		const {manifestGeneric: {host}, onSetHost} = this.props;
 		
 		const res = host.map((h, i) =>
 			<div key={i} className="host">
 				<h4>{h.app}</h4>
 				<div className="row">
-					Min. version: <SP.Textfield value={h.minVersion} onInput={e => onSetHost(h.app, { minVersion: e.target?.value })} />
+					Min. version: <SP.Textfield value={h.minVersion} onInput={e => onSetHost(h.app, {minVersion: e.target?.value})} />
 				</div>
 				<div className="row">
 					API version: <SP.Textfield value={h.data.apiVersion.toString()} disabled={true} />
@@ -31,7 +31,7 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 		);
 
 		return res;
-	}
+	};
 
 	public render():React.ReactNode {
 		const { manifestGeneric, isGenericVisible,onSet: onSetMain } = this.props;

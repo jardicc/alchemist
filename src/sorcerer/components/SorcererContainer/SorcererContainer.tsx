@@ -36,7 +36,7 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 			return "active";
 		}
 		return "";
-	}
+	};
 
 	private renderItems = (items: IEntrypointPanel[] | IEntrypointCommand[] | ISnippet[]) => {
 		const { selectItem} = this.props;
@@ -46,11 +46,11 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 			</div>
 		));
 		return res;
-	}
+	};
 
-	private export = () => {
-		SorcererBuilder.exportPreset();
-	}
+	private export = async () => {
+		await SorcererBuilder.exportPreset();
+	};
 
 	private import = async () => {
 		const data = await SorcererBuilder.importPreset();
@@ -58,7 +58,7 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 			return;
 		}
 		this.props.setPreset(data);
-	}
+	};
 
 	public render(): JSX.Element {
 		const { fontSizeSettings,commands,snippets,panels,selectItem,make,remove,selectedItem, manifestCode, enableRemove } = this.props;
@@ -90,15 +90,15 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 					</div>
 				</div>
 				<div className="buttonBar">
-					<div className={"button"} onClick={() => SorcererBuilder.buildPlugin()}>Build plugin</div>
+					<div className={"button"} onClick={() => void SorcererBuilder.buildPlugin()}>Build plugin</div>
 					<div className={"button " + (enableRemove ? "" : "disallowed")}
 						onClick={() => {
 							const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
 							remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
 						}}>Remove selected</div>
 					<div className="spread"></div>
-					<div className={"button"} onClick={this.export}>Export as preset</div>
-					<div className={"button"} onClick={this.import}>Import preset</div>
+					<div className={"button"} onClick={void this.export}>Export as preset</div>
+					<div className={"button"} onClick={void this.import}>Import preset</div>
 				</div>
 
 				<FooterContainer parentPanel="atnConverter" />

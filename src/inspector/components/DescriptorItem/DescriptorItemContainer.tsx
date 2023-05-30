@@ -35,7 +35,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 			}
 		} 
 		this.props.onSelect(this.props.descriptor.id, operation, this.props.descriptor.crc);
-	}
+	};
 
 	private get autoSelected():boolean {
 		return this.props.autoSelected.includes(this.props.descriptor.id);
@@ -45,7 +45,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		this.setState({
 			tempName: e.currentTarget.value,
 		});
-	}
+	};
 
 	private get hasError (): boolean {
 		return (this.props.descriptor.recordedData as any)?.[0]?._obj === "error";
@@ -57,17 +57,17 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 		const errorClass = this.hasError ? " error" : "";
 
 		return "wrap" + (descriptor.selected ? " selected" : "") + (this.autoSelected ? " autoSelected" : "") + errorClass;
-	}
+	};
 
 	private rename = () => {
 		const { descriptor } = this.props;
 		this.props.onChangeName(descriptor.id, this.state.tempName);
 		this.props.setRenameMode(descriptor.id, false);
-	}
+	};
 	private cancel = () => {
 		const { descriptor } = this.props;
 		this.props.setRenameMode(descriptor.id, false);		
-	}
+	};
 
 	private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		switch (e.key) {
@@ -78,7 +78,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				this.rename();
 				break;
 		}
-	}
+	};
 
 	private Icon = ():JSX.Element => {
 		const type = this.props.descriptor.originalReference.type;
@@ -90,7 +90,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				{icon}
 			</div>
 		);
-	}
+	};
 
 	private renderEditState = () => {
 		const { descriptor } = this.props;
@@ -108,7 +108,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				<div className="button" onClick={this.cancel}>×</div>
 			</div>
 		);
-	}
+	};
 
 	private renderNormalState = () => {
 		const {descriptor} = this.props;
@@ -126,7 +126,7 @@ class DescriptorItem extends React.Component<TDescriptorItem,IState> {
 				{descriptor.startTime===0 ? null : <div className="time">{descriptor.endTime-descriptor.startTime} ms</div>}
 			</div>
 		);
-	}
+	};
 
 	public render(): React.ReactNode{
 		const { renameMode} = this.props.descriptor;

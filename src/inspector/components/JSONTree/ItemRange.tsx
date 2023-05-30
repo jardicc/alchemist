@@ -41,5 +41,5 @@ export class ItemRange extends React.Component<IItemRange,IItemState> {
 
 	handleClick=():void => {
 		this.setState({ expanded: !this.state.expanded });
-	}
+	};
 }

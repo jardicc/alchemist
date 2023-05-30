@@ -15,73 +15,73 @@ export class FlyoutMenu {
 		//
 	}
 
-	private static handleFlyout(id: string) {
+	private static async handleFlyout(id: string) {
 		console.log(id);
 		switch (id) {
 			case "importAppState":
-				FlyoutMenu.importState();
+				await FlyoutMenu.importState();
 				break;
 			case "importAddItems":
-				FlyoutMenu.importItems("append");
+				await FlyoutMenu.importItems("append");
 				break;
 			case "importReplaceItems":
-				FlyoutMenu.importItems("replace");
+				await FlyoutMenu.importItems("replace");
 				break;
 			
 			case "exportAppState":
-				FlyoutMenu.exportState();
+				await FlyoutMenu.exportState();
 				break;
 			case "exportAllItems":
-				FlyoutMenu.exportItems("all");
+				await FlyoutMenu.exportItems("all");
 				break;
 			case "exportSelectedItems":
-				FlyoutMenu.exportItems("selected");
+				await FlyoutMenu.exportItems("selected");
 				break;
 			
 			case "reset":
-				Settings.reset();
+				await Settings.reset();
 				break;
 			case "reload":
 				location.reload();
 				break;
 			case "showAll":
-				FlyoutMenu.showAll();
+				await FlyoutMenu.showAll();
 				break;
 		}
 	}
 
-	private static showAll = async () => {
+	private static showAll = () => {
 		manifest.entrypoints.forEach(e => {
 			if (e.type === "panel") {
 				Main.plugin.showPanel(e.id);
 			}
 		});
-	}
+	};
 
-	private static exportState = () => {
+	private static exportState = async () => {
 		const wholeState = rootStore.getState();
-		Settings.saveSettingsWithDialog(wholeState);
-	}
+		await Settings.saveSettingsWithDialog(wholeState);
+	};
 
 	private static exportItems = async (kind: TExportItems) => {
 		const wholeState = rootStore.getState();
 		
 		const allItems = getAllDescriptors(wholeState);
 		const selectedItems = getSelectedDescriptors(wholeState);
-		Settings.exportDescriptorItems(kind === "all" ? allItems : selectedItems);
-	}
+		await Settings.exportDescriptorItems(kind === "all" ? allItems : selectedItems);
+	};
 
 	private static importState = async () => {
 		const data = await Settings.importStateWithDialog();
 		if (!data) { return; }
 		dispatch(importStateAction(data));
-	}
+	};
 	
 	private static importItems = async (kind: TImportItems) => {
 		const data = await Settings.importStateWithDialog();
 		if (!data) { return; }
 		dispatch(importItemsAction(data, kind));
-	}
+	};
 
 	public static setup(): void {
 
@@ -123,7 +123,7 @@ export class FlyoutMenu {
 						{id: "spacer2", label: "-"}, // SPACER
 					],
 					invokeMenu(id: string) {
-						FlyoutMenu.handleFlyout(id);
+						void FlyoutMenu.handleFlyout(id);
 					},
 				},
 			},

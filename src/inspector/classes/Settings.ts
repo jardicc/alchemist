@@ -2,7 +2,7 @@ import { IDescriptor, IInspectorState, TFontSizeSettings } from "../model/types"
 import { alert } from "./Helpers";
 import type {uxp} from "../../types/uxp";
 import {SpectrumComponetDefaults} from "react-uxp-spectrum";
-import { getInitialState} from "../inspInitialState";
+import {getInitialState} from "../inspInitialState";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
@@ -33,14 +33,16 @@ export class Settings{
 		return folder;
 	}
 
-	public static async saveSettings(object: any): Promise<void> {
+	public static saveSettings(object: any): void {
 		clearTimeout(Settings.saveTimeout);
-		Settings.saveTimeout = window.setTimeout(async () => {
+		const handler = async () => {
 			const folder = await Settings.settingsFolder();
 			console.log(folder);
 			await Settings._saveSettings(object, folder);
 			console.log("saved");
-		}, 10 * 1000);
+		};
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
+		Settings.saveTimeout = window.setTimeout(handler, 10 * 1000);
 	}
 
 	private static getTimeStamp() {

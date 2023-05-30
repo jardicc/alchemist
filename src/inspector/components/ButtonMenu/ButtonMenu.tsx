@@ -51,7 +51,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 
 	private listElement= ()=> {
 		return document.getElementById(this.state.uuid)?.querySelector(".list");
-	}
+	};
 
 	private panelElement=()=> {
 		const list = this.listElement();
@@ -59,16 +59,16 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 			return document.body.querySelector("[panelid=inspector]") ?? document.body;			
 		}
 		return null;
-	}
+	};
 
 	private listBox=()=> {
 		const result =  this.listElement()?.getBoundingClientRect();
 		return result;
-	}
+	};
 
 	private panelBox=()=> {
 		return this.panelElement()?.getBoundingClientRect();
-	}
+	};
 
 	public componentDidMount(): void{
 		const elList = this.listElement;
@@ -124,7 +124,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 		}
 
 		return result;
-	}
+	};
 
 	private renderList = () => {
 		const { items } = this.props;
@@ -137,7 +137,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 				{items}
 			</div>
 		);
-	}
+	};
 
 	private hide = () => {
 		console.log("blur");
@@ -153,7 +153,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 			}
 		});
 		//},1000);
-	}
+	};
 
 	private toggle = (): void => {
 		console.log("Toggle button menu", this.state.expanded);
@@ -168,7 +168,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 				document.body.classList.remove("menuExpanded");
 			}
 		});
-	}
+	};
 
 
 	public render(): JSX.Element {

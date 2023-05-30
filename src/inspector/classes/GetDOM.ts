@@ -39,8 +39,9 @@ export class ReferenceToDOM extends Reference{
 				return this.getChannelDom();
 			case "path":
 				return this.getPathDom();
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	private getGuideDom(): Guide | null{

@@ -57,7 +57,7 @@ export class Main{
 	}
 }
 
-async function run() {
+function run() {
 	window.Main = Main;
 	if (Main.isFirstParty) {
 		Main.plugin.showPanel("inspector");
@@ -66,7 +66,7 @@ async function run() {
 	document.addEventListener("uxpcommand", (event:any) => {
 		console.log(event);
 		if (event.commandId === "resetStateFn") {
-			Settings.reset();
+			void Settings.reset();
 		}
 	});
 	Main.start();
@@ -78,7 +78,7 @@ if (Main.devMode) {
 	try {
 		run();
 	} catch (e:any) {
-		core.showAlert({
+		void core.showAlert({
 			message: e.stack,
 		});
 	}

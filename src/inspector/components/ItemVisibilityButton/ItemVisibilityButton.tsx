@@ -21,7 +21,7 @@ class ItemVisibilityButton extends React.Component<TItemVisibilityButton, Record
 
 	private toggle = () => {
 		this.props.onChangeVisibility(this.props.value, this.visible ? "remove" : "add");
-	}
+	};
 	
 
 	public render(): JSX.Element {
