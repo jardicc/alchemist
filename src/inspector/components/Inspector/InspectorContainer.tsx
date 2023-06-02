@@ -77,7 +77,18 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 						<SplitPane split="horizontal" primary="second" maxSize={25} minSize={25} defaultSize={25} allowResize={false} resizerStyle={{display:"none"}}>
 							
 							<Pane className="rightPane">
-								<SplitPane className="split" split="vertical" defaultSize={visible ? rightColumnWidthPx : 0} onDragFinished={(px) => setColumnSize(px, "right")} maxSize={visible ? undefined : 0} minSize={visible ? 200 : 0} primary={"second"}>
+								<SplitPane
+									className="split"
+									split="vertical"
+									defaultSize={rightColumnWidthPx}
+									onDragFinished={(px) => setColumnSize(px, "right")}
+									maxSize={visible ? undefined : 0}
+									minSize={visible ? 200 : 0}
+									primary={"second"}
+									allowResize={visible}
+									size={visible ? rightColumnWidthPx : 0}
+									resizerStyle={visible ? {} : {display:"none"}}
+								>
 									<Pane className="rightPane" >
 										<TabList
 											className="tabsDescriptor"
@@ -102,9 +113,9 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 											</TabPanel>
 										</TabList>
 									</Pane>
-									<Pane className="rightPane" style={{overflow: "auto"}}>
+									{<Pane className="rightPane" style={{overflow: "auto"}}>
 										{visible && <SettingsContainer />}
-									</Pane>
+									</Pane>}
 								</SplitPane>
 							</Pane>
 							<Pane className="footerPane">
