@@ -4,7 +4,7 @@ import { Main } from "../../shared/classes/Main";
 import {events} from "./StringIDs";
 import {action} from "photoshop";
 
-export type TNotificationListenerCb = (event: string, descriptor: ActionDescriptor) => Promise<void>
+export type TNotificationListenerCb = (event: string, descriptor: ActionDescriptor) => void
 
 export class ListenerClass{	
 
@@ -17,14 +17,14 @@ export class ListenerClass{
 	public static startSpy(cb: TNotificationListenerCb) {
 		this.spyCb = cb;
 		if (Main.isFirstParty) {
-			action.addNotificationListener(this.universalEvents,this.spyCb);
+			void action.addNotificationListener(this.universalEvents,this.spyCb);
 		}
 	}
 
 	public static stopSpy() {
 		if (!this.spyCb) {return;}
 		if (Main.isFirstParty){
-			action.removeNotificationListener(this.universalEvents, this.spyCb);			
+			void action.removeNotificationListener(this.universalEvents, this.spyCb);			
 		}
 		this.spyCb = null;
 	}
@@ -34,9 +34,9 @@ export class ListenerClass{
 		//ListenerClass.addAMConverterHack();
 		if (Main.devMode || Main.isFirstParty) {
 			//app.eventNotifier = this.listenerCb;
-			action.addNotificationListener(["all"], this.listenerCb);
+			void action.addNotificationListener(["all"], this.listenerCb);
 		} else {
-			action.addNotificationListener(events, this.listenerCb);
+			void action.addNotificationListener(events, this.listenerCb);
 		}
 	}
 
@@ -45,21 +45,21 @@ export class ListenerClass{
 		if (!this.listenerCb) {return;}
 		if (Main.devMode || Main.isFirstParty) {
 			//app.eventNotifier = () => { };
-			action.removeNotificationListener(["all"], this.listenerCb);
+			void action.removeNotificationListener(["all"], this.listenerCb);
 		} else {
-			action.removeNotificationListener(events, this.listenerCb);			
+			void action.removeNotificationListener(events, this.listenerCb);			
 		}
 		this.listenerCb = null;
 	}
 
 	public static startInspector(cb: TNotificationListenerCb): void{
 		this.inspectorCb = cb;
-		action.addNotificationListener(["select"], this.inspectorCb);
+		void action.addNotificationListener(["select"], this.inspectorCb);
 	}
 
 	public static stopInspector(): void{
 		if (!this.inspectorCb) {return; }
-		action.removeNotificationListener(["select"], this.inspectorCb);			
+		void action.removeNotificationListener(["select"], this.inspectorCb);			
 		this.inspectorCb = null;
 	}
 

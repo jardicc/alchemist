@@ -145,6 +145,7 @@ export const getDescriptorsListView = createSelector([
 		}
 
 		// skip categories with no further filter options... just to make it easier
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		switch (activeRef.type) {
 			case "generator":
 			case "listener":

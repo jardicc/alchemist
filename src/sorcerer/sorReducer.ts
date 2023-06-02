@@ -1,11 +1,10 @@
 import produce from "immer";
-import { Helpers } from "../inspector/classes/Helpers";
 import { IInspectorState } from "../inspector/model/types";
-import { TAllActions } from "../inspector/reducers/reducer";
 import { makeSorCommand, makeSorPanel, makeSorSnippet } from "./sorInitialState";
 import { IEntrypointPanel } from "./sorModel";
+import {TSorActions} from "./sorActions";
 
-export const sorReducer = (state: IInspectorState, action: TAllActions): IInspectorState => {
+export const sorReducer = (state: IInspectorState, action: TSorActions): IInspectorState => {
 	switch (action.type) {
 		case "[SOR] SELECT": {
 			state = produce(state, draft => {

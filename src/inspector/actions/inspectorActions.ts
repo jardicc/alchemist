@@ -56,10 +56,6 @@ export interface IClearAction{
 	type: "CLEAR"
 	payload:null
 }
-export interface IClearNonExistentAction{
-	type: "CLEAR_NON_EXISTENT"
-	payload:null
-}
 export interface ILockDescAction{
 	type: "LOCK_DESC"
 	payload: {
@@ -89,18 +85,6 @@ export interface IImportItemsAction{
 }
 export interface IImportReplaceAction{
 	type: "IMPORT_REPLACE"
-	payload:null
-}
-export interface IExportSelectedDescAction{
-	type: "EXPORT_SELECTED_DESC"
-	payload:null
-}
-export interface IExportAllDescAction{
-	type: "EXPORT_ALL_DESC"
-	payload:null
-}
-export interface IExportStateAction{
-	type: "EXPORT_STATE"
 	payload:null
 }
 export interface ISetFilterStateAction {
@@ -174,12 +158,6 @@ export interface ISetListenerNotifierAction{
 	}
 }
 
-/*
-export interface IGroupSameAction{	
-	type: "GROUP_SAME_ACTION",
-	payload: boolean
-}
-*/
 export interface IFilterEventNameAction{
 	type: "FILTER_EVENT_NAME_ACTION",
 	payload: {
@@ -558,12 +536,6 @@ export function clearAction():IClearAction{
 		payload: null,
 	};
 }
-export function clearNonExistentAction():IClearNonExistentAction{
-	return{
-		type: "CLEAR_NON_EXISTENT",
-		payload: null,
-	};
-}
 export function lockDescAction(lock:boolean,uuids:string[]):ILockDescAction{
 	return{
 		type: "LOCK_DESC",
@@ -606,24 +578,6 @@ export function importReplaceAction():IImportReplaceAction{
 		payload: null,
 	};
 }
-export function exportSelectedDescAction():IExportSelectedDescAction{
-	return{
-		type: "EXPORT_SELECTED_DESC",
-		payload: null,
-	};
-}
-export function exportAllDescAction():IExportAllDescAction{
-	return{
-		type: "EXPORT_ALL_DESC",
-		payload: null,
-	};
-}
-export function exportStateAction():IExportStateAction{
-	return{
-		type: "EXPORT_STATE",
-		payload: null,
-	};
-}
 
 /////////////////
 
@@ -642,22 +596,6 @@ export function setListenerNotifierFilterAction(data:Partial<IListenerNotifierFi
 		},
 	};
 }
-/*
-export function groupSameAction(enabled: boolean):IGroupSameAction {
-	return {
-		type: "GROUP_SAME_ACTION",
-		payload: enabled,
-	};
-}*/
-
-export function filterEventNameAction(eventName:string, kind:"include"|"exclude", operation: "add"|"remove"):IFilterEventNameAction {
-	return {
-		type: "FILTER_EVENT_NAME_ACTION",
-		payload: {
-			eventName,kind,operation,
-		},
-	};
-}
 
 export function toggleAccordion(id: string, expanded: boolean): IToggleAccordionAction{
 	return {
@@ -670,51 +608,45 @@ export function toggleAccordion(id: string, expanded: boolean): IToggleAccordion
 }
 
 
-export type TActions = 
-	IToggleSettingsAction |
-	ISetInspectorPathDOMAction |
-	ISetModeTab |
-	ISetTargetReference |
+export type TInspectorActions = 
 	IAddDescriptorAction |
-	ISelectDescriptor |
-	ISetSelectedReferenceTypeAction |
-	IClearViewAction |
+	IAutoInspectorAction |
 	IClearAction |
-	IClearNonExistentAction |
+	IClearViewAction |
+	IDontShowMarketplaceInfoAction |
+	IImportItemsAction |
+	IImportStateAction |
+	IListenerAction |
 	ILockDescAction |
 	IPinDescAction |
 	IRemoveDescAction |
-	IImportStateAction |
-	IImportItemsAction |
-	IExportSelectedDescAction |
-	IExportAllDescAction |
-	IExportStateAction |
-	ISetFilterStateAction |
-	ISetInspectorPathDiffAction |
-	ISetInspectorPathContentAction |
-	ISetExpandedPathAction |
-	IListenerAction |
-	IAutoInspectorAction |
-	ISetSearchTermAction |
-	ISetListenerNotifierAction|
-	//IGroupSameAction |
-	IFilterEventNameAction |
-	ISetDispatcherValueAction |
-	ISetRenameModeAction |
 	IRenameDescriptorAction |
-	ISetDescriptorOptionsAction |
-	ISetInspectorViewAction |
-	ISetColumnSizeAction |
-	ISetRecordRawAction |
+	ISelectDescriptor |
 	ISetAutoExpandLevelAction |
-	ISetMaximumItemsAction |
-	IDontShowMarketplaceInfoAction |
-	ISetFontSizeAction |
-	ISetNeverRecordActionNamesAction |
-	IToggleDescriptorsGroupingAction |
-	ISetSettingsAction |
-	IToggleAccordionAction |
-	ISetSearchContentKeywordAction |
-	ISpyAction |
 	ISetCategoryItemVisibilityAction |
-	ISetPropertyAction
+	ISetColumnSizeAction |
+	ISetDescriptorOptionsAction |
+	ISetDispatcherValueAction |
+	ISetExpandedPathAction |
+	ISetFilterStateAction |
+	ISetFontSizeAction |
+	ISetInspectorPathContentAction |
+	ISetInspectorPathDiffAction |
+	ISetInspectorPathDOMAction |
+	ISetInspectorViewAction |
+	ISetListenerNotifierAction|
+	ISetMaximumItemsAction |
+	ISetModeTab |
+	ISetNeverRecordActionNamesAction |
+	ISetPropertyAction |
+	ISetRecordRawAction |
+	ISetRenameModeAction |
+	ISetSearchContentKeywordAction |
+	ISetSearchTermAction |
+	ISetSelectedReferenceTypeAction |
+	ISetSettingsAction |
+	ISetTargetReference |
+	ISpyAction |
+	IToggleAccordionAction |
+	IToggleDescriptorsGroupingAction |
+	IToggleSettingsAction

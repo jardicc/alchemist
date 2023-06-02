@@ -269,6 +269,7 @@ export class Filters extends React.Component<TFilters, IState> {
 	private Property = (): JSX.Element | null => {
 		const {activeRef, activeRefProperties, onSetProperty} = this.props;
 		
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		switch (activeRef.type) {
 			case "generator":
 			case "listener":

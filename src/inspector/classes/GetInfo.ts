@@ -10,7 +10,6 @@ import { ActionDescriptor } from "photoshop/dom/CoreModules";
 import {Reference, TReference} from "./Reference";
 import {IDBySelected} from "./GetIDBySelected";
 import {GetList} from "./GetList";
-import {ReferenceToDOM} from "./GetDOM";
 
 
 export interface ITargetReferenceAM {
@@ -92,6 +91,7 @@ export class GetInfo {
 			}
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		switch (origRef.type) {
 			case "actions": {
 
@@ -317,10 +317,12 @@ export class GetInfo {
 			case "notifier": {
 				return calculatedReference._obj;
 			}
+			default: {
+				const parts = getName(calculatedReference._target);
+				const names = parts.map(p => p.value ?? "N/A");
+				return names.join(" / ");
+			}
 		}
-		const parts = getName(calculatedReference._target);
-		const names = parts.map(p => p.value ?? "N/A");
-		return names.join(" / ");
 	};
 
 	private static buildReply(startTime: number, playResult: ActionDescriptor[], playAbleData: ITargetReferenceAM, originalRef: TAllTargetReferences): IDescriptor {

@@ -107,7 +107,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	/**
 	 * Listener to be attached to all Photoshop notifications.
 	 */
-	public listener = async (event: string, descriptor: any, spy = false): Promise<void> => {
+	public listener = (event: string, descriptor: any, spy = false): void => {
 		if (this.props.settings.neverRecordActionNames.includes(event)) {
 			return;
 		}
@@ -184,7 +184,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		this.props.setListener(!autoUpdateListener);
 	};
 
-	private attachSpy = async () => {
+	private attachSpy = () => {
 		const { settings:{autoUpdateSpy}} = this.props;
 		if (autoUpdateSpy) {
 			ListenerClass.stopSpy();
@@ -194,7 +194,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		this.props.setSpy(!autoUpdateSpy);
 	};
 
-	private attachAutoInspector = async () => {
+	private attachAutoInspector = () => {
 		const {settings:{autoUpdateInspector} } = this.props;
 		this.props.setAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {

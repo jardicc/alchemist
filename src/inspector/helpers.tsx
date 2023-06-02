@@ -41,9 +41,6 @@ export function getIcon(type: TTargetReference | "error") {
 			icon = <IconLayers />;
 			break;
 		}
-		case "channel": {
-			break;
-		}
 		case "path": {
 			icon = <IconFork />;
 			break;
@@ -68,6 +65,11 @@ export function getIcon(type: TTargetReference | "error") {
 		}
 		case "timeline": {
 			icon = <IconProject />;
+			break;
+		}
+		case "channel":
+		case "generator": {
+			icon = <IconDocument />;			
 			break;
 		}
 	}

@@ -27,11 +27,6 @@ export interface IClearAllAction {
 	payload: null
 }
 
-export interface IPassSelectedAction {
-	type: "[ATN] PASS_SELECTED"
-	payload: null
-}
-
 export interface ISetDontSendDisabledAction {
 	type: "[ATN] SET_DONT_SEND_DISABLED"
 	payload: boolean
@@ -41,13 +36,6 @@ export function setDontSendDisabledAction(value:boolean): ISetDontSendDisabledAc
 	return {
 		type: "[ATN] SET_DONT_SEND_DISABLED",
 		payload: value,
-	};
-}
-
-export function passSelectedAction(): IPassSelectedAction{
-	return {
-		type: "[ATN] PASS_SELECTED",
-		payload: null,
 	};
 }
 
@@ -81,4 +69,4 @@ export function setExpandActionAction(uuid: TExpandedItem, expand:boolean, recur
 }
 
 
-export type TAtnActions = ISetDataAction | ISelectAction | IExpandAction | IClearAllAction | IPassSelectedAction | ISetDontSendDisabledAction
+export type TAtnActions = ISetDataAction | ISelectAction | IExpandAction | IClearAllAction | ISetDontSendDisabledAction

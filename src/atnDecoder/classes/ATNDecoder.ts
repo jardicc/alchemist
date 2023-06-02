@@ -5,7 +5,6 @@ import { uxp } from "../../types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
 import { IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../atnModel";
-import { Helpers } from "../../inspector/classes/Helpers";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 // IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html

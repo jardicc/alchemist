@@ -66,7 +66,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 						</span>
 					</div>
 					<div>
-						<span style={whiteColor}  onClick={(e) => { e.preventDefault(); Settings.reset(); }}>
+						<span style={whiteColor}  onClick={(e) => { e.preventDefault(); void Settings.reset(); }}>
 							<h2>Reset panel state</h2>
 						</span>
 					</div>

@@ -10,7 +10,7 @@ import { FooterContainer } from "../../../inspector/components/Footer/FooterCont
 import { IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation } from "../../../inspector/model/types";
 import { getAllDescriptors, getFontSizeSettings, getInspectorSettings } from "../../../inspector/selectors/inspectorSelectors";
 import { getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands } from "../../atnSelectors";
-import { clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction } from "../../atnActions";
+import { clearAllAction, setDataAction, setDontSendDisabledAction, setSelectActionAction } from "../../atnActions";
 import { IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem } from "../../atnModel";
 import { ActionSetContainer } from "../ActionSetContainer/ActionSetContainer";
 import { addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setModeTabAction, toggleDescriptorsGroupingAction } from "../../../inspector/actions/inspectorActions";
@@ -18,7 +18,6 @@ import { alert, Helpers } from "../../../inspector/classes/Helpers";
 import { str as crc } from "crc-32";
 import PS from "photoshop";
 import SP from "react-uxp-spectrum";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 
 class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> { 
@@ -45,7 +44,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		);
 	};
 
-	private pass = (replace=false) => {
+	private pass = async (replace=false) => {
 		// eslint-disable-next-line prefer-const
 		let { selectedCommands, onPassSelected,onSelectAlchemistDescriptors,dontSendDisabled, allAlchemistDescriptors,settingsAlchemist } = this.props;
 
@@ -56,7 +55,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		}
 
 		if (selectedCommands.length > settingsAlchemist.maximumItems) {
-			alert(`Alchemist can currently show only ${settingsAlchemist.maximumItems} items. Increase limit in Alchemist settings if you want to see ${selectedCommands.length - settingsAlchemist.maximumItems} additional items`);
+			await alert(`Alchemist can currently show only ${settingsAlchemist.maximumItems} items. Increase limit in Alchemist settings if you want to see ${selectedCommands.length - settingsAlchemist.maximumItems} additional items`);
 		}
 
 		selectedCommands.forEach((command, index) => {
@@ -94,6 +93,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 	};
 
 	private renderAddButton = () => (
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		<div className="button" onClick={async (e) => {
 			e.stopPropagation();
 			const res = await decodeATN();
@@ -106,9 +106,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 
 	public render(): JSX.Element {
 
-		const { fontSizeSettings, data, setData, textData, onClearAll,selectedCommands, setSelectedItem,onSetDontSendDisabled,dontSendDisabled } = this.props;
-
-
+		const { fontSizeSettings, data, textData, onClearAll,selectedCommands, setSelectedItem,onSetDontSendDisabled,dontSendDisabled } = this.props;
 
 		return (
 			<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
@@ -123,8 +121,8 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				</div>
 				<div className="buttonBar">
 					{this.renderAddButton()}
-					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={()=>this.pass()}>Add to Alchemist</div>
-					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => this.pass(true)}>Replace in Alchemist</div>
+					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={()=>void this.pass()}>Add to Alchemist</div>
+					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() =>void this.pass(true)}>Replace in Alchemist</div>
 					<SP.Checkbox onChange={()=>onSetDontSendDisabled(!dontSendDisabled)} checked={dontSendDisabled}>{"Don't send disabled"}</SP.Checkbox>
 					<div className="spread"></div>
 					<div className={"button " + (!data.length ? "disallowed" : "")} onClick={onClearAll}>Clear all</div>
@@ -136,11 +134,8 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 	}
 }
 
-
-
 type TATNDecoder = IATNDecoderProps & IATNDecoderDispatch
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IATNDecoderState{
 
 }
