@@ -36,6 +36,7 @@ import { ButtonMenu } from "../ButtonMenu/ButtonMenu";
 import { filterNonExistent } from "../../classes/filterNonExistent";
 import {FiltersContainer} from "../Filters/Filters";
 import {getGeneratedCode} from "../../selectors/inspectorCodeSelectors";
+import {harvesterControl} from "../../../harvester/HarvesterControl";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
@@ -70,38 +71,40 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 
 	};
 
-	public autoInspector = async (event: string, descriptor: any): Promise<void> => {
-		if (event !== "select") { return; }
-		const startTime = Date.now();
-		const calculatedReference:ITargetReferenceAM = {
-			_obj: "get",
-			_target: descriptor._target,
-		};
-		const playResult = await photoshop.action.batchPlay([calculatedReference], {});
-		const originalReference = guessOriginalReference(descriptor._target);
-		if (!originalReference) {
-			console.error("Can't identify: ", calculatedReference);
-			return;
-		}
-
-		const result: IDescriptor = {
-			endTime: Date.now(),
-			startTime: startTime,
-			id: crypto.randomUUID(),
-			locked: false,
-			crc: crc(JSON.stringify(playResult)),
-			recordedData: RawDataConverter.replaceArrayBuffer(playResult),
-			originalReference,
-			pinned: false,
-			renameMode: false,
-			selected: false,
-			title: GetInfo.generateTitle(originalReference, calculatedReference),
-			playAbleData: calculatedReference,
-			descriptorSettings: this.props.settings.initialDescriptorSettings,
-		};
-
-		//this.props.setLastHistoryID;
-		this.props.onAddDescriptor(result);
+	public autoInspector = (event: string, descriptor: any): void => {
+		void (async () => {
+			if (event !== "select") {return;}
+			const startTime = Date.now();
+			const calculatedReference: ITargetReferenceAM = {
+				_obj: "get",
+				_target: descriptor._target,
+			};
+			const playResult = await photoshop.action.batchPlay([calculatedReference], {});
+			const originalReference = guessOriginalReference(descriptor._target);
+			if (!originalReference) {
+				console.error("Can't identify: ", calculatedReference);
+				return;
+			}
+	
+			const result: IDescriptor = {
+				endTime: Date.now(),
+				startTime: startTime,
+				id: crypto.randomUUID(),
+				locked: false,
+				crc: crc(JSON.stringify(playResult)),
+				recordedData: RawDataConverter.replaceArrayBuffer(playResult),
+				originalReference,
+				pinned: false,
+				renameMode: false,
+				selected: false,
+				title: GetInfo.generateTitle(originalReference, calculatedReference),
+				playAbleData: calculatedReference,
+				descriptorSettings: this.props.settings.initialDescriptorSettings,
+			};
+	
+			//this.props.setLastHistoryID;
+			this.props.onAddDescriptor(result);
+		})();
 	};
 
 	/**
@@ -125,6 +128,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			_obj:event,
 			...descriptor,
 		};
+		
+		void harvesterControl.addDescriptor(descWithEvent);
 
 		const descCrc = crc(JSON.stringify(descWithEvent));
 		const originalData = RawDataConverter.replaceArrayBuffer(descWithEvent);
@@ -152,8 +157,8 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	/**
 	 * Listen to more PS events
 	 */
-	public spy = async (event: string, descriptor: any): Promise<void> => {
-		await this.listener(event, descriptor, true);
+	public spy = (event: string, descriptor: any): void => {
+		this.listener(event, descriptor, true);
 	};
 
 	/**
@@ -172,7 +177,6 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		}
 		
 		if (autoUpdateListener) {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			//ListenerClass.listenerCb = async () => { };
 			ListenerClass.stopListener();
 			
@@ -198,7 +202,6 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		const {settings:{autoUpdateInspector} } = this.props;
 		this.props.setAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			ListenerClass.stopInspector();
 		} else {
 			ListenerClass.startInspector(this.autoInspector);
@@ -333,7 +336,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						*/}
 						<div title="Rename" className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={this.rename}><IconPencil /></div>
 						<div title="Copy to clipboard"  className={"clipboard buttonIcon " + (copyToClipboardEnabled ? "allowed" : "disallowed")} onClick={this.copyToClipboard}><IconClipboard/></div>
-						<div title="Replay" className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={void this.onPlaySeparated}><IconPlayIcon /></div>
+						<div title="Replay" className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
 						<div title="(Un)lock" className={"lock buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onLock(!lockedSelection, selectedDescriptorsUUIDs); }}>
 							{selectedDescriptors.some(desc => desc.locked) ? <IconLockUnlocked /> : <IconLockLocked />}
 						</div>
@@ -343,13 +346,13 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 						<div title="Remove" className={"remove buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => { onRemove(selectedDescriptorsUUIDs); }}><IconTrash /></div>
 					</div>
 					<div className="filterButtons">
-						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={void this.getDescriptor}><IconPlus /> Add</div>
-						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={void this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
+						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}><IconPlus /> Add</div>
+						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>						
 						{
 							// helper tool to listen to more events
-							Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={void this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
+							Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
 						}
-						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={void this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
+						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
 					</div>
 				</div>
 				{this.renderMarketplaceDialog()}
@@ -358,8 +361,6 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	}
 }
 
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IState{
 	//
 }

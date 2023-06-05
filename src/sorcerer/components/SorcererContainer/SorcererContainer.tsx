@@ -97,8 +97,8 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 							remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
 						}}>Remove selected</div>
 					<div className="spread"></div>
-					<div className={"button"} onClick={void this.export}>Export as preset</div>
-					<div className={"button"} onClick={void this.import}>Import preset</div>
+					<div className={"button"} onClick={this.export}>Export as preset</div>
+					<div className={"button"} onClick={this.import}>Import preset</div>
 				</div>
 
 				<FooterContainer parentPanel="atnConverter" />

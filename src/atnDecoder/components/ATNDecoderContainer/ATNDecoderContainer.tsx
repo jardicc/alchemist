@@ -111,7 +111,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		return (
 			<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 				<div className="info spread flex">
-					<div className="tree" onClick={(e) => { e.stopPropagation(); setSelectedItem([""], "none");}}>{this.renderSet()}</div>
+					<div className="tree" onClick={(e) => {e.stopPropagation(); setSelectedItem([""], "none");}}>{this.renderSet()}</div>
 					<div className="atnCode">
 						<SP.Textarea
 							className="infoBlock"
@@ -121,9 +121,9 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 				</div>
 				<div className="buttonBar">
 					{this.renderAddButton()}
-					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={()=>void this.pass()}>Add to Alchemist</div>
-					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() =>void this.pass(true)}>Replace in Alchemist</div>
-					<SP.Checkbox onChange={()=>onSetDontSendDisabled(!dontSendDisabled)} checked={dontSendDisabled}>{"Don't send disabled"}</SP.Checkbox>
+					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => void this.pass()}>Add to Alchemist</div>
+					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => void this.pass(true)}>Replace in Alchemist</div>
+					<SP.Checkbox onChange={() => onSetDontSendDisabled(!dontSendDisabled)} checked={dontSendDisabled}>{"Don't send disabled"}</SP.Checkbox>
 					<div className="spread"></div>
 					<div className={"button " + (!data.length ? "disallowed" : "")} onClick={onClearAll}>Clear all</div>
 				</div>

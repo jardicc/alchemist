@@ -128,7 +128,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		const {id, className, header, headerPostFix} = this.props;
 
 		return (
-			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={void this.headerClick}>
+			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
 				<div className="titleType">{header}</div>
 				<div className="group">
 					<div className="title">{this.getLabel()}</div>				

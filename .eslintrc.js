@@ -62,7 +62,15 @@ module.exports = {
 		},
 		rules: {
 			"@typescript-eslint/no-floating-promises": "error",
-			"@typescript-eslint/no-misused-promises": "error",
+			"@typescript-eslint/no-misused-promises": [
+				"error", {
+					"checksVoidReturn": {
+						// false to make it better work with React
+						"attributes": false,
+						"returns": false,
+					},
+				},
+			],
 			"@typescript-eslint/promise-function-async": "error",
 			"@typescript-eslint/switch-exhaustiveness-check": "error",
 

@@ -92,7 +92,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 				<div className="textareaWrap">
 					<SP.Textarea value={this.props.snippet} onInput={this.change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
 				</div>
-				<div className="button" onClick={void this.send}>Send</div>
+				<div className="button" onClick={this.send}>Send</div>
 			</div>
 		);
 	}
