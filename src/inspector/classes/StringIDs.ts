@@ -1,6 +1,6 @@
 export const events = [
-	"$LqFy", // liquify
 	" JPEG 2000", // JPEG2000
+	"$LqFy", // liquify
 	"08E8421B-976E-4E81-A964-AD754EDB4381",
 	"0B71D221-F8CE-11d2-B21B-0008C75B322C", // "N/A"
 	"0f9db13f-a772-4035-9020-840f0e5e2f02", // "N/A"
@@ -24,7 +24,6 @@ export const events = [
 	"9AA9D7D6-C209-494A-BED9-4E7D926DA69F",
 	"9D3174CE-045C-4B87-B7AE-40D8C3319780",
 	"a0754df2-9c60-4b64-a940-6a2bb1102652", // Delete All Empty Layers
-	"autoCutout",
 	"accentedEdges", // Accented Edges
 	"adaptCorrect", // Shadow/Highlight
 	"adaptCorrectTones", // Parameters
@@ -44,8 +43,8 @@ export const events = [
 	"addTimelineTransition", // Add Transition
 	"addTo", // Add To
 	"addVideoLayer", // Add Video Layer
-	"Adobe Camera Raw", // Camera Raw
 	"Adobe Camera Raw Filter", // Camera Raw Filter
+	"Adobe Camera Raw", // Camera Raw
 	"AdobeExposureMergeUI", // ExposuremergeUI
 	"AdobeScriptAutomation Scripts",
 	"AdobeScriptListener ScriptListener", // "N/A"
@@ -71,10 +70,12 @@ export const events = [
 	"artboardFromLayerGroupEvent", // Artboard From Layer Group
 	"artboardFromLayersEvent", // Artboard From Layers
 	"assignProfile", // Assign Profile
+	"autoCutout",
 	"autoFixCorrect", // Temperature/Tint
 	"autoFixCorrectTones", // Parameters
 	"autoHide3D", // Auto-Hide Layers For Performance
 	"B20FB700-B96A-4C10-B666-8C9B9DEF594E", // Layer Comps to PDF
+	"backgroundSaveCompleted",
 	"bake3DCrossSection", // Apply 3D Cross Section
 	"bakeFor3DPrinting", // Unify For 3D Printing
 	"basRelief", // Bas Relief
@@ -101,6 +102,11 @@ export const events = [
 	"center3DMesh", // Center Mesh In View
 	"centerCropMarks", // Conté Crayon
 	"cf34b502-2013-4d07-8431-1dfd634ee0cd", // Layer Comps to Files
+	"chalkCharcoal", // Chalk & Charcoal
+	"changePathDetails", // Change Path Details
+	"channelMixer", // Channel Mixer
+	"charcoal", // Charcoal
+	"chrome", // Chrome
 	"clearAllGuides", // Clear All Guides
 	"clearBrushControls", // Clear Brush Controls
 	"clearCanvasGuides", // Clear Canvas Guides
@@ -208,6 +214,7 @@ export const events = [
 	"deleteAllAnnot", // Delete All Notes
 	"deleteAudioClips", // Delete Audio Clips
 	"deleteFrame", // Delete Frame
+	"deleteGeneratedVariation",
 	"deleteMeasurements", // "N/A"
 	"deleteTimeline", // Delete Video Timeline
 	"deleteTransitions", // Delete Transitions
@@ -252,8 +259,8 @@ export const events = [
 	"enableExtendedNotification", // "Could not complete your request because a command was not available.",
 	"enableLayerLink", // Enable Layer Link
 	"equalize", // Equalize
-	"excludeIntersection", // Exclude Intersection With
 	"exchange", // Exchange
+	"excludeIntersection", // Exclude Intersection With
 	"expand", // Expand
 	"export", // "N/A"
 	"export3DModel", // Export 3D Model
@@ -317,13 +324,10 @@ export const events = [
 	"hide", // Hide
 	"hideAlteredVideo", // Hide Altered Video
 	"highPass", // High Pass
+	"historyStateChanged",
 	"hitTest", // HitTest
+	"hostFocusChanged",
 	"hueSaturation", // Hue/Saturation
-	"chalkCharcoal", // Chalk & Charcoal
-	"changePathDetails", // Change Path Details
-	"channelMixer", // Channel Mixer
-	"charcoal", // Charcoal
-	"chrome", // Chrome
 	"ID", // ID
 	"idleNetworkCommands", // "Could not complete your request because a command was not available.",
 	"Illustrator Export.  This string makes me unique!", // Illustrator Export
@@ -345,9 +349,11 @@ export const events = [
 	"intersectWith", // Intersect With
 	"inverse", // Inverse
 	"invert", // Invert
+	"invokeCommand",
 	"isolateLayers", // Isolate Layers
 	"jsonAction", // "Could not complete your request because a command was not available.",
 	"jumpto", // Jump to
+	"layersFiltered",
 	"lensFlare", // Lens Flare
 	"levels", // Levels
 	"licensed", // License Image
@@ -367,8 +373,8 @@ export const events = [
 	"makerColorLookupLayerFromFile", // "N/A"
 	"makeTimeline", // Create Video Timeline
 	"manual", // manual
-	"materialSwitch", // Set 3D material switch
 	"matchColor", // Match Color
+	"materialSwitch", // Set 3D material switch
 	"maximum", // Maximum
 	"maximumQuality", // Maximum
 	"measurementScaleMarker", // Measurement Scale Marker
@@ -384,6 +390,7 @@ export const events = [
 	"mezzotint", // Mezzotint
 	"minimum", // Minimum
 	"MixamoNotifier", // Mixamo Notifier
+	"modalStateChanged",
 	"mosaic", // Mosaic
 	"mosaicPlugin", // Mosaic Tiles
 	"motionBlur", // Motion Blur
@@ -403,6 +410,7 @@ export const events = [
 	"newArtboardEvent", // New Artboard
 	"newArtboardGuidesFromTarget", // New Artboard Guides From Shape
 	"newDocPresetJSON", // New Document Presets
+	"newDocument",
 	"newFramedGroupEvent", // New Frame
 	"newGuideLayout", // New Guide Layout
 	"newGuidesFromTarget", // New Guides From Shape
@@ -437,6 +445,7 @@ export const events = [
 	"open",
 	"open3DLayerTexture", // Open 3D Texture
 	"openViewlessDocument", // "Could not complete your request because a command was not available.",
+	"owlAction",
 	"packageFile", // Package File
 	"packTo3DGroundPlane", // Pack 3D Objects on Ground Plane
 	"paint3DBump", // Paint Bump
@@ -462,6 +471,7 @@ export const events = [
 	"perspectiveWarpTransform", // Perspective Warp
 	"photocopy", // Photocopy
 	"photoFilter", // Photo Filter
+	"pifInvalidatedAttributes",
 	"pinch", // Pinch
 	"placedLayerConvertToEmbedded", // Embed Linked Smart Object
 	"placedLayerConvertToLinked", // Convert To Linked
@@ -606,6 +616,7 @@ export const events = [
 	"select3DPaintable", // Select Paintable 3D Areas
 	"select3DReference", // Selected Reference
 	"selectAllLayers", // Select All Layers
+	"selectGeneratedVariation",
 	"selectiveColor", // Selective Color
 	"selectLinkedLayers", // Select Linked Layers
 	"selectNoLayers", // Deselect Layers
@@ -692,6 +703,7 @@ export const events = [
 	"showAlteredVideo", // Show Altered Video
 	"showColorPicker", // "N/A"
 	"showFileBrowserPalette", // "N/A"
+	"showGrid",
 	"showMiniBridge", // Browse in Mini Bridge
 	"similar", // Similar
 	"simplify3DModel", // Simplify 3D Mesh
@@ -724,6 +736,7 @@ export const events = [
 	"syncSettings", // Sync Settings With Cloud
 	"syncSettingsPull", // Load Settings From Cloud
 	"syncSettingsPush", // Save Settings To Cloud
+	"syntheticFill",
 	"systemCall", // "Could not complete your request because a command was not available.",
 	"takeMergedSnapshot", // Take Merged Snapshot
 	"takeSnapshot", // Take Snapshot
@@ -742,6 +755,7 @@ export const events = [
 	"toggle3DTexture", // Toggle 3D Texture
 	"toggle3DTextures", // Toggle 3D Textures
 	"togglePalettes", // "Could not complete your request because a command was not available.",
+	"toolModalStateChanged",
 	"toolRecording", // Use
 	"tornEdges", // Torn Edges
 	"traceContour", // Trace Contour
@@ -750,6 +764,7 @@ export const events = [
 	"trim", // Trim
 	"trimDocumentToWorkArea", // Trim Document To Work Area
 	"twirl", // Twirl
+	"uiInfo",
 	"underpainting", // Underpainting
 	"undoEvent", // Undo
 	"undoWhile3DPainting", // Parent History Change
