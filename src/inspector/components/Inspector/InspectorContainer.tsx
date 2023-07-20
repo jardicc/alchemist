@@ -34,10 +34,10 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 	}
 
 	private closeMessage = () => {
-		this.setState({
-			...this.state,
+		this.setState(state => ({
+			...state,
 			showMessage: false,
-		});
+		}));
 	};
 
 	public componentDidMount():void {		
@@ -48,13 +48,13 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 				return;
 			}
 			const data = await res.json();
-			this.setState({
-				...this.state,
+			this.setState(state => ({
+				...state,
 				message: data.message,
 				link: data.link,
-				showMessage:true,
-			});
-			console.log("fetch",data);
+				showMessage: true,
+			}));
+			console.log("fetch", data);
 		})();
 	}
 

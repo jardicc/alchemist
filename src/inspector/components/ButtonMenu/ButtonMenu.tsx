@@ -74,13 +74,13 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 		const elList = this.listElement;
 		const elContent = document.getElementById(this.state.uuid)?.querySelector(".childWrap");
 
-		this.setState({
-			...this.state,
+		this.setState(state => ({
+			...state,
 			listHeight: elList()?.clientHeight ?? 0,
 			listWidth: elList()?.clientWidth ?? 0,
 			contentHeight:elContent?.clientHeight ?? 0,
 			contentWidth:elContent?.clientWidth ?? 0,
-		});
+		}));
 	}
 
 	public componentDidUpdate(prevProps: TButtonMenu, prevState: IButtonMenuState): void {
@@ -90,17 +90,17 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 		const width = el?.clientWidth;
 
 		if (height && height !== this.state.listHeight) {
-			this.setState({
-				...this.state,
+			this.setState(state => ({
+				...state,
 				listHeight: height,
-			});
+			}));
 		}
 
 		if (width && width !== this.state.listWidth) {
-			this.setState({
-				...this.state,
+			this.setState(state => ({
+				...state,
 				listWidth: width,
-			});
+			}));
 		}
 	}
 
@@ -142,10 +142,10 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 	private hide = () => {
 		console.log("blur");
 		//setTimeout(() => {
-		this.setState({
-			...this.state,
+		this.setState(state => ({
+			...state,
 			expanded: false,
-		}, () => {
+		}), () => {
 			if (this.state.expanded) {
 				document.body.classList.add("menuExpanded");			
 			} else {
@@ -158,10 +158,10 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 	private toggle = (): void => {
 		console.log("Toggle button menu", this.state.expanded);
 
-		this.setState({
-			...this.state,
+		this.setState(state => ({
+			...state,
 			expanded: !this.state.expanded,
-		}, () => {
+		}), () => {
 			if (this.state.expanded) {
 				document.body.classList.add("menuExpanded");			
 			} else {

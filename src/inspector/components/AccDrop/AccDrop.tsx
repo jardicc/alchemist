@@ -85,10 +85,10 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	};
 
 	private toggleExpanded = () => {
-		this.setState({
-			...this.state,
+		this.setState(state => ({
+			...state,
 			expanded: !this.state.expanded,
-		},
+		}),
 		/*, () => {
 			if (this.state.expanded) {
 				(this.searchRef as any)?.current?.focus();
@@ -167,10 +167,10 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					placeholder="Filter..."
 					key="search"
 					// value={this.state.searchValue}
-					onInput={(e) => this.setState({
-						...this.state,
+					onInput={(e) => this.setState(state => ({
+						...state,
 						searchValue: (e.target?.value ?? ""),
-					})}
+					}))}
 				/>
 			</div>
 		);
@@ -256,10 +256,10 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				return;
 			}
 
-			this.setState({
-				...this.state,
+			this.setState(state => ({
+				...state,
 				calcHeight: height,
-			});
+			}));
 		}
 	}
 	

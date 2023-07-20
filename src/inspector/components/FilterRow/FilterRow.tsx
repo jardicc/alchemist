@@ -19,10 +19,10 @@ class FilterRow extends React.Component<TFilterRow,IFilterRowState> {
 	private setList = (list:(IPropertyItem | IPropertyGroup)[]) => {
 		const {initialItems} = this.props;
 
-		this.setState({
-			...this.state,
+		this.setState(state => ({
+			...state,
 			list: [...(initialItems || []), ...list],
-		});
+		}));
 	};
 
 	public render(): React.ReactNode {
