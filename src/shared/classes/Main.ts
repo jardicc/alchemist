@@ -72,14 +72,9 @@ function run() {
 	Main.start();
 }
 
-if (Main.devMode) {
+try {
 	run();
-} else {	
-	try {
-		run();
-	} catch (e:any) {
-		void core.showAlert({
-			message: e.stack,
-		});
-	}
+} catch (e:any) {
+	console.error(e.message);
+	throw new Error(e);
 }
