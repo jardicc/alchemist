@@ -82,11 +82,17 @@ export class Harvester{
 				else if (property === "_name" && typeof value === "string") {
 					data[property] = "dummy name";
 				}
+				else if (property === "_path" && typeof value === "string") {
+					data[property] = "dummy path";
+				}
 				else if (property === "_data" && typeof value === "string") {
 					data[property] = "dummy base64";
 				}
 				else if (value instanceof ArrayBuffer) {
 					data[property] = "stripped ArrayBuffer";
+				}
+				else if (property === "notifyPlayLevel" && typeof value === "number") {
+					delete data[property];
 				}
 				else if (property === "_isCommand") {
 					delete data[property];
