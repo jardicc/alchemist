@@ -1,70 +1,70 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {JSONArrow} from "./JSONArrow";
-import {getCollectionEntries} from "./getCollectionEntries";
-import {JSONNode} from "./JSONNode";
-import {ItemRange} from "./ItemRange";
+import { JSONArrow } from "./JSONArrow";
+import { getCollectionEntries } from "./getCollectionEntries";
+import { JSONNode } from "./JSONNode";
+import { ItemRange } from "./ItemRange";
 
 /**
  * Renders nested values (eg. objects, arrays, lists, etc.)
  */
 
-function renderChildNodes(props:any, from?:number, to?:number) {
-	const {
-		nodeType,
-		data,
-		collectionLimit,
-		circularCache,
-		keyPath,
-		postprocessValue,
-		sortObjectKeys,
-		protoMode,
-	} = props;
-	const childNodes:any = [];
+function renderChildNodes(props: any, from?: number, to?: number) {
+  const {
+    nodeType,
+    data,
+    collectionLimit,
+    circularCache,
+    keyPath,
+    postprocessValue,
+    sortObjectKeys,
+    protoMode,
+  } = props;
+  const childNodes: any = [];
 
-	getCollectionEntries(
-		protoMode,
-		nodeType,
-		data,
-		sortObjectKeys,
-		collectionLimit,
-		from,
-		to,
-	).forEach((entry:any) => {
-		if (entry.to) {
-			childNodes.push(
-				<ItemRange
-					{...props}
-					key={`ItemRange--${entry.from}-${entry.to}`}
-					from={entry.from}
-					to={entry.to}
-					renderChildNodes={renderChildNodes}
-				/>,
-			);
-		} else {
-			const { key, value } = entry;
-			const isCircular = circularCache.indexOf(value) !== -1;
+  getCollectionEntries(
+    protoMode,
+    nodeType,
+    data,
+    sortObjectKeys,
+    collectionLimit,
+    from,
+    to,
+  ).forEach((entry: any) => {
+    if (entry.to) {
+      childNodes.push(
+        <ItemRange
+          {...props}
+          key={`ItemRange--${entry.from}-${entry.to}`}
+          from={entry.from}
+          to={entry.to}
+          renderChildNodes={renderChildNodes}
+        />,
+      );
+    } else {
+      const { key, value } = entry;
+      const isCircular = circularCache.indexOf(value) !== -1;
 
-			const node = (
-				<JSONNode
-					{...props}
-					{...{ postprocessValue, collectionLimit }}
-					key={`Node--${key}`}
-					keyPath={[key, ...keyPath]}
-					value={postprocessValue(value)}
-					circularCache={[...circularCache, value]}
-					isCircular={isCircular}
-					hideRoot={false}
-				/>
-			);
+      const node = (
+        <JSONNode
+          {...props}
+          {...{ postprocessValue, collectionLimit }}
+          key={`Node--${key}`}
+          keyPath={[key, ...keyPath]}
+          value={postprocessValue(value)}
+          circularCache={[...circularCache, value]}
+          isCircular={isCircular}
+          hideRoot={false}
+        />
+      );
 
-			if ((node as any) !== false) {
-				childNodes.push(node);
-			}
-		}
-	});
+      if ((node as any) !== false) {
+        childNodes.push(node);
+      }
+    }
+  });
 
-	return childNodes;
+  return childNodes;
 }
 /*
 function getStateFromProps(props:any) {
@@ -78,41 +78,41 @@ function getStateFromProps(props:any) {
 	};
 }*/
 
-export class JSONNestedNode extends React.Component<any,any,any> {
-	static propTypes = {
-		getItemString: PropTypes.func.isRequired,
-		nodeTypeIndicator: PropTypes.any,
-		nodeType: PropTypes.string.isRequired,
-		data: PropTypes.any,
-		hideRoot: PropTypes.bool.isRequired,
-		createItemString: PropTypes.func.isRequired,
-		collectionLimit: PropTypes.number,
-		keyPath: PropTypes.arrayOf(
-			PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-		).isRequired,
-		labelRenderer: PropTypes.func.isRequired,
-		shouldExpandNode: PropTypes.func,
-		level: PropTypes.number.isRequired,
-		sortObjectKeys: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-		isCircular: PropTypes.bool,
-		expandable: PropTypes.bool,
-		protoMode: PropTypes.string,
-	};
+export class JSONNestedNode extends React.Component<any, any, any> {
+  static propTypes = {
+    getItemString: PropTypes.func.isRequired,
+    nodeTypeIndicator: PropTypes.any,
+    nodeType: PropTypes.string.isRequired,
+    data: PropTypes.any,
+    hideRoot: PropTypes.bool.isRequired,
+    createItemString: PropTypes.func.isRequired,
+    collectionLimit: PropTypes.number,
+    keyPath: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    ).isRequired,
+    labelRenderer: PropTypes.func.isRequired,
+    shouldExpandNode: PropTypes.func,
+    level: PropTypes.number.isRequired,
+    sortObjectKeys: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+    isCircular: PropTypes.bool,
+    expandable: PropTypes.bool,
+    protoMode: PropTypes.string,
+  };
 
-	static defaultProps = {
-		data: [] as any[],
-		circularCache: [] as any[],
-		level: 0,
-		expandable: true,
-		protoMode: "none",
-	};
+  static defaultProps = {
+    data: [] as any[],
+    circularCache: [] as any[],
+    level: 0,
+    expandable: true,
+    protoMode: "none",
+  };
 
-	constructor(props:any) {
-		super(props);
-		//this.state = getStateFromProps(props);
-	}
+  constructor(props: any) {
+    super(props);
+    //this.state = getStateFromProps(props);
+  }
 
-	/*static getDerivedStateFromProps(nextProps:any, prevState:any) {
+  /*static getDerivedStateFromProps(nextProps:any, prevState:any) {
 		const nextState = getStateFromProps(nextProps);
 		if (getStateFromProps(nextProps).expanded !== nextState.expanded) {
 			return nextState;
@@ -120,7 +120,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		return null;
 	}
 */
-	/*shouldComponentUpdate(nextProps:any, nextState:any) {
+  /*shouldComponentUpdate(nextProps:any, nextState:any) {
 		return (
 			!!Object.keys(nextProps).find(
 				(key:any) =>
@@ -133,88 +133,87 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		return true;
 	}*/
 
-	private get expanded() {
-		const {
-			data,
-			keyPath,
-			level,
-		}: any = this.props;
-		const expanded: boolean = this.props.shouldExpandNode(keyPath, data, level);
-		return expanded;
-	}
+  private get expanded() {
+    const { data, keyPath, level }: any = this.props;
+    const expanded: boolean = this.props.shouldExpandNode(keyPath, data, level);
+    return expanded;
+  }
 
-	render():JSX.Element {
-		//console.log("STATE",this.state);
-		const {
-			getItemString,
-			nodeTypeIndicator,
-			nodeType,
-			data,
-			hideRoot,
-			createItemString,
-			collectionLimit,
-			keyPath,
-			labelRenderer,
-			expandable,
-			level,
-			protoMode,
-		}: any = this.props;
+  render(): JSX.Element {
+    //console.log("STATE",this.state);
+    const {
+      getItemString,
+      nodeTypeIndicator,
+      nodeType,
+      data,
+      hideRoot,
+      createItemString,
+      collectionLimit,
+      keyPath,
+      labelRenderer,
+      expandable,
+      level,
+      protoMode,
+    }: any = this.props;
 
-		const expanded: boolean = this.expanded;
-		//const { expanded } = this.state;
-		//console.log("STATE",this.state);
-		const renderedChildren =
-			expanded || (hideRoot && this.props.level === 0)
-				? renderChildNodes({ ...this.props, level: this.props.level + 1 })
-				: null;
+    const expanded: boolean = this.expanded;
+    //const { expanded } = this.state;
+    //console.log("STATE",this.state);
+    const renderedChildren =
+      expanded || (hideRoot && this.props.level === 0)
+        ? renderChildNodes({ ...this.props, level: this.props.level + 1 })
+        : null;
 
-		const itemType = (
-			<span className="nestedNodeItemType">
-				{nodeTypeIndicator}
-			</span>
-		);
-		const renderedItemString = getItemString(
-			nodeType,
-			data,
-			itemType,
-			createItemString(data, collectionLimit),
-		);
-		const stylingArgs = [keyPath, nodeType, expanded, expandable];
+    const itemType = (
+      <span className="nestedNodeItemType">{nodeTypeIndicator}</span>
+    );
+    const renderedItemString = getItemString(
+      nodeType,
+      data,
+      itemType,
+      createItemString(data, collectionLimit),
+    );
+    const stylingArgs = [keyPath, nodeType, expanded, expandable];
 
-		return hideRoot ? (
-			<li className="rootNode">
-				<ul className="rootNodeChildren">
-					{renderedChildren}
-				</ul>
-			</li>
-		) : (
-			<li className="nestedNode">
-				{expandable && (
-					<JSONArrow
-						nodeType={nodeType}
-						expanded={expanded}
-						onClick={this.handleClick}
-					/>
-				)}
-				<label className={"label nestedNodeLabel" + ((expandable) ? " expandable":"")} onClick={this.handleClick as any}>
-					{labelRenderer(...stylingArgs)}
-				</label>
-				<span className={"nestedNodeItemString" + ((expanded) ? " expanded":"")} onClick={this.handleClick}>
-					
-					{expanded ? null : renderedItemString}
-				</span>
-				<ul className={"nestedNodeChildren" + ((expanded) ? " expanded":"")} >
-					{renderedChildren}
-				</ul>
-			</li>
-		);
-	}
+    return hideRoot ? (
+      <li className="rootNode">
+        <ul className="rootNodeChildren">{renderedChildren}</ul>
+      </li>
+    ) : (
+      <li className="nestedNode">
+        {expandable && (
+          <JSONArrow
+            nodeType={nodeType}
+            expanded={expanded}
+            onClick={this.handleClick}
+          />
+        )}
+        <label
+          className={
+            "label nestedNodeLabel" + (expandable ? " expandable" : "")
+          }
+          onClick={this.handleClick as any}
+        >
+          {labelRenderer(...stylingArgs)}
+        </label>
+        <span
+          className={"nestedNodeItemString" + (expanded ? " expanded" : "")}
+          onClick={this.handleClick}
+        >
+          {expanded ? null : renderedItemString}
+        </span>
+        <ul className={"nestedNodeChildren" + (expanded ? " expanded" : "")}>
+          {renderedChildren}
+        </ul>
+      </li>
+    );
+  }
 
-	handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>):void => {
-		if (this.props.expandable) {
-			let path = [...this.props.keyPath];
-			path = path.reverse();
-			this.props.expandClicked(path,!this.expanded, e.altKey);
-		}
-	};
+  handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    if (this.props.expandable) {
+      let path = [...this.props.keyPath];
+      path = path.reverse();
+      this.props.expandClicked(path, !this.expanded, e.altKey);
+    }
+  };
 }

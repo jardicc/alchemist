@@ -30,7 +30,7 @@ Short demo: Convert Photoshop Action (.atn) files to UXP code with Alchemist <ht
 Can generate whole plugin based copy/pasted source code e.g. from Alchemist panel. It also can help you generate content of manifest.json file.
 So you can convert action file into plugin very quickly. E.g. record action file (.atn) -> Read it as JSON via Occultist -> Pass it into Alchemist to generate source code -> Generate plugin from generated source code.
 
-Video:  Generate plugin with Sorcerer panel <https://www.youtube.com/watch?v=fhSy2nyK3Uk> (tutorial)
+Video: Generate plugin with Sorcerer panel <https://www.youtube.com/watch?v=fhSy2nyK3Uk> (tutorial)
 
 ## Versions
 
@@ -61,11 +61,11 @@ Click add plugin button. And open `dist\manifest.json` in dialog. Then click "lo
 
 Please make sure to use **`dist`** folder and NOT **`uxp`** folder.
 
-## Even quicker usage - Marketplace version  (Not preferred)
+## Even quicker usage - Marketplace version (Not preferred)
 
 Download `installer/2bcdb900.ccx` installer file in <https://github.com/jardicc/alchemist/raw/master/installer/2bcdb900.ccx> And double click file in file explorer.
 
-## Quickest usage - Marketplace version  (Not preferred)
+## Quickest usage - Marketplace version (Not preferred)
 
 You just click the button to add plugin automatically in Photoshop from Marketplace <https://adobe.com/go/cc_plugins_discover_plugin?pluginId=2bcdb900&workflow=share>
 
@@ -102,7 +102,7 @@ npm install
 Run this to watch for file changes and rebuild automatically and also generate sourcemap
 
 ```sh
-npm watch 
+npm watch
 ```
 
 Or run this to create production bundle

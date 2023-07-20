@@ -38,6 +38,7 @@
 - add connection to CEP "Spy" plugin to get more events from Photoshop. This plugin is not distributed and enabled by default.
 
 - Adds these document properties
+
   - cloudDocument
   - compositor
   - isCloudDoc
@@ -45,10 +46,12 @@
   - visible
 
 - New path properties
+
   - AGMStrokeStyleInfo
   - symmetryPath
 
 - New layer properties
+
   - parentLayerID
 
 - New application properties
@@ -73,18 +76,17 @@
   - springLoadedToolsTimingSensitivity
   - LoadedPluginsNames
 
-
 Note: Use "reset alchemist state" to load these new properties.
 
 ## 2.1.0
 
 - fix: another fix for PS 23.3.0 since last fix broke it in PS 23.2.x  
-This change makes plugin incompatible with PS 23.2.x and lower.  
-If you want to use alchemist in 23.2.x or lower then use Alchemist version 2.0.2 or lower
+  This change makes plugin incompatible with PS 23.2.x and lower.  
+  If you want to use alchemist in 23.2.x or lower then use Alchemist version 2.0.2 or lower
 
 ## 2.0.3
 
-- fix: in PS 23.3.0 it does not load due to launchProcess  permission. Therefore in this version it is fixed
+- fix: in PS 23.3.0 it does not load due to launchProcess permission. Therefore in this version it is fixed
 
 ## 2.0.2
 
@@ -213,7 +215,7 @@ If you want to use alchemist in 23.2.x or lower then use Alchemist version 2.0.2
 
 Merges Inspector and listener panels
 
-- shows by default content of item  first for more tabs if none is selected
+- shows by default content of item first for more tabs if none is selected
 - adds auto inspector feature
 - adds possibility of continuous selection with Shift (add) or Ctrl+Shift (subtract)
 - implements search

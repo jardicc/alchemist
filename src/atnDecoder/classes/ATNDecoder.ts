@@ -4,421 +4,440 @@ import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
 import { uxp } from "../../types/uxp";
 import { charIDToStringID } from "./CharIDToStringID";
 import { DataViewCustom } from "./DataViewCustom";
-import { IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../atnModel";
+import {
+  IActionSet,
+  IActionItem,
+  ICommand,
+  TDescDataType,
+  TRefDataType,
+  IObjectArrayListInner,
+  IActionSetUUID,
+} from "../atnModel";
 import { ActionDescriptor } from "photoshop/dom/CoreModules";
 
 // IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
+const localFileSystem: uxp.storage.LocalFileSystemProvider =
+  require("uxp").storage.localFileSystem;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const formats = require("uxp").storage.formats;
 
-function addUUIDs(arg:IActionSet) :IActionSetUUID{
-	
-	const data: IActionSetUUID = arg as IActionSetUUID;
-	data.__uuid__ = crypto.randomUUID();
+function addUUIDs(arg: IActionSet): IActionSetUUID {
+  const data: IActionSetUUID = arg as IActionSetUUID;
+  data.__uuid__ = crypto.randomUUID();
 
-	data.actionItems?.forEach(item => {
-		
-		item.__uuid__ = crypto.randomUUID();
-		item.__uuidParentSet__ = data.__uuid__;
+  data.actionItems?.forEach((item) => {
+    item.__uuid__ = crypto.randomUUID();
+    item.__uuidParentSet__ = data.__uuid__;
 
-		item.commands?.forEach(command => {
-			
-			command.__uuidParentAction__ = item.__uuid__;
-			command.__uuidParentSet__ = data.__uuid__;
-			command.__uuid__ = crypto.randomUUID();
+    item.commands?.forEach((command) => {
+      command.__uuidParentAction__ = item.__uuid__;
+      command.__uuidParentSet__ = data.__uuid__;
+      command.__uuid__ = crypto.randomUUID();
+    });
+  });
 
-		});
-	});
-
-	return data;
+  return data;
 }
 
-export async function decodeATN():Promise<IActionSetUUID[]> {
-	const dataViews = await loadFile();
-	if(!dataViews){return [];}
-	const parsed = dataViews.map(dataView => addUUIDs(parse(dataView)));
-	return parsed;
+export async function decodeATN(): Promise<IActionSetUUID[]> {
+  const dataViews = await loadFile();
+  if (!dataViews) {
+    return [];
+  }
+  const parsed = dataViews.map((dataView) => addUUIDs(parse(dataView)));
+  return parsed;
 }
 
-export async function loadFile():Promise<DataView[]|null> {
-	const files = await localFileSystem.getFileForOpening({
-		types: ["atn"],
-		allowMultiple: true,
-	});
-	if (!files?.length) {
-		return null;
-	}
+export async function loadFile(): Promise<DataView[] | null> {
+  const files = await localFileSystem.getFileForOpening({
+    types: ["atn"],
+    allowMultiple: true,
+  });
+  if (!files?.length) {
+    return null;
+  }
 
-	const result: DataView[] = [];
+  const result: DataView[] = [];
 
-	for (let i = 0; i < files.length; i++) {
-		const file = files[i];
-		
-		const data:ArrayBuffer = await file.read({format: formats.binary});
-		try {
-			result.push(new DataView(data));
-		} catch (e) {
-			console.log("Error - with reading of settings!");
-		}
-	}
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
 
-	return result;
+    const data: ArrayBuffer = await file.read({ format: formats.binary });
+    try {
+      result.push(new DataView(data));
+    } catch (e) {
+      console.log("Error - with reading of settings!");
+    }
+  }
+
+  return result;
 }
 
-export function parse(d: DataView):IActionSet {
-	const res:Partial<IActionSet> = {};
-	const data = new DataViewCustom(d.buffer, false);
-	const version = data.getUint32();
+export function parse(d: DataView): IActionSet {
+  const res: Partial<IActionSet> = {};
+  const data = new DataViewCustom(d.buffer, false);
+  const version = data.getUint32();
 
-	if (version !== 16) {
-		throw new Error("ATN wrong version. Should be 16 but instead got: " + version);
-	}
+  if (version !== 16) {
+    throw new Error(
+      "ATN wrong version. Should be 16 but instead got: " + version,
+    );
+  }
 
-	res.version = version;
-	res.actionSetName = data.getUtf16String();
-	res.expanded = data.getBoolean();
-	
-	const actionsCount = data.getUint32();
-	if (actionsCount) {
-		res.actionItems = [];		
-	}
+  res.version = version;
+  res.actionSetName = data.getUtf16String();
+  res.expanded = data.getBoolean();
 
-	for (let i = 0; i < actionsCount; i++) {
+  const actionsCount = data.getUint32();
+  if (actionsCount) {
+    res.actionItems = [];
+  }
 
-		const item: Partial<IActionItem> = {
-			fKeyIndex: data.getUint16(),
-			shiftKey: data.getBoolean(),
-			commandKey: data.getBoolean(),
-			colorIndex: data.getUint16(),
-			actionItemName: data.getUtf16String(),
-			expanded: data.getBoolean(),
-		};
+  for (let i = 0; i < actionsCount; i++) {
+    const item: Partial<IActionItem> = {
+      fKeyIndex: data.getUint16(),
+      shiftKey: data.getBoolean(),
+      commandKey: data.getBoolean(),
+      colorIndex: data.getUint16(),
+      actionItemName: data.getUtf16String(),
+      expanded: data.getBoolean(),
+    };
 
-		const commandsCount = data.getUint32();
-		if (commandsCount) {
-			item.commands = [];
-		}
+    const commandsCount = data.getUint32();
+    if (commandsCount) {
+      item.commands = [];
+    }
 
+    for (let j = 0; j < commandsCount; j++) {
+      let command: Partial<ICommand> = {
+        expanded: data.getBoolean(),
+        enabled: data.getBoolean(),
+        showDialogs: data.getBoolean(),
+        dialogMode: data.getUint8(),
+      };
 
-		for (let j = 0; j < commandsCount; j++) {
-			let command: Partial<ICommand> = {
-				expanded:data.getBoolean(),
-				enabled:data.getBoolean(),
-				showDialogs:data.getBoolean(),
-				dialogMode:data.getUint8(),
-			};
+      const desc: ActionDescriptor = {
+        _obj: data.getCommandStringID(),
+      };
 
-			const desc: ActionDescriptor = {
-				_obj: data.getCommandStringID(),
-			};
+      command = {
+        ...command,
+        commandName: data.readASCII(),
+        descriptor: desc,
+      };
 
-			command = {
-				...command,
-				commandName: data.readASCII(),
-				descriptor: desc,				
-			};
+      const isDescriptorFollowing: boolean = data.getInt32() === -1;
+      if (isDescriptorFollowing) {
+        parseActionDescriptor(data, desc);
+      }
 
-			const isDescriptorFollowing: boolean = data.getInt32() === -1;
-			if (isDescriptorFollowing) {
-				parseActionDescriptor(data, desc);
-			}
+      item.commands!.push(command as ICommand);
+    }
 
-			item.commands!.push(command as ICommand);
-		}
+    res.actionItems!.push(item as IActionItem);
+  }
 
-		res.actionItems!.push(item as IActionItem);
-		
-	}
-
-
-	return res as IActionSet;
+  return res as IActionSet;
 }
 
-export function parseDescriptor(data: DataViewCustom, desc: any): void{
-	const version = data.getUint32();
-	if (version !== 16) {
-		throw new Error("ATN descriptor wrong version. Should be 16 but instead got: " + version);
-	}
-	parseActionDescriptor(data, desc);
+export function parseDescriptor(data: DataViewCustom, desc: any): void {
+  const version = data.getUint32();
+  if (version !== 16) {
+    throw new Error(
+      "ATN descriptor wrong version. Should be 16 but instead got: " + version,
+    );
+  }
+  parseActionDescriptor(data, desc);
 }
 
 export function parseActionDescriptor(data: DataViewCustom, desc: any): void {
-	const fromClassID = data.getUtf16String();
-	const objKey = data.getStringID();
-	desc._obj = desc._obj || objKey;
-	const count = data.getUint32();
+  const fromClassID = data.getUtf16String();
+  const objKey = data.getStringID();
+  desc._obj = desc._obj || objKey;
+  const count = data.getUint32();
 
-	for (let i = 0; i < count; i++) {
-		const propertyName: string = data.getStringID();
-		dataTypeHub(data, desc, propertyName);		
-	}
+  for (let i = 0; i < count; i++) {
+    const propertyName: string = data.getStringID();
+    dataTypeHub(data, desc, propertyName);
+  }
 }
 
-export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: string ): void {
-	// new Uint8Array(data.buffer)
-	const dataTypeKey: TDescDataType = data.readASCII(undefined,4) as TDescDataType;
-	
-	switch (dataTypeKey) {
-		
-		// Descriptor
-		case "GlbO":
-		case "Objc": {
-			const subDesc: ActionDescriptor = { _obj: "" };
-			parseActionDescriptor(data, subDesc);
-			desc[propertyName] = subDesc;
-			return;
-		}
-			
-		// String
-		case "TEXT":
-			desc[propertyName] = data.getUtf16String();
-			return;
-		
-		// UnitFloat
-		case "UntF": {
-			desc[propertyName] = {
-				_unit: charIDToStringID[data.readASCII(undefined, 4)],
-				_value: data.getFloat64(),
-			};
-			return;
-		}
-		
-		// List
-		case "VlLs": {
-			const count = data.getUint32();
-			const list: any[] = [];
-			desc[propertyName] = list;
+export function dataTypeHub(
+  data: DataViewCustom,
+  desc: any,
+  propertyName: string,
+): void {
+  // new Uint8Array(data.buffer)
+  const dataTypeKey: TDescDataType = data.readASCII(
+    undefined,
+    4,
+  ) as TDescDataType;
 
-			for (let i = 0; i < count; i++) {
-				// :-( try to improve this
-				const item:{dummy:any} = {dummy:null};
-				dataTypeHub(data, item,"dummy");				
-				list.push(Array.isArray(item.dummy) ? item.dummy[0] : item.dummy);
-			}
+  switch (dataTypeKey) {
+    // Descriptor
+    case "GlbO":
+    case "Objc": {
+      const subDesc: ActionDescriptor = { _obj: "" };
+      parseActionDescriptor(data, subDesc);
+      desc[propertyName] = subDesc;
+      return;
+    }
 
-			return;
-		}
-		
-		// Alias
-		case "alis":
-		case "Pth ":{
-			data.offset += 4; // block length since next key till path property end
-			data.offset += 4; // txtu key
-			data.offset += 4; // block length
-			const nameLen = data.getUint16(undefined, true); // filename length. Character length not bytes
-			console.log(nameLen);
-			data.offset += 1; // x00 prefix
+    // String
+    case "TEXT":
+      desc[propertyName] = data.getUtf16String();
+      return;
 
-			// filename as Unicode
-			const end = (nameLen - 1) * 2 + data.offset;
-			const sub = new Uint8Array(data.buffer.slice(data.offset, end));
+    // UnitFloat
+    case "UntF": {
+      desc[propertyName] = {
+        _unit: charIDToStringID[data.readASCII(undefined, 4)],
+        _value: data.getFloat64(),
+      };
+      return;
+    }
 
-			const decoded: string = decode(sub as any, "utf16be").replace(/\0/g, "");
-			console.log(decoded);
-			data.offset = end;
+    // List
+    case "VlLs": {
+      const count = data.getUint32();
+      const list: any[] = [];
+      desc[propertyName] = list;
 
-			// unicode terminator
-			data.offset += 2;
-			// byte pad
-			data.offset += 1;
-			desc[propertyName] = {
-				_kind: "local",
-				_path: decoded,
-			};
-			return;
-		}
-			
-		// Boolean
-		case "bool":
-			desc[propertyName] = data.getBoolean();
-			return;
-		
-		// LargeInteger
-		case "comp":
-			desc[propertyName] = data.getInt64();
-			return;
-		
-		// Double
-		case "doub":
-			desc[propertyName] = data.getFloat64();
-			return;
-		
-		// Enumerated
-		case "enum":
-			desc[propertyName] = {
-				_enum: data.getStringID(),
-				_value: data.getStringID(),
-			};
-			return;
-		
-		// Integer
-		case "long":
-			desc[propertyName] = data.getInt32();
-			return;
-		
-		// reference
-		case "obj ":{
-			referenceTypeHub(data, desc, propertyName);
-			return;
-		}
-		// Class
-		case "type":
-		case "GlbC": {
-			const classID = data.getUtf16String();
-			desc[propertyName] = {
-				_class: data.getStringID(),
-			};
-			return;			
-		}
-			
-		// RawData
-		case "tdta": {
-			const length = data.getUint32();
+      for (let i = 0; i < count; i++) {
+        // :-( try to improve this
+        const item: { dummy: any } = { dummy: null };
+        dataTypeHub(data, item, "dummy");
+        list.push(Array.isArray(item.dummy) ? item.dummy[0] : item.dummy);
+      }
 
-			desc[propertyName] = {
-				_rawData: "base64",
-				_data: Base64.btoa(					
-					RawDataConverter.arrayBufferToString(
-						data.buffer.slice(data.offset, data.offset + length),
-					),
-				),
-			};
+      return;
+    }
 
-			data.offset += length;
-			return;
-		}
-		
-		// Ancient List
-		case "ObAr":{
-			const length = data.getUint32();
-			const name = data.getUtf16String();
-			const classID = data.getStringID();
-			const count = data.getUint32();
+    // Alias
+    case "alis":
+    case "Pth ": {
+      data.offset += 4; // block length since next key till path property end
+      data.offset += 4; // txtu key
+      data.offset += 4; // block length
+      const nameLen = data.getUint16(undefined, true); // filename length. Character length not bytes
+      console.log(nameLen);
+      data.offset += 1; // x00 prefix
 
-			const list:any = {
-				_objList: classID,
-			};
-			desc[propertyName] = list;
+      // filename as Unicode
+      const end = (nameLen - 1) * 2 + data.offset;
+      const sub = new Uint8Array(data.buffer.slice(data.offset, end));
 
-			for (let i = 0; i < count; i++) {
-				const key = data.getStringID();
-				// broken since here
-				const listType = data.readASCII(undefined, 4);
-				const valuesList: number[] = [];
-				let unit = "error";
+      const decoded: string = decode(sub as any, "utf16be").replace(/\0/g, "");
+      console.log(decoded);
+      data.offset = end;
 
-				if (listType==="UnFl") {
-					unit = charIDToStringID[data.readASCII(undefined, 4)];
-					console.log(unit);
-					const unitCount = data.getUint32();
+      // unicode terminator
+      data.offset += 2;
+      // byte pad
+      data.offset += 1;
+      desc[propertyName] = {
+        _kind: "local",
+        _path: decoded,
+      };
+      return;
+    }
 
-					
+    // Boolean
+    case "bool":
+      desc[propertyName] = data.getBoolean();
+      return;
 
-					for (let j = 0; j < unitCount; j++) {
-						const value = data.getFloat64();
-						valuesList.push(value);						
-					}
-				} else {
-					throw new Error(`Unkown data type "${listType}" in ObjectArray "ObAr`);
-				}
+    // LargeInteger
+    case "comp":
+      desc[propertyName] = data.getInt64();
+      return;
 
-				console.log(unit);
-				list[key] = {
-					_unit: unit,
-					list:valuesList,
-				} as IObjectArrayListInner;
-			}
+    // Double
+    case "doub":
+      desc[propertyName] = data.getFloat64();
+      return;
 
-			return;
-		}
-		default: throw new Error(`Unrecognized data type key in descriptor ${dataTypeKey}`);
-		
-	}
+    // Enumerated
+    case "enum":
+      desc[propertyName] = {
+        _enum: data.getStringID(),
+        _value: data.getStringID(),
+      };
+      return;
+
+    // Integer
+    case "long":
+      desc[propertyName] = data.getInt32();
+      return;
+
+    // reference
+    case "obj ": {
+      referenceTypeHub(data, desc, propertyName);
+      return;
+    }
+    // Class
+    case "type":
+    case "GlbC": {
+      const classID = data.getUtf16String();
+      desc[propertyName] = {
+        _class: data.getStringID(),
+      };
+      return;
+    }
+
+    // RawData
+    case "tdta": {
+      const length = data.getUint32();
+
+      desc[propertyName] = {
+        _rawData: "base64",
+        _data: Base64.btoa(
+          RawDataConverter.arrayBufferToString(
+            data.buffer.slice(data.offset, data.offset + length),
+          ),
+        ),
+      };
+
+      data.offset += length;
+      return;
+    }
+
+    // Ancient List
+    case "ObAr": {
+      const length = data.getUint32();
+      const name = data.getUtf16String();
+      const classID = data.getStringID();
+      const count = data.getUint32();
+
+      const list: any = {
+        _objList: classID,
+      };
+      desc[propertyName] = list;
+
+      for (let i = 0; i < count; i++) {
+        const key = data.getStringID();
+        // broken since here
+        const listType = data.readASCII(undefined, 4);
+        const valuesList: number[] = [];
+        let unit = "error";
+
+        if (listType === "UnFl") {
+          unit = charIDToStringID[data.readASCII(undefined, 4)];
+          console.log(unit);
+          const unitCount = data.getUint32();
+
+          for (let j = 0; j < unitCount; j++) {
+            const value = data.getFloat64();
+            valuesList.push(value);
+          }
+        } else {
+          throw new Error(
+            `Unkown data type "${listType}" in ObjectArray "ObAr`,
+          );
+        }
+
+        console.log(unit);
+        list[key] = {
+          _unit: unit,
+          list: valuesList,
+        } as IObjectArrayListInner;
+      }
+
+      return;
+    }
+    default:
+      throw new Error(
+        `Unrecognized data type key in descriptor ${dataTypeKey}`,
+      );
+  }
 }
 
-export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: string): void {
-	const count = data.getUint32();
-	const ref: any[] = [];
-	if (propertyName === "null") {
-		propertyName = "_target";
-	}
-	desc[propertyName] = ref;
-	
-	for (let i = 0; i < count; i++) {
-		const refType: TRefDataType = data.readASCII(undefined, 4) as TRefDataType;
+export function referenceTypeHub(
+  data: DataViewCustom,
+  desc: any,
+  propertyName: string,
+): void {
+  const count = data.getUint32();
+  const ref: any[] = [];
+  if (propertyName === "null") {
+    propertyName = "_target";
+  }
+  desc[propertyName] = ref;
 
-		const name = data.getUtf16String();
-		const classID = data.getStringID();
+  for (let i = 0; i < count; i++) {
+    const refType: TRefDataType = data.readASCII(undefined, 4) as TRefDataType;
 
-		switch (refType) {
+    const name = data.getUtf16String();
+    const classID = data.getStringID();
 
-			// Property
-			case "prop": {
-				ref.push({
-					_ref: classID,
-					_property: data.getStringID(),
-				});
-				break;
-			}
-				
-			// Class
-			case "Clss": {
-				ref.push({
-					_ref: classID,
-				});
-				break;
-			}
-				
-			// Enumerated Reference
-			case "Enmr": {
-				ref.push({
-					_ref: classID,
-					_enum: data.getStringID(),
-					_value: data.getStringID(),
-				});
-				break;
-			}
-				
-			// Offset
-			case "rele": {
-				ref.push({
-					_ref: classID,
-					_offset: data.getInt32(),
-				});
-				break;
-			}
-				
-			// Identifier
-			case "Idnt": {
-				ref.push({
-					_ref: classID,
-					_id: data.getInt32(),
-				});
-				break;
-			}
-				
-			// Index
-			case "indx": {
-				ref.push({
-					_ref: classID,
-					_index: data.getInt32(),
-				});
-				break;
-			}
-				
-			// Name
-			case "name": {
-				ref.push({
-					_ref: classID,
-					_name: data.getUtf16String(),
-				});
-				break;
-			}
-				
-			default: throw new Error(`Unrecognized data type key in reference ${refType}`);
-		}
-	}	
+    switch (refType) {
+      // Property
+      case "prop": {
+        ref.push({
+          _ref: classID,
+          _property: data.getStringID(),
+        });
+        break;
+      }
+
+      // Class
+      case "Clss": {
+        ref.push({
+          _ref: classID,
+        });
+        break;
+      }
+
+      // Enumerated Reference
+      case "Enmr": {
+        ref.push({
+          _ref: classID,
+          _enum: data.getStringID(),
+          _value: data.getStringID(),
+        });
+        break;
+      }
+
+      // Offset
+      case "rele": {
+        ref.push({
+          _ref: classID,
+          _offset: data.getInt32(),
+        });
+        break;
+      }
+
+      // Identifier
+      case "Idnt": {
+        ref.push({
+          _ref: classID,
+          _id: data.getInt32(),
+        });
+        break;
+      }
+
+      // Index
+      case "indx": {
+        ref.push({
+          _ref: classID,
+          _index: data.getInt32(),
+        });
+        break;
+      }
+
+      // Name
+      case "name": {
+        ref.push({
+          _ref: classID,
+          _name: data.getUtf16String(),
+        });
+        break;
+      }
+
+      default:
+        throw new Error(`Unrecognized data type key in reference ${refType}`);
+    }
+  }
 }

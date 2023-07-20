@@ -1,68 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <head>
+    <script src="index.js"></script>
+    <style>
+      .loadingWrapper {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        font-size: 1.2em;
+        flex-direction: column;
+      }
 
-<head>
-	<script src="index.js"></script>
-	<style>
-		.loadingWrapper {
-			display: flex;
-			width: 100vw;
-			height: 100vh;
-			justify-content: center;
-			text-align: center;
-			color: white;
-			font-size: 1.2em;
-			flex-direction: column;
-		}
+      .loadingMessage {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 0;
+        align-self: center;
+        font-size: 1.8em;
+      }
+    </style>
+  </head>
+  <script>
+    // For people who don't read a documentation :-D
+    setTimeout(() => {
+      const message = document.createElement("div");
+      message.innerText =
+        'Are you sure that you loaded plugin from "dist/" folder instead of "uxp/"?';
+      [...document.body.querySelectorAll(".loadingWrapper")].forEach((el) =>
+        el.appendChild(message.cloneNode(true)),
+      );
+    }, 2000);
+  </script>
 
-		.loadingMessage {
-			display: flex;
-			flex-direction: column;
-			flex-grow: 0;
-			align-self: center;
-			font-size: 1.8em;
-		}
-	</style>
-</head>
-<script>
-	// For people who don't read a documentation :-D 
-	setTimeout(() => {
-		const message = document.createElement("div");
-		message.innerText = 'Are you sure that you loaded plugin from "dist/" folder instead of "uxp/"?';
-		[...document.body.querySelectorAll(".loadingWrapper")].forEach(el => el.appendChild(message.cloneNode(true)));
-	}, 2000)
-</script>
+  <body>
+    <uxp-panel panelid="inspector">
+      <div class="Inspector">
+        <div class="loadingWrapper">
+          <div class="loadingMessage">Loading...</div>
+        </div>
+      </div>
+    </uxp-panel>
 
-<body>
-	<uxp-panel panelid="inspector">
-		<div class="Inspector">
-			<div class="loadingWrapper">
-				<div class="loadingMessage">
-					Loading...
-				</div>
-			</div>
-		</div>
-	</uxp-panel>
+    <uxp-panel panelid="occultist">
+      <div class="Occultist">
+        <div class="loadingWrapper">
+          <div class="loadingMessage">Loading...</div>
+        </div>
+      </div>
+    </uxp-panel>
 
-	<uxp-panel panelid="occultist">
-		<div class="Occultist">
-			<div class="loadingWrapper">
-				<div class="loadingMessage">
-					Loading...
-				</div>
-			</div>
-		</div>
-	</uxp-panel>
-
-	<uxp-panel panelid="sorcerer">
-		<div class="Sorcerer">
-			<div class="loadingWrapper">
-				<div class="loadingMessage">
-					Loading...
-				</div>
-			</div>
-		</div>
-	</uxp-panel>
-</body>
-
+    <uxp-panel panelid="sorcerer">
+      <div class="Sorcerer">
+        <div class="loadingWrapper">
+          <div class="loadingMessage">Loading...</div>
+        </div>
+      </div>
+    </uxp-panel>
+  </body>
 </html>

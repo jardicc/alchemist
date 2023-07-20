@@ -7,45 +7,46 @@ import "./GeneratedCode.less";
 import { Dispatch } from "redux";
 import SP from "react-uxp-spectrum";
 
-class GeneratedCode extends Component<TGeneratedCode, Record<string,unknown>> {
+class GeneratedCode extends Component<TGeneratedCode, Record<string, unknown>> {
+  constructor(props: TGeneratedCode) {
+    super(props);
 
-	constructor(props: TGeneratedCode) {
-		super(props);
+    this.state = {};
+  }
 
-		this.state = {
-		};
-	}
-	
-	public render(): React.ReactNode {
-
-		return (
-			<div className="GeneratedCode">
-				<SP.Textarea
-					className="generatedCodeBox"
-					value={this.props.code}
-				/>
-			</div>
-		);
-	}
+  public render(): React.ReactNode {
+    return (
+      <div className="GeneratedCode">
+        <SP.Textarea className="generatedCodeBox" value={this.props.code} />
+      </div>
+    );
+  }
 }
 
+type TGeneratedCode = IGeneratedCodeProps & IGeneratedCodeDispatch;
 
-type TGeneratedCode = IGeneratedCodeProps & IGeneratedCodeDispatch
-
-interface IGeneratedCodeProps{
-	code: string
+interface IGeneratedCodeProps {
+  code: string;
 }
 
 const mapStateToProps = (state: IRootState): IGeneratedCodeProps => ({
-	code: getGeneratedCode(state),
+  code: getGeneratedCode(state),
 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IGeneratedCodeDispatch {
-	
-}
+interface IGeneratedCodeDispatch {}
 
-const mapDispatchToProps: MapDispatchToPropsFunction<IGeneratedCodeDispatch, Record<string, unknown>> = (dispatch: Dispatch): IGeneratedCodeDispatch => ({
-});
+const mapDispatchToProps: MapDispatchToPropsFunction<
+  IGeneratedCodeDispatch,
+  Record<string, unknown>
+> = (dispatch: Dispatch): IGeneratedCodeDispatch => ({});
 
-export const GeneratedCodeContainer = connect<IGeneratedCodeProps, IGeneratedCodeDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(GeneratedCode);
+export const GeneratedCodeContainer = connect<
+  IGeneratedCodeProps,
+  IGeneratedCodeDispatch,
+  Record<string, unknown>,
+  IRootState
+>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(GeneratedCode);

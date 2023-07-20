@@ -1,27 +1,20 @@
 // eslint-disable-next-line no-undef
 module.exports = (wallaby) => {
+  return {
+    files: ['src/**/*.ts', 'src/**/*.tsx', '!**/_tests_/**/*'],
 
-	return {
-		files: [
-			"src/**/*.ts",
-			"src/**/*.tsx",
-			"!**/_tests_/**/*",
-		],
+    tests: ['**/_tests_/**/*.ts'],
 
-		tests: [
-			"**/_tests_/**/*.ts",
-		],
-		
-		env: {
-			type: "node",
-		},
+    env: {
+      type: 'node'
+    },
 
-		testFramework: "jest",
+    testFramework: 'jest',
 
-		workers: {
-			initial: 7,
-			regular: 5,
-			restart: true,
-		},
-	};
-};
+    workers: {
+      initial: 7,
+      regular: 5,
+      restart: true
+    }
+  }
+}
