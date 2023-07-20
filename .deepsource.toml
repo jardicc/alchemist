@@ -1,0 +1,18 @@
+version = 1
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  plugins = ["react"]
+  environment = [
+    "nodejs",
+    "browser",
+    "jest"
+  ]
+
+[[transformers]]
+name = "prettier"
+
+[[transformers]]
+name = "standardjs"
