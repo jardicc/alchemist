@@ -1,4 +1,3 @@
-import "react";
 import React from "react";
 import {
 	IconBan,
