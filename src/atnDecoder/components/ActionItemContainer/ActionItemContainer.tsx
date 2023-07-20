@@ -71,16 +71,25 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 			<div className="ActionItem">
 				<div className={"wrap " + (this.isSelected ? "selected" : "")} onClick={this.select}>
 					<div className="checkmark">
-						{(actionItem.commands?.every(item=>item.enabled) ?? true) ? <IconCheck />:<IconEmpty />}
+						{(actionItem.commands?.every(item => item.enabled) ?? true) ? <IconCheck /> : <IconEmpty />}
 					</div>
-					<div className="expand"  onClick={this.onExpand}>
-						{this.isExpanded  ? <IconChevronBottom /> : <IconChevronRight />}
+					<div className="expand" onClick={this.onExpand}>
+						{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
 					</div>
 					<span className="title">
 						{PS.core.translateUIString(actionItem.actionItemName)}
-					</span>				
+					</span>
 				</div>
-				{this.isExpanded && actionItem.commands?.map((item, key) => <ActionCommandContainer parentAction={actionItem} parentSet={parentSet} actionCommand={item} key={key} />)}
+				{
+					this.isExpanded && actionItem.commands?.map((item, index) =>
+						<ActionCommandContainer
+							parentAction={actionItem}
+							parentSet={parentSet}
+							actionCommand={item}
+							key={parentSet + "_" + actionItem + "_" + index}
+						/>,
+					)
+				}
 			</div>
 		);
 	}

@@ -22,13 +22,13 @@ export class Panel extends React.Component<TPanelContainer, IPanelContainerState
 				<div className="row">
 					Label: <SP.Textfield
 						value={activePanel.label.default}
-						onInput={e => onSet(activePanel.$$$uuid, { label: { default: e?.target?.value ?? "" } })}
+						onInput={e => onSet(activePanel.$$$uuid, {label: {default: e?.target?.value ?? ""}})}
 					/>
 				</div>
 				<div className="row">
 					ID: <SP.Textfield
 						value={activePanel.id}
-						onInput={e => onSet(activePanel.$$$uuid, { id: e?.target?.value ?? "" })}
+						onInput={e => onSet(activePanel.$$$uuid, {id: e?.target?.value ?? ""})}
 					/>
 				</div>
 				<div className="row">
@@ -36,11 +36,11 @@ export class Panel extends React.Component<TPanelContainer, IPanelContainerState
 				</div>
 				<div className="column">
 					{snippets.map((checkboxItem, index) => (
-						<div className="row" key={index}>
+						<div className="row" key={checkboxItem.$$$uuid + "_" + index}>
 							<SP.Checkbox
 								key={checkboxItem.$$$uuid}
 								checked={activePanel.$$$snippetUUIDs.includes(checkboxItem.$$$uuid) ? true : undefined}
-								onChange={e => onAssignSnippet(activePanel.$$$uuid, e?.target?.checked ? "on" : "off",checkboxItem.$$$uuid)}
+								onChange={e => onAssignSnippet(activePanel.$$$uuid, e?.target?.checked ? "on" : "off", checkboxItem.$$$uuid)}
 							>{checkboxItem.label.default}</SP.Checkbox>
 						</div>
 					))}

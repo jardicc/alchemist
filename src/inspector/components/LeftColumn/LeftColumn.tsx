@@ -214,7 +214,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		return (
 			allInViewDescriptors.map((d, index) => {
 				return (
-					<div className={"DescriptorItem"}  key={index} ref={index === allInViewDescriptors.length - 1 ? this.lastDescRef as any : null}>
+					<div className={"DescriptorItem"} key={d.id + "_" + index} ref={index === allInViewDescriptors.length - 1 ? this.lastDescRef as any : null}>
 						<DescriptorItemContainer descriptor={d} key={d.id} />
 					</div>
 				);

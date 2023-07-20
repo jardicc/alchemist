@@ -72,9 +72,9 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 			<div className="ActionSet">
 				<div className={"wrap " + (this.isSelected ? "selected" : "")} onClick={this.select}>
 					<div className="checkmark">
-						{(actionSet.actionItems?.every(aItem=>aItem.commands?.every(item=>item.enabled) ?? true) ?? true) ? <IconCheck />:<IconEmpty />}
+						{(actionSet.actionItems?.every(aItem => aItem.commands?.every(item => item.enabled) ?? true) ?? true) ? <IconCheck /> : <IconEmpty />}
 					</div>
-					<div className="expand"  onClick={this.onExpand}>
+					<div className="expand" onClick={this.onExpand}>
 						{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
 					</div>
 					<IconFolder />
@@ -82,7 +82,9 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 						{PS.core.translateUIString(actionSet.actionSetName)}
 					</span>
 				</div>
-				{this.isExpanded && actionSet.actionItems.map((item,key)=><ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}
+				{this.isExpanded && actionSet.actionItems.map((item, index) =>
+					<ActionItemContainer actionItem={item} parent={actionSet} key={actionSet + "_" + item + "_" + index} />,
+				)}
 			</div>
 		);
 	}

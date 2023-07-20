@@ -39,9 +39,9 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 	};
 
 	private renderItems = (items: IEntrypointPanel[] | IEntrypointCommand[] | ISnippet[]) => {
-		const { selectItem} = this.props;
+		const {selectItem} = this.props;
 		const res = items.map((p, index) => (
-			<div key={index} className={"menuItem " + this.menuItemActiveClass(p)} onClick={()=>selectItem(p.type,p.$$$uuid)}>
+			<div key={p.$$$uuid + "_" + index} className={"menuItem " + this.menuItemActiveClass(p)} onClick={() => selectItem(p.type, p.$$$uuid)}>
 				{p.label.default || "(none)"}
 			</div>
 		));

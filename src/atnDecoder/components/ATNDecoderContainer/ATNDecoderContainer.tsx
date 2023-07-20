@@ -38,8 +38,8 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		}
 
 		return (
-			data.map((set,i) => (
-				<ActionSetContainer actionSet={set} key={i} />
+			data.map((set, i) => (
+				<ActionSetContainer actionSet={set} key={set + "_" + i} />
 			))
 		);
 	};
