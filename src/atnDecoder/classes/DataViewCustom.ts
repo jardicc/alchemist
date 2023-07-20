@@ -83,7 +83,7 @@ export class DataViewCustom extends DataView{
 			let byte = super.getUint8(this.offset + (this.littleEndian ? i : 7 - i));
 			if (isNegative) {
 				if (carrying) {
-					if (byte != 0x00) {
+					if (byte !== 0x00) {
 						byte = (~(byte - 1)) & 0xFF;
 						carrying = false;
 					}

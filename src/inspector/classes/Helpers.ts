@@ -45,7 +45,7 @@ export async function replayDescriptor(desc: ActionDescriptor): Promise<ActionDe
 		return res;
 	}
 	catch (e: any) {
-		if (e.number == 9) {
+		if (e.number === 9) {
 			await photoshop.core.showAlert({ message: "executeAsModal was rejected (some other plugin is currently inside a modal scope)" });
 		}
 		throw new Error(e);
