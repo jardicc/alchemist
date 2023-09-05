@@ -19,6 +19,8 @@ module.exports = {
 	plugins: [
 		"react",
 		"@typescript-eslint",
+		"eslint-plugin-html",
+		"@html-eslint",
 	],
 	rules: {
 		"no-async-promise-executor": ["error"],
@@ -52,29 +54,36 @@ module.exports = {
 			"always",
 		],
 	},
-	overrides: [{
-		files: ["*.ts", "*.tsx"],
-		extends: [
-			"plugin:@typescript-eslint/recommended",
-		],
-		parserOptions: {
-			project: ["./tsconfig.json"], // Specify it only for TypeScript files
+	overrides: [
+		{
+			files: ["*.html","*.htm"],
+			parser: "@html-eslint/parser",
+			extends: ["plugin:@html-eslint/recommended"],
 		},
-		rules: {
-			"@typescript-eslint/no-floating-promises": "error",
-			"@typescript-eslint/no-misused-promises": [
-				"error", {
-					"checksVoidReturn": {
-						// false to make it better work with React
-						"attributes": false,
-						"returns": false,
-					},
-				},
+		{
+			files: ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			extends: [
+				"plugin:@typescript-eslint/recommended",
 			],
-			"@typescript-eslint/promise-function-async": "error",
-			"@typescript-eslint/switch-exhaustiveness-check": "error",
+			parserOptions: {
+				project: ["./tsconfig.json"], // Specify it only for TypeScript files
+			},
+			rules: {
+				"@typescript-eslint/no-floating-promises": "error",
+				"@typescript-eslint/no-misused-promises": [
+					"error", {
+						"checksVoidReturn": {
+							// false to make it better work with React
+							"attributes": false,
+							"returns": false,
+						},
+					},
+				],
+				"@typescript-eslint/promise-function-async": "error",
+				"@typescript-eslint/switch-exhaustiveness-check": "error",
 
-			"@typescript-eslint/no-empty-interface": "off",
-		},
-	}],
+				"@typescript-eslint/no-empty-interface": "off",
+				"react/no-invalid-html-attribute": "error",
+			},
+		}],
 };

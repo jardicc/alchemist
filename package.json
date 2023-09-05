@@ -28,7 +28,6 @@
     "copy-webpack-plugin": "^9.0.1",
     "crc-32": "^1.2.0",
     "css-loader": "^6.7.3",
-    "eslint": "^8.41.0",
     "eslint-config-defaults": "^9.0.0",
     "eslint-plugin-react": "^7.32.2",
     "iconv-lite": "^0.6.3",
@@ -67,6 +66,10 @@
     "zip-webpack-plugin": "^4.0.1"
   },
   "devDependencies": {
+    "@html-eslint/eslint-plugin": "^0.19.0",
+    "@html-eslint/parser": "^0.19.0",
+    "eslint": "^8.45.0",
+    "eslint-plugin-html": "^7.1.0",
     "eslint-webpack-plugin": "^4.0.1",
     "webpack-watch-external-files-plugin": "^1.0.0"
   }
