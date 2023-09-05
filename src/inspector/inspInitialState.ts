@@ -7,7 +7,7 @@ import { getSorInitialState } from "../sorcerer/sorInitialState";
 
 export function getInitialState(): IInspectorState {
 	return {
-		version: [12, 0, 0],
+		version: [13, 0, 0],
 		selectedReferenceType: "layer",
 		filterBySelectedReferenceType: "off",
 		descriptorsGrouping: "eventName",
@@ -183,6 +183,7 @@ export function getInitialState(): IInspectorState {
 			},
 		},
 		settings: {
+
 			settingsVisible:false,
 			/** Sometimes you can get data when object in reference array is selected. This option is intended to select that item automatically for you */
 			fontSize: "size-default",
@@ -700,6 +701,7 @@ export function getInitialState(): IInspectorState {
 			singleQuotes: false,
 			codeImports: "require",
 			codeWrappers: "modal",
+			tokenify: true,
 
 			hide_isCommand: true,
 			hideDontRecord: true,

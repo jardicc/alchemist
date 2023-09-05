@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.0
+
+- adds option to convert `_path` into tokens by default in generated code
+
 ## 2.6.0
 
 - adds icons to the recorded descriptors in descriptors list
