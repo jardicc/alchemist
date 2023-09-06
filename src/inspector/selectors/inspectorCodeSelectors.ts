@@ -199,7 +199,7 @@ export const getGeneratedCode = createSelector([
 		const strActionCommand = `async function actionCommands() {\n${idt(strBatchPlay)}\n}\n\n`;
 
 		const strCall = qts(`async function runModalFunction() {\n${tab}await executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);
-		const strTokenify = shouldShowTokenify ? qts(`async function tokenify(url){\n${tab}return fs.createSessionToken(await fs.getEntryWithUrl("file:/" + url));\n}\n\n`) : "";
+		const strTokenify = shouldShowTokenify ? qts(`async function tokenify(url){\n${tab}return fs.createSessionToken(await fs.getEntryWithUrl("file:" + url));\n}\n\n`) : "";
 
 		let banner = "";
 		if (iDesc.some(item => item.originalReference.type === "notifier")) {
