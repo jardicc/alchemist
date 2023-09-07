@@ -130,7 +130,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		const {settings: {makeRawDataEasyToInspect: ignoreRawData, maximumItems, fontSize, neverRecordActionNames, accordionExpandedIDs}, onSetRecordRaw, onSetFontSize, onNeverRecordActionNamesChanged} = this.props;
 		const {onSetGlobalOptions, settingsVisible: visible, setToggleSettings, onToggleAccordion} = this.props;
 		const {dialogOptions, modalBehavior, synchronousExecution, supportRawDataType} = this.props.descriptorSettings;
-		const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand,codeImports,codeWrappers} = this.props.globalSettings;
+		const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand,codeImports,codeWrappers,tokenify} = this.props.globalSettings;
 		
 		const items: {val: TFontSizeSettings, label: string}[] = [
 			{label: "Tiny", val: "size-tiny"},
@@ -240,6 +240,12 @@ class Settings extends Component<TSettings, ISettingsState> {
 							onChange={(e) => onSetGlobalOptions({singleQuotes: !!e.target?.checked})}
 							checked={singleQuotes || undefined}
 						>Use single quotes</SP.Checkbox>
+					</div>
+					<div className="row">
+						<SP.Checkbox
+							onChange={(e) => onSetGlobalOptions({tokenify: !!e.target?.checked})}
+							checked={tokenify || undefined}
+						>Convert _path to tokens</SP.Checkbox>
 					</div>
 
 					<div className="row">

@@ -53,6 +53,8 @@ export const getGeneratedCode = createSelector([
 	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
 ], (selected, autoActive, treePath, replayEnabled, descOptions, settings, tab) => {
 
+	let shouldShowTokenify = false;
+
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
 		
@@ -93,27 +95,27 @@ export const getGeneratedCode = createSelector([
 
 		const res: BatchPlayCommandOptionsExtended = {};
 
-		if (hasAnySync) { res.synchronousExecution = true; }
-		else if (hasAnyAsync) { res.synchronousExecution = false; }
+		if (hasAnySync) {res.synchronousExecution = true;}
+		else if (hasAnyAsync) {res.synchronousExecution = false;}
 
-		if (modalIsExecute) { res.modalBehavior = "execute"; }
-		else if (modalIsWait) { res.modalBehavior = "wait"; }
-		else if (!modalIsDefault) { res.modalBehavior = "fail"; }
+		if (modalIsExecute) {res.modalBehavior = "execute";}
+		else if (modalIsWait) {res.modalBehavior = "wait";}
+		else if (!modalIsDefault) {res.modalBehavior = "fail";}
 
 		return res;
 	}
 
 	// adds indentation
-	function idt(str:string):string {
+	function idt(str: string): string {
 		return str.split("\n").map(l => tab + l).join("\n");
 	}
 
-	function udt(str: string): string{
+	function udt(str: string): string {
 		return str.split("\n").map(l => l.replace(tab, "")).join("\n");
 	}
 
 	// replaces quotes
-	function qts(str:string):string {
+	function qts(str: string): string {
 		if (settings.singleQuotes) {
 			str = str.replaceAll(`"`, `'`);
 		}
@@ -124,13 +126,23 @@ export const getGeneratedCode = createSelector([
 	const wrappers = settings.codeWrappers;
 
 	if (selected.length >= 1 || autoActive) {
-		let data:any = null, iDesc: IDescriptor[] = [];
+		let data: any = null, iDesc: IDescriptor[] = [];
 
 		const stringifyOptions = {
 			singleQuotes: settings.singleQuotes,
 			indent: tab,
+			transform: (input: any | object, prop: number | string | symbol, originalResult: string) => {
+				if (settings.tokenify && prop === "_path") {
+					shouldShowTokenify = true;
+					console.log(input, originalResult);
+					const res = qts(`await tokenify("${input._path.replaceAll("\\","/")}")`);
+					return res;
+				}				
+				return originalResult;
+			},
 		};
 
+		const tokenifyInfo = "// Please make sure that file system access permission in manifest.json has correct value.\n\n";
 		const playAbleInfo = "// Alchemist can't generate code from the reply of replay and from dispatched code.";
 		const notifierWarning = "// Events recognized as notifiers are not re-playable in most of the cases. There is high chance that generated code won't work.\n\n";
 
@@ -139,7 +151,7 @@ export const getGeneratedCode = createSelector([
 		} else if (autoActive) {
 			iDesc = [autoActive];
 		}
-		if (iDesc.some(item => ["replies","dispatcher"].includes(item.originalReference.type))) {
+		if (iDesc.some(item => ["replies", "dispatcher"].includes(item.originalReference.type))) {
 			return playAbleInfo;
 		}
 		data = iDesc.map(item => addPerItemOptions(item));
@@ -149,20 +161,20 @@ export const getGeneratedCode = createSelector([
 		if (Array.isArray(data)) {
 			data.forEach(d => {
 				if (settings.hideDontRecord) {
-					delete d.dontRecord;				
+					delete d.dontRecord;
 				}
 				if (settings.hideForceNotify) {
-					delete d.forceNotify;				
+					delete d.forceNotify;
 				}
 				if (settings.hide_isCommand) {
 					delete d._isCommand;
-				}				
+				}
 			});
 		}
 		
 		for (let i = 0; i < data.length; i++) {
 			const item = data[i];
-			RawDataConverter.convertFakeRawInCode(item,descOptions);
+			RawDataConverter.convertFakeRawInCode(item, descOptions);
 		}
 
 		let strPinned = "";
@@ -175,34 +187,46 @@ export const getGeneratedCode = createSelector([
 		const commandOptions = addCommonOptions(iDesc);
 
 		const strOptions = idt(stringifyObject(commandOptions, stringifyOptions));
-		const strDesc:string = stringifyObject(data, stringifyOptions);
+		const strDesc: string = stringifyObject(data, stringifyOptions);
 
 
 		const strExecModalImport = addModules ? qts(`const {executeAsModal} = require("photoshop").core;\n`) : "";
-		const strBatchPlayImport = addModules ? qts(`const {batchPlay} = require("photoshop").action;\n\n`) : "";
+		const strBatchPlayImport = addModules ? qts(`const {batchPlay} = require("photoshop").action;\n`) : "";
+		const strTokenifyImport = addModules && shouldShowTokenify ? qts(`const {localFileSystem: fs} = require("uxp").storage;\n`) : "";
+		const strNewLine = addModules ? "\n" : "";
 
 		const strBatchPlay = `const result = await batchPlay(\n${idt(strDesc)},\n${strOptions}\n);${strPinned}`;
 		const strActionCommand = `async function actionCommands() {\n${idt(strBatchPlay)}\n}\n\n`;
 
 		const strCall = qts(`async function runModalFunction() {\n${tab}await executeAsModal(actionCommands, {"commandName": "Action Commands"});\n}\n\nawait runModalFunction();\n`);
+		const strTokenify = shouldShowTokenify ? qts(`async function tokenify(url){\n${tab}return fs.createSessionToken(await fs.getEntryWithUrl("file:" + url));\n}\n\n`) : "";
 
 		let banner = "";
 		if (iDesc.some(item => item.originalReference.type === "notifier")) {
 			banner = notifierWarning;
 		}
+		if (shouldShowTokenify) {
+			banner += tokenifyInfo;
+		}
 			
 		
-		if (wrappers==="batchPlay") {
+		if (wrappers === "batchPlay") {
 			return (
 				banner +
 				strBatchPlayImport +
+				strTokenifyImport +
+				strNewLine +
+				strTokenify +
 				strBatchPlay
 			);
-		} else if (wrappers==="modal") {
+		} else if (wrappers === "modal") {
 			return (
 				banner +
 				strExecModalImport +
 				strBatchPlayImport +
+				strTokenifyImport +
+				strNewLine +
+				strTokenify +
 				strActionCommand +
 				strCall
 			);
