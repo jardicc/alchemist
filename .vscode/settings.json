@@ -1,8 +1,12 @@
 {
 	"eslint.enable": true,
 	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"eslint.validate": [ "javascript", "html" ],
+	"eslint.validate": [ 
+		"javascript", 
+		"html" 
+	],
 	"cSpell.words": [
+		"tokenify",
 		"jsxdev"
 	]
 }

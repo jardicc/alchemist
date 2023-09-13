@@ -297,6 +297,7 @@ export interface ISettings {
 	neverRecordActionNames: string[]
 	accordionExpandedIDs: string[]
 	
+	tokenify:boolean
 	singleQuotes: boolean
 	indent: "tab" | "space1" | "space2" | "space3" | "space4" | "space5" | "space6" | "space7" | "space8"
 
