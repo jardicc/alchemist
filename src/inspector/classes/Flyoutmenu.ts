@@ -51,7 +51,7 @@ export class FlyoutMenu {
 	}
 
 	private static showAll = () => {
-		manifest.entrypoints.forEach(e => {
+		manifest.entryPoints.forEach(e => {
 			if (e.type === "panel") {
 				Main.plugin.showPanel(e.id);
 			}
