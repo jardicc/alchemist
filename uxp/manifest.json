@@ -3,15 +3,47 @@
 	"name": "Alchemist",
 	"id": "2bcdb900",
 	"version": "2.7.0",
+	"main": "index.html",
 	"host": {
 		"app": "PS",
 		"minVersion": "24.2",
 		"data":{
 			"loadEvent": "use",
 			"addToPluginMenu": true
-		}
+		},
+		"icons": [
+			{
+				"width": 23,
+				"height": 23,
+				"scale": [1, 2],
+				"path": "icons/light.png",
+				"theme": ["darkest", "dark"]
+			}, 
+			{
+				"width": 23,
+				"height": 23,
+				"scale": [1, 2],
+				"path": "icons/dark.png",
+				"theme": ["lightest", "light"]
+			},
+			{
+				"width": 24,
+				"height": 24,
+				"scale": [1, 2],
+				"path": "icons/lightPlugin.png",
+				"theme": ["darkest", "dark"],
+				"species": ["generic"]
+			}, 
+			{
+				"width": 24,
+				"height": 24,
+				"scale": [1, 2],
+				"path": "icons/darkPlugin.png",
+				"theme": ["lightest", "light"],
+				"species": ["generic"]
+			}
+		]
 	},
-	"main": "index.html",
 	"requiredPermissions": {
 		"allowCodeGenerationFromStrings": true,
 		"clipboard": "readAndWrite",
@@ -26,12 +58,11 @@
 			"domains": "all"
 		}
 	},
-	"entryPoints": [{
+	"entryPoints": [
+		{
 			"type": "panel",
 			"id": "inspector",
-			"label": {
-				"default": "Alchemist"
-			},
+			"label": "Alchemist",
 			"minimumSize": {
 				"width": 600,
 				"height": 360
@@ -47,27 +78,12 @@
 			"preferredFloatingSize": {
 				"width": 800,
 				"height": 540
-			},
-			"icons": [{
-				"width": 23,
-				"height": 23,
-				"path": "icons/light.png",
-				"scale": [1, 2],
-				"theme": ["darkest", "dark"]
-			}, {
-				"width": 23,
-				"height": 23,
-				"path": "icons/dark.png",
-				"scale": [1, 2],
-				"theme": ["lightest", "light"]
-			}]
+			}
 		},
 		{
 			"type": "panel",
 			"id": "occultist",
-			"label": {
-				"default": "Occultist"
-			},
+			"label": "Occultist",
 			"minimumSize": {
 				"width": 450,
 				"height": 360
@@ -83,27 +99,12 @@
 			"preferredFloatingSize": {
 				"width": 600,
 				"height": 540
-			},
-			"icons": [{
-				"width": 23,
-				"height": 23,
-				"path": "icons/light.png",
-				"scale": [1, 2],
-				"theme": ["darkest", "dark"]
-			}, {
-				"width": 23,
-				"height": 23,
-				"path": "icons/dark.png",
-				"scale": [1, 2],
-				"theme": ["lightest", "light"]
-			}]
+			}
 		},
 		{
 			"type": "panel",
 			"id": "sorcerer",
-			"label": {
-				"default": "Sorcerer"
-			},
+			"label": "Sorcerer",
 			"minimumSize": {
 				"width": 450,
 				"height": 360
@@ -119,42 +120,12 @@
 			"preferredFloatingSize": {
 				"width": 600,
 				"height": 540
-			},
-			"icons": [{
-				"width": 23,
-				"height": 23,
-				"path": "icons/light.png",
-				"scale": [1, 2],
-				"theme": ["darkest", "dark"]
-			}, {
-				"width": 23,
-				"height": 23,
-				"path": "icons/dark.png",
-				"scale": [1, 2],
-				"theme": ["lightest", "light"]
-			}]
+			}
 		},
 		{
 			"type": "command",
 			"id": "resetStateFn",
-			"label": {
-				"default": "Reset Alchemist state"
-			}
+			"label": "Reset Alchemist state"
 		}
-	],
-	"icons": [{
-		"width": 48,
-		"height": 48,
-		"path": "icons/lightPlugin.png",
-		"scale": [1, 2],
-		"theme": ["darkest", "dark"],
-		"species": ["pluginList"]
-	}, {
-		"width": 48,
-		"height": 48,
-		"path": "icons/darkPlugin.png",
-		"scale": [1, 2],
-		"theme": ["lightest", "light"],
-		"species": ["pluginList"]
-	}]
+	]
 }
