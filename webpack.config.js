@@ -70,7 +70,6 @@ module.exports = (env) => {
 				new WatchExternalFilesPlugin({
 					files: [
 						"/uxp/**",
-						"./webpack.config.js",
 					],
 				}),
 			],
