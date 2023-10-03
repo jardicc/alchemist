@@ -7,7 +7,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const ZipPlugin = require("zip-webpack-plugin");
 const WatchExternalFilesPlugin = require("webpack-watch-external-files-plugin");
 const manifest = require("./uxp/manifest.json");
-const merge = require("lodash.merge");
+const {merge} = require("webpack-merge");
 
 module.exports = (env) => {
 	
@@ -19,6 +19,7 @@ module.exports = (env) => {
 	return merge(
 		{
 			mode: "development",
+			devtool: "eval-source-map",
 			entry: "./src/shared/classes/Main.ts",
 			output: {
 				filename: "index.js",
@@ -41,10 +42,15 @@ module.exports = (env) => {
 			module: {
 				rules: [
 					{
-						test: /\.ts(x?)$/,
-						exclude: /node_modules/,
-						use: "ts-loader",
+						// Match `.js`, `.jsx`, `.ts` or `.tsx` files
+						test: /\.[jt]sx?$/,
+						loader: "esbuild-loader",
+						options: {
+							// JavaScript version to compile to
+							target: "es2020",
+						},
 					},
+					
 					{
 						test: /\.less$/,
 						exclude: /node_modules/,
@@ -62,56 +68,59 @@ module.exports = (env) => {
 				// this will copy manifest files and icon files on change 
 				// without need to explicitly trigger watcher or restart it
 				new WatchExternalFilesPlugin({
-					files: ["/uxp/**"],
+					files: [
+						"/uxp/**",
+						"./webpack.config.js",
+					],
 				}),
 			],
 		},
 		// Add steps for production build
 		isProduction &&
-			{
-				// Make code smaller but keep it somehow readable since it is open-source.
-				// So it will be easier to debug production builds.
-				mode: "production",
-				devtool: "eval-source-map",
-				optimization: {
-					moduleIds: "named",
-					minimize: true,
-					minimizer: [new TerserPlugin(
-						{
-							extractComments: true,
-							parallel: true,
-							terserOptions: {
-								mangle: false,
-								compress: {
-									conditionals: false,
-									drop_console: true,
-									drop_debugger: true,
-									comparisons: false,
-									collapse_vars: false,
-									booleans: false,
-									inline: false,
-									keep_classnames: true,
-								},
+		{
+			// Make code smaller but keep it somehow readable since it is open-source.
+			// So it will be easier to debug production builds.
+			mode: "production",
+			devtool: false,
+			optimization: {
+				moduleIds: "named",
+				minimize: true,
+				minimizer: [new TerserPlugin(
+					{
+						extractComments: true,
+						parallel: true,
+						terserOptions: {
+							mangle: false,
+							compress: {
+								conditionals: false,
+								drop_console: true,
+								drop_debugger: true,
+								comparisons: false,
+								collapse_vars: false,
+								booleans: false,
+								inline: false,
+								keep_classnames: true,
 							},
 						},
-					)],
-				},
-				plugins: [
-					// Pack plugin into CCX automatically
-					new ZipPlugin({
-						// OPTIONAL: defaults to the Webpack output path (above)
-						// can be relative (to Webpack output path) or absolute
-						path: "../installer",
-				
-						// OPTIONAL: defaults to the Webpack output filename (above) or,
-						// if not present, the basename of the path
-						filename: `${manifest.id}_PS`,
-				
-						// OPTIONAL: defaults to "zip"
-						// the file extension to use instead of "zip"
-						extension: "ccx",
-					}),
-				],
+					},
+				)],
 			},
+			plugins: [
+				// Pack plugin into CCX automatically
+				new ZipPlugin({
+					// OPTIONAL: defaults to the Webpack output path (above)
+					// can be relative (to Webpack output path) or absolute
+					path: "../installer",
+				
+					// OPTIONAL: defaults to the Webpack output filename (above) or,
+					// if not present, the basename of the path
+					filename: `${manifest.id}_PS`,
+				
+					// OPTIONAL: defaults to "zip"
+					// the file extension to use instead of "zip"
+					extension: "ccx",
+				}),
+			],
+		},
 	);
 };

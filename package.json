@@ -28,6 +28,7 @@
     "copy-webpack-plugin": "^9.0.1",
     "crc-32": "^1.2.0",
     "css-loader": "^6.7.3",
+    "esbuild-loader": "^4.0.2",
     "eslint": "^7.32.0",
     "eslint-config-defaults": "^9.0.0",
     "eslint-plugin-react": "^7.31.10",
@@ -60,13 +61,11 @@
     "terser-webpack-plugin": "^5.3.6",
     "test-jest": "^1.0.1",
     "ts-jest": "^29.0.4",
-    "ts-loader": "^9.4.1",
     "typescript": "^5.0.2",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.10.0",
+    "webpack-merge": "^5.9.0",
+    "webpack-watch-external-files-plugin": "^1.0.0",
     "zip-webpack-plugin": "^4.0.1"
-  },
-  "devDependencies": {
-    "webpack-watch-external-files-plugin": "^1.0.0"
   }
 }
