@@ -1,8 +1,8 @@
 {
   "version": "0.2.0",
   "scripts": {
-    "build": "webpack --config webpack.config.js --env mode=prod",
-    "watch": "webpack --watch --config webpack.config.js --env mode=dev"
+    "build": "node esbuild.config.js --build",
+    "watch": "node esbuild.config.js --watch"
   },
   "engines": {
     "//": "Comment: use NVM tool for switching NodeJS version if needed. https://github.com/nvm-sh/nvm/blob/master/README.md",
@@ -24,14 +24,15 @@
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
     "buffer": "^6.0.3",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^9.0.1",
+    "chokidar": "^3.5.3",
     "crc-32": "^1.2.0",
-    "css-loader": "^6.7.3",
-    "esbuild-loader": "^4.0.2",
+    "esbuild-plugin-clean": "^1.0.1",
+    "esbuild-plugin-copy": "^2.1.1",
+    "esbuild-style-plugin": "^1.6.2",
     "eslint": "^7.32.0",
     "eslint-config-defaults": "^9.0.0",
     "eslint-plugin-react": "^7.31.10",
+    "events": "^3.3.0",
     "iconv-lite": "^0.6.3",
     "immer": "^9.0.1",
     "immutable": "^3.8.2",
@@ -41,7 +42,7 @@
     "js-beautify": "^1.14.7",
     "jsondiffpatch": "^0.4.1",
     "jszip": "^3.7.1",
-    "less-loader": "^11.1.0",
+    "less": "^4.2.0",
     "lodash": "^4.17.15",
     "minimist": "^1.2.6",
     "react": "^17.0.2",
@@ -56,16 +57,14 @@
     "semver": "^7.3.8",
     "string_decoder": "^1.3.0",
     "stringify-object": "^3.3.0",
-    "style-loader": "^3.3.1",
     "sval": "^0.4.8",
-    "terser-webpack-plugin": "^5.3.6",
     "test-jest": "^1.0.1",
     "ts-jest": "^29.0.4",
     "typescript": "^5.0.2",
-    "webpack": "^5.76.0",
-    "webpack-cli": "^4.10.0",
     "webpack-merge": "^5.9.0",
-    "webpack-watch-external-files-plugin": "^1.0.0",
-    "zip-webpack-plugin": "^4.0.1"
+    "zip-a-folder": "^3.1.3"
+  },
+  "devDependencies": {
+    "esbuild": "0.19.4"
   }
 }
