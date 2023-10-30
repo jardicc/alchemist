@@ -37,6 +37,8 @@ import { filterNonExistent } from "../../classes/filterNonExistent";
 import {FiltersContainer} from "../Filters/Filters";
 import {getGeneratedCode} from "../../selectors/inspectorCodeSelectors";
 
+import {Checkbox} from "@swc-react/checkbox"
+
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
 		super(props);
@@ -280,7 +282,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					<p>Also Alchemist might be unresponsive for several seconds once you click continue. <a href="https://github.com/jardicc/alchemist">Get development version here</a></p>					
 				</sp-body>
 				<footer>
-					<label className="dontShowLabel"><SP.Checkbox onChange={(e: any) => onSetDontShowMarketplaceInfo(e.currentTarget.checked)} />{"Don't show again"}</label>
+					<label className="dontShowLabel"><Checkbox onChange={(e: any) => onSetDontShowMarketplaceInfo(e.currentTarget.checked)} />{"Don't show again"}</label>
 					{/*<sp-button quiet={true} variant="secondary">Cancel</sp-button>*/}
 					<sp-button variant="cta" onClick={() => { this.marketplaceDialogRef.current.close("true"); }}>Continue</sp-button>
 				</footer>
@@ -304,7 +306,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					<FiltersContainer />
 					<div className="search">
 						<SP.Textfield placeholder="Search..." onInput={(e: any) => this.onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
-						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}> <span className="groupLabel">Group</span></SP.Checkbox>
+						<Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}></Checkbox>
 					</div>
 					<div className="descriptorsWrapper" ref={this.wrapperDescRef} onClick={() => this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}

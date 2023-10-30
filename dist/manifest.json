@@ -5,13 +5,15 @@
 	"version": "2.7.0",
 	"host": {
 		"app": "PS",
-		"minVersion": "24.2",
+		"minVersion": "24.5",
 		"data":{
-			"apiVersion": 2,
 			"loadEvent": "use"
 		}
 	},
 	"main": "index.html",
+	"featureFlags": {
+		"enableSWCSupport": true
+	},
 	"requiredPermissions": {
 		"allowCodeGenerationFromStrings": true,
 		"clipboard": "readAndWrite",
@@ -26,7 +28,8 @@
 			"domains": "all"
 		}
 	},
-	"entrypoints": [{
+	"entryPoints": [
+		{
 			"type": "panel",
 			"id": "inspector",
 			"label": {
@@ -143,15 +146,15 @@
 		}
 	],
 	"icons": [{
-		"width": 48,
-		"height": 48,
+		"width": 24,
+		"height": 24,
 		"path": "icons/lightPlugin.png",
 		"scale": [1, 2],
 		"theme": ["darkest", "dark"],
 		"species": ["pluginList"]
 	}, {
-		"width": 48,
-		"height": 48,
+		"width": 24,
+		"height": 24,
 		"path": "icons/darkPlugin.png",
 		"scale": [1, 2],
 		"theme": ["lightest", "light"],

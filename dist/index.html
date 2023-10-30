@@ -3,6 +3,7 @@
 
 <head>
 	<script src="index.js"></script>
+	<link rel="stylesheet" href="index.css" />
 	<style>
 		.loadingWrapper {
 			display: flex;
@@ -34,35 +35,39 @@
 </script>
 
 <body>
-	<uxp-panel panelid="inspector">
-		<div class="Inspector">
-			<div class="loadingWrapper">
-				<div class="loadingMessage">
-					Loading...
+	<div id="ui">
+		<sp-theme theme="spectrum" color="dark" scale="medium" dir="ltr">
+			<uxp-panel panelid="inspector">
+				<div class="Inspector">
+					<div class="loadingWrapper">
+						<div class="loadingMessage">
+							Loading...
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-	</uxp-panel>
-
-	<uxp-panel panelid="occultist">
-		<div class="Occultist">
-			<div class="loadingWrapper">
-				<div class="loadingMessage">
-					Loading...
+			</uxp-panel>
+		
+			<uxp-panel panelid="occultist">
+				<div class="Occultist">
+					<div class="loadingWrapper">
+						<div class="loadingMessage">
+							Loading...
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-	</uxp-panel>
-
-	<uxp-panel panelid="sorcerer">
-		<div class="Sorcerer">
-			<div class="loadingWrapper">
-				<div class="loadingMessage">
-					Loading...
+			</uxp-panel>
+		
+			<uxp-panel panelid="sorcerer">
+				<div class="Sorcerer">
+					<div class="loadingWrapper">
+						<div class="loadingMessage">
+							Loading...
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-	</uxp-panel>
+			</uxp-panel>
+		</sp-theme>
+	</div>
 </body>
 
 </html>

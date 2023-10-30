@@ -5,12 +5,15 @@
 	"version": "2.7.0",
 	"host": {
 		"app": "PS",
-		"minVersion": "24.2",
+		"minVersion": "24.5",
 		"data":{
 			"loadEvent": "use"
 		}
 	},
 	"main": "index.html",
+	"featureFlags": {
+		"enableSWCSupport": true
+	},
 	"requiredPermissions": {
 		"allowCodeGenerationFromStrings": true,
 		"clipboard": "readAndWrite",
@@ -25,7 +28,8 @@
 			"domains": "all"
 		}
 	},
-	"entryPoints": [{
+	"entryPoints": [
+		{
 			"type": "panel",
 			"id": "inspector",
 			"label": {

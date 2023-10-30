@@ -1,7 +1,7 @@
 import { connect, MapDispatchToPropsFunction } from "react-redux";
 import { setModeTabAction, setColumnSizeAction, toggleSettingsAction } from "../../actions/inspectorActions";
 import { IRootState } from "../../../shared/store";
-import { getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible } from "../../selectors/inspectorSelectors";
+import {getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible} from "../../selectors/inspectorSelectors";
 
 import React from "react";
 import { TabList } from "../Tabs/TabList";
@@ -17,8 +17,10 @@ import { GeneratedCodeContainer } from "../GeneratedCode/GeneratedCodeContainer"
 import { SettingsContainer } from "../Settings/SettingsContainer";
 import { IconCog, IconX} from "../../../shared/components/icons";
 import { LeftColumnContainer } from "../LeftColumn/LeftColumn";
-import {Pane} from "react-split-pane";
-import SplitPane from "react-split-pane";
+import {Pane as _Pane} from "react-split-pane";
+import _SplitPane from "react-split-pane";
+const SplitPane = _SplitPane as any;
+const Pane = _Pane as any;
 
 
 class Inspector extends React.Component<TInspector, IInspectorState> { 
@@ -73,7 +75,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 						<Pane className="leftPane">
 							<LeftColumnContainer />
 						</Pane>
-						<SplitPane split="horizontal" primary="second" maxSize={25} minSize={25} defaultSize={25} allowResize={false} resizerStyle={{display:"none"}}>
+						<SplitPane split="horizontal" primary="second" maxSize={25} minSize={25} defaultSize={25} allowResize={false} resizerStyle={{display: "none"}}>
 							
 							<Pane className="rightPane">
 								<SplitPane className="split" split="vertical" defaultSize={visible ? rightColumnWidthPx : 0} onDragFinished={(px) => setColumnSize(px, "right")} maxSize={visible ? undefined : 0} minSize={visible ? 200 : 0} primary={"second"}>

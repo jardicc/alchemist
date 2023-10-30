@@ -1,12 +1,10 @@
-import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
 import "./../index.less";
 import "./../ThemeVars.less";
 import { Settings } from "../../inspector/classes/Settings";
 import {core} from "photoshop";
-import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
-import { renderSorcererUI } from "../../sorcerer/components/sorcererIndex";
 import {FlyoutMenu} from "../../inspector/classes/Flyoutmenu";
 import manifest from "./../../../uxp/manifest.json";
+import {renderUI} from "../components/renderUI";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const uxp = require("uxp");
@@ -44,15 +42,7 @@ export class Main{
 	}
 
 	public static start(): void {
-		const {suppressResizeGripper} = core as any;
-
-		suppressResizeGripper({"type": "panel", "target": "inspector", "value": true});
-		suppressResizeGripper({"type": "panel", "target": "occultist", "value": true});
-		suppressResizeGripper({"type": "panel", "target": "sorcerer", "value": true});
-		
-		renderInspectorUI();
-		renderATNDecoderUI();
-		renderSorcererUI();
+		renderUI();
 		FlyoutMenu.setup();
 	}
 }

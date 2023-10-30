@@ -19,6 +19,11 @@ declare global {
 			"sp-tags": any;
 			"sp-tag": any;
 			"sp-tooltip": any;
+			"uxp-panel": {
+				panelid: string
+				children?: React.ReactNode
+				class?: string
+			};
 		}
 	}
 }
