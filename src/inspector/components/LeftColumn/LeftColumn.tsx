@@ -306,7 +306,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					<FiltersContainer />
 					<div className="search">
 						<SP.Textfield placeholder="Search..." onInput={(e: any) => this.onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
-						<Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}></Checkbox>
+						<Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}>Group</Checkbox>
 					</div>
 					<div className="descriptorsWrapper" ref={this.wrapperDescRef} onClick={() => this.props.onSelect("none")}>
 						{this.renderDescriptorsList()}

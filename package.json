@@ -137,5 +137,6 @@
     "@spectrum-web-components/sidenav": "0.13.7",
     "@spectrum-web-components/toast": "0.11.9",
     "@spectrum-web-components/tags": "0.10.1"
-  }
+  },
+  "packageManager": "yarn@4.0.1"
 }
