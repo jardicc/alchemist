@@ -1,5 +1,5 @@
 {
-  "version": "4.0.1",
+  "version": "4.0.0",
   "scripts": {
     "build": "node esbuild.config.js --build",
     "watch": "node esbuild.config.js --watch"
@@ -8,7 +8,7 @@
   "engines": {
     "node": ">= 18.6.0",
     "npm": ">= 999.999.999",
-    "yarn": ">=1.22"
+    "yarn": ">=4.0.0"
   },
   "dependencies": {
     "@spectrum-web-components/button": "^0.39.3",
