@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "4.0.1",
   "scripts": {
     "build": "node esbuild.config.js --build",
     "watch": "node esbuild.config.js --watch"
@@ -15,13 +15,12 @@
     "@spectrum-web-components/theme": "^0.39.3",
     "@swc-react/button": "^0.39.3",
     "@swc-react/checkbox": "0.14.6-react.2993",
-    "@swc-uxp-wrappers/button": "^1.0.0",
-
     "@swc-react/menu": "0.16.9-react.3029",
     "@swc-react/theme": "0.14.8-react.2993",
-    "@swc-uxp-wrappers/utils": "1.0.0",
+    "@swc-uxp-wrappers/button": "^1.0.0",
+    "@swc-uxp-wrappers/checkbox": "^1.0.0",
     "@swc-uxp-wrappers/menu": "1.0.0",
-    
+    "@swc-uxp-wrappers/utils": "1.0.0",
     "@types/jest": "^29.5.6",
     "@types/js-beautify": "^1.13.3",
     "@types/lodash": "^4.14.155",
@@ -138,5 +137,5 @@
     "@spectrum-web-components/sidenav": "0.13.7",
     "@spectrum-web-components/toast": "0.11.9",
     "@spectrum-web-components/tags": "0.10.1"
- }
+  }
 }
