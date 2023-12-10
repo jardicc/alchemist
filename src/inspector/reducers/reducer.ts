@@ -1,23 +1,23 @@
 
 
 import produce from "immer";
-import { getInitialState } from "../inspInitialState";
-import { TActions } from "../actions/inspectorActions";
-import { IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType, TSubTypes } from "../model/types";
-import { addMoreKeys } from "../../shared/helpers";
-import { Settings } from "../classes/Settings";
-import { getDescriptorsListView } from "../selectors/inspectorSelectors";
-import { getTreeDomInstance } from "../selectors/inspectorDOMSelectors";
-import { TAtnActions } from "../../atnDecoder/atnActions";
-import { atnReducer } from "../../atnDecoder/atnReducer";
-import { TSorActions } from "../../sorcerer/sorActions";
-import { sorReducer } from "../../sorcerer/sorReducer";
+import {getInitialState} from "../inspInitialState";
+import {TActions} from "../actions/inspectorActions";
+import {IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType, TSubTypes} from "../model/types";
+import {addMoreKeys} from "../../shared/helpers";
+import {Settings} from "../classes/Settings";
+import {getDescriptorsListView} from "../selectors/inspectorSelectors";
+import {getTreeDomInstance} from "../selectors/inspectorDOMSelectors";
+import {TAtnActions} from "../../atnDecoder/atnActions";
+import {atnReducer} from "../../atnDecoder/atnReducer";
+import {TSorActions} from "../../sorcerer/sorActions";
+import {sorReducer} from "../../sorcerer/sorReducer";
 import {ListenerClass} from "../classes/Listener";
 import {TFilterState} from "../components/FilterButton/FilterButton";
 
-export type TAllActions = TActions | TAtnActions|TSorActions;
+export type TAllActions = TActions | TAtnActions | TSorActions;
 
-export const inspectorReducer = (state:IInspectorState = Settings.importState() || getInitialState(), action:TAllActions ): IInspectorState => {
+export const inspectorReducer = (state: IInspectorState = Settings.importState() || getInitialState(), action: TAllActions): IInspectorState => {
 	console.log(action/*JSON.stringify(action, null, "\t")*/);
 	switch (action.type) {
 		// ALCHEMIST
@@ -31,7 +31,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 			state = produce(state, draft => {
 
 				const type = state.selectedReferenceType;
-				
+
 				draft.targetReference[type] = {
 					...state.targetReference[type] as any, // TS is not that smart to find a match :-/
 					...action.payload,
@@ -42,11 +42,11 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "ADD_DESCRIPTOR": {
 			state = produce(state, draft => {
 				if (state.descriptors.length >= state.settings.maximumItems) {
-					for (let i = 0; i<draft.descriptors.length; i++){
+					for (let i = 0; i < draft.descriptors.length; i++) {
 						if (!draft.descriptors[i].locked) {
 							// in case that we downsized limit and more than 1 item has to be removed
 							if (draft.descriptors.length < state.settings.maximumItems) {
-								break;								
+								break;
 							}
 							draft.descriptors.splice(i, 1);
 						}
@@ -55,14 +55,14 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				if (action.payload.replace) {
 					draft.descriptors = [action.payload.arg];
 				} else {
-					draft.descriptors.push(action.payload.arg);					
+					draft.descriptors.push(action.payload.arg);
 				}
 			});
 			break;
 		}
 		case "SELECT_DESCRIPTOR": {
 			state = produce(state, draft => {
-				const { operation, uuid } = action.payload;
+				const {operation, uuid} = action.payload;
 				if (operation === "none") {
 					draft.descriptors.forEach(d => d.selected = false);
 				} else if (operation === "replace") {
@@ -70,23 +70,23 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				}
 
 				const found = draft.descriptors.find(d => d.id === uuid);
-				if (found && operation !== "none") {					
+				if (found && operation !== "none") {
 					if (operation === "add" || operation === "replace") {
 						found.selected = true;
 					} else if (operation === "subtract") {
 						found.selected = false;
 					} else if (operation === "addContinuous" || operation === "subtractContinuous") {
-						const view = getDescriptorsListView({inspector:state});
+						const view = getDescriptorsListView({inspector: state});
 						const lastSelectedItemIndex = view.map(item => item.id).indexOf(state.settings.lastSelectedItem ?? "n/a");
 						const thisItemIndex = view.map(item => item.id).indexOf(uuid as string);
 						if (lastSelectedItemIndex !== -1 && thisItemIndex !== -1) {
-							const ids:string[] = [];
-							for (let i = Math.min(lastSelectedItemIndex, thisItemIndex), end = Math.max(lastSelectedItemIndex, thisItemIndex); i <= end; i++){
+							const ids: string[] = [];
+							for (let i = Math.min(lastSelectedItemIndex, thisItemIndex), end = Math.max(lastSelectedItemIndex, thisItemIndex); i <= end; i++) {
 								ids.push(view[i].id);
 							}
 							ids.forEach(id => {
 								const f = draft.descriptors.find(item => item.id === id);
-								if (f) { f.selected = operation === "addContinuous";}
+								if (f) {f.selected = operation === "addContinuous";}
 							});
 						}
 					}
@@ -111,7 +111,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				const {value, toggle} = action.payload;
 
 				const activeRef = draft.targetReference[state.selectedReferenceType];
-		
+
 				if ("properties" in activeRef && typeof value === "string") {
 					if (toggle) { // support multiGet
 						const foundIndex = activeRef.properties.indexOf(value);
@@ -129,13 +129,13 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		}
 		case "CLEAR_VIEW": {
 			state = produce(state, draft => {
-				const view = getDescriptorsListView({ inspector: state});
+				const view = getDescriptorsListView({inspector: state});
 				const ids = view.filter(item => !item.locked).map(item => item.id);
 				draft.descriptors = state.descriptors.filter(item => {
 					if (action.payload.keep) {
 						return ids.includes(item.id);
 					} else {
-						return !ids.includes(item.id);						
+						return !ids.includes(item.id);
 					}
 				},
 				);
@@ -162,7 +162,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				if (state.settings.groupDescriptors === "strict") {
 					const selectedByID = state.descriptors.filter(d => (action.payload.uuids.includes(d.id)));
 					const crcs = Array.from(new Set(selectedByID.map(d => d.crc)));
-					
+
 					draft.descriptors.filter(d => crcs.includes(d.crc)).forEach(d => d.locked = action.payload.lock);
 				} else if (state.settings.groupDescriptors === "none") {
 					draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.locked = action.payload.lock);
@@ -176,7 +176,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				if (state.settings.groupDescriptors === "strict") {
 					const selectedByID = state.descriptors.filter(d => (action.payload.uuids.includes(d.id)));
 					const crcs = Array.from(new Set(selectedByID.map(d => d.crc)));
-					
+
 					draft.descriptors.filter(d => crcs.includes(d.crc)).forEach(d => d.pinned = action.payload.pin);
 				} else if (state.settings.groupDescriptors === "none") {
 					draft.descriptors.filter(d => action.payload.uuids.includes(d.id)).forEach(d => d.pinned = action.payload.pin);
@@ -202,7 +202,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_INSPECTOR_PATH_DIFF": {
 			state = produce(state, draft => {
 				if (action.payload.mode === "add") {
-					draft.inspector.difference.treePath = [...state.inspector.difference.treePath, ...action.payload.path];					
+					draft.inspector.difference.treePath = [...state.inspector.difference.treePath, ...action.payload.path];
 				} else if (action.payload.mode === "replace") {
 					draft.inspector.difference.treePath = action.payload.path;
 				}
@@ -212,7 +212,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_INSPECTOR_PATH_CONTENT": {
 			state = produce(state, draft => {
 				if (action.payload.mode === "add") {
-					draft.inspector.content.treePath = [...state.inspector.content.treePath, ...action.payload.path];					
+					draft.inspector.content.treePath = [...state.inspector.content.treePath, ...action.payload.path];
 				} else if (action.payload.mode === "replace") {
 					draft.inspector.content.treePath = action.payload.path;
 				}
@@ -226,7 +226,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_INSPECTOR_PATH_DOM": {
 			state = produce(state, draft => {
 				if (action.payload.mode === "add") {
-					draft.inspector.dom.treePath = [...state.inspector.dom.treePath, ...action.payload.path];					
+					draft.inspector.dom.treePath = [...state.inspector.dom.treePath, ...action.payload.path];
 				} else if (action.payload.mode === "replace") {
 					draft.inspector.dom.treePath = action.payload.path;
 				}
@@ -243,7 +243,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 			state = produce(state, draft => {
 				if (action.payload.kind === "append") {
 					action.payload.items.forEach(desc => desc.id = crypto.randomUUID());
-					draft.descriptors = [...state.descriptors,...action.payload.items];
+					draft.descriptors = [...state.descriptors, ...action.payload.items];
 				} else if (action.payload.kind === "replace") {
 					draft.descriptors = action.payload.items;
 				}
@@ -272,7 +272,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		*/
 		case "SET_FILTER_STATE": {
 			state = produce(state, draft => {
-				const { payload: { state: filterState, subType, type } } = action;
+				const {payload: {state: filterState, subType, type}} = action;
 				const found = draft.targetReference[type];
 
 				// :-(
@@ -308,12 +308,12 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				];
 
 				// map object to array based on sorted arrays above
-				const map = filterClasses.map((c,index) => ({
+				const map = filterClasses.map((c, index) => ({
 					filterClass: c,
-					className:classes[index],
+					className: classes[index],
 					assign: (str: TFilterState) => {
 						if (c in found) {
-							(found as any)[c] = str;							
+							(found as any)[c] = str;
 						}
 					},
 				}));
@@ -321,7 +321,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				function disableAllNonMain() {
 					map.forEach(item => item.assign("off"));
 				}
-				
+
 				if (subType === "main") {
 					if (filterState === "on") {
 						draft.filterBySelectedReferenceType = "off";
@@ -348,7 +348,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 						});
 					}
 				}
-				
+
 			});
 			break;
 		}
@@ -390,11 +390,11 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		}
 		case "SET_EXPANDED_PATH": {
 			state = produce(state, draft => {
-				const { expand, path, recursive, type } = action.payload;
-				let { data } = action.payload;
+				const {expand, path, recursive, type} = action.payload;
+				let {data} = action.payload;
 
 				// gets port of the tree data where you clicked
-				function getDataPart(d: any, tPath:TPath|undefined): any {
+				function getDataPart(d: any, tPath: TPath | undefined): any {
 					if (!tPath) {
 						return d;
 					}
@@ -406,9 +406,9 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				}
 
 				// prevents callstack exceeded error
-				function isCyclical(tPath: TPath, toTest: any): boolean{
+				function isCyclical(tPath: TPath, toTest: any): boolean {
 					let sub = data;
-					tPath = [...path,...tPath];
+					tPath = [...path, ...tPath];
 					tPath.splice(tPath.length - 1, 1);
 					for (const part of tPath) {
 						sub = (sub)?.[part];
@@ -420,14 +420,14 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 				}
 
 				// generates paths for all expandable item in passed object
-				function generatePaths(d: any): TPath[]{
+				function generatePaths(d: any): TPath[] {
 					const paths: TPath[] = [];
 					traverse(d);
 					return paths;
-					
+
 					// recursion
-					function traverse(d: any, tPath: TPath = []): void{
-						if (d && typeof d === "object" && !isCyclical(tPath,d)) {
+					function traverse(d: any, tPath: TPath = []): void {
+						if (d && typeof d === "object" && !isCyclical(tPath, d)) {
 							paths.push([...path, ...tPath]);
 							const keys = Object.keys(d);
 							if (type === "dom") {
@@ -435,12 +435,12 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 								keys.sort();
 							}
 							for (const key of keys) {
-								traverse(d[key],[...tPath,key]);
+								traverse(d[key], [...tPath, key]);
 							}
 						}
-					}					
+					}
 				}
-				
+
 				let draftPart: IContent | IDifference | IDOM | null = null;
 
 				switch (type) {
@@ -450,12 +450,12 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 					default: console.warn("You shouldn't see this line logged in console");
 				}
 
-				if (type === "dom") {		
-					data = getTreeDomInstance({ inspector: state});
+				if (type === "dom") {
+					data = getTreeDomInstance({inspector: state});
 				}
 
-				if (draftPart) { 
-					let index:number|null = null;
+				if (draftPart) {
+					let index: number | null = null;
 					const found = draftPart.expandedTree.find((item, i) => {
 						index = i;
 						return item.join("-") === path.join("-");
@@ -465,9 +465,9 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 							const parts = generatePaths(getDataPart(data, path));//.map(p=>([...path,...p]));
 							draftPart.expandedTree.push(...parts);
 						} else {
-							draftPart.expandedTree.push(path);									
+							draftPart.expandedTree.push(path);
 						}
-						
+
 					} else if ((found || recursive) && index !== null) {
 						if (recursive) {
 							const parts = generatePaths(getDataPart(data, path));//.map(p => ([...path,...p,]));
@@ -483,7 +483,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 								}
 							}
 						} else {
-							draftPart.expandedTree.splice(index, 1);								
+							draftPart.expandedTree.splice(index, 1);
 						}
 					}
 				}
@@ -504,12 +504,12 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 					draft.settings.listenerFilter = {
 						...state.settings.listenerFilter,
 						...action.payload.data,
-					};					
+					};
 				} else if (state.selectedReferenceType === "notifier") {
 					draft.settings.notifierFilter = {
 						...state.settings.notifierFilter,
 						...action.payload.data,
-					};	
+					};
 				}
 
 			});
@@ -547,7 +547,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 						...action.payload.options,
 					};
 				} else {
-					for (let i = 0, len = action.payload.uuids.length; i < len; i++){
+					for (let i = 0, len = action.payload.uuids.length; i < len; i++) {
 						let foundIndex = 0;
 						const found = draft.descriptors.find((desc, j) => {
 							foundIndex = j;
@@ -562,7 +562,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 					}
 				}
 			});
-			break;	
+			break;
 		}
 		case "TOGGLE_SETTINGS": {
 			state = produce(state, draft => {
@@ -572,7 +572,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		}
 		case "SET_INSPECTOR_VIEW_ACTION": {
 			state = produce(state, draft => {
-				const {inspectorType,viewType } = action.payload;
+				const {inspectorType, viewType} = action.payload;
 
 				switch (inspectorType) {
 					case "code":
@@ -591,9 +591,9 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "SET_COLUMN_SIZE_ACTION": {
 			state = produce(state, draft => {
 				if (action.payload.location === "left") {
-					draft.settings.leftColumnWidthPx = action.payload.value;					
+					draft.settings.leftColumnWidthPx = action.payload.value;
 				} else {
-					draft.settings.rightColumnWidthPx = action.payload.value;					
+					draft.settings.rightColumnWidthPx = action.payload.value;
 				}
 			});
 			break;
@@ -654,9 +654,9 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 		case "TOGGLE_DESCRIPTORS_GROUPING": {
 			state = produce(state, draft => {
 				if (action.payload === null) {
-					draft.settings.groupDescriptors = state.settings.groupDescriptors === "strict" ? "none" : "strict";					
+					draft.settings.groupDescriptors = state.settings.groupDescriptors === "strict" ? "none" : "strict";
 				} else {
-					draft.settings.groupDescriptors = action.payload;					
+					draft.settings.groupDescriptors = action.payload;
 				}
 			});
 			break;
@@ -677,7 +677,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 						draft.settings.accordionExpandedIDs.push(action.payload.id);
 					}
 				} else {
-					if (state.settings.accordionExpandedIDs.includes(action.payload.id)) { 
+					if (state.settings.accordionExpandedIDs.includes(action.payload.id)) {
 						draft.settings.accordionExpandedIDs = state.settings.accordionExpandedIDs.filter(id => id !== action.payload.id);
 					}
 				}
@@ -694,7 +694,7 @@ export const inspectorReducer = (state:IInspectorState = Settings.importState() 
 			state = produce(state, draft => {
 				const set = new Set(state.explicitlyVisibleTopCategories);
 				if (action.payload.operation === "add") {
-					set.add(action.payload.value);					
+					set.add(action.payload.value);
 				} else {
 					set.delete(action.payload.value);
 				}

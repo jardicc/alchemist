@@ -114,7 +114,7 @@ const config = merge(
 			});
 			// start watching
 			await ctx.watch();
-			
+
 		}
 
 		console.log("ESBuild finished: " + (Date.now() - start) + "ms");

@@ -1,6 +1,6 @@
-import _, { cloneDeep } from "lodash";
-import { createSelector } from "reselect";
-import { getSelectedDescriptors, getAutoActiveDescriptor, getActiveDescriptors, all } from "./inspectorSelectors";
+import _, {cloneDeep} from "lodash";
+import {createSelector} from "reselect";
+import {getSelectedDescriptors, getAutoActiveDescriptor, getActiveDescriptors, all} from "./inspectorSelectors";
 
 export const getInspectorContentTab = createSelector([all], t => {
 	return t.inspector.content;
@@ -18,7 +18,7 @@ export const getSearchContentKeyword = createSelector([getInspectorContentTab], 
 	return t.search;
 });
 
-export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, getContentPath, getAutoActiveDescriptor], (t, d,autoActive) => {
+export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, getContentPath, getAutoActiveDescriptor], (t, d, autoActive) => {
 	const path = cloneDeep(d);
 	// selected or auto-selected
 	let data: any = cloneDeep(t?.[0]?.recordedData ?? autoActive?.recordedData);
@@ -30,23 +30,23 @@ export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, 
 	// make primitive types pin-able
 	if (typeof data !== "object" && data !== undefined && data !== null) {
 		const lastPart = path[path.length - 1];
-		data = { ["$$$noPin_"+lastPart]:data };
+		data = {["$$$noPin_" + lastPart]: data};
 	}
 	return data;
 });
 
-export const getActiveDescriptorContent = createSelector([getActiveDescriptors, getAutoActiveDescriptor,getSearchContentKeyword], (selected, autoActive,keyword) => {
+export const getActiveDescriptorContent = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getSearchContentKeyword], (selected, autoActive, keyword) => {
 	if (selected.length >= 1) {
-		const toSend = selected.map(item => filter(item.recordedData,keyword));
+		const toSend = selected.map(item => filter(item.recordedData, keyword));
 		return JSON.stringify(toSend.length === 1 ? toSend[0] : toSend, null, 3);
 	} else if (autoActive) {
 		return JSON.stringify(autoActive.recordedData, null, 3);
 	} else {
 		return "Add some descriptor";
-	}	
+	}
 });
 
-export const getContentExpandedNodes = createSelector([getInspectorContentTab], (t) => {	
+export const getContentExpandedNodes = createSelector([getInspectorContentTab], (t) => {
 	return t.expandedTree;
 });
 
@@ -55,7 +55,7 @@ export const getContentExpandLevel = createSelector([getInspectorContentTab], (t
 });
 
 // TODO do not add array item by property name e.g. do not search by index ["4"]
-export const getTreeContent = createSelector([getTreeContentUnfiltered, getSearchContentKeyword], (tree,keyword) => {
+export const getTreeContent = createSelector([getTreeContentUnfiltered, getSearchContentKeyword], (tree, keyword) => {
 	return filter(tree, keyword);
 });
 
@@ -72,7 +72,7 @@ function filter(tree: any, keyword: string) {
 		return tree;
 	}
 	recursion(tree);
-	function recursion(obj:any) {
+	function recursion(obj: any) {
 		const entries = Object.entries(obj);
 		entries.forEach(entry => {
 
@@ -117,7 +117,7 @@ function filter(tree: any, keyword: string) {
 				default: {
 					throw new Error(`Unknown type: ${typeof entry[1]}`);
 				}
-					
+
 			}
 		});
 	}
@@ -138,7 +138,7 @@ function filter(tree: any, keyword: string) {
 		}
 		return item;
 	});
-	const result = _.merge({},...individualObjects);
+	const result = _.merge({}, ...individualObjects);
 
 	//console.log(foundPaths);
 	return result;

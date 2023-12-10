@@ -1,10 +1,10 @@
-.TreePath{
+.TreePath {
 	padding: 0.5em 0.5em 0.5em 0;
 	flex-grow: 0;
 	flex-shrink: 0;
 	display: flex;
 
-	.levelSlider{
+	.levelSlider {
 		flex-shrink: 0;
 		display: flex;
 		overflow: hidden;
@@ -13,28 +13,28 @@
 		justify-content: center;
 		margin-left: auto;
 
-		.levelLabel{
+		.levelLabel {
 			margin-right: 1em;
 		}
 	}
 
-	.pathWrap{
+	.pathWrap {
 		display: flex;
 		flex-wrap: wrap;
 
-		.pathItem{
-			.link{
+		.pathItem {
+			.link {
 				margin: 0 0.5em;
 				text-decoration: underline;
 				cursor: pointer;
-	
-				&:hover{
-					color:var(--hover);
+
+				&:hover {
+					color: var(--hover);
 				}
 			}
 		}
 
-		.pathItem:not(:first-child)::before{
+		.pathItem:not(:first-child)::before {
 			content: ">";
 			margin-left: 0.5em;
 		}

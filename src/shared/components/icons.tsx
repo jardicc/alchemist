@@ -1,6 +1,6 @@
 import React from "react";
 
-export const IconPlayIcon = ():JSX.Element => (
+export const IconPlayIcon = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 18 18" width="18">
 		<path d="M4.73,2H3.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5H4.73a1,1,0,0,0,.5035-.136l11.032-6.433a.5.5,0,0,0,0-.862L5.2335,2.136A1,1,0,0,0,4.73,2Z" />
 	</svg>
@@ -77,37 +77,37 @@ export const IconArrowCircleTop = (): JSX.Element => (
 	</svg>
 );
 
-export const IconArrowLeft=():JSX.Element=>(
+export const IconArrowLeft = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M3 0l-3 2.53 3 2.47v-2h5v-1h-5v-2z" transform="translate(0 1)" />
 	</svg>
 );
-export const IconArrowRight=():JSX.Element=>(
+export const IconArrowRight = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
 	</svg>
 );
-export const IconArrowThickBottom=():JSX.Element=>(
+export const IconArrowThickBottom = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M2 0v5h-2l3.03 3 2.97-3h-2v-5h-2z" transform="translate(1)" />
 	</svg>
 );
-export const IconArrowThickLeft=():JSX.Element=>(
+export const IconArrowThickLeft = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M3 0l-3 3.03 3 2.97v-2h5v-2h-5v-2z" transform="translate(0 1)" />
 	</svg>
 );
-export const IconArrowThickRight=():JSX.Element=>(
+export const IconArrowThickRight = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M5 0v2h-5v2h5v2l3-3.03-3-2.97z" transform="translate(0 1)" />
 	</svg>
 );
-export const IconArrowThickTop=():JSX.Element=>(
+export const IconArrowThickTop = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M2.97 0l-2.97 3h2v5h2v-5h2l-3.03-3z" transform="translate(1)" />
 	</svg>
 );
-export const IconArrowTop=():JSX.Element=>(
+export const IconArrowTop = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M2.47 0l-2.47 3h2v5h1v-5h2l-2.53-3z" transform="translate(1)" />
 	</svg>
@@ -193,22 +193,22 @@ export const IconBrowser = (): JSX.Element => (
 //export const IconCameraSlr=():JSX.Element=>(
 //
 //)
-export const IconCaretBottom=():JSX.Element=>(
+export const IconCaretBottom = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M0 0l4 4 4-4h-8z" transform="translate(0 2)" />
 	</svg>
 );
-export const IconCaretLeft=():JSX.Element=>(
+export const IconCaretLeft = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M4 0l-4 4 4 4v-8z" transform="translate(2)" />
 	</svg>
 );
-export const IconCaretRight=():JSX.Element=>(
+export const IconCaretRight = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M0 0v8l4-4-4-4z" transform="translate(2)" />
 	</svg>
 );
-export const IconCaretTop=():JSX.Element=>(
+export const IconCaretTop = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 		<path d="M4 0l-4 4h8l-4-4z" transform="translate(0 2)" />
 	</svg>
@@ -251,7 +251,7 @@ export const IconClipboard = (): JSX.Element => (
 //)
 export const IconCog = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
-		<path d="M3.5 0l-.5 1.19c-.1.03-.19.08-.28.13l-1.19-.5-.72.72.5 1.19c-.05.1-.09.18-.13.28l-1.19.5v1l1.19.5c.04.1.08.18.13.28l-.5 1.19.72.72 1.19-.5c.09.04.18.09.28.13l.5 1.19h1l.5-1.19c.09-.04.19-.08.28-.13l1.19.5.72-.72-.5-1.19c.04-.09.09-.19.13-.28l1.19-.5v-1l-1.19-.5c-.03-.09-.08-.19-.13-.28l.5-1.19-.72-.72-1.19.5c-.09-.04-.19-.09-.28-.13l-.5-1.19h-1zm.5 2.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z"/>
+		<path d="M3.5 0l-.5 1.19c-.1.03-.19.08-.28.13l-1.19-.5-.72.72.5 1.19c-.05.1-.09.18-.13.28l-1.19.5v1l1.19.5c.04.1.08.18.13.28l-.5 1.19.72.72 1.19-.5c.09.04.18.09.28.13l.5 1.19h1l.5-1.19c.09-.04.19-.08.28-.13l1.19.5.72-.72-.5-1.19c.04-.09.09-.19.13-.28l1.19-.5v-1l-1.19-.5c-.03-.09-.08-.19-.13-.28l.5-1.19-.72-.72-1.19.5c-.09-.04-.19-.09-.28-.13l-.5-1.19h-1zm.5 2.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" />
 	</svg>
 );
 //export const IconCollapseDown=():JSX.Element=>(
@@ -627,12 +627,12 @@ export const IconPencil = (): JSX.Element => (
 //)
 export const IconPinLeft = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
-		<path  transform='rotate(90 4 4)'  d="M1.34 0a.5.5 0 0 0 .16 1h.5v2h-1c-.55 0-1 .45-1 1h3v3l.44 1 .56-1v-3h3c0-.55-.45-1-1-1h-1v-2h.5a.5.5 0 1 0 0-1h-4a.5.5 0 0 0-.09 0 .5.5 0 0 0-.06 0z" />
+		<path transform='rotate(90 4 4)' d="M1.34 0a.5.5 0 0 0 .16 1h.5v2h-1c-.55 0-1 .45-1 1h3v3l.44 1 .56-1v-3h3c0-.55-.45-1-1-1h-1v-2h.5a.5.5 0 1 0 0-1h-4a.5.5 0 0 0-.09 0 .5.5 0 0 0-.06 0z" />
 	</svg>
 );
 export const IconPinDown = (): JSX.Element => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
-		<path  d="M1.34 0a.5.5 0 0 0 .16 1h.5v2h-1c-.55 0-1 .45-1 1h3v3l.44 1 .56-1v-3h3c0-.55-.45-1-1-1h-1v-2h.5a.5.5 0 1 0 0-1h-4a.5.5 0 0 0-.09 0 .5.5 0 0 0-.06 0z" />
+		<path d="M1.34 0a.5.5 0 0 0 .16 1h.5v2h-1c-.55 0-1 .45-1 1h3v3l.44 1 .56-1v-3h3c0-.55-.45-1-1-1h-1v-2h.5a.5.5 0 1 0 0-1h-4a.5.5 0 0 0-.09 0 .5.5 0 0 0-.06 0z" />
 	</svg>
 );
 export const IconPlayCircle = (): JSX.Element => (

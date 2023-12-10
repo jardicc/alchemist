@@ -1,23 +1,23 @@
-import { IDescriptor, IInspectorState, TFontSizeSettings } from "../model/types";
-import { alert } from "./Helpers";
+import {IDescriptor, IInspectorState, TFontSizeSettings} from "../model/types";
+import {alert} from "./Helpers";
 import type {uxp} from "../../types/uxp";
 import {SpectrumComponetDefaults} from "react-uxp-spectrum";
-import { getInitialState} from "../inspInitialState";
+import {getInitialState} from "../inspInitialState";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const readFileSync:any = require("fs").readFileSync;
+const readFileSync: any = require("fs").readFileSync;
 
-export class Settings{
+export class Settings {
 	private static readonly settingsFilename = "settings.json";
 	private static saveTimeout: number;
 
-	public static async reset():Promise<void> {
+	public static async reset(): Promise<void> {
 		try {
 			const folder = await Settings.settingsFolder();
 			const entry = await folder.getEntry(Settings.settingsFilename);
-		
+
 			if (!entry.isFile) {
 				return;
 			}
@@ -28,7 +28,7 @@ export class Settings{
 		}
 	}
 
-	public static async settingsFolder():Promise<uxp.storage.Folder> {
+	public static async settingsFolder(): Promise<uxp.storage.Folder> {
 		const folder = await localFileSystem.getDataFolder();
 		return folder;
 	}
@@ -81,8 +81,8 @@ export class Settings{
 		});
 	}
 
-	private static async _saveSettings(object: any, folder: any): Promise<void>{
-		
+	private static async _saveSettings(object: any, folder: any): Promise<void> {
+
 		const data = JSON.stringify(object, null, "\t");
 		//console.log(folder);
 		const created = await folder.createFile(Settings.settingsFilename, {
@@ -97,7 +97,7 @@ export class Settings{
 		try {
 			const text = readFileSync(`plugin-data:/${Settings.settingsFilename}`, {encoding: "utf-8"});
 			const result: IInspectorState = JSON.parse(text);
-			
+
 			// if settings has different major version than version currently in use then reset all redux store content
 			if (getInitialState().version[0] !== result.version[0]) {
 				return null;
@@ -120,25 +120,25 @@ export class Settings{
 		}
 	}
 
-	public static setSpectrumComponentSize(fontSize:TFontSizeSettings):void {
+	public static setSpectrumComponentSize(fontSize: TFontSizeSettings): void {
 		switch (fontSize) {
-			case "size-tiny":SpectrumComponetDefaults.defaultSize = "s";
+			case "size-tiny": SpectrumComponetDefaults.defaultSize = "s";
 				break;
-			case "size-small":SpectrumComponetDefaults.defaultSize = "s";
+			case "size-small": SpectrumComponetDefaults.defaultSize = "s";
 				break;
-			case "size-default":SpectrumComponetDefaults.defaultSize = "s";
+			case "size-default": SpectrumComponetDefaults.defaultSize = "s";
 				break;
-			case "size-bigger":SpectrumComponetDefaults.defaultSize = "m";
+			case "size-bigger": SpectrumComponetDefaults.defaultSize = "m";
 				break;
-			case "size-big":SpectrumComponetDefaults.defaultSize = "m";
+			case "size-big": SpectrumComponetDefaults.defaultSize = "m";
 				break;
-			case "size-youMustBeJoking":SpectrumComponetDefaults.defaultSize = "xl";
+			case "size-youMustBeJoking": SpectrumComponetDefaults.defaultSize = "xl";
 				break;
-				
+
 		}
 	}
 
-	public static async importStateWithDialog(): Promise<any|null>{
+	public static async importStateWithDialog(): Promise<any | null> {
 		const files = await localFileSystem.getFileForOpening({
 			types: ["json"],
 			allowMultiple: true,

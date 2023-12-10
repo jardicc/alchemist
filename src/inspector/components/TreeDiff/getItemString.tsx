@@ -3,16 +3,16 @@ import {Iterable} from "immutable";
 
 const IS_IMMUTABLE_KEY = "@@__IS_IMMUTABLE__@@";
 
-function isImmutable(value:any) {
+function isImmutable(value: any) {
 	return Iterable.isKeyed(value) || Iterable.isIndexed(value) || Iterable.isIterable(value);
 }
 
-function isIterable(obj:any) {
+function isIterable(obj: any) {
 	return obj !== null && typeof obj === "object" && !Array.isArray(obj) &&
 		typeof obj[window.Symbol.iterator] === "function";
 }
 
-function getShortTypeString(val:any, diff:boolean) {
+function getShortTypeString(val: any, diff: boolean) {
 	if (diff && Array.isArray(val)) {
 		val = val[val.length === 2 ? 1 : 0];
 	}
@@ -53,14 +53,14 @@ function getText(type: any, data: any, isWideLayout: boolean, isDiff: boolean) {
 	} else if (type === "Array") {
 		try {
 			if (!isWideLayout) return data.length ? "[…]" : "[]";
-	
+
 			const str = data
 				.slice(0, 4)
-				.map((val:any) => getShortTypeString(val, isDiff))
+				.map((val: any) => getShortTypeString(val, isDiff))
 				.concat(data.length > 4 ? ["…"] : []).join(", ");
-	
-			return `[${str}]`;			
-		}catch(e:any){
+
+			return `[${str}]`;
+		} catch (e: any) {
 			return "!!! ERROR !!! " + (e.message || "");
 		}
 	} else {
@@ -68,7 +68,7 @@ function getText(type: any, data: any, isWideLayout: boolean, isDiff: boolean) {
 	}
 }
 
-export const getItemString = (type:any, data:any, isWideLayout:boolean, isDiff:boolean) =>
+export const getItemString = (type: any, data: any, isWideLayout: boolean, isDiff: boolean) =>
 	<span className="treeItemHint">
 		{data[IS_IMMUTABLE_KEY] ? "Immutable" : ""}
 		{getText(type, data, isWideLayout, isDiff)}

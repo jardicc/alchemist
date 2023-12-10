@@ -1,13 +1,13 @@
 //import photoshop from "photoshop";
 //import Document from "photoshop/dist/dom/Document";
 //import { action } from "../../shared/imports";
-import { Document } from "photoshop/dom/Document";
-import { action, app } from "photoshop";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
-import { batchPlaySync, isValidRef } from "../../shared/helpers";
+import {Document} from "photoshop/dom/Document";
+import {action, app} from "photoshop";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
+import {batchPlaySync, isValidRef} from "../../shared/helpers";
 import {IDReference} from "./Reference";
 
-export class DocumentExtra extends app.Document{
+export class DocumentExtra extends app.Document {
 
 	constructor(doc: Document) {
 		super(doc.id);
@@ -16,38 +16,38 @@ export class DocumentExtra extends app.Document{
 		}
 	}
 
-	public get amReference():IDReference<"document"> {
+	public get amReference(): IDReference<"document"> {
 		return ({
 			"_ref": "document",
 			"_id": this.id,
 		});
 	}
 
-	public get exists(): boolean{
+	public get exists(): boolean {
 		return isValidRef([this.amReference]);
 	}
 
-	public get colorMode(): number{
+	public get colorMode(): number {
 		return this.getPropertySync("mode")._value;
 	}
 
-	public get numberOfPaths(): number{
+	public get numberOfPaths(): number {
 		return this.getPropertySync("numberOfPaths");
 	}
 
-	public get numberOfChannels(): number{
+	public get numberOfChannels(): number {
 		return this.getPropertySync("numberOfChannels");
 	}
 
-	public get numberOfGuides(): number{
+	public get numberOfGuides(): number {
 		return this.getPropertySync("numberOfGuides");
 	}
 
-	public async $title(): Promise<string>{
+	public async $title(): Promise<string> {
 		return await this.getPropertyAsync("title");
 	}
 
-	public get allLayers():{name:string,layerID:number}[] {
+	public get allLayers(): {name: string, layerID: number}[] {
 		const docRef = {
 			_ref: "document",
 			_id: this.id,
@@ -76,10 +76,10 @@ export class DocumentExtra extends app.Document{
 		return res;
 	}
 
-	public get guidesIDs(): { value: number; label: string }[]{
+	public get guidesIDs(): {value: number; label: string}[] {
 		const len = this.numberOfGuides;
 		const desc: ActionDescriptor[] = [];
-		for (let i = 1; i <= len; i++){
+		for (let i = 1; i <= len; i++) {
 			desc.push({
 				_obj: "get",
 				_target: [
@@ -98,11 +98,11 @@ export class DocumentExtra extends app.Document{
 			value: d.ID,
 			label: d.ID,
 		}));
-	
+
 		return pairs;
 	}
 
-	public get userChannelIDsAndNames(): {value: number;label: string;index:number}[] {
+	public get userChannelIDsAndNames(): {value: number; label: string; index: number}[] {
 		const len = this.numberOfChannels;
 		const descID: ActionDescriptor[] = [];
 		for (let i = 1; i <= len; i++) {
@@ -149,7 +149,7 @@ export class DocumentExtra extends app.Document{
 		return pairs;
 	}
 
-	public get userPathsIDsAndNames(): {value: number;label: string}[] {
+	public get userPathsIDsAndNames(): {value: number; label: string}[] {
 		const len = this.numberOfPaths;
 		const desc: ActionDescriptor[] = [];
 		for (let i = 1; i <= len; i++) {
@@ -173,12 +173,12 @@ export class DocumentExtra extends app.Document{
 		}));
 		pairs = pairs.filter(pair => (pair.type === "clippingPathEPS" || pair.type === "normalPath"));
 		//const result = pairs.map(pair => ({value:pair.value,label:pair.label}));
-	
+
 		return pairs;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public getPropertySync(property: string):any {
+	public getPropertySync(property: string): any {
 		const desc = batchPlaySync([
 			{
 				_obj: "get",

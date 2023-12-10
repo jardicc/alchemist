@@ -1,4 +1,4 @@
-.JSONTree{
+.JSONTree {
 	border: 0;
 	padding: 0.5em;
 	margin: 0;
@@ -8,7 +8,7 @@
 	font-family: 'Courier New', Monaco;
 	font-size: 1.01em;
 
-	.arrowContainer{
+	.arrowContainer {
 		position: absolute;
 		left: 0em;
 		padding: 0;
@@ -16,10 +16,11 @@
 		cursor: pointer;
 	}
 
-	.arrow{
-		fill:var(--ARROW_COLOR);
-		&:hover{
-			fill:var(--ARROW_COLOR_HOVER);
+	.arrow {
+		fill: var(--ARROW_COLOR);
+
+		&:hover {
+			fill: var(--ARROW_COLOR_HOVER);
 		}
 	}
 
@@ -53,16 +54,16 @@
 		color: var(--LABEL_COLOR);
 	}
 
-	.nestedNodeLabel{
+	.nestedNodeLabel {
 		position: relative;
 		margin-left: 0;
-		padding-left:  0;
+		padding-left: 0;
 	}
 
-	.nestedNode{
+	.nestedNode {
 		position: relative;
 		padding-top: 0.3em;
-		margin-left:  0.875em;
+		margin-left: 0.875em;
 		padding-left: 1.1em;
 	}
 
@@ -70,7 +71,7 @@
 		margin: 0 0.5em 0 0;
 	}
 
-	.itemRange{
+	.itemRange {
 		position: relative;
 		padding-top: 0.3em;
 		padding-right: 0;
@@ -79,23 +80,24 @@
 		cursor: pointer;
 		color: var(--LABEL_COLOR);
 		fill: var(--LABEL_COLOR);
-		&:hover{
+
+		&:hover {
 			color: var(--LABEL_COLOR_HOVER);
 			fill: var(--LABEL_COLOR_HOVER);
 		}
 	}
 
-	.nestedNodeLabel{
+	.nestedNodeLabel {
 		margin: 0;
 		padding: 0;
 		cursor: default;
 
-		&.expandable{
+		&.expandable {
 			cursor: pointer;
 		}
 	}
 
-	.value{
+	.value {
 		padding-top: 0.3em;
 		padding-right: 0;
 		margin-left: 0.875em;
@@ -105,48 +107,57 @@
 		word-break: break-all
 	}
 
-	.valueText{
-		&.String{
+	.valueText {
+		&.String {
 			color: var(--STRING_COLOR);
 		}
-		&.Date{
+
+		&.Date {
 			color: var(--DATE_COLOR);
 		}
-		&.Number{
+
+		&.Number {
 			color: var(--NUMBER_COLOR);
 		}
-		&.Boolean{
+
+		&.Boolean {
 			color: var(--BOOLEAN_COLOR);
 		}
-		&.Null{
+
+		&.Null {
 			color: var(--NULL_COLOR);
 		}
-		&.Undefined{
+
+		&.Undefined {
 			color: var(--UNDEFINED_COLOR);
 		}
-		&.Function{
+
+		&.Function {
 			color: var(--FUNCTION_COLOR);
 		}
-		&.Symbol{
+
+		&.Symbol {
 			color: var(--SYMBOL_COLOR);
 		}
 	}
 
-	.nestedNodeItemString{
+	.nestedNodeItemString {
 		padding-left: 0.5em;
 		cursor: default;
 		color: var(--ITEM_STRING_COLOR);
-		&.expanded{
+
+		&.expanded {
 			color: var(--ITEM_STRING_EXPANDED_COLOR);
 		}
 	}
 
-	.nestedNodeChildren{
+	.nestedNodeChildren {
 		padding: 0;
 		margin: 0;
 		list-style: none;
-		display:none;
-		&.expanded{
+		display: none;
+
+		&.expanded {
 			display: block;
 		}
 	}

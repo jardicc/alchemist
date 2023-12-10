@@ -11,7 +11,7 @@ module.exports = (wallaby) => {
 		tests: [
 			"**/_tests_/**/*.ts",
 		],
-		
+
 		env: {
 			type: "node",
 		},

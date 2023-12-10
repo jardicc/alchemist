@@ -1,23 +1,23 @@
-import {decode } from "iconv-lite/lib/index";
-import { charIDToStringID } from "./CharIDToStringID";
+import {decode} from "iconv-lite/lib/index";
+import {charIDToStringID} from "./CharIDToStringID";
 
-export class DataViewCustom extends DataView{
-	
+export class DataViewCustom extends DataView {
+
 	public offset: number;
-	private littleEndian:boolean
-	
-	constructor(buffer: ArrayBufferLike|number[],  littleEndian:boolean, byteOffset?: number, byteLength?: number) {
-		
+	private littleEndian: boolean;
+
+	constructor(buffer: ArrayBufferLike | number[], littleEndian: boolean, byteOffset?: number, byteLength?: number) {
+
 		if (Array.isArray(buffer)) {
 			buffer = new Uint8ClampedArray(buffer).buffer;
 		}
-		
+
 		super(buffer as ArrayBufferLike, byteOffset, byteLength);
 		this.offset = 0;
 		this.littleEndian = littleEndian;
 	}
 
-	public getBoolean(byteOffset: number = this.offset):boolean {
+	public getBoolean(byteOffset: number = this.offset): boolean {
 		const res = this.getUint8(byteOffset);
 		//this.offset += 1;
 		if (res !== 1 && res !== 0) {
@@ -26,19 +26,19 @@ export class DataViewCustom extends DataView{
 		return !!res;
 	}
 
-	public getUint8(byteOffset: number = this.offset):number {
+	public getUint8(byteOffset: number = this.offset): number {
 		const res = super.getUint8(byteOffset);
 		this.offset += 1;
 		return res;
 	}
 
-	public getInt8(byteOffset: number = this.offset):number {
+	public getInt8(byteOffset: number = this.offset): number {
 		const res = super.getInt8(byteOffset);
 		this.offset += 1;
 		return res;
 	}
 
-	public getInt16(byteOffset: number = this.offset):number {
+	public getInt16(byteOffset: number = this.offset): number {
 		const res = super.getInt16(byteOffset, this.littleEndian);
 		this.offset += 2;
 		return res;
@@ -50,18 +50,18 @@ export class DataViewCustom extends DataView{
 		return res;
 	}
 
-	public getInt32(byteOffset: number = this.offset):number {
+	public getInt32(byteOffset: number = this.offset): number {
 		const res = super.getInt32(byteOffset, this.littleEndian);
 		this.offset += 4;
 		return res;
 	}
 
-	public getUint32(byteOffset: number = this.offset):number {
+	public getUint32(byteOffset: number = this.offset): number {
 		const res = super.getUint32(byteOffset, this.littleEndian);
 		this.offset += 4;
 		return res;
 	}
-	
+
 	/** Will return Int instead of BitInt */
 	public getUint64(byteOffset: number = this.offset): number {
 		this.offset = byteOffset;
@@ -69,7 +69,7 @@ export class DataViewCustom extends DataView{
 		const gsb = BigInt(super.getUint32(this.offset + (this.littleEndian ? 4 : 0), this.littleEndian));
 		const res = Number(lsb + 4294967296n * gsb);
 		this.offset += 8;
-		return res;		
+		return res;
 	}
 
 	/** Will return Int instead of BitInt */
@@ -103,7 +103,7 @@ export class DataViewCustom extends DataView{
 		return res;
 	}
 
-	public getFloat64(byteOffset: number = this.offset):number {
+	public getFloat64(byteOffset: number = this.offset): number {
 		const res = super.getFloat64(byteOffset, this.littleEndian);
 		this.offset += 8;
 		return res;
@@ -118,7 +118,7 @@ export class DataViewCustom extends DataView{
 		return decoded;
 	}
 
-	public readASCII(byteOffset: number = this.offset, length?: number): string{
+	public readASCII(byteOffset: number = this.offset, length?: number): string {
 		this.offset = byteOffset;
 		length = length || this.getUint32();
 		const sub = new Uint8Array(this.buffer.slice(this.offset, this.offset + length));
@@ -127,10 +127,10 @@ export class DataViewCustom extends DataView{
 		return res;
 	}
 
-	public getCommandStringID(byteOffset: number = this.offset): string{
+	public getCommandStringID(byteOffset: number = this.offset): string {
 		this.offset = byteOffset;
 		const type = this.getUint32();
-		
+
 		if (type === 1413830740) { // TEXT
 			const res = this.readASCII();
 			return res;
@@ -145,7 +145,7 @@ export class DataViewCustom extends DataView{
 	public getStringID(byteOffset: number = this.offset): string {
 		this.offset = byteOffset;
 		const length = this.getUint32();
-		
+
 		if (length === 0) { // long
 			//console.log(Array.from(new Uint8Array(this.buffer)));
 			const sub = new Uint8Array(this.buffer.slice(this.offset, this.offset + 4));
@@ -153,11 +153,11 @@ export class DataViewCustom extends DataView{
 			const id = String.fromCharCode.apply(null, sub as any);
 			let s = "";
 
-			if(charIDToStringID[id]){
-				s = charIDToStringID[id];			
-			}else{
+			if (charIDToStringID[id]) {
+				s = charIDToStringID[id];
+			} else {
 				s = "$" + id;
-			}	
+			}
 			return s;
 		} else { // TEXT
 			const res = this.readASCII(undefined, length);

@@ -9,7 +9,7 @@ import {ItemRange} from "./ItemRange";
  * Renders nested values (eg. objects, arrays, lists, etc.)
  */
 
-function renderChildNodes(props:any, from?:number, to?:number) {
+function renderChildNodes(props: any, from?: number, to?: number) {
 	const {
 		nodeType,
 		data,
@@ -20,7 +20,7 @@ function renderChildNodes(props:any, from?:number, to?:number) {
 		sortObjectKeys,
 		protoMode,
 	} = props;
-	const childNodes:any = [];
+	const childNodes: any = [];
 
 	getCollectionEntries(
 		protoMode,
@@ -30,7 +30,7 @@ function renderChildNodes(props:any, from?:number, to?:number) {
 		collectionLimit,
 		from,
 		to,
-	).forEach((entry:any) => {
+	).forEach((entry: any) => {
 		if (entry.to) {
 			childNodes.push(
 				<ItemRange
@@ -42,13 +42,13 @@ function renderChildNodes(props:any, from?:number, to?:number) {
 				/>,
 			);
 		} else {
-			const { key, value } = entry;
+			const {key, value} = entry;
 			const isCircular = circularCache.indexOf(value) !== -1;
 
 			const node = (
 				<JSONNode
 					{...props}
-					{...{ postprocessValue, collectionLimit }}
+					{...{postprocessValue, collectionLimit}}
 					key={`Node--${key}`}
 					keyPath={[key, ...keyPath]}
 					value={postprocessValue(value)}
@@ -78,7 +78,7 @@ function getStateFromProps(props:any) {
 	};
 }*/
 
-export class JSONNestedNode extends React.Component<any,any,any> {
+export class JSONNestedNode extends React.Component<any, any, any> {
 	static propTypes = {
 		getItemString: PropTypes.func.isRequired,
 		nodeTypeIndicator: PropTypes.any,
@@ -107,7 +107,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		protoMode: "none",
 	};
 
-	constructor(props:any) {
+	constructor(props: any) {
 		super(props);
 		//this.state = getStateFromProps(props);
 	}
@@ -143,7 +143,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		return expanded;
 	}
 
-	render():JSX.Element {
+	render(): JSX.Element {
 		//console.log("STATE",this.state);
 		const {
 			getItemString,
@@ -165,7 +165,7 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 		//console.log("STATE",this.state);
 		const renderedChildren =
 			expanded || (hideRoot && this.props.level === 0)
-				? renderChildNodes({ ...this.props, level: this.props.level + 1 })
+				? renderChildNodes({...this.props, level: this.props.level + 1})
 				: null;
 
 		const itemType = (
@@ -196,25 +196,25 @@ export class JSONNestedNode extends React.Component<any,any,any> {
 						onClick={this.handleClick}
 					/>
 				)}
-				<label className={"label nestedNodeLabel" + ((expandable) ? " expandable":"")} onClick={this.handleClick as any}>
+				<label className={"label nestedNodeLabel" + ((expandable) ? " expandable" : "")} onClick={this.handleClick as any}>
 					{labelRenderer(...stylingArgs)}
 				</label>
-				<span className={"nestedNodeItemString" + ((expanded) ? " expanded":"")} onClick={this.handleClick}>
-					
+				<span className={"nestedNodeItemString" + ((expanded) ? " expanded" : "")} onClick={this.handleClick}>
+
 					{expanded ? null : renderedItemString}
 				</span>
-				<ul className={"nestedNodeChildren" + ((expanded) ? " expanded":"")} >
+				<ul className={"nestedNodeChildren" + ((expanded) ? " expanded" : "")} >
 					{renderedChildren}
 				</ul>
 			</li>
 		);
 	}
 
-	handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>):void => {
+	handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
 		if (this.props.expandable) {
 			let path = [...this.props.keyPath];
 			path = path.reverse();
-			this.props.expandClicked(path,!this.expanded, e.altKey);
+			this.props.expandClicked(path, !this.expanded, e.altKey);
 		}
 	};
 }

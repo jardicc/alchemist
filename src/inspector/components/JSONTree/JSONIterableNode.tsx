@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {JSONNestedNode} from "./JSONNestedNode";
-import { INestedNodeProps } from "./types";
+import {INestedNodeProps} from "./types";
 
 // Returns the "n Items" string for this node,
 // generating and caching it if it hasn't been created yet.
@@ -24,7 +24,7 @@ const createItemString = (data: any, limit: number) => {
 };
 
 // Configures <JSONNestedNode> to render an iterable
-export function JSONIterableNode({ ...props }:INestedNodeProps):JSX.Element {
+export function JSONIterableNode({...props}: INestedNodeProps): JSX.Element {
 	return (
 		<JSONNestedNode
 			{...props}

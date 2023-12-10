@@ -8,32 +8,32 @@ import {Dispatch} from "redux";
 import {getActiveRef} from "../../selectors/inspectorSelectors";
 import {setFilterStateAction} from "../../actions/inspectorActions";
 
-class FilterRow extends React.Component<TFilterRow,IFilterRowState> { 
+class FilterRow extends React.Component<TFilterRow, IFilterRowState> {
 
-	constructor(props:TFilterRow) {
+	constructor(props: TFilterRow) {
 		super(props);
 
 		this.state = {list: props.initialItems ?? []};
 	}
 
-	private setList = (list:(IPropertyItem | IPropertyGroup)[]) => {
+	private setList = (list: (IPropertyItem | IPropertyGroup)[]) => {
 		const {initialItems} = this.props;
 
 		this.setState({
 			...this.state,
 			list: [...(initialItems || []), ...list],
 		});
-	}
+	};
 
 	public render(): React.ReactNode {
-		const {value: content, subtype, filterBy, onSelect,onUpdateList,initialItems,items} = this.props;
-		let newContent: (string|number)[];
-		if(!Array.isArray(content)) {
+		const {value: content, subtype, filterBy, onSelect, onUpdateList, initialItems, items} = this.props;
+		let newContent: (string | number)[];
+		if (!Array.isArray(content)) {
 			newContent = [content];
 		} else {
 			newContent = content;
 		}
-		
+
 		return (
 			<AccDrop
 				{...this.props}
@@ -63,20 +63,20 @@ class FilterRow extends React.Component<TFilterRow,IFilterRowState> {
 		);
 	}
 }
-interface IFilterRowState{
-	list:(IPropertyItem|IPropertyGroup)[]
+interface IFilterRowState {
+	list: (IPropertyItem | IPropertyGroup)[]
 }
 
-interface IOwn{
+interface IOwn {
 	subtype: TSubTypes | "main"
 	initialItems?: (IPropertyItem | IPropertyGroup)[]
 	items?: (IPropertyItem | IPropertyGroup)[]
-	icons? :boolean
+	icons?: boolean
 	header: string | React.ReactElement
 	filterBy: TFilterState
-	value: string|number|string[]
+	value: string | number | string[]
 	showSearch?: boolean
-	ItemPostFix?:ComponentType<IAccDropPostFixProps>
+	ItemPostFix?: ComponentType<IAccDropPostFixProps>
 	doNotCollapse?: boolean
 	supportMultiSelect?: boolean
 	onSelect: (value: string | number, toggle: boolean) => void
@@ -85,7 +85,7 @@ interface IOwn{
 
 export type TFilterRow = IFilterRowProps & IFilterRowDispatch
 
-export interface IFilterRowProps extends IOwn{
+export interface IFilterRowProps extends IOwn {
 	activeRef: TAllTargetReferences;
 }
 

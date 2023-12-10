@@ -1,56 +1,56 @@
-import { connect, MapDispatchToPropsFunction } from "react-redux";
-import { IRootState } from "../../../shared/store";
+import {connect, MapDispatchToPropsFunction} from "react-redux";
+import {IRootState} from "../../../shared/store";
 
 import React from "react";
 
 import "./SorcererContainer.less";
 
 import SP from "react-uxp-spectrum";
-import { TFontSizeSettings } from "../../../inspector/model/types";
-import { FooterContainer } from "../../../inspector/components/Footer/FooterContainer";
-import { getFontSizeSettings } from "../../../inspector/selectors/inspectorSelectors";
-import { IActionSetUUID } from "../../../atnDecoder/atnModel";
-import { GeneralContainer } from "../GeneralContainer/GeneralContainer";
-import { SnippetContainer } from "../SnippetsContainer/SnippetContainer";
-import { Command, CommandContainer } from "../CommandsContainer/CommandContainer";
-import { IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState } from "../../sorModel";
-import { getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove } from "../../sorSelectors";
-import { setSelectActionAction } from "../../../atnDecoder/atnActions";
-import { makeAction, removeAction, setPresetAction, setSelectAction } from "../../sorActions";
-import { PanelContainer } from "../PanelsContainer/PanelContainer";
-import { SorcererBuilder } from "../../classes/Sorcerer";
+import {TFontSizeSettings} from "../../../inspector/model/types";
+import {FooterContainer} from "../../../inspector/components/Footer/FooterContainer";
+import {getFontSizeSettings} from "../../../inspector/selectors/inspectorSelectors";
+import {IActionSetUUID} from "../../../atnDecoder/atnModel";
+import {GeneralContainer} from "../GeneralContainer/GeneralContainer";
+import {SnippetContainer} from "../SnippetsContainer/SnippetContainer";
+import {Command, CommandContainer} from "../CommandsContainer/CommandContainer";
+import {IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState} from "../../sorModel";
+import {getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove} from "../../sorSelectors";
+import {setSelectActionAction} from "../../../atnDecoder/atnActions";
+import {makeAction, removeAction, setPresetAction, setSelectAction} from "../../sorActions";
+import {PanelContainer} from "../PanelsContainer/PanelContainer";
+import {SorcererBuilder} from "../../classes/Sorcerer";
 
 
-class Sorcerer extends React.Component<TSorcerer, ISorcererState> { 
+class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 	constructor(props: TSorcerer) {
 		super(props);
 	}
 
-	private menuItemActiveClass = (item:IEntrypointCommand|IEntrypointPanel|ISnippet) => {
-		const { selectedItem } = this.props;
+	private menuItemActiveClass = (item: IEntrypointCommand | IEntrypointPanel | ISnippet) => {
+		const {selectedItem} = this.props;
 		if (!selectedItem) {
 			return "";
 		}
-		
+
 		if (selectedItem.type === item.type && item.$$$uuid === selectedItem.$$$uuid) {
 			return "active";
 		}
 		return "";
-	}
+	};
 
 	private renderItems = (items: IEntrypointPanel[] | IEntrypointCommand[] | ISnippet[]) => {
-		const { selectItem} = this.props;
+		const {selectItem} = this.props;
 		const res = items.map((p, index) => (
-			<div key={index} className={"menuItem " + this.menuItemActiveClass(p)} onClick={()=>selectItem(p.type,p.$$$uuid)}>
+			<div key={index} className={"menuItem " + this.menuItemActiveClass(p)} onClick={() => selectItem(p.type, p.$$$uuid)}>
 				{p.label.default || "(none)"}
 			</div>
 		));
 		return res;
-	}
+	};
 
 	private export = () => {
 		SorcererBuilder.exportPreset();
-	}
+	};
 
 	private import = async () => {
 		const data = await SorcererBuilder.importPreset();
@@ -58,10 +58,10 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 			return;
 		}
 		this.props.setPreset(data);
-	}
+	};
 
 	public render(): JSX.Element {
-		const { fontSizeSettings,commands,snippets,panels,selectItem,make,remove,selectedItem, manifestCode, enableRemove } = this.props;
+		const {fontSizeSettings, commands, snippets, panels, selectItem, make, remove, selectedItem, manifestCode, enableRemove} = this.props;
 
 		return (
 			<div className={`SorcererContainer ${fontSizeSettings}`} key={fontSizeSettings}>
@@ -112,20 +112,20 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 type TSorcerer = ISorcererProps & ISorcererDispatch
 
 
-interface ISorcererProps{
+interface ISorcererProps {
 	fontSizeSettings: TFontSizeSettings
 	panels: IEntrypointPanel[]
 	commands: IEntrypointCommand[]
 	snippets: ISnippet[]
-	selectedItem: ISnippet | IEntrypointPanel | IEntrypointCommand | { type: "general" }|null
+	selectedItem: ISnippet | IEntrypointPanel | IEntrypointCommand | {type: "general"} | null
 	manifestCode: string
-	enableRemove:boolean
+	enableRemove: boolean
 }
 
-const mapStateToProps = (state: IRootState): ISorcererProps => (state = state as IRootState,{
+const mapStateToProps = (state: IRootState): ISorcererProps => (state = state as IRootState, {
 	fontSizeSettings: getFontSizeSettings(state),
 	panels: getAllPanels(state),
-	commands:getAllCommands(state),
+	commands: getAllCommands(state),
 	snippets: getAllSnippets(state),
 	selectedItem: getActiveItem(state),
 	manifestCode: getManifestCode(state),
@@ -137,7 +137,7 @@ interface ISorcererDispatch {
 	selectItem(type: "panel" | "command" | "snippet" | "general", uuid: null | string): void
 	make(type: "panel" | "command" | "snippet"): void
 	remove(type: "panel" | "command" | "snippet", uuid: string): void
-	setPreset(data:ISorcererState):void
+	setPreset(data: ISorcererState): void
 }
 
 const mapDispatchToProps: MapDispatchToPropsFunction<ISorcererDispatch, Record<string, unknown>> = (dispatch): ISorcererDispatch => ({

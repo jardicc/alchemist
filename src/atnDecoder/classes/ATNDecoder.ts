@@ -1,12 +1,12 @@
-import { decode } from "iconv-lite";
-import { Base64 } from "../../inspector/classes/Base64";
-import { RawDataConverter } from "../../inspector/classes/RawDataConverter";
-import { uxp } from "../../types/uxp";
-import { charIDToStringID } from "./CharIDToStringID";
-import { DataViewCustom } from "./DataViewCustom";
-import { IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID } from "../atnModel";
-import { Helpers } from "../../inspector/classes/Helpers";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import {decode} from "iconv-lite";
+import {Base64} from "../../inspector/classes/Base64";
+import {RawDataConverter} from "../../inspector/classes/RawDataConverter";
+import {uxp} from "../../types/uxp";
+import {charIDToStringID} from "./CharIDToStringID";
+import {DataViewCustom} from "./DataViewCustom";
+import {IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID} from "../atnModel";
+import {Helpers} from "../../inspector/classes/Helpers";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
 // IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html
 
@@ -15,18 +15,18 @@ const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").stor
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const formats = require("uxp").storage.formats;
 
-function addUUIDs(arg:IActionSet) :IActionSetUUID{
-	
+function addUUIDs(arg: IActionSet): IActionSetUUID {
+
 	const data: IActionSetUUID = arg as IActionSetUUID;
 	data.__uuid__ = crypto.randomUUID();
 
 	data.actionItems?.forEach(item => {
-		
+
 		item.__uuid__ = crypto.randomUUID();
 		item.__uuidParentSet__ = data.__uuid__;
 
 		item.commands?.forEach(command => {
-			
+
 			command.__uuidParentAction__ = item.__uuid__;
 			command.__uuidParentSet__ = data.__uuid__;
 			command.__uuid__ = crypto.randomUUID();
@@ -37,14 +37,14 @@ function addUUIDs(arg:IActionSet) :IActionSetUUID{
 	return data;
 }
 
-export async function decodeATN():Promise<IActionSetUUID[]> {
+export async function decodeATN(): Promise<IActionSetUUID[]> {
 	const dataViews = await loadFile();
-	if(!dataViews){return []}
+	if (!dataViews) {return [];}
 	const parsed = dataViews.map(dataView => addUUIDs(parse(dataView)));
 	return parsed;
 }
 
-export async function loadFile():Promise<DataView[]|null> {
+export async function loadFile(): Promise<DataView[] | null> {
 	const files = await localFileSystem.getFileForOpening({
 		types: ["atn"],
 		allowMultiple: true,
@@ -57,8 +57,8 @@ export async function loadFile():Promise<DataView[]|null> {
 
 	for (let i = 0; i < files.length; i++) {
 		const file = files[i];
-		
-		const data:ArrayBuffer = await file.read({format: formats.binary});
+
+		const data: ArrayBuffer = await file.read({format: formats.binary});
 		try {
 			result.push(new DataView(data));
 		} catch (e) {
@@ -69,8 +69,8 @@ export async function loadFile():Promise<DataView[]|null> {
 	return result;
 }
 
-export function parse(d: DataView):IActionSet {
-	const res:Partial<IActionSet> = {};
+export function parse(d: DataView): IActionSet {
+	const res: Partial<IActionSet> = {};
 	const data = new DataViewCustom(d.buffer, false);
 	const version = data.getUint32();
 
@@ -81,10 +81,10 @@ export function parse(d: DataView):IActionSet {
 	res.version = version;
 	res.actionSetName = data.getUtf16String();
 	res.expanded = data.getBoolean();
-	
+
 	const actionsCount = data.getUint32();
 	if (actionsCount) {
-		res.actionItems = [];		
+		res.actionItems = [];
 	}
 
 	for (let i = 0; i < actionsCount; i++) {
@@ -106,10 +106,10 @@ export function parse(d: DataView):IActionSet {
 
 		for (let j = 0; j < commandsCount; j++) {
 			let command: Partial<ICommand> = {
-				expanded:data.getBoolean(),
-				enabled:data.getBoolean(),
-				showDialogs:data.getBoolean(),
-				dialogMode:data.getUint8(),
+				expanded: data.getBoolean(),
+				enabled: data.getBoolean(),
+				showDialogs: data.getBoolean(),
+				dialogMode: data.getUint8(),
 			};
 
 			const desc: ActionDescriptor = {
@@ -119,7 +119,7 @@ export function parse(d: DataView):IActionSet {
 			command = {
 				...command,
 				commandName: data.readASCII(),
-				descriptor: desc,				
+				descriptor: desc,
 			};
 
 			const isDescriptorFollowing: boolean = data.getInt32() === -1;
@@ -131,14 +131,14 @@ export function parse(d: DataView):IActionSet {
 		}
 
 		res.actionItems!.push(item as IActionItem);
-		
+
 	}
 
 
 	return res as IActionSet;
 }
 
-export function parseDescriptor(data: DataViewCustom, desc: any): void{
+export function parseDescriptor(data: DataViewCustom, desc: any): void {
 	const version = data.getUint32();
 	if (version !== 16) {
 		throw new Error("ATN descriptor wrong version. Should be 16 but instead got: " + version);
@@ -154,30 +154,30 @@ export function parseActionDescriptor(data: DataViewCustom, desc: any): void {
 
 	for (let i = 0; i < count; i++) {
 		const propertyName: string = data.getStringID();
-		dataTypeHub(data, desc, propertyName);		
+		dataTypeHub(data, desc, propertyName);
 	}
 }
 
-export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: string ): void {
+export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: string): void {
 	// new Uint8Array(data.buffer)
-	const dataTypeKey: TDescDataType = data.readASCII(undefined,4) as TDescDataType;
-	
+	const dataTypeKey: TDescDataType = data.readASCII(undefined, 4) as TDescDataType;
+
 	switch (dataTypeKey) {
-		
+
 		// Descriptor
 		case "GlbO":
 		case "Objc": {
-			const subDesc: ActionDescriptor = { _obj: "" };
+			const subDesc: ActionDescriptor = {_obj: ""};
 			parseActionDescriptor(data, subDesc);
 			desc[propertyName] = subDesc;
 			return;
 		}
-			
+
 		// String
 		case "TEXT":
 			desc[propertyName] = data.getUtf16String();
 			return;
-		
+
 		// UnitFloat
 		case "UntF": {
 			desc[propertyName] = {
@@ -186,7 +186,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 			};
 			return;
 		}
-		
+
 		// List
 		case "VlLs": {
 			const count = data.getUint32();
@@ -195,17 +195,17 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 
 			for (let i = 0; i < count; i++) {
 				// :-( try to improve this
-				const item:{dummy:any} = {dummy:null};
-				dataTypeHub(data, item,"dummy");				
+				const item: {dummy: any} = {dummy: null};
+				dataTypeHub(data, item, "dummy");
 				list.push(Array.isArray(item.dummy) ? item.dummy[0] : item.dummy);
 			}
 
 			return;
 		}
-		
+
 		// Alias
 		case "alis":
-		case "Pth ":{
+		case "Pth ": {
 			data.offset += 4; // block length since next key till path property end
 			data.offset += 4; // txtu key
 			data.offset += 4; // block length
@@ -231,22 +231,22 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 			};
 			return;
 		}
-			
+
 		// Boolean
 		case "bool":
 			desc[propertyName] = data.getBoolean();
 			return;
-		
+
 		// LargeInteger
 		case "comp":
 			desc[propertyName] = data.getInt64();
 			return;
-		
+
 		// Double
 		case "doub":
 			desc[propertyName] = data.getFloat64();
 			return;
-		
+
 		// Enumerated
 		case "enum":
 			desc[propertyName] = {
@@ -254,14 +254,14 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 				_value: data.getStringID(),
 			};
 			return;
-		
+
 		// Integer
 		case "long":
 			desc[propertyName] = data.getInt32();
 			return;
-		
+
 		// reference
-		case "obj ":{
+		case "obj ": {
 			referenceTypeHub(data, desc, propertyName);
 			return;
 		}
@@ -272,16 +272,16 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 			desc[propertyName] = {
 				_class: data.getStringID(),
 			};
-			return;			
+			return;
 		}
-			
+
 		// RawData
 		case "tdta": {
 			const length = data.getUint32();
 
 			desc[propertyName] = {
 				_rawData: "base64",
-				_data: Base64.btoa(					
+				_data: Base64.btoa(
 					RawDataConverter.arrayBufferToString(
 						data.buffer.slice(data.offset, data.offset + length),
 					),
@@ -291,15 +291,15 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 			data.offset += length;
 			return;
 		}
-		
+
 		// Ancient List
-		case "ObAr":{
+		case "ObAr": {
 			const length = data.getUint32();
 			const name = data.getUtf16String();
 			const classID = data.getStringID();
 			const count = data.getUint32();
 
-			const list:any = {
+			const list: any = {
 				_objList: classID,
 			};
 			desc[propertyName] = list;
@@ -311,16 +311,16 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 				const valuesList: number[] = [];
 				let unit = "error";
 
-				if (listType==="UnFl") {
+				if (listType === "UnFl") {
 					unit = charIDToStringID[data.readASCII(undefined, 4)];
 					console.log(unit);
 					const unitCount = data.getUint32();
 
-					
+
 
 					for (let j = 0; j < unitCount; j++) {
 						const value = data.getFloat64();
-						valuesList.push(value);						
+						valuesList.push(value);
 					}
 				} else {
 					throw new Error(`Unkown data type "${listType}" in ObjectArray "ObAr`);
@@ -329,14 +329,14 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 				console.log(unit);
 				list[key] = {
 					_unit: unit,
-					list:valuesList,
+					list: valuesList,
 				} as IObjectArrayListInner;
 			}
 
 			return;
 		}
 		default: throw new Error(`Unrecognized data type key in descriptor ${dataTypeKey}`);
-		
+
 	}
 }
 
@@ -347,7 +347,7 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 		propertyName = "_target";
 	}
 	desc[propertyName] = ref;
-	
+
 	for (let i = 0; i < count; i++) {
 		const refType: TRefDataType = data.readASCII(undefined, 4) as TRefDataType;
 
@@ -364,7 +364,7 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 				});
 				break;
 			}
-				
+
 			// Class
 			case "Clss": {
 				ref.push({
@@ -372,7 +372,7 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 				});
 				break;
 			}
-				
+
 			// Enumerated Reference
 			case "Enmr": {
 				ref.push({
@@ -382,7 +382,7 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 				});
 				break;
 			}
-				
+
 			// Offset
 			case "rele": {
 				ref.push({
@@ -391,7 +391,7 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 				});
 				break;
 			}
-				
+
 			// Identifier
 			case "Idnt": {
 				ref.push({
@@ -400,7 +400,7 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 				});
 				break;
 			}
-				
+
 			// Index
 			case "indx": {
 				ref.push({
@@ -409,7 +409,7 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 				});
 				break;
 			}
-				
+
 			// Name
 			case "name": {
 				ref.push({
@@ -418,8 +418,8 @@ export function referenceTypeHub(data: DataViewCustom, desc: any, propertyName: 
 				});
 				break;
 			}
-				
+
 			default: throw new Error(`Unrecognized data type key in reference ${refType}`);
 		}
-	}	
+	}
 }

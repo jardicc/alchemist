@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { ISimpleNodeProps } from "./types";
+import {ISimpleNodeProps} from "./types";
 
 /**
  * Renders simple values (eg. strings, numbers, booleans, etc)
@@ -14,13 +14,13 @@ export const JSONValueNode = ({
 	valueRenderer,
 	value,
 	valueGetter,
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-}:ISimpleNodeProps&{valueGetter:(value:any)=>any}) => (
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}: ISimpleNodeProps & {valueGetter: (value: any) => any}) => (
 	<li className="value">
 		<label className="label valueLabel">
 			{labelRenderer(keyPath, nodeType, false, false)}
 		</label>
-		<span className={"valueText "+nodeType}>
+		<span className={"valueText " + nodeType}>
 			{
 				valueRenderer(valueGetter(value), value, nodeType, ...keyPath)
 			}
@@ -41,5 +41,5 @@ JSONValueNode.propTypes = {
 
 JSONValueNode.defaultProps = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	valueGetter: (value:any) => value,
+	valueGetter: (value: any) => value,
 };

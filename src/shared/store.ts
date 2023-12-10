@@ -1,6 +1,6 @@
-import { legacy_createStore as createStore, applyMiddleware, combineReducers } from "redux";
-import { inspectorReducer } from "../inspector/reducers/reducer";
-import { IInspectorState } from "../inspector/model/types";
+import {legacy_createStore as createStore, applyMiddleware, combineReducers} from "redux";
+import {inspectorReducer} from "../inspector/reducers/reducer";
+import {IInspectorState} from "../inspector/model/types";
 
 /*
  * We're giving State interface to create store
@@ -12,7 +12,7 @@ export interface IRootState {
 }
 
 const rootReducer = combineReducers<IRootState>({
-	inspector:inspectorReducer,
+	inspector: inspectorReducer,
 });
 
 export const rootStore = createStore(rootReducer, applyMiddleware());

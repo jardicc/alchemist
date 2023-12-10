@@ -1,12 +1,12 @@
 import {app, action} from "photoshop";
-import { cloneDeep } from "lodash";
-import { IDescriptor, TAllTargetReferences} from "../model/types";
-import { getName } from "./GetName";
-import { getInitialState } from "../inspInitialState";
-import { RawDataConverter } from "./RawDataConverter";
-import { str as crc } from "crc-32";
-import { batchPlaySync } from "../../shared/helpers";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import {cloneDeep} from "lodash";
+import {IDescriptor, TAllTargetReferences} from "../model/types";
+import {getName} from "./GetName";
+import {getInitialState} from "../inspInitialState";
+import {RawDataConverter} from "./RawDataConverter";
+import {str as crc} from "crc-32";
+import {batchPlaySync} from "../../shared/helpers";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
 import {Reference, TReference} from "./Reference";
 import {IDBySelected} from "./GetIDBySelected";
 import {GetList} from "./GetList";
@@ -60,7 +60,7 @@ export class GetInfo {
 			default: {
 				if ("documentID" in origRef) throw new Error(origRef.type);
 			}
-			
+
 		}
 
 		// set layer
@@ -109,7 +109,7 @@ export class GetInfo {
 				break;
 			}
 			case "channel": {
-				
+
 				if (origRef.channelID === "all") {
 					ref.allClass = "channel";
 					break;
@@ -213,7 +213,7 @@ export class GetInfo {
 
 		return ref;
 	}
-	
+
 	public static async getAM(_originalRef: TAllTargetReferences | null): Promise<IDescriptor | null> {
 		if (!_originalRef) {return null;}
 		const origRef = cloneDeep(_originalRef);
@@ -229,7 +229,7 @@ export class GetInfo {
 		}
 
 		let descToPlay: ITargetReferenceAM;
-		
+
 		if (reference.propertiesOnly.length > 1 || reference.allClass) {
 
 			const target = [...reference.refsOnly];
@@ -240,17 +240,17 @@ export class GetInfo {
 				if (reference.document) {
 					const hasBg = new app.Document(reference.document._id).backgroundLayer;
 					if (hasBg) {
-						range.index = 0;						
+						range.index = 0;
 					}
-				} else if(app.activeDocument.backgroundLayer){
+				} else if (app.activeDocument.backgroundLayer) {
 					range.index = 0;
 				}
 			}
 			if (reference.allClass === "path") {
 				if (reference.document) {
 					const doc = new app.Document(reference.document._id);
-					range.count = doc.pathItems.length;						
-				} else if(app.activeDocument){
+					range.count = doc.pathItems.length;
+				} else if (app.activeDocument) {
 					range.count = app.activeDocument.pathItems.length;
 				} else {
 					range.count = 0;
@@ -316,7 +316,7 @@ export class GetInfo {
 		const parts = getName(calculatedReference._target);
 		const names = parts.map(p => p.value ?? "N/A");
 		return names.join(" / ");
-	}
+	};
 
 	private static buildReply(startTime: number, playResult: ActionDescriptor[], playAbleData: ITargetReferenceAM, originalRef: TAllTargetReferences): IDescriptor {
 		return {

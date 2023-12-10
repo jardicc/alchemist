@@ -1,27 +1,27 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React from "react";
 
-export interface ITabPanelProps{
+export interface ITabPanelProps {
 	id: string
-	marginRight?:boolean
+	marginRight?: boolean
 	title: string | JSX.Element
 	noPadding?: boolean
 	showScrollbars?: boolean
-	children:JSX.Element|JSX.Element[]
+	children: JSX.Element | JSX.Element[]
 }
 
 export interface ITabPanelDispatch {
-	
+
 }
 
-export interface ITabPanelState{
-	
+export interface ITabPanelState {
+
 }
 
 export type TTabPanel = ITabPanelProps & ITabPanelDispatch
 export type TTabPanelComponent = React.Component<TTabPanel, ITabPanelState>
 
-export class TabPanel extends React.Component<TTabPanel, ITabPanelState> { 
+export class TabPanel extends React.Component<TTabPanel, ITabPanelState> {
 	constructor(props: TTabPanel) {
 		super(props);
 
@@ -29,7 +29,7 @@ export class TabPanel extends React.Component<TTabPanel, ITabPanelState> {
 		};
 	}
 
-	public render():React.ReactNode{
+	public render(): React.ReactNode {
 		return this.props.children;
 	}
 }

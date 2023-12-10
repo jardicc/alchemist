@@ -1,13 +1,13 @@
-import { cloneDeep } from "lodash";
-import { IGetNameOutput } from "../model/types";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
-import { batchPlaySync } from "../../shared/helpers";
+import {cloneDeep} from "lodash";
+import {IGetNameOutput} from "../model/types";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
+import {batchPlaySync} from "../../shared/helpers";
 import {TReference} from "./Reference";
 
 /** Name to be shown in descriptor list as title */
 export function getName(refs: TReference[]): IGetNameOutput[] {
 	const copyRef = cloneDeep(refs);
-	const nameParts:IGetNameOutput[] = [];
+	const nameParts: IGetNameOutput[] = [];
 
 	while (copyRef.length) {
 		if ("_property" in copyRef[0]) {
@@ -21,17 +21,17 @@ export function getName(refs: TReference[]): IGetNameOutput[] {
 				value: getNameProp(copyRef),
 			});
 		}
-		
+
 		copyRef.shift();
 	}
-	
+
 	return nameParts.reverse();
 }
 
 /** We will ask item for its name but different classes are using different property names for name */
-function getNameProp(refs: TReference[]):string {
+function getNameProp(refs: TReference[]): string {
 	let propName = "N/A";
-	if ("_property" in refs[0]) { return propName;}
+	if ("_property" in refs[0]) {return propName;}
 
 	switch (refs[0]._ref) {
 		case "actionSet":
@@ -63,7 +63,7 @@ function getNameProp(refs: TReference[]):string {
 	}
 
 	// Ask Photoshop for element name
-	const desc:ActionDescriptor = {
+	const desc: ActionDescriptor = {
 		_obj: "get",
 		_target: [
 			{

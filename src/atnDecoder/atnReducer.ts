@@ -1,10 +1,10 @@
 import produce from "immer";
-import { uniqBy } from "lodash";
-import { IInspectorState } from "../inspector/model/types";
-import { TAllActions } from "../inspector/reducers/reducer";
-import { getInitialState } from "../inspector/inspInitialState";
-import { TExpandedItem, TSelectedItem } from "./atnModel";
-import { getSetByUUID } from "./atnSelectors";
+import {uniqBy} from "lodash";
+import {IInspectorState} from "../inspector/model/types";
+import {TAllActions} from "../inspector/reducers/reducer";
+import {getInitialState} from "../inspector/inspInitialState";
+import {TExpandedItem, TSelectedItem} from "./atnModel";
+import {getSetByUUID} from "./atnSelectors";
 
 
 export const atnReducer = (state: IInspectorState, action: TAllActions): IInspectorState => {
@@ -21,13 +21,13 @@ export const atnReducer = (state: IInspectorState, action: TAllActions): IInspec
 			});
 			break;
 		}
-		
+
 		case "[ATN] EXPAND_ACTION": {
 			state = produce(state, draft => {
-				const { expand, recursive, uuid } = action.payload;
+				const {expand, recursive, uuid} = action.payload;
 				//const treePart = getTreePartUniversal(state, uuid);
 
-			
+
 				const indexOf = draft.atnConverter.expandedItems.findIndex(item => {
 					if (item.length !== action.payload.uuid.length) {
 						return false;
@@ -43,7 +43,7 @@ export const atnReducer = (state: IInspectorState, action: TAllActions): IInspec
 							const found = getSetByUUID(state, uuid[0]);
 							if (found) {
 								const rest: TExpandedItem[] = found.actionItems.map(item => [item.__uuidParentSet__, item.__uuid__]);
-								draft.atnConverter.expandedItems.push(...rest);								
+								draft.atnConverter.expandedItems.push(...rest);
 							}
 						}
 					}
@@ -53,7 +53,7 @@ export const atnReducer = (state: IInspectorState, action: TAllActions): IInspec
 						if (recursive && uuid.length === 1) {
 							const found = getSetByUUID(state, uuid[0]);
 							if (found) {
-								const rest: string[] = found.actionItems.map(item => [item.__uuidParentSet__, item.__uuid__].join("|"));								
+								const rest: string[] = found.actionItems.map(item => [item.__uuidParentSet__, item.__uuid__].join("|"));
 								rest.forEach(itm => {
 									const index = draft.atnConverter.expandedItems.findIndex((a) => {
 										return a.join("|") === itm;
@@ -67,18 +67,18 @@ export const atnReducer = (state: IInspectorState, action: TAllActions): IInspec
 			});
 			break;
 		}
-		
+
 		case "[ATN] SET_DONT_SEND_DISABLED": {
 			state = produce(state, draft => {
 				draft.atnConverter.dontSendDisabled = action.payload;
 			});
 			break;
 		}
-		
+
 		case "[ATN] SELECT_ACTION": {
 			state = produce(state, draft => {
-				const { operation, uuid } = action.payload;
-				const { data } = state.atnConverter;
+				const {operation, uuid} = action.payload;
+				const {data} = state.atnConverter;
 				if (operation === "none") {
 					draft.atnConverter.selectedItems = [];
 				} else if (operation === "replace" && uuid?.length) {

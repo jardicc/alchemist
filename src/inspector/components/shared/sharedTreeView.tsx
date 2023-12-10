@@ -1,11 +1,11 @@
 import React from "react";
-import { IconPinDown } from "../../../shared/components/icons";
-import { TShouldExpandNode } from "../JSONTree/types";
-import { TPath } from "../../model/types";
+import {IconPinDown} from "../../../shared/components/icons";
+import {TShouldExpandNode} from "../JSONTree/types";
+import {TPath} from "../../model/types";
 
 
 export const labelRenderer = ([key, ...rest]: TPath, onInspectPath: (path: TPath, mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
-	
+
 	let noPin = false;
 	if (typeof key === "string") {
 		noPin = key.startsWith("$$$noPin_");
@@ -31,13 +31,13 @@ export const labelRenderer = ([key, ...rest]: TPath, onInspectPath: (path: TPath
 
 export const renderPath = (path: TPath, onInspectPath: (path: TPath, mode: "replace" | "add") => void): React.ReactNode[] => {
 	const parts: React.ReactNode[] = [
-		<span className="pathItem" key="root" onClick={() => { onInspectPath([], "replace"); }}>
+		<span className="pathItem" key="root" onClick={() => {onInspectPath([], "replace");}}>
 			<span className="link">root</span>
 		</span>,
 	];
 	for (let i = 0, len = path.length; i < len; i++) {
 		parts.push(
-			<span className="pathItem" key={i} onClick={() => { onInspectPath(path.slice(0, i + 1), "replace"); }}>
+			<span className="pathItem" key={i} onClick={() => {onInspectPath(path.slice(0, i + 1), "replace");}}>
 				<span className="link">{path[i]}</span>
 			</span>,
 		);
@@ -45,7 +45,7 @@ export const renderPath = (path: TPath, onInspectPath: (path: TPath, mode: "repl
 	return parts;
 };
 
-export const shouldExpandNode = (expandedKeys: TPath[],autoExpandLevels=0,allowInfinity=false): TShouldExpandNode => {
+export const shouldExpandNode = (expandedKeys: TPath[], autoExpandLevels = 0, allowInfinity = false): TShouldExpandNode => {
 	return (keyPath, data, level) => {
 
 		const keyPathString = [...keyPath].reverse().join("-");
@@ -55,7 +55,7 @@ export const shouldExpandNode = (expandedKeys: TPath[],autoExpandLevels=0,allowI
 					return true;
 				}
 			}
-		}		
+		}
 
 		// 0 = off
 		if (autoExpandLevels !== 0) {
@@ -63,7 +63,7 @@ export const shouldExpandNode = (expandedKeys: TPath[],autoExpandLevels=0,allowI
 			if (autoExpandLevels === 10 && allowInfinity) {
 				return true;
 			}
-			return  level <= autoExpandLevels;
+			return level <= autoExpandLevels;
 		}
 		return false;
 	};

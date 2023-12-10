@@ -1,7 +1,7 @@
 
 import {action, app} from "photoshop";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
-import {TChannelReferenceValid,DocumentMode} from "../model/types";
+import {TChannelReferenceValid, DocumentMode} from "../model/types";
 
 
 export class IDBySelected {
@@ -9,12 +9,12 @@ export class IDBySelected {
 	// "action" can be used to get target actions and commands but not the sets. We skip it here.
 
 	public static async channel(docID?: number): Promise<number | null | TChannelReferenceValid> {
-			
+
 		const resultItemIndex = await this.getProperty("itemIndex", "channel", docID);
 		if ("itemIndex" in resultItemIndex) {
 			return resultItemIndex.itemIndex as number;
 		}
-	
+
 		const itemIndex = (await this.getProperty("itemIndex", "channel", docID)).itemIndex;
 		const mode = await this.getActiveDocumentColorMode(docID);
 		switch (mode) {
@@ -47,7 +47,7 @@ export class IDBySelected {
 				break;
 			default:
 				return "RGB"; // can we return composite channel instead?
-			
+
 		}
 		return "RGB"; // can we return composite channel instead?
 	}
@@ -92,12 +92,12 @@ export class IDBySelected {
 	}
 
 
-	private static getActiveDocumentColorMode(docID?:number): DocumentMode{
+	private static getActiveDocumentColorMode(docID?: number): DocumentMode {
 		if (typeof docID === "number") {
 			const doc = new app.Document(docID);
 			return doc.mode as any;
 		} else {
-			return app.activeDocument.mode as any;			
+			return app.activeDocument.mode as any;
 		}
 	}
 

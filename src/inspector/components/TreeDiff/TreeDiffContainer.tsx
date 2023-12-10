@@ -1,27 +1,27 @@
-import { connect, MapDispatchToPropsFunction } from "react-redux";
-import { IRootState } from "../../../shared/store";
-import { setInspectorPathDiffAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction } from "../../actions/inspectorActions";
-import { getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, getLeftRawDiff, getRightRawDiff, getDiffActiveView, getDiffExpandLevel } from "../../selectors/inspectorDiffSelectors";
+import {connect, MapDispatchToPropsFunction} from "react-redux";
+import {IRootState} from "../../../shared/store";
+import {setInspectorPathDiffAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction} from "../../actions/inspectorActions";
+import {getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, getLeftRawDiff, getRightRawDiff, getDiffActiveView, getDiffExpandLevel} from "../../selectors/inspectorDiffSelectors";
 
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {stringify} from "javascript-stringify";
 import {getItemString} from "./getItemString";
 import "./TreeDiff.less";
 import {JSONTree} from "../JSONTree";
-import { diff } from "jsondiffpatch";
-import { labelRenderer, shouldExpandNode } from "../shared/sharedTreeView";
-import { IDescriptor, TPath, TGenericViewType } from "../../model/types";
-import { TabList } from "../Tabs/TabList";
-import { TabPanel } from "../Tabs/TabPanel";
-import { VisualDiffTab } from "../VisualDiff/VisualDiff";
-import { TreePath } from "../TreePath/TreePath";
-import { Dispatch } from "redux";
+import {diff} from "jsondiffpatch";
+import {labelRenderer, shouldExpandNode} from "../shared/sharedTreeView";
+import {IDescriptor, TPath, TGenericViewType} from "../../model/types";
+import {TabList} from "../Tabs/TabList";
+import {TabPanel} from "../Tabs/TabPanel";
+import {VisualDiffTab} from "../VisualDiff/VisualDiff";
+import {TreePath} from "../TreePath/TreePath";
+import {Dispatch} from "redux";
 
-function stringifyAndShrink(val:any, isWideLayout=false) {
-	if (val === null) { return "null"; }
+function stringifyAndShrink(val: any, isWideLayout = false) {
+	if (val === null) {return "null";}
 
 	const str = stringify(val);
-	if (typeof str === "undefined") { return "undefined"; }
+	if (typeof str === "undefined") {return "undefined";}
 
 	if (isWideLayout) return str.length > 42 ? str.substr(0, 30) + "…" + str.substr(-10) : str;
 	return str.length > 22 ? `${str.substr(0, 15)}…${str.substr(-5)}` : str;
@@ -29,9 +29,9 @@ function stringifyAndShrink(val:any, isWideLayout=false) {
 
 //const expandFirstLevel = (keyName:TPath, data:any, level:number):boolean => (level <= 1);
 
-function prepareDelta(value:any) {
+function prepareDelta(value: any) {
 	if (value && value._t === "a") {
-		const res:any = {};
+		const res: any = {};
 		for (const key in value) {
 			if (key !== "_t") {
 				if (key[0] === "_" && !value[key.substr(1)]) {
@@ -50,7 +50,7 @@ function prepareDelta(value:any) {
 }
 
 class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
-	
+
 	constructor(props: TTreeDiff) {
 		super(props);
 
@@ -61,40 +61,40 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 
 	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
-	}
+	};
 
-	public componentDidMount():void {
+	public componentDidMount(): void {
 		this.updateData();
 	}
 
-	public componentDidUpdate(prevProps:TTreeDiff):void {
+	public componentDidUpdate(prevProps: TTreeDiff): void {
 		if (prevProps.left !== this.props.left && prevProps.right !== this.props.right) {
 			this.updateData();
 		}
 	}
 
-	public updateData():void {
+	public updateData(): void {
 		// this magically fixes weird React error, where it can't find a node in tree
 		// if we set `delta` as JSONTree data right away
 		// https://github.com/alexkuz/redux-devtools-inspector/issues/17
 
-		const { left,right} = this.props;
+		const {left, right} = this.props;
 
-		this.setState({ data: diff(left, right) });
+		this.setState({data: diff(left, right)});
 	}
 
-	private expandClicked = (keyPath: TPath, expanded: boolean, recursive:boolean) => {
+	private expandClicked = (keyPath: TPath, expanded: boolean, recursive: boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.state.data);
-	}
+	};
 
-	public render():React.ReactNode {
-		const { ...props } = this.props;
+	public render(): React.ReactNode {
+		const {...props} = this.props;
 
-		const { left, right, autoExpandLevels,onInspectPath,onSetAutoExpandLevel,path,expandedKeys } = this.props;
+		const {left, right, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys} = this.props;
 		const delta = this.state.data;
 
 		let jsonTreeContent: JSX.Element;
-		
+
 		if (!delta && left && right) {
 			jsonTreeContent = (
 				<div className="TreeDiff">
@@ -132,9 +132,9 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 				<TabPanel id="tree" title="Tree" noPadding={true}>
 					<div className="TreeDiff">
 						<TreePath
-							autoExpandLevels = {autoExpandLevels}
-							onInspectPath = {onInspectPath}
-							onSetAutoExpandLevel = {onSetAutoExpandLevel}
+							autoExpandLevels={autoExpandLevels}
+							onInspectPath={onInspectPath}
+							onSetAutoExpandLevel={onSetAutoExpandLevel}
 							path={path}
 							allowInfinityLevels={true}
 						/>
@@ -153,14 +153,14 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 
 	public getItemString = (type: any, data: any): JSX.Element => (
 		getItemString(type, data, this.props.isWideLayout, true)
-	)
+	);
 
-	public valueRenderer = (raw:any, value:any) => {
-		const { /*styling,*/ isWideLayout } = this.props;
+	public valueRenderer = (raw: any, value: any) => {
+		const { /*styling,*/ isWideLayout} = this.props;
 
-		function renderSpan(name:string, body:React.ReactNode) {
+		function renderSpan(name: string, body: React.ReactNode) {
 			return (
-				<span key={name} /*{...styling(["diff", name])}*/ className={"diffHighlight" +" "+ name}>{body}</span>
+				<span key={name} /*{...styling(["diff", name])}*/ className={"diffHighlight" + " " + name}>{body}</span>
 			);
 		}
 
@@ -190,27 +190,27 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		}
 
 		return raw;
-	}
+	};
 }
 
 
 type TTreeDiff = ITreeDiffProps & ITreeDiffDispatch
 
-interface ITreeDiffState{
+interface ITreeDiffState {
 	data: any
 }
 
-interface ITreeDiffProps{
+interface ITreeDiffProps {
 	left: any
 	right: any
 	path: string[]
 	expandedKeys: TPath[]
-	invertTheme:boolean,
+	invertTheme: boolean,
 	isWideLayout: boolean,
-	leftRawDiff:IDescriptor | null
+	leftRawDiff: IDescriptor | null
 	rightRawDiff: IDescriptor | null
 	viewType: TGenericViewType
-	autoExpandLevels:number
+	autoExpandLevels: number
 }
 
 const mapStateToProps = (state: IRootState): ITreeDiffProps => ({
@@ -233,9 +233,9 @@ interface ITreeDiffDispatch {
 	onSetAutoExpandLevel: (level: number) => void
 }
 
-const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDiffDispatch, Record<string, unknown>> = (dispatch:Dispatch):ITreeDiffDispatch => ({
+const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDiffDispatch, Record<string, unknown>> = (dispatch: Dispatch): ITreeDiffDispatch => ({
 	onInspectPath: (path, mode) => dispatch(setInspectorPathDiffAction(path, mode)),
-	onSetExpandedPath: (path, expand, recursive,data) => dispatch(setExpandedPathAction("difference",path, expand, recursive,data)),
+	onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("difference", path, expand, recursive, data)),
 	onSetView: (viewType) => dispatch(setInspectorViewAction("diff", viewType)),
 	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("diff", level)),
 });

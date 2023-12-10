@@ -1,20 +1,20 @@
-import { cloneDeep } from "lodash";
-import { createSelector } from "reselect";
-import { getIndentString } from "../inspector/selectors/inspectorCodeSelectors";
-import { getInspectorSettings } from "../inspector/selectors/inspectorSelectors";
-import { IRootState } from "../shared/store";
+import {cloneDeep} from "lodash";
+import {createSelector} from "reselect";
+import {getIndentString} from "../inspector/selectors/inspectorCodeSelectors";
+import {getInspectorSettings} from "../inspector/selectors/inspectorSelectors";
+import {IRootState} from "../shared/store";
 
-import { IEntrypointCommand, IEntrypointPanel, ISorcererState } from "./sorModel";
+import {IEntrypointCommand, IEntrypointPanel, ISorcererState} from "./sorModel";
 
-export const all = (state:IRootState):ISorcererState => state.inspector.sorcerer;
+export const all = (state: IRootState): ISorcererState => state.inspector.sorcerer;
 export const getManifestGeneric = createSelector([all], s => s.manifestInfo);
 
 
-export const getAllSnippets = createSelector([all], s => {	
+export const getAllSnippets = createSelector([all], s => {
 	return s.snippets.list;
 });
 
-export const getActiveSnippet = createSelector([all, getAllSnippets], (s,snippets) => {
+export const getActiveSnippet = createSelector([all, getAllSnippets], (s, snippets) => {
 	if (s.selectedItem.kind !== "snippet" || typeof s.selectedItem.uuid !== "string") {
 		return null;
 	}
@@ -31,7 +31,7 @@ export const getActiveCommand = createSelector([all, getAllEntryPoints], (s, ent
 		return null;
 	}
 
-	const res:IEntrypointCommand |null = entryPoints.find(item => item.$$$uuid === s.selectedItem.uuid && item.type === "command") as IEntrypointCommand || null;
+	const res: IEntrypointCommand | null = entryPoints.find(item => item.$$$uuid === s.selectedItem.uuid && item.type === "command") as IEntrypointCommand || null;
 	return res;
 });
 
@@ -60,16 +60,16 @@ export const isGenericModuleVisible = createSelector([all], s => {
 	return res;
 });
 
-export const getActiveItem = createSelector([getActiveSnippet, getActiveCommand, getActiveCommand, getActivePanel, isGenericModuleVisible],(activeSnippet, activeEntryPoint, activeCommand, activePanel, genericModuleVisible) => {
-	const res = activeSnippet || activeEntryPoint || activeCommand || activePanel || (genericModuleVisible ? {type:"general"} : null);
+export const getActiveItem = createSelector([getActiveSnippet, getActiveCommand, getActiveCommand, getActivePanel, isGenericModuleVisible], (activeSnippet, activeEntryPoint, activeCommand, activePanel, genericModuleVisible) => {
+	const res = activeSnippet || activeEntryPoint || activeCommand || activePanel || (genericModuleVisible ? {type: "general"} : null);
 	return res;
 });
 
 export const getManifestCode = createSelector([all, getIndentString], (all, indent) => {
 
-	const clone:any = cloneDeep(all.manifestInfo);
+	const clone: any = cloneDeep(all.manifestInfo);
 
-	clone.entrypoints.forEach((ep:any) => {
+	clone.entrypoints.forEach((ep: any) => {
 		delete ep.$$$uuid;
 		if (ep.type === "command") {
 			delete ep.$$$snippetUUID;
@@ -98,16 +98,16 @@ export const shouldEnableRemove = createSelector([all], (all) => {
 	return res;
 });
 
-export const generateScriptFileCode = createSelector([getAllCommands, getAllPanels,getAllSnippets], (commands, panels,snippets) => {
-	
-	const str=
-	`const { entrypoints } = require("uxp");
+export const generateScriptFileCode = createSelector([getAllCommands, getAllPanels, getAllSnippets], (commands, panels, snippets) => {
+
+	const str =
+		`const { entrypoints } = require("uxp");
 
 	// assign code the commands in Photoshop main menu
 
 	entrypoints.setup({
 		commands: {
-			${commands.map(c=>`${c.id}: () => ${c.$$$snippetUUID}(),\n\t\t\t`).join("")}
+			${commands.map(c => `${c.id}: () => ${c.$$$snippetUUID}(),\n\t\t\t`).join("")}
 		}
 	});
 
@@ -116,36 +116,36 @@ export const generateScriptFileCode = createSelector([getAllCommands, getAllPane
 		${snippets.map(s => {
 			return `
 			// ${s.label.default}
-			[...document.body.querySelectorAll('[data-snippet="${s.$$$uuid}"]')].forEach(button => button.addEventListener("click",${s.$$$uuid}));`
+			[...document.body.querySelectorAll('[data-snippet="${s.$$$uuid}"]')].forEach(button => button.addEventListener("click",${s.$$$uuid}));`;
 		}).join("\n")}
 	}
 
 	// your code snippets
 	${snippets.map(snippet =>
-	`/** ${snippet?.label.default ?? ""} */
+			`/** ${snippet?.label.default ?? ""} */
 	async function ${snippet?.$$$uuid ?? ""}(){
-		${snippet?.code ?? "" }
-	}\n\t`
-	).join("")}
-	`
+		${snippet?.code ?? ""}
+	}\n\t`,
+		).join("")}
+	`;
 	return str;
 });
 
-export const generateHtmlFileCode = createSelector([getAllPanels,getAllSnippets], (panels,snippets) => {
+export const generateHtmlFileCode = createSelector([getAllPanels, getAllSnippets], (panels, snippets) => {
 
-	function generatePanel(panel:IEntrypointPanel):string {
+	function generatePanel(panel: IEntrypointPanel): string {
 		const str = `
 		<uxp-panel panelid="${panel.id}">
 			${panel.$$$snippetUUIDs.map(snippetUUID => {
-				const found = snippets.find(s => s.$$$uuid === snippetUUID);
-				if (found) {
-					return `<sp-action-button data-snippet="${found.$$$uuid}">${found.label.default}</sp-action-button>`;
-				} else {
-					return "";
-				}
-			}).join("\n")}
+			const found = snippets.find(s => s.$$$uuid === snippetUUID);
+			if (found) {
+				return `<sp-action-button data-snippet="${found.$$$uuid}">${found.label.default}</sp-action-button>`;
+			} else {
+				return "";
+			}
+		}).join("\n")}
 		</uxp-panel>
-		`
+		`;
 
 		return str;
 	}
@@ -180,6 +180,6 @@ export const generateHtmlFileCode = createSelector([getAllPanels,getAllSnippets]
 		${panels.map(p => generatePanel(p)).join("\n")}
 	</body>
 	</html>
-	`
+	`;
 	return html;
-})
+});

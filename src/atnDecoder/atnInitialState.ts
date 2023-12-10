@@ -1,9 +1,9 @@
 // maybe TODO
 
-import { IATNConverterState } from "./atnModel";
+import {IATNConverterState} from "./atnModel";
 
 
-export function getAtnInitialState():IATNConverterState {
+export function getAtnInitialState(): IATNConverterState {
 	return {
 		data: [],
 		expandedItems: [],

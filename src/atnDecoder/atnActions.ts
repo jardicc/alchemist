@@ -1,4 +1,4 @@
-import { IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem } from "./atnModel";
+import {IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem} from "./atnModel";
 
 export interface ISetDataAction {
 	type: "[ATN] SET_DATA"
@@ -8,7 +8,7 @@ export interface ISetDataAction {
 export interface ISelectAction {
 	type: "[ATN] SELECT_ACTION"
 	payload: {
-		operation:TSelectActionOperation
+		operation: TSelectActionOperation
 		uuid?: TSelectedItem
 	}
 }
@@ -18,7 +18,7 @@ export interface IExpandAction {
 	payload: {
 		uuid: TExpandedItem
 		expand: boolean
-		recursive:boolean
+		recursive: boolean
 	}
 }
 
@@ -37,46 +37,46 @@ export interface ISetDontSendDisabledAction {
 	payload: boolean
 }
 
-export function setDontSendDisabledAction(value:boolean): ISetDontSendDisabledAction{
+export function setDontSendDisabledAction(value: boolean): ISetDontSendDisabledAction {
 	return {
 		type: "[ATN] SET_DONT_SEND_DISABLED",
 		payload: value,
 	};
 }
 
-export function passSelectedAction(): IPassSelectedAction{
+export function passSelectedAction(): IPassSelectedAction {
 	return {
 		type: "[ATN] PASS_SELECTED",
 		payload: null,
 	};
 }
 
-export function clearAllAction(): IClearAllAction{
+export function clearAllAction(): IClearAllAction {
 	return {
 		type: "[ATN] CLEAR_ALL",
 		payload: null,
 	};
 }
 
-export function setDataAction(data:IActionSetUUID[]): ISetDataAction{
+export function setDataAction(data: IActionSetUUID[]): ISetDataAction {
 	return {
 		type: "[ATN] SET_DATA",
 		payload: data,
 	};
 }
 
-export function setSelectActionAction(operation: TSelectActionOperation, uuid?:TSelectedItem): ISelectAction {
+export function setSelectActionAction(operation: TSelectActionOperation, uuid?: TSelectedItem): ISelectAction {
 	return {
 		type: "[ATN] SELECT_ACTION",
-		payload: {operation,uuid},
+		payload: {operation, uuid},
 	};
 }
 
-export function setExpandActionAction(uuid: TExpandedItem, expand:boolean, recursive=false): IExpandAction {
+export function setExpandActionAction(uuid: TExpandedItem, expand: boolean, recursive = false): IExpandAction {
 	return {
 		type: "[ATN] EXPAND_ACTION",
-		payload: { uuid, expand,recursive },
-		
+		payload: {uuid, expand, recursive},
+
 	};
 }
 

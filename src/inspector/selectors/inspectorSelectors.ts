@@ -1,23 +1,23 @@
 /* eslint-disable comma-dangle */
-import { createSelector } from "reselect";
-import { IRootState } from "../../shared/store";
-import { IDescriptor, IInspectorState, IListenerNotifierFilter, TSubTypes, TTargetReference } from "../model/types";
-import { Helpers } from "../classes/Helpers";
-import { cloneDeep, isEqual } from "lodash";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import {createSelector} from "reselect";
+import {IRootState} from "../../shared/store";
+import {IDescriptor, IInspectorState, IListenerNotifierFilter, TSubTypes, TTargetReference} from "../model/types";
+import {Helpers} from "../classes/Helpers";
+import {cloneDeep, isEqual} from "lodash";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
-export const all = (state:IRootState):IInspectorState => state.inspector;
- 
+export const all = (state: IRootState): IInspectorState => state.inspector;
+
 export const getModeTabID = createSelector([all], s => s.inspector.activeTab);
 
 export const getSelectedTargetReference = createSelector([all], s => s.selectedReferenceType);
 export const getFilterBySelectedReferenceType = createSelector([all], s => s.filterBySelectedReferenceType);
 export const getTargetReference = createSelector([all], s => s.targetReference);
-export const getAutoUpdate = createSelector([all],s=>s.settings.autoUpdateInspector);
+export const getAutoUpdate = createSelector([all], s => s.settings.autoUpdateInspector);
 export const getAllDescriptors = createSelector([all], s => s.descriptors);
 export const getSelectedDescriptors = createSelector([all], s => s.descriptors.filter((d) => d.selected === true));
 export const getSelectedDescriptorsUUID = createSelector([getSelectedDescriptors], s => s.map(d => d.id));
-export const getPropertySettings = createSelector([all],s=>s.settings.properties);
+export const getPropertySettings = createSelector([all], s => s.settings.properties);
 export const getLockedSelection = createSelector([getSelectedDescriptors], s => s.some(d => d.locked));
 export const getPinnedSelection = createSelector([getSelectedDescriptors], s => s.some(d => d.pinned));
 export const getRemovableSelection = createSelector([getLockedSelection], s => !s);
@@ -113,15 +113,15 @@ export const getDescriptorsListView = createSelector([
 	rootFilter,
 	settings,
 	visibleMainCategories,
-) => {	
-	const pinned:IDescriptor[] = allDesc.filter(i => i.pinned);
+) => {
+	const pinned: IDescriptor[] = allDesc.filter(i => i.pinned);
 	const notPinned: IDescriptor[] = allDesc.filter(i => !i.pinned);
 	let reordered = [...notPinned, ...pinned];
-	const { searchTerm,listenerFilter,notifierFilter } = settings;
+	const {searchTerm, listenerFilter, notifierFilter} = settings;
 
 	if (searchTerm) {
 		reordered = reordered.filter(item => (item.title.toLowerCase().includes(searchTerm.toLowerCase())));
-	} 
+	}
 
 	/*
 	if (rootFilter === "off" && activeRefFilter.type !== "listener") {
@@ -132,13 +132,13 @@ export const getDescriptorsListView = createSelector([
 
 	//let filtered: IDescriptor[] = reordered;
 
-	
+
 	let filtered = reordered.filter((desc: IDescriptor) => {
 		// show all if none filter is active
 		if (rootFilter === "off") {
 			return true;
 		}
-	
+
 		// hide items from inactive categories
 		if (!visibleMainCategories.includes(desc.originalReference.type)) {
 			return false;
@@ -153,7 +153,7 @@ export const getDescriptorsListView = createSelector([
 			case "replies":
 				return true;
 		}
-		
+
 		// order matter
 		const filterClasses = [
 			"filterDoc",
@@ -168,7 +168,7 @@ export const getDescriptorsListView = createSelector([
 			"filterSnapshot",
 			"filterProp",
 		] as const;
-		
+
 		// order matter
 		const classes: TSubTypes[] = [
 			"documentID",
@@ -183,7 +183,7 @@ export const getDescriptorsListView = createSelector([
 			"snapshotID",
 			"properties",
 		];
-		
+
 		//console.log(desc.title, activeRef, origRefClone);
 		const activeRefClone = cloneDeep(activeRef);
 		const origRefClone = cloneDeep(desc.originalReference);
@@ -199,18 +199,18 @@ export const getDescriptorsListView = createSelector([
 		// allows to compare when multiple main categories are set to be visible
 		delete (origRefClone as any).type;
 		delete (activeRefClone as any).type;
-		console.log(desc.title,activeRefClone, origRefClone);
+		console.log(desc.title, activeRefClone, origRefClone);
 		return isEqual(activeRefClone, origRefClone);
 	});
 
 	if (activeRef.type === "listener" || activeRef.type === "notifier") {
 		const filterSettings: IListenerNotifierFilter = (activeRef.type === "listener") ? listenerFilter : notifierFilter;
 		if (filterSettings.type === "exclude" && filterSettings.exclude.join(";").trim().length) {
-			filtered = filtered.filter(item => 
+			filtered = filtered.filter(item =>
 				!filterSettings.exclude.some(str => (item.recordedData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		} else if (filterSettings.type === "include" && filterSettings.include.join(";").trim().length) {
-			filtered = filtered.filter(item => 
+			filtered = filtered.filter(item =>
 				filterSettings.include.some(str => (item.recordedData as ActionDescriptor)?._obj?.includes(str.trim())),
 			);
 		}
@@ -219,20 +219,20 @@ export const getDescriptorsListView = createSelector([
 	if (settings.groupDescriptors === "strict") {
 		filtered = cloneDeep(filtered);
 		filtered.reverse();
-	
+
 		// group (remove) duplicates
-		for (let i = 0; i < filtered.length-1; i++) {
+		for (let i = 0; i < filtered.length - 1; i++) {
 			const element = filtered[i];
-			for (let j = i+1; j < filtered.length; j++) {
+			for (let j = i + 1; j < filtered.length; j++) {
 				const next = filtered[j];
 				if (next.crc === element.crc) {
 					filtered.splice(j, 1);
 					j -= 1;
-					element.groupCount = (!element.groupCount) ? 2 : element.groupCount+1;
+					element.groupCount = (!element.groupCount) ? 2 : element.groupCount + 1;
 				}
 			}
 		}
-		
+
 		filtered.reverse();
 	}
 
@@ -249,7 +249,7 @@ export const getAutoActiveDescriptor = createSelector([getActiveDescriptors, get
 	const list = view;//.filter(item => !item.pinned);
 	if (activeDescs.length === 0) {
 		if (list.length) {
-			return list[list.length-1];			
+			return list[list.length - 1];
 		}
 	}
 	return null;
@@ -259,19 +259,19 @@ export const getSecondaryAutoActiveDescriptor = createSelector([getActiveDescrip
 	const list = view;//.filter(item => !item.pinned);
 	if (activeDescs.length === 0) {
 		if (list.length >= 2) {
-			return list[list.length-2];
+			return list[list.length - 2];
 		}
 	}
 	return null;
 });
 
-export const getAutoSelectedUUIDs = createSelector([getAutoActiveDescriptor, getSecondaryAutoActiveDescriptor,getModeTabID], (first,second,mode) => {
+export const getAutoSelectedUUIDs = createSelector([getAutoActiveDescriptor, getSecondaryAutoActiveDescriptor, getModeTabID], (first, second, mode) => {
 	const f = first?.id;
-	const s = (mode==="difference") ? second?.id : null;
+	const s = (mode === "difference") ? second?.id : null;
 	const result: string[] = [];
-	if (f) { result.push(f); }
-	if (s) { result.push(s); }
-	
+	if (f) {result.push(f);}
+	if (s) {result.push(s);}
+
 	return result;
 });
 

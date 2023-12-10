@@ -1,50 +1,50 @@
-.TabList{
+.TabList {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
 	flex-shrink: 0;
 	border: 0px solid yellow;
-	
 
-	.tabContent{
+
+	.tabContent {
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
 		padding: 1em;
 		position: relative;
-	
-		&.noPadding{
-			padding:0;
+
+		&.noPadding {
+			padding: 0;
 		}
 
-		&.showScrollbars{
+		&.showScrollbars {
 			overflow: auto;
 		}
 	}
 }
 
-.TabList .tabRow{
+.TabList .tabRow {
 	display: flex;
 	border-bottom: 1px solid var(--divider);
 	flex-shrink: 0;
 	align-items: center;
-	
+
 	flex-wrap: wrap;
-    min-width: 100%;
-    width: 0;
+	min-width: 100%;
+	width: 0;
 }
 
-.TabList .tabHeader{
+.TabList .tabHeader {
 	flex-shrink: 0;
-	padding:0.5em 0.5em;
+	padding: 0.5em 0.5em;
 }
 
-.TabList .tabHeader:hover{
-	color:var(--hover);
+.TabList .tabHeader:hover {
+	color: var(--hover);
 	cursor: pointer;
 }
 
-.TabList .tabHeader.active{
-	color:var(--active);
+.TabList .tabHeader.active {
+	color: var(--active);
 	cursor: default;
 }

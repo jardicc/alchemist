@@ -1,9 +1,9 @@
-import { IRefChannel, IRefDocument, IRefHistoryState, IRefLayer, IRefPath, IRefSnapshotClass, TAllTargetReferences, TChannelReferenceValid } from "../model/types";
-import { Reference, TReference } from "./Reference";
-import { getInitialState } from "../inspInitialState";
+import {IRefChannel, IRefDocument, IRefHistoryState, IRefLayer, IRefPath, IRefSnapshotClass, TAllTargetReferences, TChannelReferenceValid} from "../model/types";
+import {Reference, TReference} from "./Reference";
+import {getInitialState} from "../inspInitialState";
 
 // used for auto inspector
-export const guessOriginalReference = (refAM: TReference[]): TAllTargetReferences|null => {
+export const guessOriginalReference = (refAM: TReference[]): TAllTargetReferences | null => {
 	const r = new Reference(refAM);
 	const init = getInitialState().targetReference;
 
@@ -59,7 +59,7 @@ export const guessOriginalReference = (refAM: TReference[]): TAllTargetReference
 				...init.channel,
 				documentID: r.document?._id ?? init.channel.documentID,
 				layerID: r.layer?._id ?? init.channel.layerID,
-				channelID: (channel && "_enum" in channel) ? channel._value as TChannelReferenceValid: channel?._id ?? init.channel.layerID as TChannelReferenceValid,
+				channelID: (channel && "_enum" in channel) ? channel._value as TChannelReferenceValid : channel?._id ?? init.channel.layerID as TChannelReferenceValid,
 			};
 			return res;
 		}

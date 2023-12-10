@@ -1,5 +1,5 @@
-.SorcererContainer{
-	color:var(--text);
+.SorcererContainer {
+	color: var(--text);
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -9,69 +9,69 @@
 	background: var(--bg);
 
 
-	h3{
-		margin:0;
+	h3 {
+		margin: 0;
 	}
 
-	.manifest{
+	.manifest {
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
 		width: 0;
 
-		.manifestCode{
+		.manifestCode {
 			flex-grow: 1;
 			width: 100%;
 		}
 	}
 
-	.menuItemHeader{
+	.menuItemHeader {
 		padding-left: 0.7em;
 		display: flex;
 		align-items: center;
 		font-size: var(--biggerText);
 		font-weight: bold;
 
-		> span{
-			margin-right:  auto;
+		>span {
+			margin-right: auto;
 		}
 
-		> .button{
+		>.button {
 			align-self: center;
 			justify-self: center;
 			padding: 0 0.2em;
 		}
 	}
 
-	.menuItem{
+	.menuItem {
 		padding-left: 1.7em;
 		cursor: pointer;
 
-		&.general{
+		&.general {
 			padding-left: 0.7em;
 		}
 
-		&:hover{
-			color:var(--hover);
+		&:hover {
+			color: var(--hover);
 		}
 
-		&.active{
-			color:var(--active);
+		&.active {
+			color: var(--active);
 		}
 	}
 
 
-	.details{
-		padding:0.7em;
+	.details {
+		padding: 0.7em;
 		width: 0;
 		min-width: 27em;
 
-		sp-textfield{
+		sp-textfield {
 			margin-left: auto;
 		}
 	}
 
-	.tree{
+	.tree {
 		padding-top: 1em;
 		overflow: auto;
 		//min-width: 20em;
@@ -81,52 +81,57 @@
 		border-bottom: none;
 		border-top: none;
 
-		.ctaEmpty{
+		.ctaEmpty {
 			display: flex;
 			flex-direction: column;
 			max-width: 15em;
-			margin:auto;
+			margin: auto;
 			text-align: center;
 			justify-content: center;
 			align-items: center;
 			flex-shrink: 0;
-	
-			.button{
+
+			.button {
 				flex-grow: 0;
 			}
 		}
 	}
 
-	.atnData{
+	.atnData {
 		display: flex;
 		flex-grow: 1;
 	}
 
-	&.size-tiny{
+	&.size-tiny {
 		font-size: 10px;
 	}
-	&.size-small{
+
+	&.size-small {
 		font-size: 10.5px;
 	}
-	&.size-default{
+
+	&.size-default {
 		font-size: 11px;
 	}
-	&.size-bigger{
+
+	&.size-bigger {
 		font-size: 12px;
 	}
-	&.size-big{
+
+	&.size-big {
 		font-size: 13px;
 	}
-	&.size-youMustBeJoking{
+
+	&.size-youMustBeJoking {
 		font-size: 24px;
 	}
 
-	sp-textarea{
+	sp-textarea {
 		appearance: none;
-		margin-bottom:2px;
+		margin-bottom: 2px;
 	}
 
-	.buttonBar{
+	.buttonBar {
 		border-top: 1px solid var(--divider);
 		display: flex;
 		flex-direction: row;

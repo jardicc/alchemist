@@ -1,14 +1,14 @@
 
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
-import { IDescriptorSettings } from "../model/types";
-import { getInspectorSettings } from "../selectors/inspectorSelectors";
-import { Base64} from "./Base64";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
+import {IDescriptorSettings} from "../model/types";
+import {getInspectorSettings} from "../selectors/inspectorSelectors";
+import {Base64} from "./Base64";
 
-export class RawDataConverter{
+export class RawDataConverter {
 
 	public static arrayBufferToString(arr: ArrayBuffer): string {
 		let binary = "";
-		const bytes = new Uint8Array( arr );
+		const bytes = new Uint8Array(arr);
 		for (let i = 0, len = bytes.byteLength; i < len; i++) {
 			binary += String.fromCharCode(bytes[i]);
 		}
@@ -23,7 +23,7 @@ export class RawDataConverter{
 		return binary;
 	}
 
-	public static replaceArrayBuffer(obj: ActionDescriptor[]|ActionDescriptor): ActionDescriptor[]|ActionDescriptor {
+	public static replaceArrayBuffer(obj: ActionDescriptor[] | ActionDescriptor): ActionDescriptor[] | ActionDescriptor {
 		const store = window._rootStore;
 		const settings = getInspectorSettings(store.getState());
 		if (!settings.makeRawDataEasyToInspect) {
@@ -32,7 +32,7 @@ export class RawDataConverter{
 		rec(obj);
 		return obj;
 
-		function rec(data:any) {
+		function rec(data: any) {
 			for (const key in data) {
 				if (Object.prototype.hasOwnProperty.call(data, key)) {
 					if (Array.isArray(data)) {
@@ -48,7 +48,7 @@ export class RawDataConverter{
 							data[key] = {
 								"_rawData": "alchemistFakeType",
 								"_data": arr,
-							};							
+							};
 						} else {
 							data[key] = "<ArrayBuffer> This value was ignored for performance reasons. Turn this on in Alchemist > Settings > Support raw data type";
 						}
@@ -56,15 +56,15 @@ export class RawDataConverter{
 					else if (typeof data[key] === "object") {
 						rec(data[key]);
 					}
-				}				
+				}
 			}
 		}
 	}
 
-	public static convertFakeRawInCode(obj: ActionDescriptor,descSettings:IDescriptorSettings): void{
+	public static convertFakeRawInCode(obj: ActionDescriptor, descSettings: IDescriptorSettings): void {
 		rec(obj);
 
-		function rec(data:ActionDescriptor) {
+		function rec(data: ActionDescriptor) {
 			for (const key in data) {
 				if (Object.prototype.hasOwnProperty.call(data, key)) {
 					const itemInData = data[key];
@@ -88,10 +88,10 @@ export class RawDataConverter{
 								"_data": Base64.btoa(str),
 							};
 						} else {
-							rec(itemInData);							
+							rec(itemInData);
 						}
 					}
-				}				
+				}
 			}
 		}
 	}

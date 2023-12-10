@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { ITargetReferenceAM } from "../classes/GetInfo";
-import { TFilterState } from "../components/FilterButton/FilterButton";
-import { IActionSetUUID, IATNConverterState } from "../../atnDecoder/atnModel";
-import { ISorcererState } from "../../sorcerer/sorModel";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import type {ITargetReferenceAM} from "../classes/GetInfo";
+import {TFilterState} from "../components/FilterButton/FilterButton";
+import {IActionSetUUID, IATNConverterState} from "../../atnDecoder/atnModel";
+import {ISorcererState} from "../../sorcerer/sorModel";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
@@ -12,12 +12,12 @@ export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "s
 export type TSubTypes = "actionID" | "actionSetID" | "channelID" | "documentID" | "guideID" | "historyID" | "layerID" | "pathID" | "snapshotID" | "commandIndex" | "properties"
 
 
-export type TTargetReference = "listener" |  "generator" | 
+export type TTargetReference = "listener" | "generator" |
 	"dispatcher" | "notifier" | "replies" | TPropertyClass;
 export type TPropertyClass = "application" | "historyState" | "snapshotClass" | "layer" | "path" | "channel" | "document" | "guide" |
 	"actions" | "timeline" | "animationFrameClass" | "animationClass"
 export type TPropertyGroup = "hidden" | "optional" | "default" | "1st";
-export type ITreeDataTabs =  "content" | "difference" | "reference"|"dom"
+export type ITreeDataTabs = "content" | "difference" | "reference" | "dom"
 export type TActiveInspectorTab = ITreeDataTabs;
 
 
@@ -37,28 +37,28 @@ export type TPathReference = "selected" | "vectorMask" | "workPathIndex" | "all"
 export type TGeneratorReference = "full"
 export type TChannelReference = "selected" | "all" | TChannelReferenceValid;
 export type TChannelReferenceValid =
-	| number 
-	| "composite" 
-	| "RGB" 
-	| "red" 
-	| "green" 
-	| "blue" 
-	| "CMYK" 
-	| "black" 
-	| "cyan" 
-	| "magenta" 
-	| "yellow" 
-	| "lab" 
-	| "lightness" 
-	| "a" 
-	| "b" 
-	| "gray" 
-	| "monotone" 
-	| "duotone" 
-	| "tritone" 
-	| "quadtone" 
-	| "mask" 
-	| "transparencyEnum" 
+	| number
+	| "composite"
+	| "RGB"
+	| "red"
+	| "green"
+	| "blue"
+	| "CMYK"
+	| "black"
+	| "cyan"
+	| "magenta"
+	| "yellow"
+	| "lab"
+	| "lightness"
+	| "a"
+	| "b"
+	| "gray"
+	| "monotone"
+	| "duotone"
+	| "tritone"
+	| "quadtone"
+	| "mask"
+	| "transparencyEnum"
 	| "filterMask";
 export type TGuideReference = "none" | "all" | number;
 export type TActionSet = "none" | number;
@@ -84,35 +84,35 @@ export interface IInspectorState {
 	filterBySelectedReferenceType: TFilterState
 	descriptorsGrouping: TDescriptorsGrouping
 	targetReference: ITargetReference
-	settings:ISettings
-	inspector:IInspector
+	settings: ISettings
+	inspector: IInspector
 	descriptors: IDescriptor[]
 	dispatcher: IDispatcher
 
 	atnConverter: IATNConverterState
 	sorcerer: ISorcererState
-	
-	explicitlyVisibleTopCategories:TTargetReference[]
+
+	explicitlyVisibleTopCategories: TTargetReference[]
 }
 
-export type TAllTargetReferences = 
-| IRefListener
-| IRefDispatcher
-| IRefNotifier
-| IRefReplies
-| IRefGenerator
-| IRefApplication
-| IRefDocument
-| IRefLayer
-| IRefPath
-| IRefChannel
-| IRefActions
-| IRefTimeline
-| IRefAnimationFrameClass
-| IRefAnimationClass
-| IRefHistoryState
-| IRefSnapshotClass
-| IRefGuide
+export type TAllTargetReferences =
+	| IRefListener
+	| IRefDispatcher
+	| IRefNotifier
+	| IRefReplies
+	| IRefGenerator
+	| IRefApplication
+	| IRefDocument
+	| IRefLayer
+	| IRefPath
+	| IRefChannel
+	| IRefActions
+	| IRefTimeline
+	| IRefAnimationFrameClass
+	| IRefAnimationClass
+	| IRefHistoryState
+	| IRefSnapshotClass
+	| IRefGuide
 
 export interface ITargetReference {
 	listener: IRefListener
@@ -134,38 +134,38 @@ export interface ITargetReference {
 	guide: IRefGuide
 }
 
-export interface IRefListener{
-	type: "listener"	
+export interface IRefListener {
+	type: "listener"
 }
-export interface IRefDispatcher{
-	type: "dispatcher"	
+export interface IRefDispatcher {
+	type: "dispatcher"
 }
-export interface IRefNotifier{
-	type: "notifier"	
+export interface IRefNotifier {
+	type: "notifier"
 }
-export interface IRefReplies{
-	type: "replies"	
+export interface IRefReplies {
+	type: "replies"
 }
-export interface IRefGenerator{
-	type: "generator"	
+export interface IRefGenerator {
+	type: "generator"
 }
 
-export interface IRefApplication{
-	type: "application"	
+export interface IRefApplication {
+	type: "application"
 	properties: string[]
 	filterProp: TFilterState
 }
 
-export interface IRefDocument{
-	type: "document"	
+export interface IRefDocument {
+	type: "document"
 	documentID: number | "selected" | "all"
 	properties: string[]
 	filterDoc: TFilterState
 	filterProp: TFilterState
 }
 
-export interface IRefLayer{
-	type: "layer"	
+export interface IRefLayer {
+	type: "layer"
 	layerID: number | "selected" | "all"
 	documentID: number | "selected"
 	properties: string[]
@@ -174,8 +174,8 @@ export interface IRefLayer{
 	filterProp: TFilterState
 }
 
-export interface IRefPath{
-	type: "path"	
+export interface IRefPath {
+	type: "path"
 	pathID: number | "selected" | "all" | "workPath" | "vectorMask"
 	layerID: number | "selected" | "none"
 	documentID: number | "selected"
@@ -187,21 +187,21 @@ export interface IRefPath{
 	filterProp: TFilterState
 }
 
-export interface IRefChannel{
-	type: "channel"	
+export interface IRefChannel {
+	type: "channel"
 	channelID: number | "selected" | "all" | TChannelReferenceValid
 	layerID: number | "selected" | "none"
 	documentID: number | "selected"
 	properties: string[]
-	
+
 	filterChannel: TFilterState
 	filterLayer: TFilterState
 	filterDoc: TFilterState
 	filterProp: TFilterState
 }
 
-export interface IRefActions{
-	type: "actions"	
+export interface IRefActions {
+	type: "actions"
 	actionSetID: number | "none"
 	actionID: number | "none"
 	commandIndex: number | "none"
@@ -212,40 +212,40 @@ export interface IRefActions{
 	filterCommand: TFilterState
 	filterProp: TFilterState
 }
-export interface IRefTimeline{
-	type: "timeline"	
+export interface IRefTimeline {
+	type: "timeline"
 	properties: string[]
 	filterProp: TFilterState
 }
-export interface IRefAnimationFrameClass{
-	type: "animationFrameClass"	
+export interface IRefAnimationFrameClass {
+	type: "animationFrameClass"
 	properties: string[]
 	filterProp: TFilterState
 }
-export interface IRefAnimationClass{
-	type: "animationClass"	
+export interface IRefAnimationClass {
+	type: "animationClass"
 	properties: string[]
 	filterProp: TFilterState
 }
-export interface IRefHistoryState{
+export interface IRefHistoryState {
 	type: "historyState"
 	historyID: number | "selected"
-	filterHistory:TFilterState
+	filterHistory: TFilterState
 
 
 	properties: string[]
 	filterProp: TFilterState
 }
-export interface IRefSnapshotClass{
-	type: "snapshotClass"	
+export interface IRefSnapshotClass {
+	type: "snapshotClass"
 	snapshotID: number | "selected"
-	filterSnapshot:TFilterState
+	filterSnapshot: TFilterState
 
 	properties: string[]
 	filterProp: TFilterState
 }
-export interface IRefGuide{
-	type: "guide"	
+export interface IRefGuide {
+	type: "guide"
 	guideID: number | "none" | "all"
 	documentID: number | "selected"
 	properties: string[]
@@ -255,10 +255,10 @@ export interface IRefGuide{
 	filterProp: TFilterState
 }
 
-export interface IDispatcher{
+export interface IDispatcher {
 	snippets: [
 		{
-			content:string
+			content: string
 		}
 	]
 }
@@ -267,9 +267,9 @@ export interface IDispatcher{
 //////
 
 
-export interface IFilterProperty<T>{
+export interface IFilterProperty<T> {
 	label: string
-	value:T
+	value: T
 }
 
 /////
@@ -296,14 +296,14 @@ export interface ISettings {
 	initialDescriptorSettings: IDescriptorSettings
 	neverRecordActionNames: string[]
 	accordionExpandedIDs: string[]
-	
-	tokenify:boolean
+
+	tokenify: boolean
 	singleQuotes: boolean
 	indent: "tab" | "space1" | "space2" | "space3" | "space4" | "space5" | "space6" | "space7" | "space8"
 
 	codeImports: "none" | "require"
 	codeWrappers: "modal" | "batchPlay" | "array" | "objects"
-	
+
 	hide_isCommand: boolean
 	hideDontRecord: boolean
 	hideForceNotify: boolean
@@ -312,7 +312,7 @@ export interface ISettings {
 	notifierFilter: IListenerNotifierFilter
 }
 
-export interface IListenerNotifierFilter{
+export interface IListenerNotifierFilter {
 	type: TFilterEvents
 	exclude: string[]
 	include: string[]
@@ -327,21 +327,21 @@ export interface IDescriptorSettings {
 
 export interface IPropertySettings {
 	type: TPropertyClass
-	list: (IPropertyItem|IPropertyGroup)[]
+	list: (IPropertyItem | IPropertyGroup)[]
 }
 
-export interface IPropertyGroup{
+export interface IPropertyGroup {
 	group: string,
-	groupLabel:string,
+	groupLabel: string,
 	data: IPropertyItem[]
 }
 
 export interface IPropertyItem {
 	label: string
-	value: string|number
+	value: string | number
 }
 
-export interface IInspector{
+export interface IInspector {
 	activeTab: TActiveInspectorTab
 	dom: IDOM
 	content: IContent
@@ -350,29 +350,29 @@ export interface IInspector{
 	info: IReference
 }
 
-export interface ICode{
-	viewType: "generated"|"options"
+export interface ICode {
+	viewType: "generated" | "options"
 }
 
-export interface IDOM{
+export interface IDOM {
 	treePath: string[]
-	autoExpandLevels:number
-	expandedTree:TPath[]
+	autoExpandLevels: number
+	expandedTree: TPath[]
 }
 
-export interface IContent{
+export interface IContent {
 	viewType: TGenericViewType
-	search:string
+	search: string
 	treePath: string[]
-	autoExpandLevels:number
-	expandedTree:TPath[]
+	autoExpandLevels: number
+	expandedTree: TPath[]
 }
 
-export interface IDifference{
+export interface IDifference {
 	viewType: TGenericViewType
 	treePath: string[]
-	autoExpandLevels:number
-	expandedTree:TPath[]
+	autoExpandLevels: number
+	expandedTree: TPath[]
 }
 
 export interface IReference {
@@ -399,18 +399,18 @@ export interface IDescriptor {
 	groupCount?: number
 }
 
-export interface IGetNameOutput{
+export interface IGetNameOutput {
 	typeRef: string
 	value: string
 }
 
 export const enum DocumentMode {
-    BITMAP = "bitmapMode",
-    CMYK = "CMYKColorMode",
-    DUOTONE = "duotoneMode",
-    GRAYSCALE = "grayscaleMode",
-    INDEXEDCOLOR = "indexedColorMode",
-    LAB = "labColorMode",
-    MULTICHANNEL = "multichannelMode",
-    RGB = "RGBColorMode"
+	BITMAP = "bitmapMode",
+	CMYK = "CMYKColorMode",
+	DUOTONE = "duotoneMode",
+	GRAYSCALE = "grayscaleMode",
+	INDEXEDCOLOR = "indexedColorMode",
+	LAB = "labColorMode",
+	MULTICHANNEL = "multichannelMode",
+	RGB = "RGBColorMode"
 }

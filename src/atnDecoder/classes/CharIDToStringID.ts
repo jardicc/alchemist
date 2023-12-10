@@ -1,8 +1,8 @@
-interface ICharIDToStringID{
-	[key:string]:string
+interface ICharIDToStringID {
+	[key: string]: string
 }
-interface IStringIDToCharID{
-	[key:string]:string
+interface IStringIDToCharID {
+	[key: string]: string
 }
 
 
@@ -1807,7 +1807,7 @@ export const charIDToStringID: ICharIDToStringID = {
 	"Zm  ": "zoom",
 	"ZmIn": "zoomIn",
 	"ZmOt": "zoomOut",
-	
+
 	//////////////////////////////////
 	// CAMERA RAW
 	//////////////////////////////////
@@ -1953,7 +1953,7 @@ export const charIDToStringID: ICharIDToStringID = {
 	"OSMM": "MattePaper",
 	"OSMN": "NoneSmartSharpen",
 	"OSMS": "ScreenSmartSharpen",
-	
+
 	"RFDm": "FitToDimensions",
 	"RFLs": "FitToLongSide",
 	"RFMP": "FitToMegapixels",
@@ -1961,24 +1961,24 @@ export const charIDToStringID: ICharIDToStringID = {
 	"RFPc": "FitToPercentage",
 	"RFSs": "FitToShortSide",
 	"RFWH": "FitToWidthAndHeight",
-	
+
 	"PpIn": "PixelsPerInch",
 	"PpCm": "PixelsPerCM",
 	"CuIn": "ScaleUnitIn",
 	"CuPx": "ScaleUnitPx",
 	"CuCM": "ScaleUnitCM",
-	
+
 	"OSAH": "SharpeningHigh",
 	"OSAL": "SharpeningLow",
 	"OSAS": "SharpeningStandart",
-	
+
 	"Dayl": "Daylight",
 	"Clou": "Cloudy",
 	"Shad": "Shade",
 	"Tung": "Tungsten",
 	"Fluo": "Fluorescent",
 	"Flas": "Flash",
-	
+
 };
 
 
@@ -3930,7 +3930,7 @@ export const stringIDtoCharID: IStringIDToCharID = {
 	"MattePaper": "OSMM",
 	"NoneSmartSharpen": "OSMN",
 	"ScreenSmartSharpen": "OSMS",
-	
+
 	"FitToDimensions": "RFDm",
 	"FitToLongSide": "RFLs",
 	"FitToMegapixels": "RFMP",
@@ -3938,13 +3938,13 @@ export const stringIDtoCharID: IStringIDToCharID = {
 	"FitToPercentage": "RFPc",
 	"FitToShortSide": "RFSs",
 	"FitToWidthAndHeight": "RFWH",
-	
+
 	"PixelsPerInch": "PpIn",
 	"PixelsPerCM": "PpCm",
 	"ScaleUnitIn": "CuIn",
 	"ScaleUnitPx": "CuPx",
 	"ScaleUnitCM": "CuCM",
-	
+
 	"SharpeningHigh": "OSAH",
 	"SharpeningLow": "OSAL",
 	"SharpeningStandart": "OSAS",

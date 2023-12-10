@@ -1,6 +1,6 @@
-.Inspector{
-	color:var(--text);
-	fill:var(--text);
+.Inspector {
+	color: var(--text);
+	fill: var(--text);
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -9,31 +9,36 @@
 	flex-shrink: 0;
 	background: var(--bg);
 
-	.filterContent{
+	.filterContent {
 		margin-left: auto;
 	}
 
 
-	
-	&.size-tiny{
+
+	&.size-tiny {
 		font-size: 10px;
 	}
-	&.size-small{
+
+	&.size-small {
 		font-size: 10.5px;
 	}
-	&.size-default{
+
+	&.size-default {
 		font-size: 11px;
 	}
-	&.size-bigger{
+
+	&.size-bigger {
 		font-size: 12px;
 	}
-	&.size-big{
+
+	&.size-big {
 		font-size: 13px;
 	}
-	&.size-youMustBeJoking{
+
+	&.size-youMustBeJoking {
 		font-size: 24px;
 	}
-	
+
 	.Resizer.vertical {
 		flex-shrink: 0;
 		width: 4px;
@@ -41,13 +46,13 @@
 		border: 1px solid var(--divider);
 		cursor: ew-resize;
 
-		&:hover{
+		&:hover {
 			border: 1px solid var(--divider);
 			background: var(--hover);
 		}
 	}
 
-	.leftPane{
+	.leftPane {
 		position: absolute !important;
 		top: 0;
 		bottom: 0;
@@ -57,7 +62,7 @@
 		flex-direction: column;
 	}
 
-	.rightPane{
+	.rightPane {
 		position: absolute !important;
 		top: 0;
 		bottom: 0;
@@ -66,92 +71,93 @@
 		display: flex;
 	}
 
-	.messageStrip{
-		border-top:1px solid var(--divider);
-		padding:0.5em;
+	.messageStrip {
+		border-top: 1px solid var(--divider);
+		padding: 0.5em;
 		display: inline-flex;
 		align-items: center;
 		font-size: 1.05em;
 
-		.link{
+		.link {
 			text-decoration: none;
-			color:var(--autoActive);
+			color: var(--autoActive);
 
-			&:hover{
-				color:var(--hover);
+			&:hover {
+				color: var(--hover);
 				text-decoration: underline;
 			}
 		}
 
-		.close{
-			fill:var(--text);
+		.close {
+			fill: var(--text);
 			margin-left: auto;
 			text-decoration: none;
 			cursor: pointer;
 
-			&:hover{
-				fill:var(--hover);
+			&:hover {
+				fill: var(--hover);
 			}
 		}
 	}
 
-	.Raw{
+	.Raw {
 		position: relative;
 	}
 
-	.Tree{
+	.Tree {
 		position: relative;
 		overflow: visible;
 
-		.TreeContent{
+		.TreeContent {
 			overflow: scroll;
 		}
 	}
-	
-	.descriptorsColumns{
+
+	.descriptorsColumns {
 		display: flex;
 		flex-grow: 1;
 		position: relative;
 
-		> .SplitPane{
+		>.SplitPane {
 			display: flex;
 			position: absolute;
-			top:0;
+			top: 0;
 			bottom: 0;
 			right: 0;
 			left: 0;
 		}
 	}
 
-	.FilterButton.settings{
+	.FilterButton.settings {
 		margin-right: 0.5em;
 	}
-	
-	
-	> .TabList{
+
+
+	>.TabList {
 		flex-grow: 1;
 	}
 
-	.tabsDescriptor{
+	.tabsDescriptor {
 
-		> .tabContent{
+		>.tabContent {
 			position: relative;
 
-			.tabsView{
+			.tabsView {
 				position: absolute;
-				top:0;
+				top: 0;
 				right: 0;
 				bottom: 0;
 				left: 0;
 
-				> .tabContent{
+				>.tabContent {
 					display: flex;
 					flex-direction: column;
 					flex-grow: 1;
 					//overflow: scroll;
 				}
 
-				> .raw,.generated{
+				>.raw,
+				.generated {
 					padding: 0;
 				}
 			}
@@ -162,4 +168,3 @@
 
 
 }
-

@@ -1,4 +1,4 @@
-.ItemVisibilityButton{
+.ItemVisibilityButton {
 	height: 100%;
 	display: flex;
 	justify-content: center;
@@ -6,19 +6,21 @@
 	flex-shrink: 0;
 	padding: 0 0.5em;
 	border-radius: 3px;
-	border:1px solid transparent;
+	border: 1px solid transparent;
 
-	&.visible{
-		fill:var(--text);
+	&.visible {
+		fill: var(--text);
 	}
-	&.hidden{
-		fill:var(--textDisallowedDimmer);
+
+	&.hidden {
+		fill: var(--textDisallowedDimmer);
 	}
 
 	//&.visible, &hidden{
-		&:hover{
-			fill: var(--hover);
-			border:1px solid var(--hover)
-		}
+	&:hover {
+		fill: var(--hover);
+		border: 1px solid var(--hover)
+	}
+
 	//}
 }

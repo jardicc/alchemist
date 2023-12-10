@@ -1,13 +1,13 @@
-import { connect } from "react-redux";
-import { IRootState } from "../../../shared/store";
-import { getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings, getSettingsVisible } from "../../selectors/inspectorSelectors";
-import { setDescriptorOptionsAction, setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction, setSettingsAction, toggleAccordion, toggleSettingsAction } from "../../actions/inspectorActions";
+import {connect} from "react-redux";
+import {IRootState} from "../../../shared/store";
+import {getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings, getSettingsVisible} from "../../selectors/inspectorSelectors";
+import {setDescriptorOptionsAction, setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction, setSettingsAction, toggleAccordion, toggleSettingsAction} from "../../actions/inspectorActions";
 import SP from "react-uxp-spectrum";
-import React, { Component } from "react";
-import { IDescriptor, IDescriptorSettings, ISettings, TFontSizeSettings } from "../../model/types";
+import React, {Component} from "react";
+import {IDescriptor, IDescriptorSettings, ISettings, TFontSizeSettings} from "../../model/types";
 import "./Settings.less";
-import { Dispatch } from "redux";
-import { Settings as SettingsClass } from "../../../inspector/classes/Settings";
+import {Dispatch} from "redux";
+import {Settings as SettingsClass} from "../../../inspector/classes/Settings";
 import {getDescriptorOptions} from "../../selectors/inspectorCodeSelectors";
 import {Accordion} from "../Accordion/Accordion";
 
@@ -26,7 +26,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		} else {
 			onSetOptions(selected.map(item => item.id), options);
 		}
-	}
+	};
 
 	private renderOptionsScope = (): React.ReactNode => {
 		const auto = this.props.autoSelectedUUIDs;
@@ -38,7 +38,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		} else {
 			return (<>Will change {this.props.selected?.length ?? 0} selected item(s)</>);
 		}
-	}
+	};
 
 	private onSynchronousExecution = (e: any) => {
 		let value = e.currentTarget.value;
@@ -48,42 +48,42 @@ class Settings extends Component<TSettings, ISettingsState> {
 			value = value === "true";
 		}
 		this.common({synchronousExecution: value});
-	}
+	};
 
 	private onSetDialogOptions = (e: any) => {
 		const value = e.currentTarget.value;
 		this.common({dialogOptions: (value === "default" ? null : value)});
-	}
+	};
 
 	private onSetModalBehavior = (e: any) => {
 		const value = e.currentTarget.value;
 		this.common({modalBehavior: (value === "default" ? null : value)});
-	}
-	
+	};
+
 	private onSetSupportRawDataType = (e: any) => {
 		const value = e.target.checked;
 		this.common({supportRawDataType: !!value});
-	}
+	};
 
 	private onSetIndent = (e: any) => {
 		const value = e.currentTarget.value;
 		this.props.onSetGlobalOptions({indent: value});
-	}
+	};
 
-	private onSetCodeWrappers = (e:any) => {
+	private onSetCodeWrappers = (e: any) => {
 		if (this.levelDelay) {
-			clearTimeout(this.levelDelay);			
+			clearTimeout(this.levelDelay);
 		}
 		const value = this.wrappersString(e.target.value);
 
 		this.levelDelay = window.setTimeout(() => {
 			this.props.onSetGlobalOptions({
-				codeWrappers:value,
+				codeWrappers: value,
 			});
 		}, 50);
-	}
+	};
 
-	private get wrappersValue():number {
+	private get wrappersValue(): number {
 		switch (this.props.settings.codeWrappers) {
 			case "modal":
 				return 0;
@@ -96,7 +96,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		}
 	}
 
-	private wrappersString(num:0|1|2|3) {
+	private wrappersString(num: 0 | 1 | 2 | 3) {
 		switch (num) {
 			case 0:
 				return "modal";
@@ -109,7 +109,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		}
 	}
 
-	private get wrappersLabel():string {
+	private get wrappersLabel(): string {
 		switch (this.props.settings.codeWrappers) {
 			case "modal":
 				return "Execute as modal";
@@ -122,16 +122,16 @@ class Settings extends Component<TSettings, ISettingsState> {
 		}
 	}
 
-	private onSetImports = (e:any) => {
-		this.props.onSetGlobalOptions({codeImports:e.target?.checked ? "require" : "none"});
-	}
-	
+	private onSetImports = (e: any) => {
+		this.props.onSetGlobalOptions({codeImports: e.target?.checked ? "require" : "none"});
+	};
+
 	public render(): React.ReactNode {
 		const {settings: {makeRawDataEasyToInspect: ignoreRawData, maximumItems, fontSize, neverRecordActionNames, accordionExpandedIDs}, onSetRecordRaw, onSetFontSize, onNeverRecordActionNamesChanged} = this.props;
 		const {onSetGlobalOptions, settingsVisible: visible, setToggleSettings, onToggleAccordion} = this.props;
 		const {dialogOptions, modalBehavior, synchronousExecution, supportRawDataType} = this.props.descriptorSettings;
-		const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand,codeImports,codeWrappers,tokenify} = this.props.globalSettings;
-		
+		const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand, codeImports, codeWrappers, tokenify} = this.props.globalSettings;
+
 		const items: {val: TFontSizeSettings, label: string}[] = [
 			{label: "Tiny", val: "size-tiny"},
 			{label: "Small", val: "size-small"},
@@ -218,7 +218,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 					</div>
 					<div className="column">
 						<div className="label">
-							<span>Wrappers: </span><span>{ this.wrappersLabel}</span>
+							<span>Wrappers: </span><span>{this.wrappersLabel}</span>
 						</div>
 						<SP.Slider
 							variant="filled"
@@ -232,7 +232,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 					<div className="row">
 						<SP.Checkbox
 							onChange={this.onSetImports}
-							checked={codeImports==="require" || undefined}
+							checked={codeImports === "require" || undefined}
 						>{"Add require()"}</SP.Checkbox>
 					</div>
 					<div className="row">
@@ -330,12 +330,12 @@ class Settings extends Component<TSettings, ISettingsState> {
 
 type TSettings = ISettingsProps & ISettingsDispatch
 
-interface ISettingsState{
+interface ISettingsState {
 	maxItemsTempValue: string
 	maxItemsFocus: boolean
 }
 
-interface ISettingsProps{
+interface ISettingsProps {
 	settings: ISettings
 	autoSelectedUUIDs: string[]
 	globalSettings: ISettings
@@ -344,8 +344,8 @@ interface ISettingsProps{
 	settingsVisible: boolean
 }
 
-const mapStateToProps = (state: IRootState): ISettingsProps => ({	
-	settings: getInspectorSettings(state),	
+const mapStateToProps = (state: IRootState): ISettingsProps => ({
+	settings: getInspectorSettings(state),
 	autoSelectedUUIDs: getAutoSelectedUUIDs(state),
 	descriptorSettings: getDescriptorOptions(state),
 	globalSettings: getInspectorSettings(state),
@@ -358,12 +358,12 @@ interface ISettingsDispatch {
 	onSetMaximumItems: (value: string) => void
 	onSetFontSize: (value: TFontSizeSettings) => void
 	onNeverRecordActionNamesChanged: (value: string) => void
-	
+
 	onSetGlobalOptions: (options: Partial<ISettings>) => void
 	onSetDescriptorOptions: (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => void
 	setToggleSettings(): void
-	
-	onToggleAccordion(id:string,expanded:boolean):void
+
+	onToggleAccordion(id: string, expanded: boolean): void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): ISettingsDispatch => ({
@@ -371,7 +371,7 @@ const mapDispatchToProps = (dispatch: Dispatch): ISettingsDispatch => ({
 	onSetMaximumItems: (value) => dispatch(setMaximumItems(value)),
 	onSetFontSize: (value) => dispatch(setFontSizeAction(value)),
 	onNeverRecordActionNamesChanged: (value) => dispatch(setNeverRecordActionNamesAction(value)),
-	
+
 	onSetGlobalOptions: (options) => dispatch(setSettingsAction(options)),
 	onSetDescriptorOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
 	setToggleSettings: () => dispatch(toggleSettingsAction()),

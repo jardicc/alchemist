@@ -12,7 +12,7 @@
 	background: var(--BACKGROUND_COLOR);
 	color: var(--TEXT_COLOR);
 
-	*{
+	* {
 		flex-shrink: 0;
 	}
 
@@ -58,13 +58,13 @@
 	.jsondiffpatch-added .jsondiffpatch-value pre,
 	.jsondiffpatch-modified .jsondiffpatch-right-value pre,
 	.jsondiffpatch-textdiff-added {
-		background:var(--DIFF_ADD_COLOR);
+		background: var(--DIFF_ADD_COLOR);
 	}
 
 	.jsondiffpatch-deleted pre,
 	.jsondiffpatch-modified .jsondiffpatch-left-value pre,
 	.jsondiffpatch-textdiff-deleted {
-		background:var(--DIFF_REMOVE_COLOR);
+		background: var(--DIFF_REMOVE_COLOR);
 		text-decoration: line-through;
 	}
 
@@ -72,16 +72,16 @@
 	.jsondiffpatch-movedestination {
 		color: gray;
 	}
-/*
+
+	/*
 	.jsondiffpatch-unchanged,.jsondiffpatch-delta ul > li{
 		display: flex;
 	}*/
 
-	.jsondiffpatch-unchanged, 
+	.jsondiffpatch-unchanged,
 	.jsondiffpatch-modified,
 	.jsondiffpatch-deleted,
-	.jsondiffpatch-added
-	{
+	.jsondiffpatch-added {
 		display: flex;
 		flex-shrink: 0;
 		align-items: flex-start;

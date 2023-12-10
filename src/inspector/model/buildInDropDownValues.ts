@@ -26,7 +26,7 @@ export const mainClasses: IFilterProperty<TTargetReference>[] = [
 ];
 // TODO rework into selector?
 export const baseItemsDocument = (mainCategory: TTargetReference): IFilterProperty<TDocumentReference>[] => {
-	const res:IFilterProperty<TDocumentReference>[] = [
+	const res: IFilterProperty<TDocumentReference>[] = [
 		{label: "(active)", value: "selected"},
 	];
 	// only document main category can get all documents in multiGet

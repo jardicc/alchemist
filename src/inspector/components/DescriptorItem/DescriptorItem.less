@@ -2,23 +2,24 @@
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	
+
 	border-top: 1px solid var(--divider);
 
-	.titleIcon{
+	.titleIcon {
 		margin-right: 0.5em;
 	}
-/*
+
+	/*
 	.error::before{
 		content: "[Error]";
 		margin-right:1em;
 		text-decoration: none;
 	}
 */
-	.error{
+	.error {
 		color: var(--textDim);
-		
-		.name{
+
+		.name {
 			//
 		}
 	}
@@ -26,11 +27,12 @@
 	&:last-child {
 		border-bottom: 1px solid var(--divider);
 	}
+
 	&:first-child {
 		border-top: none;
 	}
 
-	.wrap.normalMode{		
+	.wrap.normalMode {
 		cursor: pointer;
 		padding: 0.3em 1em;
 		background: var(--bg);
@@ -39,23 +41,23 @@
 		flex-grow: 1;
 
 
-	
+
 		&:hover {
 			color: var(--hover);
 			fill: var(--hover);
 		}
-		
+
 		&.selected {
 			color: var(--active);
 			fill: var(--active);
-	
+
 			&:hover {
 				color: var(--hover);
 				fill: var(--hover);
 			}
 		}
-	
-		&.autoSelected{
+
+		&.autoSelected {
 			//color: var(--autoActive);
 			font-style: italic;
 			text-decoration: underline;
@@ -68,7 +70,7 @@
 		display: flex;
 	}
 
-	.icon{
+	.icon {
 		margin: 0 0.3em;
 	}
 
@@ -78,18 +80,18 @@
 		margin-left: 1em;
 	}
 
-	.icon{
-		fill:var(--text);
+	.icon {
+		fill: var(--text);
 	}
 
-	.editMode{
-		padding:0;
+	.editMode {
+		padding: 0;
 		display: flex;
 		flex-grow: 1;
 
-		.renameInput{
+		.renameInput {
 			appearance: none;
-			margin:0;
+			margin: 0;
 			flex-grow: 1;
 			background-color: var(--divider);
 			box-sizing: border-box;
@@ -97,8 +99,8 @@
 			width: 0;
 		}
 
-		.button{
-			margin:0;
+		.button {
+			margin: 0;
 		}
 	}
 }

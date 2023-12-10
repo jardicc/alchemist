@@ -1,13 +1,13 @@
-import { rootStore } from "../../shared/store";
-import { importItemsAction, importStateAction } from "../actions/inspectorActions";
-import { TExportItems, TImportItems } from "../model/types";
-import { getAllDescriptors, getSelectedDescriptors } from "../selectors/inspectorSelectors";
+import {rootStore} from "../../shared/store";
+import {importItemsAction, importStateAction} from "../actions/inspectorActions";
+import {TExportItems, TImportItems} from "../model/types";
+import {getAllDescriptors, getSelectedDescriptors} from "../selectors/inspectorSelectors";
 import {Settings} from "./Settings";
 import manifest from "../../../uxp/manifest.json";
 import {Main} from "../../shared/classes/Main";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { entrypoints } = require("uxp");
+const {entrypoints} = require("uxp");
 const {dispatch} = rootStore;
 
 export class FlyoutMenu {
@@ -27,7 +27,7 @@ export class FlyoutMenu {
 			case "importReplaceItems":
 				FlyoutMenu.importItems("replace");
 				break;
-			
+
 			case "exportAppState":
 				FlyoutMenu.exportState();
 				break;
@@ -37,7 +37,7 @@ export class FlyoutMenu {
 			case "exportSelectedItems":
 				FlyoutMenu.exportItems("selected");
 				break;
-			
+
 			case "reset":
 				Settings.reset();
 				break;
@@ -56,32 +56,32 @@ export class FlyoutMenu {
 				Main.plugin.showPanel(e.id);
 			}
 		});
-	}
+	};
 
 	private static exportState = () => {
 		const wholeState = rootStore.getState();
 		Settings.saveSettingsWithDialog(wholeState);
-	}
+	};
 
 	private static exportItems = async (kind: TExportItems) => {
 		const wholeState = rootStore.getState();
-		
+
 		const allItems = getAllDescriptors(wholeState);
 		const selectedItems = getSelectedDescriptors(wholeState);
 		Settings.exportDescriptorItems(kind === "all" ? allItems : selectedItems);
-	}
+	};
 
 	private static importState = async () => {
 		const data = await Settings.importStateWithDialog();
-		if (!data) { return; }
+		if (!data) {return;}
 		dispatch(importStateAction(data));
-	}
-	
+	};
+
 	private static importItems = async (kind: TImportItems) => {
 		const data = await Settings.importStateWithDialog();
-		if (!data) { return; }
+		if (!data) {return;}
 		dispatch(importItemsAction(data, kind));
-	}
+	};
 
 	public static setup(): void {
 
@@ -109,7 +109,7 @@ export class FlyoutMenu {
 								{id: "importReplaceItems", label: "Replace items"},
 							],
 						},
-						
+
 						{
 							id: "groupExport", label: "Export",
 							submenu: [

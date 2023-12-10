@@ -1,5 +1,5 @@
-.AccDrop{
-	&.header{
+.AccDrop {
+	&.header {
 		border-bottom: 1px solid var(--divider);
 		border-width: 1px 0;
 		padding: 0.2em 0.5em;
@@ -8,98 +8,99 @@
 		flex-grow: 0;
 		align-items: center;
 		flex-wrap: wrap;
-	
+
 		.FilterButton {
 			margin: 0 0.5em;
 		}
 
-		.group{
+		.group {
 			display: flex;
 			flex-grow: 1;
 			margin-left: auto;
 			align-items: center;
 		}
-	
-		.title, .titleType{
+
+		.title,
+		.titleType {
 			font-size: 1.12em;
 			line-height: 1.2em;
 			margin-left: 0;
 			// margin-top: 1em;
 			flex-shrink: 0;
 		}
-		
-		.title{
+
+		.title {
 			font-weight: bold;
 			word-wrap: break-word;
 			margin-right: auto;
 			max-width: calc(100% - 4em);
 		}
 
-		.titleType{
+		.titleType {
 			flex-grow: 0;
 			width: 0;
 			min-width: 6em;
 			margin-right: auto;
 		}
-	
-		.chevron svg{
+
+		.chevron svg {
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			margin: 0 0.5em;
-			fill:var(--text);
+			fill: var(--text);
 		}
 	}
-	
-	&.container{
-		padding:1em ;
+
+	&.container {
+		padding: 1em;
 		height: 0;
 		flex-grow: 1;
 		overflow: auto;
 		background: var(--bgList);
 		border-bottom: 1px solid var(--divider);
 
-		.itemPostFix{
+		.itemPostFix {
 			margin-left: auto;
 		}
 
-		.item{
+		.item {
 			display: flex;
 			flex-direction: row;
 			flex-shrink: 0;
 
-			.label{
+			.label {
 				display: flex;
 				align-items: center;
 
-				.icon{
+				.icon {
 					margin-right: 0.5em;
 				}
 			}
 		}
-	
-		.item[data-selected]{
-			color:var(--active);
-			fill:var(--active);
+
+		.item[data-selected] {
+			color: var(--active);
+			fill: var(--active);
 		}
-	
-		.item:hover{
-			color:var(--hover);
-			fill:var(--hover);
+
+		.item:hover {
+			color: var(--hover);
+			fill: var(--hover);
 		}
-	
-		.groupWrapper{
+
+		.groupWrapper {
 			padding-left: 1em;
 		}
 	}
 
-	&.searchField{
+	&.searchField {
 		display: flex;
 		background: var(--bgList);
 
-		.filterContent{
+		.filterContent {
 			flex-grow: 1;
-			margin:1em;
+			margin: 1em;
 			margin-bottom: 0;
 		}
 	}

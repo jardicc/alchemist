@@ -1,9 +1,9 @@
 import {render} from "react-dom";
 import React from "react";
-import { Provider } from "react-redux";
-import { rootStore } from "../../shared/store";
-import { ATNDecoderContainer } from "./ATNDecoderContainer/ATNDecoderContainer";
-import { ErrorBoundary } from "../../inspector/components/ErrorBoundary/ErrorBoundary";
+import {Provider} from "react-redux";
+import {rootStore} from "../../shared/store";
+import {ATNDecoderContainer} from "./ATNDecoderContainer/ATNDecoderContainer";
+import {ErrorBoundary} from "../../inspector/components/ErrorBoundary/ErrorBoundary";
 
 export function renderATNDecoderUI(): void {
 	const el = document.querySelector("[panelid=occultist]");

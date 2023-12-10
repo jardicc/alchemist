@@ -9,27 +9,27 @@ import React from "react";
 import PropTypes from "prop-types";
 import {JSONNode} from "./JSONNode";
 import "./JSONTree.less";
-import { IDefSettings, TShouldExpandNode, TGetItemString, TValueRenderer, TLabelRenderer, TIsCustomNode } from "./types";
+import {IDefSettings, TShouldExpandNode, TGetItemString, TValueRenderer, TLabelRenderer, TIsCustomNode} from "./types";
 
-const identity:TValueRenderer = (displayValue, rawValue, nodeType, ...keyPath) => {
-	if (nodeType === "Function") { return "fn()"; }
+const identity: TValueRenderer = (displayValue, rawValue, nodeType, ...keyPath) => {
+	if (nodeType === "Function") {return "fn()";}
 	return displayValue;
 };
-const expandRootNode:TShouldExpandNode = (keyName, data, level) => (level <= 0);
-const defaultItemString:TGetItemString = (type, data, itemType, itemString) => (
+const expandRootNode: TShouldExpandNode = (keyName, data, level) => (level <= 0);
+const defaultItemString: TGetItemString = (type, data, itemType, itemString) => (
 	<span>
 		{itemType} {itemString}
 	</span>
 );
-const defaultLabelRenderer:TLabelRenderer = ([label]) => <span>{label}:</span>;
-const noCustomNode:TIsCustomNode = () => false;
+const defaultLabelRenderer: TLabelRenderer = ([label]) => <span>{label}:</span>;
+const noCustomNode: TIsCustomNode = () => false;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ITreeContentState{
-	
+interface ITreeContentState {
+
 }
 
-export class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
+export class JSONTree extends React.Component<IDefSettings, ITreeContentState> {
 	static propTypes = {
 		data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 		hideRoot: PropTypes.bool,
@@ -55,16 +55,16 @@ export class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
 		protoMode: "none",
 	};
 
-	constructor(props:IDefSettings) {
+	constructor(props: IDefSettings) {
 		super(props);
 	}
 
-	public shouldComponentUpdate(nextProps: IDefSettings):boolean {
+	public shouldComponentUpdate(nextProps: IDefSettings): boolean {
 		// consider to optimize
 		return true;
 	}
 
-	public render():JSX.Element {
+	public render(): JSX.Element {
 		const {
 			data: value,
 			keyPath,
@@ -76,7 +76,7 @@ export class JSONTree extends React.Component<IDefSettings,ITreeContentState> {
 		return (
 			<ul className="JSONTree">
 				<JSONNode
-					{...{ postprocessValue, hideRoot, ...rest }}
+					{...{postprocessValue, hideRoot, ...rest}}
 					keyPath={hideRoot ? [] : keyPath}
 					value={postprocessValue(value)}
 					data={value}

@@ -1,19 +1,19 @@
 import {app} from "photoshop";
-import { Action, ActionSet } from "photoshop/dom/Actions";
-import { Layer } from "photoshop/dom/Layer";
-import { Photoshop } from "photoshop/dom/Photoshop";
-import { Document } from "photoshop/dom/Document";
+import {Action, ActionSet} from "photoshop/dom/Actions";
+import {Layer} from "photoshop/dom/Layer";
+import {Photoshop} from "photoshop/dom/Photoshop";
+import {Document} from "photoshop/dom/Document";
 import {Guide} from "photoshop/dom/Guide";
 import {Reference, TReference} from "./Reference";
 
-export class ReferenceToDOM extends Reference{
+export class ReferenceToDOM extends Reference {
 
 	constructor(ref: TReference[]) {
 		super(ref);
 	}
-	
+
 	public getDom(): Photoshop | Layer | Document | ActionSet | Action | Guide | null {
-		
+
 		if (!this.targetClass) {
 			return null;
 		}
@@ -25,17 +25,17 @@ export class ReferenceToDOM extends Reference{
 				return this.getHistoryDom();
 			case "application":
 				return this.getAppDom();
-			case "layer": 
+			case "layer":
 				return this.getLayerDom();
-			case "document": 
+			case "document":
 				return this.getDocumentDom();
-			case "actionSet": 
+			case "actionSet":
 				return this.actionSetDom();
-			case "action": 
+			case "action":
 				return this.actionItemDom();
 			case "guide":
 				return this.getGuideDom();
-			case "channel": 
+			case "channel":
 				return this.getChannelDom();
 			case "path":
 				return this.getPathDom();
@@ -43,7 +43,7 @@ export class ReferenceToDOM extends Reference{
 		return null;
 	}
 
-	private getGuideDom(): Guide | null{
+	private getGuideDom(): Guide | null {
 		this.sanitizeDocRef();
 		if (!this.document || !this.guide || !this.exists) {
 			return null;
@@ -51,9 +51,9 @@ export class ReferenceToDOM extends Reference{
 		const guideDom = new app.Guide(this.guide._id, this.document._id);
 		return guideDom;
 	}
-	
-	
-	private getAppDom():Photoshop {
+
+
+	private getAppDom(): Photoshop {
 		return app;
 	}
 
@@ -65,7 +65,7 @@ export class ReferenceToDOM extends Reference{
 		return docDom;
 	}
 
-	private getLayerDom(): Layer|null {
+	private getLayerDom(): Layer | null {
 		this.sanitizeDocRef();
 		if (!this.document || !this.layer || !this.exists) {
 			return null;
@@ -94,7 +94,7 @@ export class ReferenceToDOM extends Reference{
 		}
 		// TODO improve once constructor will be exposed in Photoshop class
 		if ("_enum" in this.channel) {
-			const compositeChannel = new (doc.compositeChannels[0] as any).constructor(doc.id, this.channel._value);			
+			const compositeChannel = new (doc.compositeChannels[0] as any).constructor(doc.id, this.channel._value);
 			return compositeChannel;
 		} else {
 			console.error("Not implemented");

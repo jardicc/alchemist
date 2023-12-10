@@ -1,33 +1,39 @@
-body, html, .root, .panel{
+body,
+html,
+.root,
+.panel {
 	display: flex;
 	width: 100vw;
 	height: 100vh;
-	padding:0;
+	padding: 0;
 	margin: 0;
 }
 
-a[href]{
-	color:var(--text);
-	text-decoration: underline;;
+a[href] {
+	color: var(--text);
+	text-decoration: underline;
+	;
 }
 
-a:hover{
-	color:var(--hover);
+a:hover {
+	color: var(--hover);
 }
 
-[panelid="inspector"]{
-	display:flex;
+[panelid="inspector"] {
+	display: flex;
 	flex-direction: column;
 }
 
-*{box-sizing: border-box;}
+* {
+	box-sizing: border-box;
+}
 
-code{
+code {
 	font-family: 'Courier New', Monaco;
 	background-color: var(--divider);
 }
 
-sp-checkbox{
+sp-checkbox {
 	white-space: normal;
 	height: auto;
 }
@@ -42,7 +48,7 @@ sp-checkbox{
 	flex-grow: 1;
 }
 
-.rawCode{
+.rawCode {
 	width: 100%;
 }
 
@@ -138,6 +144,6 @@ textarea {
 	}
 }
 
-.flex{
+.flex {
 	display: flex;
 }

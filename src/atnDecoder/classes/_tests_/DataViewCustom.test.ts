@@ -1,4 +1,4 @@
-import { DataViewCustom } from "../DataViewCustom";
+import {DataViewCustom} from "../DataViewCustom";
 
 describe("unicode string", () => {
 	it("can decode unicode empty string \"\"", () => {
@@ -8,9 +8,9 @@ describe("unicode string", () => {
 
 		expect(res).toBe("");
 	});
-	
+
 	it("can decode unicode string r with accent", () => {
-		const data = new DataViewCustom([0, 0, 0, 2, 1,89 , 0, 0], false);
+		const data = new DataViewCustom([0, 0, 0, 2, 1, 89, 0, 0], false);
 		const res = data.getUtf16String();
 
 		console.log(Buffer.from(res));
@@ -18,7 +18,7 @@ describe("unicode string", () => {
 		expect(res).toBe("ř");
 	});
 
-	
+
 	it("can decode complex unicode string with offset", () => {
 
 		const data = new DataViewCustom([
@@ -35,7 +35,7 @@ describe("unicode string", () => {
 
 	it("can decode four bytes per character utf-16 letters \"𐐷a𤭢b𐐷𤭢\"", () => {
 		const data = new DataViewCustom([
-			0,0,0,11,216,1,220,55,0,97,216,82,223,98,0,98,216,1,220,55,216,82,223,98,0,0,
+			0, 0, 0, 11, 216, 1, 220, 55, 0, 97, 216, 82, 223, 98, 0, 98, 216, 1, 220, 55, 216, 82, 223, 98, 0, 0,
 		], false);
 		const res = data.getUtf16String();
 
@@ -47,7 +47,7 @@ describe("unicode string", () => {
 	it("can decode string with \"ü\"", () => {
 
 		const data = new DataViewCustom([
-			0,0,0,3,0,252,0,103,
+			0, 0, 0, 3, 0, 252, 0, 103,
 		], false);
 		const res = data.getUtf16String();
 

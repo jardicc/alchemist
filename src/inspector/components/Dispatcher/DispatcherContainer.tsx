@@ -1,22 +1,22 @@
-import { connect } from "react-redux";
-import { IRootState } from "../../../shared/store";
-import { setDispatcherValueAction, addDescriptorAction } from "../../actions/inspectorActions";
-import { getDispatcherSnippet } from "../../selectors/dispatcherSelectors";
-import { getInspectorSettings } from "../../selectors/inspectorSelectors";
+import {connect} from "react-redux";
+import {IRootState} from "../../../shared/store";
+import {setDispatcherValueAction, addDescriptorAction} from "../../actions/inspectorActions";
+import {getDispatcherSnippet} from "../../selectors/dispatcherSelectors";
+import {getInspectorSettings} from "../../selectors/inspectorSelectors";
 
 /* eslint-disable quotes */
 import React from "react";
 import "./Dispatcher.less";
-import { Helpers } from "../../classes/Helpers";
-import { IDescriptor, IRefDispatcher, ISettings } from "../../model/types";
-import { RawDataConverter } from "../../classes/RawDataConverter";
-import { getInitialState } from "../../inspInitialState";
-import { str as crc } from "crc-32";
+import {Helpers} from "../../classes/Helpers";
+import {IDescriptor, IRefDispatcher, ISettings} from "../../model/types";
+import {RawDataConverter} from "../../classes/RawDataConverter";
+import {getInitialState} from "../../inspInitialState";
+import {str as crc} from "crc-32";
 import Sval from "sval";
-import { Dispatch } from "redux";
+import {Dispatch} from "redux";
 import SP from "react-uxp-spectrum";
 
-class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
+class Dispatcher extends React.Component<TDispatcher, Record<string, unknown>> {
 
 	constructor(props: TDispatcher) {
 		super(props);
@@ -26,15 +26,15 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 
 	private change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		this.props.setDispatcherValue(e.currentTarget.value);
-	}
+	};
 
 	private send = async () => {
 		try {
 			const snippet = this.props.snippet;
-			const startTime = Date.now();			
+			const startTime = Date.now();
 			let data: any;
 			try {
-				data = await (async function  () {
+				data = await (async function () {
 					const interpreter = new Sval({
 						ecmaVer: 9,
 						sandBox: false,
@@ -52,12 +52,12 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 					const res = await interpreter.exports.returnValue;
 					return res;
 				})();
-			} catch (e:any) {
-				data = {error:e.stack};
+			} catch (e: any) {
+				data = {error: e.stack};
 			}
 			const endTime = Date.now();
 
-			const originalReference:IRefDispatcher  = {
+			const originalReference: IRefDispatcher = {
 				type: "dispatcher",
 			};
 			const result: IDescriptor = {
@@ -66,7 +66,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 				id: crypto.randomUUID(),
 				locked: false,
 				//crc:Date.now()+Math.random(),
-				crc:crc(JSON.stringify(data||"__empty__")),
+				crc: crc(JSON.stringify(data || "__empty__")),
 				recordedData: RawDataConverter.replaceArrayBuffer(data),
 				originalReference,
 				pinned: false,
@@ -82,12 +82,12 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 		} catch (e) {
 			console.error(e);
 		}
-	}
+	};
 
 
 	public render(): JSX.Element {
 		return (
-			<div className="Dispatcher">				
+			<div className="Dispatcher">
 				<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
 				<div className="textareaWrap">
 					<SP.Textarea value={this.props.snippet} onInput={this.change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
@@ -101,9 +101,9 @@ class Dispatcher extends React.Component<TDispatcher, Record<string,unknown>> {
 
 type TDispatcher = IDispatcherProps & IDispatcherDispatch
 
-interface IDispatcherProps{
+interface IDispatcherProps {
 	snippet: string
-	settings:ISettings
+	settings: ISettings
 }
 
 const mapStateToProps = (state: IRootState): IDispatcherProps => ({
@@ -116,9 +116,9 @@ interface IDispatcherDispatch {
 	onAddDescriptor: (descriptor: IDescriptor) => void
 }
 
-const mapDispatchToProps = (dispatch:Dispatch):IDispatcherDispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch): IDispatcherDispatch => ({
 	setDispatcherValue: (value) => dispatch(setDispatcherValueAction(value)),
-	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc,false)),
+	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc, false)),
 });
 
-export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch, Record<string,unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Dispatcher);
+export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Dispatcher);

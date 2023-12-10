@@ -1,10 +1,10 @@
 
-import { Layer } from "photoshop/dom/Layer";
-import { app } from "photoshop";
-import { isValidRef } from "../../shared/helpers";
+import {Layer} from "photoshop/dom/Layer";
+import {app} from "photoshop";
+import {isValidRef} from "../../shared/helpers";
 import {IDReference} from "./Reference";
 
-export class LayerExtra extends app.Layer{
+export class LayerExtra extends app.Layer {
 	constructor(layer: Layer) {
 		super(layer.id, layer._docId);
 	}
@@ -22,7 +22,7 @@ export class LayerExtra extends app.Layer{
 		]);
 	}
 
-	public get exists(): boolean{
+	public get exists(): boolean {
 		return isValidRef(this.amReference);
 	}
 }

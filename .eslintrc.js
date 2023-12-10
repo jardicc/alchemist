@@ -24,16 +24,16 @@ module.exports = {
 	"rules": {
 		"no-empty-interface": 0,
 		"no-unreachable-loop": [
-			"error",	
+			"error",
 		],
 		"@typescript-eslint/no-empty-interface": "off",
 		"no-promise-executor-return": [
-			"error",	
+			"error",
 		],
 		"indent": [
 			"error",
 			"tab",
-			{ "SwitchCase": 1},
+			{"SwitchCase": 1},
 		],
 		"linebreak-style": [
 			"error",

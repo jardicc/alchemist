@@ -1,17 +1,17 @@
 /* eslint-disable quotes */
-import { cloneDeep } from "lodash";
-import { createSelector } from "reselect";
-import { RawDataConverter } from "../classes/RawDataConverter";
-import { IDescriptor, IDescriptorSettings } from "../model/types";
-import { getContentPath } from "./inspectorContentSelectors";
-import { all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled } from "./inspectorSelectors";
+import {cloneDeep} from "lodash";
+import {createSelector} from "reselect";
+import {RawDataConverter} from "../classes/RawDataConverter";
+import {IDescriptor, IDescriptorSettings} from "../model/types";
+import {getContentPath} from "./inspectorContentSelectors";
+import {all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings, getReplayEnabled} from "./inspectorSelectors";
 import stringifyObject from "stringify-object";
 import {ActionDescriptor, BatchPlayCommandOptions} from "photoshop/dom/CoreModules";
 import {js_beautify} from "js-beautify";
 
-type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?:boolean}
+type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?: boolean}
 
-export const getDescriptorOptions = createSelector([getActiveDescriptors, getAutoActiveDescriptor,getInspectorSettings], (selected, autoActive,settings) => {
+export const getDescriptorOptions = createSelector([getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings], (selected, autoActive, settings) => {
 
 	function getValue<T>(arr: T[]): T | "mixed" {
 		const first = arr[0];
@@ -27,12 +27,12 @@ export const getDescriptorOptions = createSelector([getActiveDescriptors, getAut
 		return settings.initialDescriptorSettings;
 	}
 
-	const desc:IDescriptor[] = selected;
+	const desc: IDescriptor[] = selected;
 	const res: IDescriptorSettings = {
-		supportRawDataType: getValue(desc.map(item=>item.descriptorSettings.supportRawDataType)),
-		dialogOptions: getValue(desc.map(item=>item.descriptorSettings.dialogOptions)),
-		modalBehavior: getValue(desc.map(item=>item.descriptorSettings.modalBehavior)),
-		synchronousExecution: getValue(desc.map(item=>item.descriptorSettings.synchronousExecution)),
+		supportRawDataType: getValue(desc.map(item => item.descriptorSettings.supportRawDataType)),
+		dialogOptions: getValue(desc.map(item => item.descriptorSettings.dialogOptions)),
+		modalBehavior: getValue(desc.map(item => item.descriptorSettings.modalBehavior)),
+		synchronousExecution: getValue(desc.map(item => item.descriptorSettings.synchronousExecution)),
 	};
 
 	return res;
@@ -57,7 +57,7 @@ export const getGeneratedCode = createSelector([
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
-		
+
 		let result = "";
 
 		for (const s of segments) {
@@ -135,9 +135,9 @@ export const getGeneratedCode = createSelector([
 				if (settings.tokenify && prop === "_path") {
 					shouldShowTokenify = true;
 					console.log(input, originalResult);
-					const res = qts(`await tokenify("${input._path.replaceAll("\\","/")}")`);
+					const res = qts(`await tokenify("${input._path.replaceAll("\\", "/")}")`);
 					return res;
-				}				
+				}
 				return originalResult;
 			},
 		};
@@ -171,7 +171,7 @@ export const getGeneratedCode = createSelector([
 				}
 			});
 		}
-		
+
 		for (let i = 0; i < data.length; i++) {
 			const item = data[i];
 			RawDataConverter.convertFakeRawInCode(item, descOptions);
@@ -183,7 +183,7 @@ export const getGeneratedCode = createSelector([
 			// eslint-disable-next-line quotes
 			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
-		
+
 		const commandOptions = addCommonOptions(iDesc);
 
 		const strOptions = idt(stringifyObject(commandOptions, stringifyOptions));
@@ -208,8 +208,8 @@ export const getGeneratedCode = createSelector([
 		if (shouldShowTokenify) {
 			banner += tokenifyInfo;
 		}
-			
-		
+
+
 		if (wrappers === "batchPlay") {
 			return (
 				banner +
@@ -256,7 +256,7 @@ export const getGeneratedCode2 = createSelector([
 
 	function makeNicePropertyPath(segments: string[]): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
-		
+
 		let result = "";
 
 		for (const s of segments) {
@@ -294,18 +294,18 @@ export const getGeneratedCode2 = createSelector([
 
 		const res: BatchPlayCommandOptionsExtended = {};
 
-		if (hasAnySync) { res.synchronousExecution = true; }
-		else if (hasAnyAsync) { res.synchronousExecution = false; }
+		if (hasAnySync) {res.synchronousExecution = true;}
+		else if (hasAnyAsync) {res.synchronousExecution = false;}
 
-		if (modalIsExecute) { res.modalBehavior = "execute"; }
-		else if (modalIsWait) { res.modalBehavior = "wait"; }
-		else if (!modalIsDefault) { res.modalBehavior = "fail"; }
+		if (modalIsExecute) {res.modalBehavior = "execute";}
+		else if (modalIsWait) {res.modalBehavior = "wait";}
+		else if (!modalIsDefault) {res.modalBehavior = "fail";}
 
 		return res;
 	}
 
 	// replaces quotes
-	function qts(str:string):string {
+	function qts(str: string): string {
 		if (settings.singleQuotes) {
 			str = str.replaceAll(`"`, `'`);
 		}
@@ -316,7 +316,7 @@ export const getGeneratedCode2 = createSelector([
 	const wrappers = settings.codeWrappers;
 
 	if (selected.length >= 1 || autoActive) {
-		let data:any = null, iDesc: IDescriptor[] = [];
+		let data: any = null, iDesc: IDescriptor[] = [];
 
 		const stringifyOptions = {
 			singleQuotes: settings.singleQuotes,
@@ -328,7 +328,7 @@ export const getGeneratedCode2 = createSelector([
 		} else if (autoActive) {
 			iDesc = [autoActive];
 		}
-		if (iDesc.some(item => ["replies","notifier","dispatcher"].includes(item.originalReference.type))) {
+		if (iDesc.some(item => ["replies", "notifier", "dispatcher"].includes(item.originalReference.type))) {
 			return "// Alchemist can't generate code from replay reply, dispatched code. Notifiers are not supported to save your time because those are non-playable in 99.99% of cases";
 		}
 		data = iDesc.map(item => addPerItemOptions(item));
@@ -338,20 +338,20 @@ export const getGeneratedCode2 = createSelector([
 		if (Array.isArray(data)) {
 			data.forEach(d => {
 				if (settings.hideDontRecord) {
-					delete d.dontRecord;				
+					delete d.dontRecord;
 				}
 				if (settings.hideForceNotify) {
-					delete d.forceNotify;				
+					delete d.forceNotify;
 				}
 				if (settings.hide_isCommand) {
 					delete d._isCommand;
-				}				
+				}
 			});
 		}
-		
+
 		for (let i = 0; i < data.length; i++) {
 			const item = data[i];
-			RawDataConverter.convertFakeRawInCode(item,descOptions);
+			RawDataConverter.convertFakeRawInCode(item, descOptions);
 		}
 
 		let strPinned = "";
@@ -360,12 +360,12 @@ export const getGeneratedCode2 = createSelector([
 			// eslint-disable-next-line quotes
 			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
-		
+
 		const commandOptions = addCommonOptions(iDesc);
 
 		const strOptions = stringifyObject(commandOptions, stringifyOptions);
 		const strDesc: string = stringifyObject(data, stringifyOptions);
-		
+
 		const code = `
 		${addModules ? `const {executeAsModal} = require("photoshop").core;` : ''}
 		const {batchPlay} = require("photoshop").action;
@@ -381,9 +381,9 @@ export const getGeneratedCode2 = createSelector([
 		}
 		
 		await runModalFunction();
-`;		
+`;
 
-		return js_beautify(code,{preserve_newlines: true,brace_style: "preserve-inline",end_with_newline:true});
+		return js_beautify(code, {preserve_newlines: true, brace_style: "preserve-inline", end_with_newline: true});
 	} else {
 		return "Add some descriptor";
 	}

@@ -1,6 +1,6 @@
 
 export function s2b(str: string): ArrayBuffer {
-	
+
 	const buf = Buffer.from(decodeURI(str), "binary");
 
 

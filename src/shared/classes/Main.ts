@@ -1,17 +1,17 @@
-import { renderInspectorUI } from "../../inspector/components/inspectorIndex";
+import {renderInspectorUI} from "../../inspector/components/inspectorIndex";
 import "./../index.less";
 import "./../ThemeVars.less";
-import { Settings } from "../../inspector/classes/Settings";
+import {Settings} from "../../inspector/classes/Settings";
 import {core} from "photoshop";
-import { renderATNDecoderUI } from "../../atnDecoder/components/atnDecoderIndex";
-import { renderSorcererUI } from "../../sorcerer/components/sorcererIndex";
+import {renderATNDecoderUI} from "../../atnDecoder/components/atnDecoderIndex";
+import {renderSorcererUI} from "../../sorcerer/components/sorcererIndex";
 import {FlyoutMenu} from "../../inspector/classes/Flyoutmenu";
 import manifest from "./../../../uxp/manifest.json";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const uxp = require("uxp");
 
-export class Main{
+export class Main {
 
 	public static plugin: any = null;
 
@@ -27,19 +27,19 @@ export class Main{
 		Main.plugin = result;
 	}
 
-	public static get devMode(): boolean{
+	public static get devMode(): boolean {
 		return Main.plugin.developerPlugin;
 	}
 
-	public static get isFirstParty(): boolean{
+	public static get isFirstParty(): boolean {
 		return Main.plugin.isFirstParty;
 	}
 
-	public static get isThirdParty(): boolean{
+	public static get isThirdParty(): boolean {
 		return Main.plugin.isThirdParty;
 	}
 
-	public static get privileged(): boolean{
+	public static get privileged(): boolean {
 		return Main.plugin.privileged;
 	}
 
@@ -49,7 +49,7 @@ export class Main{
 		suppressResizeGripper({"type": "panel", "target": "inspector", "value": true});
 		suppressResizeGripper({"type": "panel", "target": "occultist", "value": true});
 		suppressResizeGripper({"type": "panel", "target": "sorcerer", "value": true});
-		
+
 		renderInspectorUI();
 		renderATNDecoderUI();
 		renderSorcererUI();
@@ -63,7 +63,7 @@ async function run() {
 		Main.plugin.showPanel("inspector");
 	}
 
-	document.addEventListener("uxpcommand", (event:any) => {
+	document.addEventListener("uxpcommand", (event: any) => {
 		console.log(event);
 		if (event.commandId === "resetStateFn") {
 			Settings.reset();
@@ -74,10 +74,10 @@ async function run() {
 
 if (Main.devMode) {
 	run();
-} else {	
+} else {
 	try {
 		run();
-	} catch (e:any) {
+	} catch (e: any) {
 		core.showAlert({
 			message: e.stack,
 		});

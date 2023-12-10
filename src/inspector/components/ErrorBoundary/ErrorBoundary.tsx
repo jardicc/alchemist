@@ -1,21 +1,21 @@
 import React from "react";
-import { Settings } from "../../classes/Settings";
+import {Settings} from "../../classes/Settings";
 
-interface IState{
+interface IState {
 	hasError: boolean,
-	error:any
+	error: any
 }
 
 export class ErrorBoundary extends React.Component<any, IState> {
-	constructor(props:any) {
+	constructor(props: any) {
 		super(props);
 		this.state = {
 			hasError: false,
-			error:null,
+			error: null,
 		};
 	}
-    
-	private static getDerivedStateFromError(error:any) {
+
+	private static getDerivedStateFromError(error: any) {
 		// Update state so the next render will show the fallback UI.
 		console.log(error);
 		return {
@@ -29,9 +29,9 @@ export class ErrorBoundary extends React.Component<any, IState> {
 		// You can also log the error to an error reporting service
 		//logErrorToMyService(error, errorInfo);
 	}
-    */
-	
-	public render():React.ReactNode {
+	*/
+
+	public render(): React.ReactNode {
 		if (this.state.hasError) {
 
 			const style: React.CSSProperties = {
@@ -44,7 +44,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 
 			const whiteColor: React.CSSProperties = {
 				color: "white",
-				textDecoration:"underline",
+				textDecoration: "underline",
 			};
 
 			const stack: React.CSSProperties = {
@@ -61,12 +61,12 @@ export class ErrorBoundary extends React.Component<any, IState> {
 				<div style={style}>
 					<h1>Something went wrong ¯\_(ツ)_/¯</h1>
 					<div>
-						<span style={whiteColor} onClick={(e) => { e.preventDefault(); location.reload(); }}>
+						<span style={whiteColor} onClick={(e) => {e.preventDefault(); location.reload();}}>
 							<h2>Reload panel</h2>
 						</span>
 					</div>
 					<div>
-						<span style={whiteColor}  onClick={(e) => { e.preventDefault(); Settings.reset(); }}>
+						<span style={whiteColor} onClick={(e) => {e.preventDefault(); Settings.reset();}}>
 							<h2>Reset panel state</h2>
 						</span>
 					</div>
@@ -74,7 +74,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 				</div>
 			);
 		}
-    
+
 		return this.props.children;
 	}
 }

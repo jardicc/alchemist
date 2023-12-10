@@ -1,9 +1,9 @@
-import { IDescriptor } from "../model/types";
-import { isValidRef } from "../../shared/helpers";
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import {IDescriptor} from "../model/types";
+import {isValidRef} from "../../shared/helpers";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
-export function filterNonExistent(descriptors: IDescriptor[]):IDescriptor[] {
-	
+export function filterNonExistent(descriptors: IDescriptor[]): IDescriptor[] {
+
 
 	const result = descriptors.filter(desc => {
 		let res = false;

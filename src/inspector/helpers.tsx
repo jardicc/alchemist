@@ -11,7 +11,7 @@ export function getIcon(type: TTargetReference | "error") {
 	if (type === "error") {
 		return <IconBan />;
 	}
-	let  icon: JSX.Element = <IconDocument />;
+	let icon: JSX.Element = <IconDocument />;
 	switch (type) {
 		case "listener": {
 			icon = <IconStar />;

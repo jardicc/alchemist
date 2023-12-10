@@ -7,7 +7,7 @@ import {
 	THistoryReference, IFilterProperty,
 } from "../model/types";
 
-import { DocumentExtra } from "./DocumentExtra";
+import {DocumentExtra} from "./DocumentExtra";
 
 
 export class GetList {
@@ -135,11 +135,11 @@ export class GetList {
 			label: d.name,
 			snapshot: !d.auto,
 		}));
-	
+
 		return pairs;
 	}
 
-	public static getAllCommandsOfAction(actionItemID: number):ActionDescriptor[] {
+	public static getAllCommandsOfAction(actionItemID: number): ActionDescriptor[] {
 		console.log("action command");
 		const action = new app.Action(actionItemID);
 
@@ -160,10 +160,10 @@ export class GetList {
 			desc,
 		]);
 
-		
+
 		const childCount = result[0].numberOfChildren;
 		const desc2: ActionDescriptor[] = [];
-		for (let i = 1; i <= childCount; i++){
+		for (let i = 1; i <= childCount; i++) {
 			desc2.push({
 				_obj: "get",
 				_target: [
@@ -200,7 +200,7 @@ export class GetList {
 		return docE;
 	}
 
-	private static get historyCount(): number{
+	private static get historyCount(): number {
 		const desc = {
 			_obj: "get",
 			_target: [

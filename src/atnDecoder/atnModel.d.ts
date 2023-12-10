@@ -1,60 +1,60 @@
-import { ActionDescriptor } from "photoshop/dom/CoreModules";
+import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
-export interface IActionSetUUID extends IActionSet{
-	__uuid__:string
-	actionItems:IActionItemUUID[]
-}
-
-export interface IActionItemUUID extends IActionItem{
+export interface IActionSetUUID extends IActionSet {
 	__uuid__: string
-	__uuidParentSet__:string
-	commands:IActionCommandUUID[]
+	actionItems: IActionItemUUID[]
 }
 
-export interface IActionCommandUUID extends ICommand{
-	__uuid__:string
-	__uuidParentAction__:string
-	__uuidParentSet__:string
+export interface IActionItemUUID extends IActionItem {
+	__uuid__: string
+	__uuidParentSet__: string
+	commands: IActionCommandUUID[]
 }
 
-export type TSelectActionOperation = "replace" | "add" | "subtract"|"addContinuous"|"subtractContinuous"|"none";
+export interface IActionCommandUUID extends ICommand {
+	__uuid__: string
+	__uuidParentAction__: string
+	__uuidParentSet__: string
+}
+
+export type TSelectActionOperation = "replace" | "add" | "subtract" | "addContinuous" | "subtractContinuous" | "none";
 
 export type TSelectedItem = [string, string?, string?]
 export type TExpandedItem = [string, string?]
 
-export interface IATNConverterState{
+export interface IATNConverterState {
 	data: IActionSetUUID[]
-	lastSelected:TSelectedItem|null
+	lastSelected: TSelectedItem | null
 	selectedItems: TSelectedItem[]
 	expandedItems: TExpandedItem[]
-	dontSendDisabled:boolean
+	dontSendDisabled: boolean
 }
 
-export interface IActionSet{
+export interface IActionSet {
 	version: number
 	actionSetName: string
 	expanded: boolean
-	actionItems:IActionItem[]
+	actionItems: IActionItem[]
 }
 
-export interface IActionItem{
-	fKeyIndex:number
+export interface IActionItem {
+	fKeyIndex: number
 	shiftKey: boolean
 	commandKey: boolean
 	colorIndex: number
 	actionItemName: string
 	expanded: boolean
-	commands:ICommand[]
+	commands: ICommand[]
 }
 
-export interface ICommand{
+export interface ICommand {
 	expanded: boolean
 	enabled: boolean
 	showDialogs: boolean
 	dialogMode: number
 	commandName: string
 	commandName2: string
-	descriptor:ActionDescriptor
+	descriptor: ActionDescriptor
 }
 /*
 interface IDescriptor{
@@ -62,9 +62,9 @@ interface IDescriptor{
 	[prop: string]: any;
 }*/
 
-export interface IObjectArrayListInner{
+export interface IObjectArrayListInner {
 	_unit: string
-	list:number[]
+	list: number[]
 }
 
 type TDescDataType =

@@ -1,21 +1,21 @@
-.Filters{
+.Filters {
 	display: flex;
 	width: 100%;
 	flex-direction: column;
 
 
-	.excludeIncludeInput{
+	.excludeIncludeInput {
 		display: flex;
 		align-items: center;
 		margin: 0 0.5em;
-		
-		.label{
+
+		.label {
 			width: 0;
 			min-width: 6em;
 		}
 
-		
-		.input{
+
+		.input {
 			flex-grow: 1;
 			width: 0;
 			margin: 0;
@@ -23,14 +23,14 @@
 
 	}
 
-	
-	.filterButtons{
+
+	.filterButtons {
 		flex-shrink: 0;
 		display: flex;
 		flex-wrap: wrap;
-		
 
-		.button{
+
+		.button {
 			margin: 0;
 			border-radius: 0;
 			border-color: var(--divider);
@@ -39,58 +39,58 @@
 			font-weight: bold;
 			padding: 0.7em 0.5em;
 
-			> svg{
+			>svg {
 				width: 1em;
 				height: 1em;
 				margin-right: 0.5em;
 			}
 
-			&.disallowed{
+			&.disallowed {
 				border: none !important;
 			}
 
-			&:not(.disallowed):hover{
-				color:var(--divider);
-				fill:var(--divider);
+			&:not(.disallowed):hover {
+				color: var(--divider);
+				fill: var(--divider);
 				background: var(--hover);
 
-				> svg{
-					fill:var(--divider);
+				>svg {
+					fill: var(--divider);
 				}
 			}
 		}
 	}
-	
+
 	.oneMore {
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
 		height: 0;
 	}
-	
-	.filter{
+
+	.filter {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		margin: 0 0.5em;
 
-		.label{
+		.label {
 			width: 0;
 			min-width: 6em;
 			margin-right: 0.7em;
 		}
 
-		&.excludeIncludeDropdownRow{
+		&.excludeIncludeDropdownRow {
 			margin-right: 0.9em;
 		}
 
-		.dropdownWrap{
+		.dropdownWrap {
 			display: flex;
 			align-items: center;
 			flex-grow: 1;
 		}
 
-		sp-dropdown{
+		sp-dropdown {
 			flex-grow: 1;
 			min-width: 8em;
 			width: 8em;

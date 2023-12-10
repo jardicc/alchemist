@@ -3,26 +3,26 @@ import React from "react";
 import {IconCaretRight, IconChevronBottom, IconChevronRight} from "../../../shared/components/icons";
 import "./Accordion.less";
 
-export interface IAccordionProps{
-	id:string
+export interface IAccordionProps {
+	id: string
 	className?: string
-	children: React.ReactElement|React.ReactElement[]
+	children: React.ReactElement | React.ReactElement[]
 	header: string | React.ReactElement
-	onChange: (id: string, expanded:boolean) => void
-	expanded: boolean|string[]
+	onChange: (id: string, expanded: boolean) => void
+	expanded: boolean | string[]
 }
 
 export interface IAccordionDispatch {
-	
+
 }
 
-interface IAccordionState{
-	
+interface IAccordionState {
+
 }
 
 export type TAccordion = IAccordionProps & IAccordionDispatch
 
-export class Accordion extends React.Component<TAccordion, IAccordionState> { 
+export class Accordion extends React.Component<TAccordion, IAccordionState> {
 	constructor(props: TAccordion) {
 		super(props);
 
@@ -40,16 +40,16 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 
 	private onHeaderClick = () => {
 		this.props.onChange(this.props.id, !this.isExpanded);
-	}
+	};
 
 	private renderHeader = (): JSX.Element => {
 		return (
 			<div className="header" onClick={this.onHeaderClick}>
-				{this.isExpanded ? <IconChevronBottom />:<IconChevronRight />}
+				{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
 				<span className="title">{this.props.header}</span>
 			</div>
 		);
-	}
+	};
 
 	private renderContent = (): React.ReactNode => {
 		const {children} = this.props;
@@ -62,12 +62,12 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 				{children}
 			</div>
 		);
-	}
+	};
 
 	public render(): JSX.Element {
-		
+
 		return (
-			<div className={"Accordion "+(this.props.className||"")}>
+			<div className={"Accordion " + (this.props.className || "")}>
 				{this.renderHeader()}
 				{this.renderContent()}
 			</div>

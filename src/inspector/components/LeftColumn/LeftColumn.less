@@ -1,12 +1,12 @@
-.LeftColumn{
+.LeftColumn {
 	display: flex;
 	width: 100%;
 	flex-direction: column;
 	flex-grow: 1;
 
-	.descriptorsWrapper{
+	.descriptorsWrapper {
 		flex-grow: 1;
-		overflow:auto;
+		overflow: auto;
 		height: 0;
 		display: flex;
 		flex-direction: column;
@@ -19,23 +19,23 @@
 		min-height: 90px;
 	}
 
-	.add{
+	.add {
 		flex-grow: 2;
 		justify-content: center;
 		border-left: none;
 	}
 
 	.listenerSwitch,
-	.autoInspectorSwitch{
+	.autoInspectorSwitch {
 		justify-content: center;
 		flex-grow: 1;
 	}
 
-	.divider{
+	.divider {
 		height: 2px;
 		background: var(--divider);
 	}
-	
+
 	.search {
 		background-color: var(--sp-textfield-bg);
 		//border: 3px solid var(--bg);
@@ -45,12 +45,12 @@
 		max-width: 100%;
 		flex-grow: 0;
 
-		.groupLabel{
+		.groupLabel {
 			font-family: sans-serif;
 			font-size: 0.9em;
 		}
 
-		sp-textfield{
+		sp-textfield {
 			flex-grow: 1;
 			margin: 0;
 			width: 0;
@@ -58,28 +58,28 @@
 			appearance: none;
 			color: var(--text);
 
-			&:hover{
+			&:hover {
 				color: var(--hover);
 			}
 		}
 
-		sp-checkbox{
-			padding:0 0.3em;
+		sp-checkbox {
+			padding: 0 0.3em;
 			padding-bottom: 0.3em;
-			margin:0;
+			margin: 0;
 			flex-grow: 0;
 			align-self: center;
 		}
 	}
-	
+
 	.oneMore {
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
 		height: 0;
 	}
-	
-	.descriptorButtons{
+
+	.descriptorButtons {
 		flex-shrink: 0;
 		display: flex;
 		align-items: center;
@@ -87,26 +87,27 @@
 		justify-content: flex-end;
 		border-bottom: 1px solid var(--divider);
 
-		.button{
+		.button {
 			display: inline-block;
 		}
 	}
 }
 
-.MarketplaceAdvice{
+.MarketplaceAdvice {
 
-	background: transparent;;
+	background: transparent;
+	;
 
-	.dontShowLabel{
+	.dontShowLabel {
 		color: var(--text);
 		margin-right: auto;
 
-		input{
-			margin-left:0;
+		input {
+			margin-left: 0;
 		}
 	}
 
-	p{
+	p {
 		margin-left: 0;
 		margin-right: 0;
 	}

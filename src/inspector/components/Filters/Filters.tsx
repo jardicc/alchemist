@@ -5,16 +5,16 @@ import {
 	baseItemsLayer, mainClasses,
 } from "../../model/buildInDropDownValues";
 import {IPropertySettings, TAllTargetReferences, TChannelReferenceValid, TTargetReference} from "../../model/types";
-import { TFilterState } from "../FilterButton/FilterButton";
-import { ListenerFilterContainer } from "../ListenerFilter/ListenerFilterContainer";
+import {TFilterState} from "../FilterButton/FilterButton";
+import {ListenerFilterContainer} from "../ListenerFilter/ListenerFilterContainer";
 
-import { MapDispatchToPropsFunction, connect } from "react-redux";
-import { IRootState } from "../../../shared/store";
+import {MapDispatchToPropsFunction, connect} from "react-redux";
+import {IRootState} from "../../../shared/store";
 import {
 	getActiveRef,
 	getFilterBySelectedReferenceType, getPropertiesListForActiveRef,
 } from "../../selectors/inspectorSelectors";
-import { Dispatch } from "redux";
+import {Dispatch} from "redux";
 import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityButton";
 import {FilterRowContainer} from "../FilterRow/FilterRow";
 import {setProperty, setSelectedReferenceTypeAction, setTargetReferenceAction} from "../../actions/inspectorActions";
@@ -42,11 +42,11 @@ export class Filters extends React.Component<TFilters, IState> {
 				onSelect={(value) => this.props.onSetSelectedReferenceType(value as TTargetReference)}
 			/>
 		);
-	}
-	
+	};
+
 	private Document = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
-		
+
 		switch (activeRef.type) {
 			case "channel":
 			case "document":
@@ -69,11 +69,11 @@ export class Filters extends React.Component<TFilters, IState> {
 			}
 			default: return null;
 		}
-	}
-	
+	};
+
 	private Layer = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
-		
+
 		// only these three classes support layer in reference
 		if ((activeRef.type !== "layer" && activeRef.type !== "channel" && activeRef.type !== "path")) {
 			return null;
@@ -87,7 +87,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			return null;
 		}
 
-		
+
 		return (
 			<FilterRowContainer
 				header="Layer:"
@@ -101,7 +101,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				onUpdateList={async () => GetList.getLayers(activeRef.documentID)}
 			/>
 		);
-	}
+	};
 
 	private Channel = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
@@ -115,13 +115,13 @@ export class Filters extends React.Component<TFilters, IState> {
 				filterBy={activeRef.filterChannel}
 				value={activeRef.channelID}
 				onSelect={(value) => {
-					onSetTargetReference({channelID: value as number | "selected" | TChannelReferenceValid | "all" });
+					onSetTargetReference({channelID: value as number | "selected" | TChannelReferenceValid | "all"});
 				}}
 				onUpdateList={async () => GetList.getChannels(activeRef.documentID)}
 			/>
 		);
-	}
-	
+	};
+
 	private Path = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
 		if (activeRef.type !== "path") {return null;}
@@ -134,17 +134,17 @@ export class Filters extends React.Component<TFilters, IState> {
 				filterBy={activeRef.filterPath}
 				value={activeRef.pathID}
 				onSelect={(value) => {
-					onSetTargetReference({pathID:value as number | "selected" | "all" | "workPath" | "vectorMask"});
+					onSetTargetReference({pathID: value as number | "selected" | "all" | "workPath" | "vectorMask"});
 				}}
 				onUpdateList={async () => GetList.getPaths(activeRef.documentID)}
 			/>
 		);
-	}
+	};
 
 	private ActionSet = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
 		if (activeRef.type !== "actions") {return null;}
-		
+
 		return (
 			<FilterRowContainer
 				header="Action set:"
@@ -158,9 +158,9 @@ export class Filters extends React.Component<TFilters, IState> {
 				onUpdateList={async () => GetList.getActionSets()}
 			/>
 		);
-	}
+	};
 
-	private ActionItem = ():JSX.Element|null => {
+	private ActionItem = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
 		if (activeRef.type !== "actions" || activeRef.actionSetID === "none") {return null;}
 
@@ -179,7 +179,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				onUpdateList={async () => GetList.getActionItem(id)}
 			/>
 		);
-	}
+	};
 
 	private Command = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
@@ -203,7 +203,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				onUpdateList={async () => GetList.getActionCommands(id)}
 			/>
 		);
-	}
+	};
 
 	private Guide = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
@@ -222,7 +222,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				onUpdateList={async () => GetList.getGuides(activeRef.documentID)}
 			/>
 		);
-	}
+	};
 
 	private History = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
@@ -241,7 +241,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				onUpdateList={async () => GetList.getHistory()}
 			/>
 		);
-	}
+	};
 
 	private Snapshots = (): JSX.Element | null => {
 		const {activeRef, onSetTargetReference} = this.props;
@@ -260,11 +260,11 @@ export class Filters extends React.Component<TFilters, IState> {
 				onUpdateList={async () => GetList.getSnapshots()}
 			/>
 		);
-	}
-	
+	};
+
 	private Property = (): JSX.Element | null => {
 		const {activeRef, activeRefProperties, onSetProperty} = this.props;
-		
+
 		switch (activeRef.type) {
 			case "generator":
 			case "listener":
@@ -273,7 +273,7 @@ export class Filters extends React.Component<TFilters, IState> {
 			case "replies":
 				return null;
 		}
-		
+
 		if (!activeRefProperties) {throw new Error("Properties not found");}
 
 		return (
@@ -281,7 +281,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				subtype="properties"
 				header="Property:"
 				items={activeRefProperties.list}
-				
+
 				showSearch={true}
 				doNotCollapse={true}
 				filterBy={activeRef.filterProp}
@@ -291,7 +291,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				onSelect={onSetProperty}
 			/>
 		);
-	}
+	};
 
 	private ListenerFilter = (): JSX.Element | null => {
 		switch (this.props.activeRef.type) {
@@ -300,7 +300,7 @@ export class Filters extends React.Component<TFilters, IState> {
 				return <ListenerFilterContainer />;
 			default: return null;
 		}
-	}
+	};
 
 	public render(): JSX.Element {
 		return (
@@ -323,12 +323,12 @@ export class Filters extends React.Component<TFilters, IState> {
 	}
 }
 
-interface IState{
+interface IState {
 }
 
 type TFilters = IFiltersProps & IFiltersDispatch
 
-export interface IFiltersProps{
+export interface IFiltersProps {
 	activeRef: TAllTargetReferences;
 	filterBySelectedReferenceType: TFilterState
 	activeRefProperties: IPropertySettings | undefined
@@ -337,7 +337,7 @@ export interface IFiltersProps{
 
 const mapStateToProps = (state: IRootState): IFiltersProps => ({
 	activeRef: getActiveRef(state),
-	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),		
+	filterBySelectedReferenceType: getFilterBySelectedReferenceType(state),
 	activeRefProperties: getPropertiesListForActiveRef(state),
 });
 
@@ -350,7 +350,7 @@ interface IFiltersDispatch {
 const mapDispatchToProps: MapDispatchToPropsFunction<IFiltersDispatch, Record<string, unknown>> = (dispatch: Dispatch): IFiltersDispatch => ({
 	onSetSelectedReferenceType: (type) => dispatch(setSelectedReferenceTypeAction(type)),
 	onSetTargetReference: (arg) => dispatch(setTargetReferenceAction(arg)),
-	onSetProperty: (value,toggle) => dispatch(setProperty(value,toggle)),
+	onSetProperty: (value, toggle) => dispatch(setProperty(value, toggle)),
 });
 
 export const FiltersContainer = connect<IFiltersProps, IFiltersDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Filters);

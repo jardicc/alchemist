@@ -8,33 +8,33 @@ export type TClasses = "application" | "document" | "layer" | "path" | "channel"
 
 
 
-export interface IDReference<T extends TClasses>{
+export interface IDReference<T extends TClasses> {
 	_ref: T,
 	_id: number
 }
 
-export interface IndexReference<T extends TClasses>{
+export interface IndexReference<T extends TClasses> {
 	_ref: T,
 	_index: number
 }
 
-export interface INameReference<T extends TClasses>{
+export interface INameReference<T extends TClasses> {
 	_ref: T,
 	_name: string
 }
 
-export interface IPropertyReference{
-	_ref?:TClasses
+export interface IPropertyReference {
+	_ref?: TClasses
 	_property: string
 }
 
-export interface IEnumReference<T extends TClasses>{
+export interface IEnumReference<T extends TClasses> {
 	_ref: T
 	_enum: string
 	_value: string
 }
 
-export interface IApplicationReference{
+export interface IApplicationReference {
 	_ref: "application"
 	_enum: "ordinal"
 	_value: "targetEnum"
@@ -51,33 +51,33 @@ export class Reference {
 		this.ref = ref;
 	}
 
-	public get exists(): boolean{
+	public get exists(): boolean {
 		return isValidRef(this.refsOnly);
 	}
 
-	public get length(): number{
+	public get length(): number {
 		return this.ref.length;
 	}
 
-	public get lengthNonProp(): number{
+	public get lengthNonProp(): number {
 		return this.refsOnly.length;
 	}
 
-	public get amCode(){
+	public get amCode() {
 		return this.ref;
 	}
 
-	public get propertiesOnly(): IPropertyReference[]{
+	public get propertiesOnly(): IPropertyReference[] {
 		const res = this.ref.filter(v => ("_property" in v)) as IPropertyReference[];
 		return res;
 	}
 
-	public get refsOnly(): TReferenceNonProp[]{
+	public get refsOnly(): TReferenceNonProp[] {
 		const res = this.ref.filter(v => ("_ref" in v) && !("_property" in v)) as TReferenceNonProp[];
 		return res;
 	}
 
-	public get targetClass() { 
+	public get targetClass() {
 		const refs = this.refsOnly;
 		if (!refs[0]) {
 			return null;
@@ -224,7 +224,7 @@ export class Reference {
 		if (index === -1) {
 			this.ref.push(r);
 		} else {
-			this.ref.splice(index, 0, r);			
+			this.ref.splice(index, 0, r);
 		}
 	}
 
@@ -234,7 +234,7 @@ export class Reference {
 		this.removeAllClasses("historyState");
 		// application must be first if exists
 		const index = this.getClassIndex("application");
-		const r:IDReference<"historyState"> = {
+		const r: IDReference<"historyState"> = {
 			_ref: "historyState",
 			_id: id,
 		};
@@ -245,7 +245,7 @@ export class Reference {
 		// some references can have multiple layers... maybe support it in future
 		this.removeAllClasses("layer");
 		const index = this.getClassIndex("document");
-		const r:IDReference<"layer"> = {
+		const r: IDReference<"layer"> = {
 			_ref: "layer",
 			_id: id,
 		};
@@ -258,7 +258,7 @@ export class Reference {
 		this.removeAllClasses("snapshotClass");
 		// application must be first if exists
 		const index = this.getClassIndex("application");
-		const r:IDReference<"snapshotClass"> = {
+		const r: IDReference<"snapshotClass"> = {
 			_ref: "snapshotClass",
 			_id: id,
 		};
@@ -272,7 +272,7 @@ export class Reference {
 		this.removeAllClasses("historyState");
 		// application must be first if exists
 		const index = this.getClassIndex("application");
-		const r:IDReference<"document"> = {
+		const r: IDReference<"document"> = {
 			_ref: "document",
 			_id: id,
 		};
@@ -282,7 +282,7 @@ export class Reference {
 	public setGuide(id: number) {
 		this.removeAllClasses("guide");
 		const index = this.getClassIndex("document");
-		const r:IDReference<"guide"> = {
+		const r: IDReference<"guide"> = {
 			_ref: "guide",
 			_id: id,
 		};
@@ -292,8 +292,8 @@ export class Reference {
 	public setVectorMask() {
 		this.removeAllClasses("path");
 		const index = this.findIndexForPath();
-		
-		const r:IEnumReference<"path"> = {
+
+		const r: IEnumReference<"path"> = {
 			_enum: "path",
 			_ref: "path",
 			_value: "vectorMask",
@@ -304,8 +304,8 @@ export class Reference {
 	public setWorkPath() {
 		this.removeAllClasses("path");
 		const index = this.findIndexForPath();
-		
-		const r:IPropertyReference = {
+
+		const r: IPropertyReference = {
 			_ref: "path",
 			_property: "workPath",
 		};
@@ -316,25 +316,25 @@ export class Reference {
 		this.removeAllClasses("path");
 		const index = this.findIndexForPath();
 
-		const r:IDReference<"path"> = {
+		const r: IDReference<"path"> = {
 			_ref: "path",
 			_id: id,
 		};
 		this.ref.splice(index, 0, r);
 	}
 
-	private findIndexForPath(): number{
+	private findIndexForPath(): number {
 		let index = this.getClassIndex("layer");
 		if (index === -1) {
-			index = this.getClassIndex("document");			
+			index = this.getClassIndex("document");
 		}
 		return index;
 	}
 
-	private findIndexForChannel(): number{
+	private findIndexForChannel(): number {
 		let index = this.getClassIndex("layer");
 		if (index === -1) {
-			index = this.getClassIndex("document");			
+			index = this.getClassIndex("document");
 		}
 		return index;
 	}
@@ -342,24 +342,24 @@ export class Reference {
 	public setChannel(id: TChannelReferenceValid) {
 		this.removeAllClasses("channel");
 		const index = this.findIndexForChannel();
-		
+
 		if (typeof id === "number") {
-			const r:IDReference<"channel"> = {
+			const r: IDReference<"channel"> = {
 				_ref: "channel",
 				_id: id,
-			};			
+			};
 			this.ref.splice(index, 0, r);
 		} else {
-			const r:IEnumReference<"channel"> = {
+			const r: IEnumReference<"channel"> = {
 				_ref: "channel",
 				_enum: "channel",
 				_value: id,
-			};			
+			};
 			this.ref.splice(index, 0, r);
 		}
 	}
 
-	public setTimeline(){
+	public setTimeline() {
 		this.ref = [{
 			_ref: "timeline",
 			_enum: "ordinal",
@@ -367,7 +367,7 @@ export class Reference {
 		}];
 	}
 
-	public setAnimationFrame(){
+	public setAnimationFrame() {
 		this.ref = [{
 			_ref: "animationFrameClass",
 			_enum: "ordinal",
@@ -375,7 +375,7 @@ export class Reference {
 		}];
 	}
 
-	public setAnimation(){
+	public setAnimation() {
 		this.ref = [{
 			_ref: "animationClass",
 			_enum: "ordinal",
@@ -405,7 +405,7 @@ export class Reference {
 		this.ref = this.ref.filter(r => !("_property" in r));
 	}
 
-	private getClassIndex(myClass: TClasses) { 
+	private getClassIndex(myClass: TClasses) {
 		const index = this.ref.findIndex(r => ("_ref" in r) && r._ref === myClass);
 		return index;
 	}

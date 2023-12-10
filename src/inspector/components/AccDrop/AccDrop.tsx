@@ -5,21 +5,21 @@ import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
 import {getIcon} from "../../helpers";
 
-export interface IAccDropPostFixProps{
-	value:string
+export interface IAccDropPostFixProps {
+	value: string
 }
 
-export interface IAccDropIcons{	
-	[key: string]:JSX.Element
+export interface IAccDropIcons {
+	[key: string]: JSX.Element
 }
 
 export interface IAccDropProps {
 	id: string
 	items: (IPropertyItem | IPropertyGroup)[]
 	header: string | React.ReactElement
-	
-	onSelect: (id: string, value: string|number, toggle?:boolean) => void	
-	selected: (string|number)[]
+
+	onSelect: (id: string, value: string | number, toggle?: boolean) => void
+	selected: (string | number)[]
 
 	className?: string
 	onHeaderClick?: (id: string, expanded: boolean) => Promise<void>
@@ -27,16 +27,16 @@ export interface IAccDropProps {
 	headerPostFix?: ReactElement
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
 	doNotCollapse?: boolean
-	
-	supportMultiSelect?:boolean
+
+	supportMultiSelect?: boolean
 	icons?: boolean // exists only for main type
 }
 
 export interface IAccDropDispatch {
-	
+
 }
 
-interface IAccDropState{
+interface IAccDropState {
 	expanded: boolean
 	calcHeight: number
 	searchValue: string
@@ -44,7 +44,7 @@ interface IAccDropState{
 
 export type TAccDrop = IAccDropProps & IAccDropDispatch
 
-export class AccDrop extends React.Component<TAccDrop, IAccDropState> { 
+export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 	private searchRef: React.RefObject<HTMLDivElement>;
 	private heightRef: React.RefObject<HTMLDivElement>;
@@ -73,16 +73,16 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			}
 		});
 
-		height += 1.5;		
+		height += 1.5;
 		return height;
 	}
 
 	private headerClick = async () => {
-		if(this.props.onHeaderClick){
+		if (this.props.onHeaderClick) {
 			await this.props.onHeaderClick(this.props.id, !this.state.expanded);
 		}
 		this.toggleExpanded();
-	}
+	};
 
 	private toggleExpanded = () => {
 		this.setState({
@@ -94,7 +94,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				(this.searchRef as any)?.current?.focus();
 			}
 		}*/);
-	}
+	};
 
 	private getLabel = () => {
 
@@ -122,28 +122,28 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			return `${labels[0]} +(${labels.length - 1})`;
 		}
 
-	}
+	};
 
 	private renderHeader = (): JSX.Element => {
 		const {id, className, header, headerPostFix} = this.props;
 
 		return (
-			<div key={"h_"+id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
+			<div key={"h_" + id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
 				<div className="titleType">{header}</div>
 				<div className="group">
-					<div className="title">{this.getLabel()}</div>				
+					<div className="title">{this.getLabel()}</div>
 					{headerPostFix}
 					<div className="chevron">
-						{this.state.expanded ? <IconChevronTop/>:<IconChevronBottom /> }
+						{this.state.expanded ? <IconChevronTop /> : <IconChevronBottom />}
 					</div>
 				</div>
 			</div>
 		);
-	}
+	};
 
 	private renderGroup = (group: IPropertyGroup) => {
 		return (
-			<React.Fragment key={"f_"+group.group}>
+			<React.Fragment key={"f_" + group.group}>
 				<div className="groupHeader" key={"g_" + group.group}>{group.groupLabel}</div>
 				<div key={"gw_" + group.group} className="groupWrapper">
 					{
@@ -152,7 +152,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				</div>
 			</React.Fragment>
 		);
-	}
+	};
 
 	private renderSearchField = () => {
 		if (!this.props.showSearch || !this.state.expanded) {
@@ -174,18 +174,18 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				/>
 			</div>
 		);
-	}
+	};
 
 	private renderItem = (item: IPropertyItem) => {
 		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse, icons} = this.props;
 		if (
-			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) || 
+			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) ||
 			!showSearch
 		) {
 			return (
 				<div
 					className="item"
-					key={"i_"+item.value+id}
+					key={"i_" + item.value + id}
 					onClick={(e) => {
 						e.stopPropagation();
 						if (e.ctrlKey || e.metaKey) {
@@ -194,7 +194,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 							onSelect(id, item.value);
 							if (!doNotCollapse) {
 								this.toggleExpanded();
-							}							
+							}
 						}
 
 					}}
@@ -205,15 +205,15 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					</div>
 					{
 						// filter within main category dropdown
-						ItemPostFix && <div 
+						ItemPostFix && <div
 							className="itemPostFix"
 						><ItemPostFix value={item.value.toString()} /></div>
 					}
 				</div>
-			);			
+			);
 		}
 		return null;
-	}
+	};
 
 	private renderContent = (): React.ReactNode => {
 		const {id, items} = this.props;
@@ -245,9 +245,9 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 				</div>
 			</div>
 		);
-	}
-	
-	
+	};
+
+
 	componentDidUpdate(prevProps: Readonly<TAccDrop>, prevState: Readonly<IAccDropState>, snapshot?: any): void {
 		if (this.heightRef) {
 			const height = this.height;
@@ -262,10 +262,10 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			});
 		}
 	}
-	
+
 
 	public render(): JSX.Element {
-		
+
 		return (
 			<>
 				{this.renderHeader()}

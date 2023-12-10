@@ -1,36 +1,36 @@
-import { IRootState } from "../../../shared/store";
-import { MapDispatchToPropsFunction, connect } from "react-redux";
-import { getListenerNotifierFilterSettings } from "../../selectors/inspectorSelectors";
-import { setListenerNotifierFilterAction } from "../../actions/inspectorActions";
+import {IRootState} from "../../../shared/store";
+import {MapDispatchToPropsFunction, connect} from "react-redux";
+import {getListenerNotifierFilterSettings} from "../../selectors/inspectorSelectors";
+import {setListenerNotifierFilterAction} from "../../actions/inspectorActions";
 import React from "react";
-import { IListenerNotifierFilter } from "../../model/types";
+import {IListenerNotifierFilter} from "../../model/types";
 import SP from "react-uxp-spectrum";
 
-class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> { 
+class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> {
 	constructor(props: TListenerFilter) {
 		super(props);
 	}
-	
+
 	private setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.props.onSetNotifierListenerFilter({
 			exclude: e.currentTarget.value.split(";"),
 		});
-	}
+	};
 
 	private setInclude = (e: React.ChangeEvent<HTMLInputElement>) => {
 		this.props.onSetNotifierListenerFilter({
 			include: e.currentTarget.value.split(";"),
 		});
-	}
+	};
 
 	private onSetFilterEventsType = (e: any) => {
 		this.props.onSetNotifierListenerFilter({
 			type: e.target.value,
 		});
-	}
+	};
 
-	private renderFilterFields = ():JSX.Element|null => {
-		const {exclude,include,type} = this.props.settings;
+	private renderFilterFields = (): JSX.Element | null => {
+		const {exclude, include, type} = this.props.settings;
 		switch (type) {
 			case "exclude": {
 				return (
@@ -48,7 +48,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 			}
 		}
 		return null;
-	}
+	};
 
 	public render(): JSX.Element {
 		const {type} = this.props.settings;
@@ -85,7 +85,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 
 type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
 
-interface IListenerFilterProps{
+interface IListenerFilterProps {
 	settings: IListenerNotifierFilter
 }
 
