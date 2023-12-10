@@ -96,19 +96,19 @@ To enable UXP development and see your panels in Photoshop, you will need to ena
 Install the dependencies:
 
 ```sh
-npm install
+yarn install
 ```
 
 Run this to watch for file changes and rebuild automatically and also generate sourcemap
 
 ```sh
-npm watch 
+yarn watch 
 ```
 
 Or run this to create production bundle
 
 ```sh
-npm build
+yarn build
 ```
 
 Then load plugin as described above in quick usage section.

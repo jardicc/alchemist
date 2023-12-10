@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
-		"lib": ["DOM", "ES2021"],
+		"lib": ["DOM", "ES2022"],
 		"moduleResolution": "node",
 
 		"strict": true,
@@ -17,7 +17,7 @@
 		"module": "esnext",
 		"outDir": "./dist/",
 		"sourceMap": true,
-		"target": "ES2021",
+		"target": "ES2022",
 		"disableSizeLimit": false,
 		"resolveJsonModule": true,
 		"typeRoots": [
