@@ -11,6 +11,7 @@
     "yarn": ">=1.22"
   },
   "dependencies": {
+    "@adobe/cc-ext-uxp-types": "^7.3.1",
     "@types/jest": "^27.5.2",
     "@types/js-beautify": "^1.13.3",
     "@types/lodash": "^4.14.155",

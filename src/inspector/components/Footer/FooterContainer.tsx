@@ -6,8 +6,7 @@ import {GetInfo} from "../../classes/GetInfo";
 import {Main} from "../../../shared/classes/Main";
 import {Dispatch} from "redux";
 import {valid, coerce} from "semver";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const versions = require("uxp").versions;
+import {versions} from "uxp";
 
 class Footer extends React.Component<TFooter, Record<string, unknown>> {
 	constructor(props: TFooter) {

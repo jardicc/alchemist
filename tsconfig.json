@@ -21,6 +21,7 @@
 		"disableSizeLimit": false,
 		"resolveJsonModule": true,
 		"typeRoots": [
+			"./node_modules/@adobe/cc-ext-uxp-types",
 			"./src/types",
 			"./src/inspector/model",
 			"./node_modules/@types"

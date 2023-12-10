@@ -1,13 +1,13 @@
 import {IDescriptor, IInspectorState, TFontSizeSettings} from "../model/types";
 import {alert} from "./Helpers";
-import type {uxp} from "../../types/uxp";
+import {storage} from "uxp";
 import {SpectrumComponetDefaults} from "react-uxp-spectrum";
 import {getInitialState} from "../inspInitialState";
+import {readFileSync} from "fs";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const readFileSync: any = require("fs").readFileSync;
+type TFileSystemProvider = InstanceType<typeof storage.FileSystemProvider>;
+const localFileSystem: TFileSystemProvider = (storage as any).localFileSystem;
+
 
 export class Settings {
 	private static readonly settingsFilename = "settings.json";
@@ -95,7 +95,7 @@ export class Settings {
 
 	public static importState(): IInspectorState | null {
 		try {
-			const text = readFileSync(`plugin-data:/${Settings.settingsFilename}`, {encoding: "utf-8"});
+			const text = readFileSync(`plugin-data:/${Settings.settingsFilename}`, {encoding: "utf-8"}) as string;
 			const result: IInspectorState = JSON.parse(text);
 
 			// if settings has different major version than version currently in use then reset all redux store content

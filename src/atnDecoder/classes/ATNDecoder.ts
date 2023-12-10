@@ -1,7 +1,7 @@
 import {decode} from "iconv-lite";
 import {Base64} from "../../inspector/classes/Base64";
 import {RawDataConverter} from "../../inspector/classes/RawDataConverter";
-import {uxp} from "../../types/uxp";
+import {storage} from "uxp";
 import {charIDToStringID} from "./CharIDToStringID";
 import {DataViewCustom} from "./DataViewCustom";
 import {IActionSet, IActionItem, ICommand, TDescDataType, TRefDataType, IObjectArrayListInner, IActionSetUUID} from "../atnModel";
@@ -10,10 +10,10 @@ import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
 // IMPORTANT - https://streamtool.net/assets/effects/JSON-Photoshop-Scripting/Documentation/Photoshop-Actions-File-Format/actions-file-format.html
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const localFileSystem: uxp.storage.LocalFileSystemProvider = require("uxp").storage.localFileSystem;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const formats = require("uxp").storage.formats;
+type TEntry = InstanceType<typeof storage.Entry>;
+type TFileSystemProvider = InstanceType<typeof storage.FileSystemProvider>;
+const localFileSystem: TFileSystemProvider = (storage as any).localFileSystem;
+const formats = storage.formats;
 
 function addUUIDs(arg: IActionSet): IActionSetUUID {
 

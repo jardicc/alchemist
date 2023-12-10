@@ -7,9 +7,7 @@ import {renderATNDecoderUI} from "../../atnDecoder/components/atnDecoderIndex";
 import {renderSorcererUI} from "../../sorcerer/components/sorcererIndex";
 import {FlyoutMenu} from "../../inspector/classes/Flyoutmenu";
 import manifest from "./../../../uxp/manifest.json";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const uxp = require("uxp");
+import uxp from "uxp";
 
 export class Main {
 

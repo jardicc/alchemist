@@ -5,9 +5,8 @@ import {getAllDescriptors, getSelectedDescriptors} from "../selectors/inspectorS
 import {Settings} from "./Settings";
 import manifest from "../../../uxp/manifest.json";
 import {Main} from "../../shared/classes/Main";
+import {entrypoints} from "uxp";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const {entrypoints} = require("uxp");
 const {dispatch} = rootStore;
 
 export class FlyoutMenu {
@@ -127,6 +126,6 @@ export class FlyoutMenu {
 					},
 				},
 			},
-		});
+		} as any); // remove as any when types are updated
 	}
 }

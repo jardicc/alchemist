@@ -15,6 +15,8 @@ import {str as crc} from "crc-32";
 import Sval from "sval";
 import {Dispatch} from "redux";
 import SP from "react-uxp-spectrum";
+import uxp from "uxp";
+import os from "os";
 
 class Dispatcher extends React.Component<TDispatcher, Record<string, unknown>> {
 
@@ -39,10 +41,8 @@ class Dispatcher extends React.Component<TDispatcher, Record<string, unknown>> {
 						ecmaVer: 9,
 						sandBox: false,
 					});
-					// eslint-disable-next-line @typescript-eslint/no-var-requires
-					interpreter.import("uxp", require("uxp"));
-					// eslint-disable-next-line @typescript-eslint/no-var-requires
-					interpreter.import("os", require("os"));
+					interpreter.import("uxp", uxp);
+					interpreter.import("os", os);
 
 					interpreter.run(`
 						"use strict";
