@@ -2,5 +2,41 @@
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"cSpell.words": [
 		"tokenify"
-	]
+	],
+	"search.useIgnoreFiles": true,
+	"search.exclude": {
+		"**/node_modules": true,
+		"/dist": true,
+		"/installer": true,
+		"yarn.lock": true,
+	},
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		// "*.ts": "${capture}.js",
+		"*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+		"*.jsx": "${capture}.js",
+		"*@1x.png": "*x.png",
+		// "*.tsx": "${capture}.ts",
+		"tsconfig.json": "tsconfig.*.json",
+		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml"
+	},
+	"eslint.enable": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"eslint.validate": [
+		"javascript",
+		"typescript",
+		"html"
+	],
+
+	"editor.formatOnSave": true,
+
+	"typescript.format.enable": true,
+	"typescript.format.insertSpaceAfterCommaDelimiter": true,
+	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+
+	"javascript.format.enable": true,
+	"javascript.format.insertSpaceAfterCommaDelimiter": true,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
 }
