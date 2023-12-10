@@ -7,6 +7,7 @@ import {build, context} from "esbuild";
 import {zip} from "zip-a-folder";
 import manifest from "./uxp/manifest.json" assert {type: "json"};
 import chokidar from "chokidar";
+import {typecheckPlugin} from "@jgoz/esbuild-plugin-typecheck";
 
 const mode = process.argv[2];
 //console.log(copy);
@@ -30,6 +31,7 @@ const esBuildConfigBase = {
 	logLevel: "info",
 	bundle: true,
 	minify: false,
+
 	sourcemap: "inline",
 	platform: "browser",
 	target: ["es2022", "node18"],
@@ -48,6 +50,9 @@ const esBuildConfigBase = {
 			watch: true,
 		}),
 		stylePlugin(),
+		typecheckPlugin({
+			watch: true,
+		}),
 	],
 	footer: {
 		// fixes sourcemap issue
@@ -65,7 +70,7 @@ const esBuildConfigBase = {
 		"modern-rgb-hsl": false,
 		"nesting": false,
 		"rebecca-purple": false,
-	}
+	},
 };
 
 /** @type {import("esbuild").CommonOptions} */

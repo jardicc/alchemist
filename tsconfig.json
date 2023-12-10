@@ -20,6 +20,7 @@
 		"module": "ES2022",
 		"outDir": "./dist/",
 		"sourceMap": true,
+		"skipLibCheck": true,
 		"target": "ES2022",
 		"disableSizeLimit": false,
 		"resolveJsonModule": true,
@@ -32,9 +33,7 @@
 		],
 	},
 
-	"include": [
-		"./**/*"
-	],
+	"include": ["./src/**/*"],
 
 	"exclude": [
 		"/node_modules",
