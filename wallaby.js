@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-undef
-module.exports = (wallaby) => {
+export default (wallaby) => {
 
 	return {
 		files: [

@@ -5,6 +5,7 @@
     "watch": "node esbuild.config.js --watch"
   },
   "_readme": "Use NVM tool for switching NodeJS version if needed. https://github.com/nvm-sh/nvm/blob/master/README.md And use Yarn only.",
+  "type": "module",
   "engines": {
     "node": ">= 18.6.0",
     "npm": ">= 999.999.999",

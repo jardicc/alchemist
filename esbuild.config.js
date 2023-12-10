@@ -1,14 +1,12 @@
-/* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-var-requires */
 console.log("ESBuild config loaded");
-const stylePlugin = require("esbuild-style-plugin");
-const {clean} = require("esbuild-plugin-clean");
-const {copy} = require("esbuild-plugin-copy");
-const {merge} = require("webpack-merge");
-const {build, context} = require("esbuild");
-const {zip} = require("zip-a-folder");
-const manifest = require("./uxp/manifest.json");
-const chokidar = require("chokidar");
+import stylePlugin from "esbuild-style-plugin";
+import {clean} from "esbuild-plugin-clean";
+import {copy} from "esbuild-plugin-copy";
+import {merge} from "webpack-merge";
+import {build, context} from "esbuild";
+import {zip} from "zip-a-folder";
+import manifest from "./uxp/manifest.json" assert {type: "json"};
+import chokidar from "chokidar";
 
 const mode = process.argv[2];
 //console.log(copy);
@@ -26,57 +24,62 @@ switch (mode) {
 		process.exit(1);
 }
 
-const config = merge(
-	{
-		entryPoints: ["./src/shared/classes/Main.ts"],
-		logLevel: "info",
-		bundle: true,
-		minify: false,
-		sourcemap: "inline",
-		platform: "browser",
-		target: ["es2022", "node18"],
-		external: ["photoshop", "uxp", "fs", "os"],
-		outfile: "./dist/index.js",
-		// adds less plugin
-		plugins: [
-			clean({
-				patterns: "./dist",
-			}),
-			copy({
-				assets: {
-					from: "./uxp/**",
-					to: "./",
-				},
-				watch: true,
-			}),
-			stylePlugin(),
+/** @type {import("esbuild").CommonOptions} */
+const esBuildConfigBase = {
+	entryPoints: ["./src/shared/classes/Main.ts"],
+	logLevel: "info",
+	bundle: true,
+	minify: false,
+	sourcemap: "inline",
+	platform: "browser",
+	target: ["es2022", "node18"],
+	external: ["photoshop", "uxp", "fs", "os"],
+	outfile: "./dist/index.js",
+	// adds less plugin
+	plugins: [
+		clean({
+			patterns: "./dist",
+		}),
+		copy({
+			assets: {
+				from: "./uxp/**",
+				to: "./",
+			},
+			watch: true,
+		}),
+		stylePlugin(),
+	],
+	footer: {
+		// fixes sourcemap issue
+		js: "//# sourceURL=webpack-internal:///./src/",
+	},
+	// Disable some features/minification to make it work in UXP
+	supported: {
+		// JavaScript
+		"top-level-await": false,
+		// CSS... because UXP is special
+		"hex-rgba": false,
+		"inline-style": false,
+		"inset-property": false,
+		"is-pseudo-class": false,
+		"modern-rgb-hsl": false,
+		"nesting": false,
+		"rebecca-purple": false,
+	}
+};
 
-		],
-		footer: {
-			// fixes sourcemap issue
-			js: "//# sourceURL=webpack-internal:///./src/",
-		},
-		// Disable some features/minification to make it work in UXP
-		supported: {
-			// JavaScript
-			"top-level-await": false,
-			// CSS... because UXP is special
-			"hex-rgba": false,
-			"inline-style": false,
-			"inset-property": false,
-			"is-pseudo-class": false,
-			"modern-rgb-hsl": false,
-			"nesting": false,
-			"rebecca-purple": false,
-		},
-	},
-	isProduction && {
-		minify: true,
-		keepNames: true,
-		sourcemap: false,
-		footer: {js: ""},
-		legalComments: "inline",
-	},
+/** @type {import("esbuild").CommonOptions} */
+const esBuildConfigProduction = {
+	minify: true,
+	keepNames: true,
+	sourcemap: false,
+	footer: {js: ""},
+	legalComments: "inline",
+};
+
+const config = merge(
+	esBuildConfigBase,
+	isProduction && esBuildConfigProduction,
 );
 
 (async () => {
@@ -114,7 +117,6 @@ const config = merge(
 			});
 			// start watching
 			await ctx.watch();
-
 		}
 
 		console.log("ESBuild finished: " + (Date.now() - start) + "ms");

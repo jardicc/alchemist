@@ -2,9 +2,12 @@
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"lib": ["DOM", "ES2022"],
-		"moduleResolution": "node",
+		"moduleResolution": "Bundler",
 
 		"strict": true,
+		"allowJs": true,
+		"downlevelIteration": true,
+		"noImplicitOverride": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		// "noUncheckedIndexedAccess": true,
@@ -12,25 +15,31 @@
 		// "noPropertyAccessFromIndexSignature": true,
 		"forceConsistentCasingInFileNames": true,
 
-		"esModuleInterop": true,
+		"esModuleInterop": true,		
 		"jsx": "react",
-		"module": "esnext",
+		"module": "ES2022",
 		"outDir": "./dist/",
 		"sourceMap": true,
 		"target": "ES2022",
 		"disableSizeLimit": false,
 		"resolveJsonModule": true,
 		"typeRoots": [
+			"./node_modules/@types",
+			"./node_modules/sass",
 			"./node_modules/@adobe/cc-ext-uxp-types",
 			"./src/types",
 			"./src/inspector/model",
-			"./node_modules/@types"
-		]
+		],
 	},
 
+	"include": [
+		"./**/*"
+	],
 
 	"exclude": [
-		"node_modules"
+		"/node_modules",
+		"/dist",
+		"/installer"
 	]
 }
 

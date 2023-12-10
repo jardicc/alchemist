@@ -28,7 +28,7 @@ export class Settings {
 		}
 	}
 
-	public static async settingsFolder(): Promise<uxp.storage.Folder> {
+	public static async settingsFolder(): Promise<storage.Folder> {
 		const folder = await localFileSystem.getDataFolder();
 		return folder;
 	}

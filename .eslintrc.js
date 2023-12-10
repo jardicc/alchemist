@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-undef
-module.exports = {
+export default {
 	"env": {
 		"browser": true,
 		"es2020": true,
