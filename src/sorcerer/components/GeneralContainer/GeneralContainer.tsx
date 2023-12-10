@@ -33,7 +33,7 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 		return res;
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {manifestGeneric, isGenericVisible, onSet: onSetMain} = this.props;
 
 		if (!isGenericVisible) {

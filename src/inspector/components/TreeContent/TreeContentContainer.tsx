@@ -45,7 +45,7 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 	};
 
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {content, protoMode, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys, viewType, onSetView} = this.props;
 		//console.log(content);
 		return (

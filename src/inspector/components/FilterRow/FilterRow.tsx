@@ -25,7 +25,7 @@ class FilterRow extends React.Component<TFilterRow, IFilterRowState> {
 		});
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {value: content, subtype, filterBy, onSelect, onUpdateList, initialItems, items} = this.props;
 		let newContent: (string | number)[];
 		if (!Array.isArray(content)) {

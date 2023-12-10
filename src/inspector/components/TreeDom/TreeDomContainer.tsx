@@ -30,7 +30,7 @@ export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {content, protoMode, onInspectPath, autoExpandLevels, onSetAutoExpandLevel} = this.props;
 		if (!content) {
 			return "Nothing to see there";

@@ -17,8 +17,9 @@ import {GeneratedCodeContainer} from "../GeneratedCode/GeneratedCodeContainer";
 import {SettingsContainer} from "../Settings/SettingsContainer";
 import {IconCog, IconX} from "../../../shared/components/icons";
 import {LeftColumnContainer} from "../LeftColumn/LeftColumn";
-import {Pane} from "react-split-pane";
-import SplitPane from "react-split-pane";
+import {SplitPane} from "../../../shared/components/split-pane-fork/SplitPane";
+import {Pane} from "../../../shared/components/split-pane-fork/Pane";
+
 
 
 class Inspector extends React.Component<TInspector, IInspectorState> {
@@ -40,7 +41,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		});
 	};
 
-	public componentDidMount(): void {
+	public override componentDidMount(): void {
 		(async () => {
 			const res = await fetch("http://alchemist.bereza.cz/alchemist-message.json");
 			if (res.status !== 200) {
@@ -57,7 +58,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		})();
 	}
 
-	public render(): JSX.Element {
+	public override render() {
 		const {fontSizeSettings, leftColumnWidthPx, rightColumnWidthPx, setColumnSize, settingsVisible: visible, setToggleSettings} = this.props;
 
 		const btnSettings = (
@@ -69,14 +70,26 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		return (
 			<div className={`Inspector ${fontSizeSettings}`} key={fontSizeSettings}>
 				<div className="descriptorsColumns">
-					<SplitPane className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => setColumnSize(px, "left")} minSize={200}>
+					<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => setColumnSize(px, "left")} minSize={200}>
 						<Pane className="leftPane">
 							<LeftColumnContainer />
 						</Pane>
-						<SplitPane split="horizontal" primary="second" maxSize={25} minSize={25} defaultSize={25} allowResize={false} resizerStyle={{display: "none"}}>
+						<SplitPane split="horizontal" primary="second" maxSize={25} minSize={25} defaultSize={25} allowResize={false} resizerStyle={{display: "none"}} pane1ClassName="" pane2ClassName="" paneClassName="">
 
 							<Pane className="rightPane">
-								<SplitPane className="split" split="vertical" defaultSize={visible ? rightColumnWidthPx : 0} onDragFinished={(px) => setColumnSize(px, "right")} maxSize={visible ? undefined : 0} minSize={visible ? 200 : 0} primary={"second"}>
+								<SplitPane
+									className="split"
+									split="vertical"
+									defaultSize={visible ? rightColumnWidthPx : 0}
+									onDragFinished={(px) => setColumnSize(px, "right")}
+									maxSize={visible ? undefined : 0}
+									minSize={visible ? 200 : 0}
+									primary={"second"}
+									allowResize={true}
+									pane1ClassName=""
+									pane2ClassName=""
+									paneClassName=""
+								>
 									<Pane className="rightPane" >
 										<TabList
 											className="tabsDescriptor"

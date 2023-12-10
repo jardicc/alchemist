@@ -64,7 +64,7 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 		);
 	};
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 
 		return (
 			<div className={"Accordion " + (this.props.className || "")}>

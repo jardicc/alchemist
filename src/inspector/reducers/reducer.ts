@@ -1,6 +1,6 @@
 
 
-import produce from "immer";
+import {produce} from "immer";
 import {getInitialState} from "../inspInitialState";
 import {TActions} from "../actions/inspectorActions";
 import {IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType, TSubTypes} from "../model/types";

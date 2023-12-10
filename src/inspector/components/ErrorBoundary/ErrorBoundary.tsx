@@ -31,7 +31,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 	}
 	*/
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		if (this.state.hasError) {
 
 			const style: React.CSSProperties = {

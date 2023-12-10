@@ -70,7 +70,7 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 		return <div className={clsName}>not array</div>;
 	};
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 
 		return (
 			<div className={"TabList " + (this.props.className || "")}>

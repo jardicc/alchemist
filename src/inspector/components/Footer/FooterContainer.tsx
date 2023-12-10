@@ -13,7 +13,7 @@ class Footer extends React.Component<TFooter, Record<string, unknown>> {
 		super(props);
 	}
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const psVersionSegments = GetInfo.getBuildString();
 		const uxpVersion = valid(coerce(versions?.uxp?.split?.("-")?.[1])) ?? "Parser error";
 		const psVersion = valid(coerce(psVersionSegments?.split?.(" ")?.[0])) ?? "Parser error";

@@ -59,12 +59,12 @@ export class JSONTree extends React.Component<IDefSettings, ITreeContentState> {
 		super(props);
 	}
 
-	public shouldComponentUpdate(nextProps: IDefSettings): boolean {
+	public override shouldComponentUpdate(nextProps: IDefSettings): boolean {
 		// consider to optimize
 		return true;
 	}
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		const {
 			data: value,
 			keyPath,

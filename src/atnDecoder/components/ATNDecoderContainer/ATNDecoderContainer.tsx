@@ -104,7 +104,7 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 	);
 
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 
 		const {fontSizeSettings, data, setData, textData, onClearAll, selectedCommands, setSelectedItem, onSetDontSendDisabled, dontSendDisabled} = this.props;
 

@@ -126,7 +126,7 @@ class Settings extends Component<TSettings, ISettingsState> {
 		this.props.onSetGlobalOptions({codeImports: e.target?.checked ? "require" : "none"});
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {settings: {makeRawDataEasyToInspect: ignoreRawData, maximumItems, fontSize, neverRecordActionNames, accordionExpandedIDs}, onSetRecordRaw, onSetFontSize, onNeverRecordActionNamesChanged} = this.props;
 		const {onSetGlobalOptions, settingsVisible: visible, setToggleSettings, onToggleAccordion} = this.props;
 		const {dialogOptions, modalBehavior, synchronousExecution, supportRawDataType} = this.props.descriptorSettings;

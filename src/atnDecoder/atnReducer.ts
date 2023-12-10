@@ -1,4 +1,4 @@
-import produce from "immer";
+import {produce} from "immer";
 import {uniqBy} from "lodash";
 import {IInspectorState} from "../inspector/model/types";
 import {TAllActions} from "../inspector/reducers/reducer";

@@ -30,7 +30,7 @@ export class FilterButton extends React.Component<TFilterButton, IFilterButtonSt
 		};
 	}
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		const {state, onClick, subtype} = this.props;
 
 		return (

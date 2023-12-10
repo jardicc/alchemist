@@ -128,7 +128,7 @@ class DescriptorItem extends React.Component<TDescriptorItem, IState> {
 		);
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {renameMode} = this.props.descriptor;
 		if (renameMode) {
 			return this.renderEditState();

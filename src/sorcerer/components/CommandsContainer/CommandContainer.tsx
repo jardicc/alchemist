@@ -14,7 +14,7 @@ export class Command extends React.Component<TCommandContainer, ICommandContaine
 		super(props);
 	}
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {activeCommand, onSet, snippets} = this.props;
 
 		if (!activeCommand) {return null;}

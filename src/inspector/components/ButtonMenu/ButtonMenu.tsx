@@ -70,7 +70,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 		return this.panelElement()?.getBoundingClientRect();
 	};
 
-	public componentDidMount(): void {
+	public override  componentDidMount(): void {
 		const elList = this.listElement;
 		const elContent = document.getElementById(this.state.uuid)?.querySelector(".childWrap");
 
@@ -83,7 +83,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 		});
 	}
 
-	public componentDidUpdate(prevProps: TButtonMenu, prevState: IButtonMenuState): void {
+	public override componentDidUpdate(prevProps: TButtonMenu, prevState: IButtonMenuState): void {
 		const el = this.listElement();
 
 		const height = el?.clientHeight;
@@ -171,7 +171,7 @@ export class ButtonMenu extends React.Component<TButtonMenu, IButtonMenuState> {
 	};
 
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		const {children} = this.props;
 
 		return (

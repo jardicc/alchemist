@@ -51,7 +51,7 @@ export class ActionCommand extends React.Component<TActionCommand, IActionComman
 		this.props.setSelectedItem(this.combinedUUID, operation);
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {actionCommand} = this.props;
 
 		return (

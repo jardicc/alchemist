@@ -63,7 +63,7 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 		this.props.setExpandedItem([parent.__uuid__, actionItem.__uuid__], !this.isExpanded);
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 
 		const {actionItem, parentSet} = this.props;
 

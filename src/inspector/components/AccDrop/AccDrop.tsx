@@ -248,7 +248,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	};
 
 
-	componentDidUpdate(prevProps: Readonly<TAccDrop>, prevState: Readonly<IAccDropState>, snapshot?: any): void {
+	public override componentDidUpdate(prevProps: Readonly<TAccDrop>, prevState: Readonly<IAccDropState>, snapshot?: any): void {
 		if (this.heightRef) {
 			const height = this.height;
 
@@ -264,7 +264,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	}
 
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 
 		return (
 			<>

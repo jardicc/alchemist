@@ -85,7 +85,7 @@ class Dispatcher extends React.Component<TDispatcher, Record<string, unknown>> {
 	};
 
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		return (
 			<div className="Dispatcher">
 				<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>

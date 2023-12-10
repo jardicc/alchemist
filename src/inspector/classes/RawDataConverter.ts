@@ -2,7 +2,6 @@
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 import {IDescriptorSettings} from "../model/types";
 import {getInspectorSettings} from "../selectors/inspectorSelectors";
-import {Base64} from "./Base64";
 
 export class RawDataConverter {
 
@@ -78,14 +77,14 @@ export class RawDataConverter {
 						const str = RawDataConverter.arrayBufferToString(itemInData);
 						data[key] = {
 							"_rawData": "base64",
-							"_data": Base64.btoa(str),
+							"_data": btoa(str),
 						};
 					} else if (typeof itemInData === "object") {
 						if ("_rawData" in itemInData && itemInData._rawData === "alchemistFakeType") {
 							const str = RawDataConverter.arrayCodeToString(itemInData._data);
 							data[key] = {
 								"_rawData": "base64",
-								"_data": Base64.btoa(str),
+								"_data": btoa(str),
 							};
 						} else {
 							rec(itemInData);

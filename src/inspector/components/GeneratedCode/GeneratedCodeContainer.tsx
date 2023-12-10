@@ -16,7 +16,7 @@ class GeneratedCode extends Component<TGeneratedCode, Record<string, unknown>> {
 		};
 	}
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 
 		return (
 			<div className="GeneratedCode">

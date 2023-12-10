@@ -63,11 +63,11 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
 	};
 
-	public componentDidMount(): void {
+	public override componentDidMount(): void {
 		this.updateData();
 	}
 
-	public componentDidUpdate(prevProps: TTreeDiff): void {
+	public override componentDidUpdate(prevProps: TTreeDiff): void {
 		if (prevProps.left !== this.props.left && prevProps.right !== this.props.right) {
 			this.updateData();
 		}
@@ -87,7 +87,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.state.data);
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {...props} = this.props;
 
 		const {left, right, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys} = this.props;

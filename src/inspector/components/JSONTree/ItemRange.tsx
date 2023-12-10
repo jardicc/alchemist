@@ -18,7 +18,7 @@ export class ItemRange extends React.Component<IItemRange, IItemState> {
 		this.handleClick = this.handleClick.bind(this);
 	}
 
-	render(): JSX.Element {
+	public override render(): JSX.Element {
 		const {from, to, renderChildNodes, nodeType} = this.props;
 
 		return this.state.expanded ? (

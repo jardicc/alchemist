@@ -15,7 +15,7 @@ export class Snippet extends React.Component<TSnippetContainer, ISnippetContaine
 		super(props);
 	}
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {activeSnippet, onSet} = this.props;
 
 		if (activeSnippet === null) {return null;}

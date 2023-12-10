@@ -24,7 +24,7 @@ class ItemVisibilityButton extends React.Component<TItemVisibilityButton, Record
 	};
 
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		return (
 			<div
 				className={"ItemVisibilityButton " + (this.visible ? "visible" : "hidden")}
@@ -69,7 +69,7 @@ export class ItemVisibilityButtonWrap extends React.Component<IAccDropPostFixPro
 		super(props);
 	}
 
-	render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		return (
 			<ItemVisibilityButtonContainer value={this.props.value as TTargetReference} />
 		);

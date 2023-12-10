@@ -1,5 +1,4 @@
 import {decode} from "iconv-lite";
-import {Base64} from "../../inspector/classes/Base64";
 import {RawDataConverter} from "../../inspector/classes/RawDataConverter";
 import {storage} from "uxp";
 import {charIDToStringID} from "./CharIDToStringID";
@@ -281,7 +280,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 
 			desc[propertyName] = {
 				_rawData: "base64",
-				_data: Base64.btoa(
+				_data: btoa(
 					RawDataConverter.arrayBufferToString(
 						data.buffer.slice(data.offset, data.offset + length),
 					),

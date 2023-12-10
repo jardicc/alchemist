@@ -47,7 +47,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	private lastDescRef: React.RefObject<HTMLDivElement> = React.createRef();
 	private wrapperDescRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-	public componentDidUpdate = (): void => {
+	public override componentDidUpdate = (): void => {
 		const itemElement = this.lastDescRef?.current;
 		const wrapperElement = this.wrapperDescRef?.current;
 		if (!itemElement || !wrapperElement) {return;}
@@ -292,7 +292,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		(navigator.clipboard as any).setContent({"text/plain": this.props.generatedCode});
 	};
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		const {addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
 			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
 			settings: {autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors, autoUpdateSpy},

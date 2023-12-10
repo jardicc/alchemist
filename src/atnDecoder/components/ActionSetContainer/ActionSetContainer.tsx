@@ -63,7 +63,7 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 		this.props.setExpandedItem([actionSet.__uuid__], !this.isExpanded, recursive);
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 
 		const {actionSet} = this.props;
 

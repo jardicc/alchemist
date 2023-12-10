@@ -60,7 +60,7 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 		this.props.setPreset(data);
 	};
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		const {fontSizeSettings, commands, snippets, panels, selectItem, make, remove, selectedItem, manifestCode, enableRemove} = this.props;
 
 		return (

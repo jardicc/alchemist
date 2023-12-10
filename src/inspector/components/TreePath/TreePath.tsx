@@ -46,7 +46,7 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 		}, 50);
 	};
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {autoExpandLevels, allowInfinityLevels} = this.props;
 
 		return (

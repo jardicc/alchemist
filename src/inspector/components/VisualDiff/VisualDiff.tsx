@@ -30,7 +30,7 @@ export class VisualDiffTab extends Component<TVisualDiff, IVisualDiffState> {
 
 	private el: HTMLDivElement | null = null;
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 
 		let __html;
 		const {left, right} = this.props;

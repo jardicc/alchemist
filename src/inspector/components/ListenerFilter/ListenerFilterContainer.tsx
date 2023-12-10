@@ -50,7 +50,7 @@ class ListenerFilter extends React.Component<TListenerFilter, Record<string, unk
 		return null;
 	};
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		const {type} = this.props.settings;
 		return (
 			<>

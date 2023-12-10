@@ -302,7 +302,7 @@ export class Filters extends React.Component<TFilters, IState> {
 		}
 	};
 
-	public render(): JSX.Element {
+	public override render(): JSX.Element {
 		return (
 			<>
 				<this.MainCategory />

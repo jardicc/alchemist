@@ -26,37 +26,37 @@ export class DataViewCustom extends DataView {
 		return !!res;
 	}
 
-	public getUint8(byteOffset: number = this.offset): number {
+	public override getUint8(byteOffset: number = this.offset): number {
 		const res = super.getUint8(byteOffset);
 		this.offset += 1;
 		return res;
 	}
 
-	public getInt8(byteOffset: number = this.offset): number {
+	public override getInt8(byteOffset: number = this.offset): number {
 		const res = super.getInt8(byteOffset);
 		this.offset += 1;
 		return res;
 	}
 
-	public getInt16(byteOffset: number = this.offset): number {
+	public override getInt16(byteOffset: number = this.offset): number {
 		const res = super.getInt16(byteOffset, this.littleEndian);
 		this.offset += 2;
 		return res;
 	}
 
-	public getUint16(byteOffset: number = this.offset, isLittleEndian = this.littleEndian): number {
+	public override getUint16(byteOffset: number = this.offset, isLittleEndian = this.littleEndian): number {
 		const res = super.getUint16(byteOffset, isLittleEndian);
 		this.offset += 2;
 		return res;
 	}
 
-	public getInt32(byteOffset: number = this.offset): number {
+	public override getInt32(byteOffset: number = this.offset): number {
 		const res = super.getInt32(byteOffset, this.littleEndian);
 		this.offset += 4;
 		return res;
 	}
 
-	public getUint32(byteOffset: number = this.offset): number {
+	public override getUint32(byteOffset: number = this.offset): number {
 		const res = super.getUint32(byteOffset, this.littleEndian);
 		this.offset += 4;
 		return res;
@@ -103,7 +103,7 @@ export class DataViewCustom extends DataView {
 		return res;
 	}
 
-	public getFloat64(byteOffset: number = this.offset): number {
+	public override getFloat64(byteOffset: number = this.offset): number {
 		const res = super.getFloat64(byteOffset, this.littleEndian);
 		this.offset += 8;
 		return res;

@@ -1,18 +1,19 @@
 import "./PanelContainer.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import {Dispatch} from "redux";
 import {IRootState} from "../../../shared/store";
 import {IEntrypointPanel, ISnippet} from "../../sorModel";
 import {getActivePanel, getAllSnippets} from "../../sorSelectors";
 import {assignSnippetToPanelAction, setPanelAction, TSetPanelActionPayload} from "../../sorActions";
+import {TActions} from "../../../inspector/actions/inspectorActions";
 export class Panel extends React.Component<TPanelContainer, IPanelContainerState> {
 	constructor(props: TPanelContainer) {
 		super(props);
 	}
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		const {activePanel, onSet, snippets, onAssignSnippet} = this.props;
 
 		if (!activePanel) {return null;}
@@ -78,6 +79,7 @@ interface IPanelContainerDispatch {
 
 const mapDispatchToProps = (dispatch: Dispatch): IPanelContainerDispatch => ({
 	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
+
 	onSet: (uuid, value) => dispatch(setPanelAction(value, uuid)),
 	onAssignSnippet: (uuid, operation, snippetUuid) => dispatch(assignSnippetToPanelAction(operation, uuid, snippetUuid)),
 });

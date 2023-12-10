@@ -29,7 +29,7 @@ export class TabPanel extends React.Component<TTabPanel, ITabPanelState> {
 		};
 	}
 
-	public render(): React.ReactNode {
+	public override render(): React.ReactNode {
 		return this.props.children;
 	}
 }

@@ -1,4 +1,4 @@
-import produce from "immer";
+import {produce} from "immer";
 import {Helpers} from "../inspector/classes/Helpers";
 import {IInspectorState} from "../inspector/model/types";
 import {TAllActions} from "../inspector/reducers/reducer";
