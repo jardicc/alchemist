@@ -180,6 +180,9 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 
 				currentPos = isPrimaryFirst ? currentPos : (containerSize + containerPos - currentPos);
 
+				currentPos = Math.min(containerSize - 10, currentPos);
+				currentPos = Math.max(10, currentPos);
+
 				if (onChange) onChange(currentPos);
 
 				this.setState({

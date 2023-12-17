@@ -70,7 +70,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		return (
 			<div className={`Inspector ${fontSizeSettings}`} key={fontSizeSettings}>
 				<div className="descriptorsColumns">
-					<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => setColumnSize(px, "left")} minSize={200}>
+					<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => setColumnSize(px, "left")} minSize={210}>
 						<Pane className="leftPane">
 							<LeftColumnContainer />
 						</Pane>
