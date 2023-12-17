@@ -19,6 +19,9 @@ declare global {
 			"sp-tags": any;
 			"sp-tag": any;
 			"sp-tooltip": any;
+			"sp-overlay": any;
+			"sp-icon": any;
+			"sp-body": any;
 		}
 	}
 }
