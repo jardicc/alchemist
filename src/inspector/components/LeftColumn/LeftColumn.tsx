@@ -40,9 +40,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {
 		super(props);
 		this.marketplaceDialogRef = React.createRef();
+		this.clearMenuRef = React.createRef();
 	}
 
 	private marketplaceDialogRef: React.RefObject<any>;
+	private clearMenuRef: React.RefObject<any>;
 	private lastDescRef: React.RefObject<HTMLDivElement> = React.createRef();
 	private wrapperDescRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -291,6 +293,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		(navigator.clipboard as any).setContent({"text/plain": this.props.generatedCode});
 	};
 
+	private closeClearMenu = () => {
+		//this.clearMenuRef.current.close();
+		this.clearMenuRef.current.removeAttribute("open");
+	}
+
 
 	public override render(): JSX.Element {
 		const {addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
@@ -317,15 +324,16 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 								Clear...
 							</div>
 							<sp-popover
+								ref={this.clearMenuRef}
 								placement="auto"
 								alignment="auto"
 								slot="click"
 							>
 								<div className="column">
-									<div className="button" onMouseDown={() => {onClear();}}>All</div>
-									<div className="button" onMouseDown={() => {onClearView(false);}}>In view</div>
-									<div className="button" onMouseDown={() => {onClearView(true);}}>Not in view</div>
-									<div className="button" onMouseDown={() => {onClearNonExistent(filterNonExistent(allDescriptors));}}>Non-existent</div>
+									<div className="button" onClick={() => {this.closeClearMenu(); onClear();}}>All</div>
+									<div className="button" onClick={() => {this.closeClearMenu(); onClearView(false);}}>In view</div>
+									<div className="button" onClick={() => {this.closeClearMenu(); onClearView(true);}}>Not in view</div>
+									<div className="button" onClick={() => {this.closeClearMenu(); onClearNonExistent(filterNonExistent(allDescriptors));}}>Non-existent</div>
 								</div>
 							</sp-popover>
 						</sp-overlay>
