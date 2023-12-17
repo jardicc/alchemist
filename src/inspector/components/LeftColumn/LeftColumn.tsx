@@ -32,7 +32,6 @@ import {
 } from "../../selectors/inspectorSelectors";
 import {Dispatch} from "redux";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
-import {ButtonMenu} from "../ButtonMenu/ButtonMenu";
 import {filterNonExistent} from "../../classes/filterNonExistent";
 import {FiltersContainer} from "../Filters/Filters";
 import {getGeneratedCode} from "../../selectors/inspectorCodeSelectors";
@@ -292,6 +291,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		(navigator.clipboard as any).setContent({"text/plain": this.props.generatedCode});
 	};
 
+
 	public override render(): JSX.Element {
 		const {addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
 			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
@@ -311,21 +311,25 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					</div>
 
 					<div className="descriptorButtons">
-						<ButtonMenu
-							key="clear"
-							className="abc"
-							placementVertical="top"
-							placementHorizontal="right"
-							items={
+
+						<sp-overlay>
+							<div slot="trigger">
+								Clear...
+							</div>
+							<sp-popover
+								placement="auto"
+								alignment="auto"
+								slot="click"
+							>
 								<div className="column">
 									<div className="button" onMouseDown={() => {onClear();}}>All</div>
 									<div className="button" onMouseDown={() => {onClearView(false);}}>In view</div>
 									<div className="button" onMouseDown={() => {onClearView(true);}}>Not in view</div>
 									<div className="button" onMouseDown={() => {onClearNonExistent(filterNonExistent(allDescriptors));}}>Non-existent</div>
 								</div>
-							}>
-							<div className="button">Clear...</div>
-						</ButtonMenu>
+							</sp-popover>
+						</sp-overlay>
+
 						<div className="spread"></div>
 
 						{/*
