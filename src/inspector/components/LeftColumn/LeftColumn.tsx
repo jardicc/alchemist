@@ -320,7 +320,7 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 					<div className="descriptorButtons">
 
 						<sp-overlay>
-							<div slot="trigger">
+							<div slot="trigger" className="button">
 								Clear...
 							</div>
 							<sp-popover
