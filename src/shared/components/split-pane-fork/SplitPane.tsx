@@ -88,9 +88,10 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 
 
 	public override componentDidMount() {
-		document.addEventListener("mouseup", this.onMouseUp);
-		document.addEventListener("mousemove", this.onMouseMove);
-		document.addEventListener("touchmove", this.onTouchMove);
+		if (this.splitPane.current === null) return;
+		this.splitPane.current.addEventListener("mouseup", this.onMouseUp);
+		this.splitPane.current.addEventListener("mousemove", this.onMouseMove);
+		this.splitPane.current.addEventListener("touchmove", this.onTouchMove);
 		this.setState(SplitPane.getSizeUpdate(this.props, this.state));
 	}
 
@@ -99,9 +100,10 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 	}
 
 	public override componentWillUnmount() {
-		document.removeEventListener("mouseup", this.onMouseUp);
-		document.removeEventListener("mousemove", this.onMouseMove);
-		document.removeEventListener("touchmove", this.onTouchMove);
+		if (this.splitPane.current === null) return;
+		this.splitPane.current.removeEventListener("mouseup", this.onMouseUp);
+		this.splitPane.current.removeEventListener("mousemove", this.onMouseMove);
+		this.splitPane.current.removeEventListener("touchmove", this.onTouchMove);
 	}
 
 	public onMouseDown(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
@@ -131,6 +133,9 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 	}
 
 	public onMouseMove(event: MouseEvent) {
+		if (event.buttons !== 1) {
+			return;
+		}
 		const eventWithTouches = Object.assign({}, event, {
 			touches: [{clientX: event.clientX, clientY: event.clientY}],
 		});
@@ -138,8 +143,14 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 	}
 
 	public onTouchMove(event: TouchEvent) {
-		const {allowResize, maxSize, minSize: _minSize, onChange, split, step} = this.props;
-		const {active, position} = this.state;
+		const {allowResize, maxSize, minSize: _minSize, onChange, split} = this.props;
+		const {
+			active,
+			position,
+		} = this.state;
+		//console.log("onTouchMove", event.touches[0].clientX);
+		//debugger;
+		//event.stopPropagation();
 
 		const minSize = _minSize as number;
 
@@ -160,15 +171,12 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 							? event.touches[0].clientX
 							: event.touches[0].clientY;
 					const size = split === "vertical" ? width : height;
-					let positionDelta = position - current;
-					if (step) {
-						if (Math.abs(positionDelta) < step) {
-							return;
-						}
-						// Integer division
-						// eslint-disable-next-line no-bitwise
-						positionDelta = ~~(positionDelta / step) * step;
-					}
+
+					debugger;
+					const position2 = event.currentTarget; // !
+					const positionDelta = position - current;
+
+
 					let sizeDelta = isPrimaryFirst ? positionDelta : -positionDelta;
 
 					const pane1Order = parseInt(window.getComputedStyle(node).order);
@@ -201,12 +209,13 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 						});
 					}
 
-					if (onChange) onChange(newSize);
+
+					if (onChange) onChange(current);
 
 					this.setState({
 						...this.state,
 						draggedSize: newSize,
-						[isPrimaryFirst ? "pane1Size" : "pane2Size"]: newSize,
+						[isPrimaryFirst ? "pane1Size" : "pane2Size"]: current,
 					});
 				}
 			}
@@ -370,47 +379,6 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 	}
 }
 
-/*
-SplitPane.propTypes = {
-	allowResize: PropTypes.bool,
-	children: PropTypes.arrayOf(PropTypes.node).isRequired,
-	className: PropTypes.string,
-	primary: PropTypes.oneOf(["first", "second"]),
-	minSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	maxSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	// eslint-disable-next-line react/no-unused-prop-types
-	defaultSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	split: PropTypes.oneOf(["vertical", "horizontal"]),
-	onDragStarted: PropTypes.func,
-	onDragFinished: PropTypes.func,
-	onChange: PropTypes.func,
-	onResizerClick: PropTypes.func,
-	onResizerDoubleClick: PropTypes.func,
-	style: stylePropType,
-	resizerStyle: stylePropType,
-	paneClassName: PropTypes.string,
-	pane1ClassName: PropTypes.string,
-	pane2ClassName: PropTypes.string,
-	paneStyle: stylePropType,
-	pane1Style: stylePropType,
-	pane2Style: stylePropType,
-	resizerClassName: PropTypes.string,
-	step: PropTypes.number,
-};
-*/
-/*
-SplitPane.defaultProps = {
-	allowResize: true,
-	minSize: 50,
-	primary: "first",
-	split: "vertical",
-	paneClassName: "",
-	pane1ClassName: "",
-	pane2ClassName: "",
-};
-*/
-
 interface ISplitPaneProps {
 	allowResize: boolean;
 	children: React.ReactNode[];
@@ -432,7 +400,7 @@ interface ISplitPaneProps {
 	pane1Style?: React.CSSProperties;
 	pane2Style?: React.CSSProperties;
 	resizerClassName?: string;
-	step?: number;
+	//step?: number;
 	paneClassName: string
 	pane1ClassName: string
 	pane2ClassName: string

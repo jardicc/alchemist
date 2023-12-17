@@ -147,13 +147,13 @@
 		"path": "icons/lightPlugin.png",
 		"scale": [1, 2],
 		"theme": ["darkest", "dark"],
-		"species": ["pluginList"]
+		"species": ["generic"]
 	}, {
 		"width": 24,
 		"height": 24,
 		"path": "icons/darkPlugin.png",
 		"scale": [1, 2],
 		"theme": ["lightest", "light"],
-		"species": ["pluginList"]
+		"species": ["generic"]
 	}]
 }
