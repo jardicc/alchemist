@@ -1,5 +1,5 @@
 console.log("ESBuild config loaded");
-import stylePlugin from "esbuild-style-plugin";
+import {lessLoader} from "esbuild-plugin-less";
 import {clean} from "esbuild-plugin-clean";
 import {copy} from "esbuild-plugin-copy";
 import {merge} from "webpack-merge";
@@ -49,7 +49,7 @@ const esBuildConfigBase = {
 			},
 			watch: true,
 		}),
-		stylePlugin(),
+		lessLoader(),
 		typecheckPlugin({
 			watch: true,
 		}),

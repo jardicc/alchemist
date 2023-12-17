@@ -24,9 +24,9 @@
 		"target": "ES2022",
 		"disableSizeLimit": false,
 		"resolveJsonModule": true,
+		"rootDir": "./src/",
 		"typeRoots": [
 			"./node_modules/@types",
-			"./node_modules/sass",
 			"./node_modules/@adobe/cc-ext-uxp-types",
 			"./src/types",
 			"./src/inspector/model",
