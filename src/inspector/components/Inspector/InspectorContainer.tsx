@@ -86,7 +86,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 									minSize={visible ? 200 : 0}
 									primary={"second"}
 									allowResize={true}
-									pane1ClassName=""
+									pane1ClassName="contentPane"
 									pane2ClassName=""
 									paneClassName=""
 								>

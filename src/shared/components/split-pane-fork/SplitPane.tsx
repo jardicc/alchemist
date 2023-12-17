@@ -158,66 +158,35 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 			unFocus(document, window);
 			const isPrimaryFirst = this.props.primary === "first";
 			const ref = isPrimaryFirst ? this.pane1 : this.pane2;
-			const ref2 = isPrimaryFirst ? this.pane2 : this.pane1;
 			if (ref) {
-				const node = ref;
-				const node2 = ref2;
+				const nodeContainer = this.splitPane.current;
 
-				if (node.getBoundingClientRect) {
-					const width = node.getBoundingClientRect().width;
-					const height = node.getBoundingClientRect().height;
-					const current =
-						split === "vertical"
-							? event.touches[0].clientX
-							: event.touches[0].clientY;
-					const size = split === "vertical" ? width : height;
+				const containerWidth = nodeContainer?.getBoundingClientRect().width;
+				const containerHeight = nodeContainer?.getBoundingClientRect().height;
+				const containerLeft = nodeContainer?.getBoundingClientRect().left;
+				const containerTop = nodeContainer?.getBoundingClientRect().top;
 
-					debugger;
-					const position2 = event.currentTarget; // !
-					const positionDelta = position - current;
-
-
-					let sizeDelta = isPrimaryFirst ? positionDelta : -positionDelta;
-
-					const pane1Order = parseInt(window.getComputedStyle(node).order);
-					const pane2Order = parseInt(window.getComputedStyle(node2).order);
-					if (pane1Order > pane2Order) {
-						sizeDelta = -sizeDelta;
-					}
-
-					let newMaxSize: number | undefined = maxSize;
-					if (maxSize !== undefined && maxSize <= 0) {
-						const splitPane = this.splitPane;
-						if (split === "vertical" && splitPane.current) {
-							newMaxSize = splitPane.current.getBoundingClientRect().width + maxSize;
-						} else if (splitPane.current) {
-							newMaxSize = splitPane.current.getBoundingClientRect().height + maxSize;
-						}
-					}
-
-					let newSize = size - sizeDelta;
-					const newPosition = position - positionDelta;
-
-					if (newSize < minSize) {
-						newSize = minSize;
-					} else if (maxSize !== undefined && typeof newMaxSize === "number" && newSize > newMaxSize) {
-						newSize = newMaxSize;
-					} else {
-						this.setState({
-							position: newPosition,
-							resized: true,
-						});
-					}
-
-
-					if (onChange) onChange(current);
-
-					this.setState({
-						...this.state,
-						draggedSize: newSize,
-						[isPrimaryFirst ? "pane1Size" : "pane2Size"]: current,
-					});
+				let currentPos =
+					split === "vertical"
+						? event.touches[0].clientX
+						: event.touches[0].clientY;
+				if (containerWidth === undefined || containerHeight === undefined ||
+					containerLeft === undefined || containerTop === undefined
+				) {
+					throw new Error("containerWidth or containerHeight is undefined");
 				}
+				const containerSize = split === "vertical" ? containerWidth : containerHeight;
+				const containerPos = split === "vertical" ? containerLeft : containerTop;
+
+				currentPos = isPrimaryFirst ? currentPos : (containerSize + containerPos - currentPos);
+
+				if (onChange) onChange(currentPos);
+
+				this.setState({
+					...this.state,
+					draggedSize: currentPos,
+					[isPrimaryFirst ? "pane1Size" : "pane2Size"]: currentPos,
+				});
 			}
 		}
 	}
@@ -296,7 +265,9 @@ export class SplitPane extends React.Component<ISplitPaneProps, ISplitPaneState>
 
 		const style: React.CSSProperties = {
 			display: "flex",
-			flex: 1,
+			flexGrow: 1,
+			flexShrink: 1,
+			flexBasis: 0,
 			height: "100%",
 			position: "absolute",
 			outline: "none",

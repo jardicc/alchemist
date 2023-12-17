@@ -19,7 +19,9 @@ export class Pane extends React.Component<IPaneProps> {
 		const classes = ["Pane", split, className];
 
 		let style: React.CSSProperties = {
-			flex: 1,
+			flexGrow: 1,
+			flexShrink: 1,
+			flexBasis: 0,
 			position: "relative",
 			outline: "none",
 		};
