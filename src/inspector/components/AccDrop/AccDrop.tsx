@@ -26,7 +26,6 @@ export interface IAccDropProps {
 	showSearch?: boolean
 	headerPostFix?: ReactElement
 	ItemPostFix?: ComponentType<IAccDropPostFixProps>
-	doNotCollapse?: boolean
 
 	supportMultiSelect?: boolean
 	icons?: boolean // exists only for main type
@@ -37,8 +36,6 @@ export interface IAccDropDispatch {
 }
 
 interface IAccDropState {
-	expanded: boolean
-	calcHeight: number
 	searchValue: string
 }
 
@@ -47,54 +44,27 @@ export type TAccDrop = IAccDropProps & IAccDropDispatch
 export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 	private searchRef: React.RefObject<HTMLDivElement>;
-	private heightRef: React.RefObject<HTMLDivElement>;
+	private popoverRef: React.RefObject<HTMLDivElement>;
 
 	constructor(props: TAccDrop) {
 		super(props);
 
 		this.searchRef = React.createRef();
-		this.heightRef = React.createRef();
+		this.popoverRef = React.createRef();
 
 
 		this.state = {
-			expanded: false,
-			calcHeight: this.height,
 			searchValue: "",
 		};
 	}
 
-	private get height(): number {
-		let height = 0;
-
-		this.props.items.forEach(item => {
-			height += 1.5;
-			if ("data" in item) {
-				height += item.data.length * 1.5;
-			}
-		});
-
-		height += 1.5;
-		return height;
-	}
 
 	private headerClick = async () => {
 		if (this.props.onHeaderClick) {
-			await this.props.onHeaderClick(this.props.id, !this.state.expanded);
+			await this.props.onHeaderClick(this.props.id, this.popoverRef.current?.hasAttribute("open") ?? false);
 		}
-		this.toggleExpanded();
 	};
 
-	private toggleExpanded = () => {
-		this.setState({
-			...this.state,
-			expanded: !this.state.expanded,
-		},
-		/*, () => {
-			if (this.state.expanded) {
-				(this.searchRef as any)?.current?.focus();
-			}
-		}*/);
-	};
 
 	private getLabel = () => {
 
@@ -124,23 +94,6 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 	};
 
-	private renderHeader = (): JSX.Element => {
-		const {id, className, header, headerPostFix} = this.props;
-
-		return (
-			<div key={"h_" + id} className={"AccDrop header " + (className || "")} onClick={this.headerClick}>
-				<div className="titleType">{header}</div>
-				<div className="group">
-					<div className="title">{this.getLabel()}</div>
-					{headerPostFix}
-					<div className="chevron">
-						{this.state.expanded ? <IconChevronTop /> : <IconChevronBottom />}
-					</div>
-				</div>
-			</div>
-		);
-	};
-
 	private renderGroup = (group: IPropertyGroup) => {
 		return (
 			<React.Fragment key={"f_" + group.group}>
@@ -155,29 +108,36 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 	};
 
 	private renderSearchField = () => {
-		if (!this.props.showSearch || !this.state.expanded) {
+		if (!this.props.showSearch) {
 			return null;
 		}
 		return (
-			<div className="AccDrop searchField">
+			<div className="searchField">
 				<SP.Textfield
 					value={this.state.searchValue}
 					className="filterContent"
 					type="search"
-					placeholder="Filter..."
+					//placeholder="Filter..."
 					key="search"
-					// value={this.state.searchValue}
-					onInput={(e) => this.setState({
-						...this.state,
-						searchValue: (e.target?.value ?? ""),
-					})}
+					onChange={(e) => {
+						console.log(e);
+
+
+					}}
+					onInput={(e) => {
+						console.log(e);
+						this.setState({
+							...this.state,
+							searchValue: (e.target?.value ?? ""),
+						});
+					}}
 				/>
 			</div>
 		);
 	};
 
 	private renderItem = (item: IPropertyItem) => {
-		const {id, selected, onSelect, showSearch, ItemPostFix, doNotCollapse, icons} = this.props;
+		const {id, selected, onSelect, showSearch, ItemPostFix, icons} = this.props;
 		if (
 			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) ||
 			!showSearch
@@ -192,9 +152,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 							onSelect(id, item.value, true);
 						} else {
 							onSelect(id, item.value);
-							if (!doNotCollapse) {
-								this.toggleExpanded();
-							}
+							this.popoverRef.current?.removeAttribute("open");
 						}
 
 					}}
@@ -217,61 +175,63 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 	private renderContent = (): React.ReactNode => {
 		const {id, items} = this.props;
-		const {calcHeight} = this.state;
-
-		if (!this.state.expanded) {
-			return null;
-		}
-
-		const containerMaxHeight: React.CSSProperties = {};
-
-		if (calcHeight !== null) {
-			containerMaxHeight.maxHeight = calcHeight + "em";
-		}
 
 		return (
-			<div key={"c_" + id} className={"AccDrop container " + (this.props.className || "")} style={containerMaxHeight}>
-				<div className="measureHeightWrapper" ref={this.heightRef}>
-					{
-						items.map((item) => {
-							if ("group" in item) {
-								//return null;
-								return this.renderGroup(item);
-							} else {
-								return this.renderItem(item);
-							}
-						})
-					}
-				</div>
+			<div key={"c_" + id} className={"container " + (this.props.className || "")}>
+				{
+					items.map((item) => {
+						if ("group" in item) {
+							//return null;
+							return this.renderGroup(item);
+						} else {
+							return this.renderItem(item);
+						}
+					})
+				}
 			</div>
 		);
 	};
 
-
-	public override componentDidUpdate(prevProps: Readonly<TAccDrop>, prevState: Readonly<IAccDropState>, snapshot?: any): void {
-		if (this.heightRef) {
-			const height = this.height;
-
-			if (prevState.calcHeight === height) {
-				return;
-			}
-
-			this.setState({
-				...this.state,
-				calcHeight: height,
-			});
-		}
-	}
-
-
 	public override render(): JSX.Element {
+		const {id, className, header, headerPostFix} = this.props;
 
 		return (
-			<>
-				{this.renderHeader()}
-				{this.renderSearchField()}
-				{this.renderContent()}
-			</>
+			<div className="AccDrop">
+				<div key={"h_" + id} className={"header " + (className || "")} onClick={this.headerClick}>
+
+					<div className="titleType">{header}</div>
+					<div className="group">
+
+						<sp-overlay class="overlay">
+							<div className="title" slot="trigger">{this.getLabel()}</div>
+							<sp-popover
+								ref={this.popoverRef}
+								placement="auto"
+								alignment="auto"
+								slot="click"
+								class="popover"
+							>
+								<div className="popoverContent">
+									{this.renderSearchField()}
+									{this.renderContent()}
+
+								</div>
+							</sp-popover>
+						</sp-overlay>
+
+						{
+							/*
+							<div className="chevron">
+								{this.state.expanded ? <IconChevronTop /> : <IconChevronBottom />}
+							</div>
+							*/
+						}
+					</div>
+
+					{headerPostFix}
+				</div>
+			</div>
+
 		);
 	}
 }

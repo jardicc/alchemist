@@ -1,16 +1,17 @@
 .AccDrop {
-	&.header {
+
+	.header {
 		border-bottom: 1px solid var(--divider);
 		border-width: 1px 0;
-		padding: 0.2em 0.5em;
+		padding: 0.2em 0.2em 0.2em 0.5em;
 		display: flex;
 		flex-shrink: 0;
 		flex-grow: 0;
 		align-items: center;
-		flex-wrap: wrap;
+		//flex-wrap: wrap;
 
 		.FilterButton {
-			margin: 0 0.5em;
+			margin: 0;
 		}
 
 		.group {
@@ -33,7 +34,11 @@
 			font-weight: bold;
 			word-wrap: break-word;
 			margin-right: auto;
-			max-width: calc(100% - 4em);
+			cursor: pointer;
+
+			&:hover {
+				color: var(--hover);
+			}
 		}
 
 		.titleType {
@@ -52,22 +57,33 @@
 		}
 	}
 
-	&.container {
-		padding: 1em;
-		height: 0;
+	.popover {
+		appearance: none;
+	}
+
+	.overlay {
 		flex-grow: 1;
-		overflow: auto;
-		background: var(--bgList);
-		border-bottom: 1px solid var(--divider);
+		overflow: hidden;
+	}
+
+	.container {
+		overflow-y: visible;
+		overflow-x: hidden;
+		//background: var(--bgList);
+		width: 180px;
 
 		.itemPostFix {
 			margin-left: auto;
+			margin-right: 1em;
 		}
 
 		.item {
 			display: flex;
 			flex-direction: row;
 			flex-shrink: 0;
+			margin: 0 1em;
+			padding: 0.2em 0;
+			cursor: pointer;
 
 			.label {
 				display: flex;
@@ -89,19 +105,30 @@
 			fill: var(--hover);
 		}
 
+		.groupHeader {
+			margin: 0 1em;
+			font-weight: bold;
+		}
+
 		.groupWrapper {
-			padding-left: 1em;
+			margin-left: 1em;
 		}
 	}
 
-	&.searchField {
+	.searchField {
 		display: flex;
 		background: var(--bgList);
 
 		.filterContent {
 			flex-grow: 1;
-			margin: 1em;
+			margin: 0.2em;
 			margin-bottom: 0;
 		}
+	}
+
+
+	.popoverContent {
+		overflow: hidden;
+		//padding: 1em;
 	}
 }
