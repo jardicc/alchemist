@@ -5,7 +5,7 @@ import {copy} from "esbuild-plugin-copy";
 import {merge} from "webpack-merge";
 import {build, context} from "esbuild";
 import {zip} from "zip-a-folder";
-import manifest from "./uxp/manifest.json" assert {type: "json"};
+import manifest from "./uxp/manifest.json" with {type: "json"};
 import chokidar from "chokidar";
 import {typecheckPlugin} from "@jgoz/esbuild-plugin-typecheck";
 
