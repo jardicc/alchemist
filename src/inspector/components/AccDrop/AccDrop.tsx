@@ -37,6 +37,7 @@ export interface IAccDropDispatch {
 
 interface IAccDropState {
 	searchValue: string
+	//open: boolean
 }
 
 export type TAccDrop = IAccDropProps & IAccDropDispatch
@@ -55,14 +56,22 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 		this.state = {
 			searchValue: "",
+			//open: false,
 		};
 	}
 
 
 	private headerClick = async () => {
+		const opened = this.popoverRef.current?.hasAttribute("open") ?? false;
 		if (this.props.onHeaderClick) {
-			await this.props.onHeaderClick(this.props.id, this.popoverRef.current?.hasAttribute("open") ?? false);
+			await this.props.onHeaderClick(this.props.id, opened);
 		}
+		/*
+		this.setState({
+			...this.state,
+			open: !opened,
+		});
+		*/
 	};
 
 
@@ -192,44 +201,49 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		);
 	};
 
+
+
 	public override render(): JSX.Element {
 		const {id, className, header, headerPostFix} = this.props;
 
 		return (
 			<div className="AccDrop">
-				<div key={"h_" + id} className={"header " + (className || "")} onClick={this.headerClick}>
+				<div key={"h_" + id} className={"header " + (className || "")}>
 
-					<div className="titleType">{header}</div>
-					<div className="group">
+					<sp-overlay class="overlay">
+						<div slot="trigger" className="triggerGroup" onMouseDown={this.headerClick}>
+							<div className="titleType">{header}</div>
+							<div className="title">{this.getLabel()}</div>
 
-						<sp-overlay class="overlay">
-							<div className="title" slot="trigger">{this.getLabel()}</div>
-							<sp-popover
-								ref={this.popoverRef}
-								placement="auto"
-								alignment="auto"
-								slot="click"
-								class="popover"
-							>
-								<div className="popoverContent">
-									{this.renderSearchField()}
-									{this.renderContent()}
+							{this.renderSearchField()}
+						</div>
 
-								</div>
-							</sp-popover>
-						</sp-overlay>
+						<sp-popover
+							ref={this.popoverRef}
+							placement="auto"
+							alignment="auto"
+							slot="click"
+							//open={this.state.open ? "open" : undefined}
+							class="popover"
+						>
+							<div className="popoverContent">
+								{this.renderContent()}
 
-						{
-							/*
+							</div>
+						</sp-popover>
+					</sp-overlay>
+
+					{headerPostFix}
+					{
+						/*
 							<div className="chevron">
 								{this.state.expanded ? <IconChevronTop /> : <IconChevronBottom />}
 							</div>
 							*/
-						}
-					</div>
-
-					{headerPostFix}
+					}
 				</div>
+
+
 			</div>
 
 		);
