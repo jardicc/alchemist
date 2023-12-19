@@ -37,7 +37,7 @@ export interface IAccDropDispatch {
 
 interface IAccDropState {
 	searchValue: string
-	//open: boolean
+	open: boolean
 }
 
 export type TAccDrop = IAccDropProps & IAccDropDispatch
@@ -56,7 +56,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 		this.state = {
 			searchValue: "",
-			//open: false,
+			open: false,
 		};
 	}
 
@@ -66,12 +66,28 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		if (this.props.onHeaderClick) {
 			await this.props.onHeaderClick(this.props.id, opened);
 		}
-		/*
+
+		if (!opened) {
+			// brute force checking because there is no event for closing
+			const intervalID = setInterval(() => {
+				const opened = this.popoverRef.current?.hasAttribute("open") ?? false;
+				if (!opened) {
+					this.setState({
+						...this.state,
+						open: false,
+					});
+					clearInterval(intervalID);
+				}
+			}, 100);
+		}
+
 		this.setState({
 			...this.state,
 			open: !opened,
 		});
-		*/
+
+
+
 	};
 
 
@@ -118,6 +134,9 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 	private renderSearchField = () => {
 		if (!this.props.showSearch) {
+			return null;
+		}
+		if (!this.state.open) {
 			return null;
 		}
 		return (
@@ -210,7 +229,9 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 			<div className="AccDrop">
 				<div key={"h_" + id} className={"header " + (className || "")}>
 
-					<sp-overlay class="overlay">
+					{
+						/*
+					<sp-overlay class="overlay" onClick={() => {console.log("aaa");}}>
 						<div slot="trigger" className="triggerGroup" onMouseDown={this.headerClick}>
 							<div className="titleType">{header}</div>
 							<div className="title">{this.getLabel()}</div>
@@ -220,6 +241,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 						<sp-popover
 							ref={this.popoverRef}
+							onClose={() => console.log("Close")}
 							placement="auto"
 							alignment="auto"
 							slot="click"
@@ -232,6 +254,30 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 							</div>
 						</sp-popover>
 					</sp-overlay>
+					*/
+					}
+					{
+
+						<sp-popover
+							ref={this.popoverRef}
+							placement="auto"
+							alignment="auto"
+							open={this.state.open ? "open" : undefined}
+							class="popover"
+						>
+							<div className="popoverContent">
+								{this.renderContent()}
+
+							</div>
+							<div slot="anchor" className="triggerGroup" onClick={this.headerClick}>
+								<div className="titleType">{header}</div>
+								<div className="title">{this.getLabel()}</div>
+
+								{this.renderSearchField()}
+							</div>
+						</sp-popover>
+
+					}
 
 					{headerPostFix}
 					{
