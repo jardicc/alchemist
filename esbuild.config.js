@@ -1,4 +1,8 @@
+/* eslint-disable require-await */
+/* eslint-disable no-promise-executor-return */
+/* eslint-disable no-constant-condition */
 console.log("ESBuild config loaded");
+import http from "http";
 import {lessLoader} from "esbuild-plugin-less";
 import {clean} from "esbuild-plugin-clean";
 import {copy} from "esbuild-plugin-copy";
@@ -25,6 +29,45 @@ switch (mode) {
 		process.exit(1);
 }
 
+// store request to send reload signal later
+let reloadResult;
+
+/** @type {import("esbuild").Plugin} */
+let reloadPlugin = {
+	name: "reloadPlugin",
+	setup(build) {
+		// eslint-disable-next-line require-await
+		build.onEnd(async result => {
+			if (!reloadResult) {
+				console.log("Nothing to reload.");
+				return;
+			}
+			console.log("Sending reload signal...");
+			reloadResult.statusCode = 200;
+			reloadResult.setHeader("Content-Type", "text/plain");
+			reloadResult.end("Reload now!");
+		});
+	},
+};
+
+// reload code injection
+const reloadCode = `
+(async () => {
+	async function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	while (true) {
+		try {
+			await fetch("http://127.0.0.1:3033");
+			location.reload();			
+		}catch(err) {
+			console.log(err);
+			await sleep(500);
+		}
+	}
+})();
+`;
+
 /** @type {import("esbuild").CommonOptions} */
 const esBuildConfigBase = {
 	entryPoints: ["./src/shared/classes/Main.ts"],
@@ -41,6 +84,7 @@ const esBuildConfigBase = {
 	plugins: [
 		clean({
 			patterns: "./dist",
+			cleanOn: "start",
 		}),
 		copy({
 			assets: {
@@ -48,6 +92,7 @@ const esBuildConfigBase = {
 				to: "./",
 			},
 			watch: true,
+			copyOnStart: true,
 		}),
 		lessLoader(),
 		typecheckPlugin({
@@ -56,7 +101,7 @@ const esBuildConfigBase = {
 	],
 	footer: {
 		// fixes sourcemap issue
-		js: "//# sourceURL=webpack-internal:///./src/",
+		js: reloadCode + "\n//# sourceURL=webpack-internal:///./src/",
 	},
 	// Disable some features/minification to make it work in UXP
 	supported: {
@@ -87,6 +132,11 @@ const config = merge(
 	isProduction && esBuildConfigProduction,
 );
 
+if (!isProduction) {
+	config.plugins.push(reloadPlugin);
+}
+
+
 (async () => {
 	try {
 		const start = Date.now();
@@ -98,9 +148,28 @@ const config = merge(
 			// pack plugin into installer
 			await zip("./dist", `./installer/${manifest.name}_${manifest.id}_v${manifest.version.replace(/\./gm, "-")}.ccx`);
 		} else {
+			const hostname = "127.0.0.1";
+			const port = 3033;
+
+			const server = http.createServer((req, res) => {
+				console.log("Waiting for reload signal...");
+				reloadResult = res;
+			});
+
+			server.setTimeout(0);
+			server.timeout = 0;
+			server.keepAliveTimeout = 0;
+			server.requestTimeout = 0;
+			server.headersTimeout = 0;
+
+			server.listen(port, hostname, () => {
+				console.log(`Reload server running at http://${hostname}:${port}/`);
+			});
+
 			// prepare watcher
 			let ctx = await context(config);
 			// add some extra files to watch for
+
 			chokidar.watch("./uxp/**",
 				{
 					// only after change happened
@@ -120,8 +189,10 @@ const config = merge(
 				// start watching again
 				await ctx.watch();
 			});
+
 			// start watching
 			await ctx.watch();
+
 		}
 
 		console.log("ESBuild finished: " + (Date.now() - start) + "ms");
@@ -130,7 +201,5 @@ const config = merge(
 		process.exit(1);
 	}
 })();
-
-
 
 
