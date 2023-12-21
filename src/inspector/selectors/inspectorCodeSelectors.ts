@@ -8,6 +8,7 @@ import {all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings
 import stringifyObject from "stringify-object";
 import {ActionDescriptor, BatchPlayCommandOptions} from "photoshop/dom/CoreModules";
 import {js_beautify} from "js-beautify";
+import {KeyPath} from "../components/react-json-tree/types";
 
 type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?: boolean}
 
@@ -55,13 +56,13 @@ export const getGeneratedCode = createSelector([
 
 	let shouldShowTokenify = false;
 
-	function makeNicePropertyPath(segments: string[]): string {
+	function makeNicePropertyPath(segments: KeyPath): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
 
 		let result = "";
 
 		for (const s of segments) {
-			if (regex.test(s)) {
+			if (regex.test(s.toString())) {
 				result += "." + s;
 			} else if (typeof s === "number") {
 				result += `[${s}]`;
@@ -254,13 +255,13 @@ export const getGeneratedCode2 = createSelector([
 	getReplayEnabled, getDescriptorOptions, getInspectorSettings, getIndentString,
 ], (selected, autoActive, treePath, replayEnabled, descOptions, settings, tab) => {
 
-	function makeNicePropertyPath(segments: string[]): string {
+	function makeNicePropertyPath(segments: KeyPath): string {
 		const regex = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/m;
 
 		let result = "";
 
 		for (const s of segments) {
-			if (regex.test(s)) {
+			if (regex.test(s.toString())) {
 				result += "." + s;
 			} else if (typeof s === "number") {
 				result += `[${s}]`;

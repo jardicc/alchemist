@@ -1,10 +1,9 @@
 import React from "react";
 import {IconPinDown} from "../../../shared/components/icons";
-import {TShouldExpandNode} from "../JSONTree/types";
-import {TPath} from "../../model/types";
+import {KeyPath, TShouldExpandNode} from "../react-json-tree/types";
 
 
-export const labelRenderer = ([key, ...rest]: TPath, onInspectPath: (path: TPath, mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+export const labelRenderer = ([key, ...rest]: KeyPath, onInspectPath: (path: KeyPath, mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
 
 	let noPin = false;
 	if (typeof key === "string") {
@@ -29,7 +28,7 @@ export const labelRenderer = ([key, ...rest]: TPath, onInspectPath: (path: TPath
 	);
 };
 
-export const renderPath = (path: TPath, onInspectPath: (path: TPath, mode: "replace" | "add") => void): React.ReactNode[] => {
+export const renderPath = (path: KeyPath, onInspectPath: (path: KeyPath, mode: "replace" | "add") => void): React.ReactNode[] => {
 	const parts: React.ReactNode[] = [
 		<span className="pathItem" key="root" onClick={() => {onInspectPath([], "replace");}}>
 			<span className="link">root</span>
@@ -45,7 +44,7 @@ export const renderPath = (path: TPath, onInspectPath: (path: TPath, mode: "repl
 	return parts;
 };
 
-export const shouldExpandNode = (expandedKeys: TPath[], autoExpandLevels = 0, allowInfinity = false): TShouldExpandNode => {
+export const shouldExpandNode = (expandedKeys: KeyPath[], autoExpandLevels = 0, allowInfinity = false): TShouldExpandNode => {
 	return (keyPath, data, level) => {
 
 		const keyPathString = [...keyPath].reverse().join("-");
@@ -55,6 +54,10 @@ export const shouldExpandNode = (expandedKeys: TPath[], autoExpandLevels = 0, al
 					return true;
 				}
 			}
+		}
+
+		if (level === undefined) {
+			return false;
 		}
 
 		// 0 = off

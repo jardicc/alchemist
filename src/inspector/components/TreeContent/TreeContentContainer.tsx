@@ -2,17 +2,17 @@ import {connect, MapDispatchToPropsFunction} from "react-redux";
 import {IRootState} from "../../../shared/store";
 import {setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction, setSearchContentKeywordAction} from "../../actions/inspectorActions";
 import {getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel, getSearchContentKeyword} from "../../selectors/inspectorContentSelectors";
-import React, {Component} from "react";
+import React, {Component, Key} from "react";
 import "./TreeContent.less";
 import {getItemString} from "../TreeDiff/getItemString";
-import {JSONTree} from "./../JSONTree";
-import {TProtoMode, TPath, TGenericViewType} from "../../model/types";
+import {JSONTree} from "./../react-json-tree";
+import {TProtoMode, TGenericViewType} from "../../model/types";
 import {labelRenderer, shouldExpandNode} from "../shared/sharedTreeView";
-import {TLabelRenderer} from "../JSONTree/types";
 import {TabList} from "../Tabs/TabList";
 import {TabPanel} from "../Tabs/TabPanel";
 import {TreePath} from "../TreePath/TreePath";
 import SP from "react-uxp-spectrum";
+import {KeyPath, TLabelRenderer} from "../react-json-tree/types";
 
 class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 
@@ -28,7 +28,7 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 		return getItemString(type, data, true, false);
 	};
 
-	private expandClicked = (keyPath: TPath, expanded: boolean, recursive: boolean) => {
+	private expandClicked = (keyPath: KeyPath, expanded: boolean, recursive: boolean) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
 	};
 
@@ -94,8 +94,8 @@ type TTreeContent = ITreeContentProps & ITreeContentDispatch
 
 interface ITreeContentProps {
 	content: any
-	path: string[]
-	expandedKeys: TPath[]
+	path: KeyPath
+	expandedKeys: KeyPath[]
 	protoMode: TProtoMode
 	descriptorContent: string
 	viewType: TGenericViewType
@@ -115,8 +115,8 @@ const mapStateToProps = (state: IRootState): ITreeContentProps => ({
 });
 
 interface ITreeContentDispatch {
-	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: KeyPath, expand: boolean, recursive: boolean, data: any) => void;
 	onSetView: (viewType: TGenericViewType) => void
 	onSetAutoExpandLevel: (level: number) => void
 	onSetSearch: (keyword: string) => void

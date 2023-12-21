@@ -1,40 +1,42 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {objType} from "./objType";
-import {JSONObjectNode} from "./JSONObjectNode";
-import {JSONArrayNode} from "./JSONArrayNode";
-import {JSONIterableNode} from "./JSONIterableNode";
-import {JSONValueNode} from "./JSONValueNode";
-import {IDefSettings, ISimpleNodeProps, INestedNodeProps, TCircularCache} from "./types";
+import JSONObjectNode from "./JSONObjectNode";
+import JSONArrayNode from "./JSONArrayNode";
+import JSONIterableNode from "./JSONIterableNode";
+import JSONValueNode from "./JSONValueNode";
+import type {CommonInternalProps} from "./types";
 
-export const JSONNode = ({
+interface Props extends CommonInternalProps {
+	value: unknown;
+}
+
+export default function JSONNode({
 	getItemString,
 	keyPath,
 	labelRenderer,
+	styling,
 	value,
 	valueRenderer,
 	isCustomNode,
-	protoMode,
 	...rest
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-}: IDefSettings & {value: any} & {circularCache?: TCircularCache} & {isCircular?: boolean}): JSX.Element => {
+}: Props) {
 	const nodeType = isCustomNode(value) ? "Custom" : objType(value);
 
-	const simpleNodeProps: ISimpleNodeProps = {
+	const simpleNodeProps = {
 		getItemString,
 		key: keyPath[0],
 		keyPath,
 		labelRenderer,
 		nodeType,
+		styling,
 		value,
 		valueRenderer,
 	};
 
-	const nestedNodeProps: INestedNodeProps = {
+	const nestedNodeProps = {
 		...rest,
 		...simpleNodeProps,
 		data: value,
-		protoMode,
 		isCustomNode,
 	};
 
@@ -52,7 +54,10 @@ export const JSONNode = ({
 			return <JSONIterableNode {...nestedNodeProps} />;
 		case "String":
 			return (
-				<JSONValueNode {...simpleNodeProps} valueGetter={raw => `"${raw}"`} />
+				<JSONValueNode
+					{...simpleNodeProps}
+					valueGetter={(raw: string) => `"${raw}"`}
+				/>
 			);
 		case "Number":
 			return <JSONValueNode {...simpleNodeProps} />;
@@ -60,14 +65,14 @@ export const JSONNode = ({
 			return (
 				<JSONValueNode
 					{...simpleNodeProps}
-					valueGetter={raw => (raw ? "true" : "false")}
+					valueGetter={(raw) => (raw ? "true" : "false")}
 				/>
 			);
 		case "Date":
 			return (
 				<JSONValueNode
 					{...simpleNodeProps}
-					valueGetter={raw => raw.toISOString()}
+					valueGetter={(raw) => raw.toISOString()}
 				/>
 			);
 		case "Null":
@@ -81,26 +86,17 @@ export const JSONNode = ({
 			return (
 				<JSONValueNode
 					{...simpleNodeProps}
-					valueGetter={raw => raw.toString()}
+					valueGetter={(raw) => raw.toString()}
 				/>
 			);
 		case "Custom":
 			return <JSONValueNode {...simpleNodeProps} />;
 		default:
 			return (
-				<JSONValueNode {...simpleNodeProps} valueGetter={() => `<${nodeType}>`} />
+				<JSONValueNode
+					{...simpleNodeProps}
+					valueGetter={() => `<${nodeType}>`}
+				/>
 			);
 	}
-};
-
-JSONNode.propTypes = {
-	getItemString: PropTypes.func.isRequired,
-	keyPath: PropTypes.arrayOf(
-		PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	).isRequired,
-	labelRenderer: PropTypes.func.isRequired,
-	value: PropTypes.any,
-	valueRenderer: PropTypes.func.isRequired,
-	isCustomNode: PropTypes.func.isRequired,
-	protoMode: PropTypes.string,
-};
+}

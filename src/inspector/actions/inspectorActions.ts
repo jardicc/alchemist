@@ -1,6 +1,12 @@
-import {TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, TSubTypes, ITreeDataTabs, TPath, TFilterEvents, TImportItems, IInspectorState, TGenericViewType, TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter, TAllTargetReferences} from "../model/types";
+import {
+	TActiveInspectorTab, IDescriptor, TTargetReference, TSelectDescriptorOperation, TSubTypes,
+	ITreeDataTabs, TFilterEvents, TImportItems, IInspectorState, TGenericViewType,
+	TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter, TAllTargetReferences,
+} from "../model/types";
 import {TFilterState} from "../components/FilterButton/FilterButton";
 import {IRootState} from "../../shared/store";
+import {KeyPath} from "../components/react-json-tree/types";
+
 
 
 export interface ISetModeTab {
@@ -115,7 +121,7 @@ export interface ISetFilterStateAction {
 export interface ISetInspectorPathDiffAction {
 	type: "SET_INSPECTOR_PATH_DIFF"
 	payload: {
-		path: string[]
+		path: KeyPath
 		mode: "replace" | "add"
 	}
 }
@@ -123,7 +129,7 @@ export interface ISetInspectorPathDiffAction {
 export interface ISetInspectorPathContentAction {
 	type: "SET_INSPECTOR_PATH_CONTENT"
 	payload: {
-		path: string[]
+		path: KeyPath
 		mode: "replace" | "add"
 	}
 }
@@ -131,7 +137,7 @@ export interface ISetInspectorPathContentAction {
 export interface ISetInspectorPathDOMAction {
 	type: "SET_INSPECTOR_PATH_DOM"
 	payload: {
-		path: string[]
+		path: KeyPath
 		mode: "replace" | "add"
 	}
 }
@@ -140,7 +146,7 @@ export interface ISetExpandedPathAction {
 	type: "SET_EXPANDED_PATH",
 	payload: {
 		type: ITreeDataTabs
-		path: TPath,
+		path: KeyPath,
 		expand: boolean
 		recursive: boolean
 		data: any
@@ -468,7 +474,7 @@ export function setAutoInspectorAction(enabled: boolean): IAutoInspectorAction {
 	};
 }
 
-export function setExpandedPathAction(type: ITreeDataTabs, path: TPath, expand: boolean, recursive: boolean, data: any): ISetExpandedPathAction {
+export function setExpandedPathAction(type: ITreeDataTabs, path: KeyPath, expand: boolean, recursive: boolean, data: any): ISetExpandedPathAction {
 	return {
 		type: "SET_EXPANDED_PATH",
 		payload: {
@@ -477,7 +483,7 @@ export function setExpandedPathAction(type: ITreeDataTabs, path: TPath, expand: 
 	};
 }
 
-export function setInspectorPathDomAction(path: string[], mode: "replace" | "add"): ISetInspectorPathDOMAction {
+export function setInspectorPathDomAction(path: KeyPath, mode: "replace" | "add"): ISetInspectorPathDOMAction {
 	return {
 		type: "SET_INSPECTOR_PATH_DOM",
 		payload: {
@@ -486,7 +492,7 @@ export function setInspectorPathDomAction(path: string[], mode: "replace" | "add
 		},
 	};
 }
-export function setInspectorPathDiffAction(path: TPath, mode: "replace" | "add"): ISetInspectorPathDiffAction {
+export function setInspectorPathDiffAction(path: KeyPath, mode: "replace" | "add"): ISetInspectorPathDiffAction {
 	return {
 		type: "SET_INSPECTOR_PATH_DIFF",
 		payload: {
@@ -495,7 +501,7 @@ export function setInspectorPathDiffAction(path: TPath, mode: "replace" | "add")
 		},
 	};
 }
-export function setInspectorPathContentAction(path: string[], mode: "replace" | "add"): ISetInspectorPathContentAction {
+export function setInspectorPathContentAction(path: KeyPath, mode: "replace" | "add"): ISetInspectorPathContentAction {
 	return {
 		type: "SET_INSPECTOR_PATH_CONTENT",
 		payload: {

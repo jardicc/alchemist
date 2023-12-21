@@ -3,7 +3,7 @@
 import {produce} from "immer";
 import {getInitialState} from "../inspInitialState";
 import {TActions} from "../actions/inspectorActions";
-import {IInspectorState, IContent, IDifference, IDOM, TPath, TCodeViewType, TGenericViewType, TSubTypes} from "../model/types";
+import {IInspectorState, IContent, IDifference, IDOM, TCodeViewType, TGenericViewType, TSubTypes} from "../model/types";
 import {addMoreKeys} from "../../shared/helpers";
 import {Settings} from "../classes/Settings";
 import {getDescriptorsListView} from "../selectors/inspectorSelectors";
@@ -14,6 +14,7 @@ import {TSorActions} from "../../sorcerer/sorActions";
 import {sorReducer} from "../../sorcerer/sorReducer";
 import {ListenerClass} from "../classes/Listener";
 import {TFilterState} from "../components/FilterButton/FilterButton";
+import {KeyPath} from "../components/react-json-tree/types";
 
 export type TAllActions = TActions | TAtnActions | TSorActions;
 
@@ -394,7 +395,7 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 				let {data} = action.payload;
 
 				// gets port of the tree data where you clicked
-				function getDataPart(d: any, tPath: TPath | undefined): any {
+				function getDataPart(d: any, tPath: KeyPath | undefined): any {
 					if (!tPath) {
 						return d;
 					}
@@ -406,7 +407,7 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 				}
 
 				// prevents callstack exceeded error
-				function isCyclical(tPath: TPath, toTest: any): boolean {
+				function isCyclical(tPath: KeyPath, toTest: any): boolean {
 					let sub = data;
 					tPath = [...path, ...tPath];
 					tPath.splice(tPath.length - 1, 1);
@@ -420,13 +421,13 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 				}
 
 				// generates paths for all expandable item in passed object
-				function generatePaths(d: any): TPath[] {
-					const paths: TPath[] = [];
+				function generatePaths(d: any): KeyPath[] {
+					const paths: KeyPath[] = [];
 					traverse(d);
 					return paths;
 
 					// recursion
-					function traverse(d: any, tPath: TPath = []): void {
+					function traverse(d: any, tPath: KeyPath = []): void {
 						if (d && typeof d === "object" && !isCyclical(tPath, d)) {
 							paths.push([...path, ...tPath]);
 							const keys = Object.keys(d);

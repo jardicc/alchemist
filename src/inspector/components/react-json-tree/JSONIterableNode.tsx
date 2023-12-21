@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import {JSONNestedNode} from "./JSONNestedNode";
-import {INestedNodeProps} from "./types";
+import JSONNestedNode from "./JSONNestedNode";
+import type {CommonInternalProps} from "./types";
 
 // Returns the "n Items" string for this node,
 // generating and caching it if it hasn't been created yet.
-const createItemString = (data: any, limit: number) => {
+function createItemString(data: any, limit: number) {
 	let count = 0;
 	let hasMore = false;
 	if (Number.isSafeInteger(data.size)) {
 		count = data.size;
 	} else {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		for (const entry of data) {
 			if (limit && count + 1 > limit) {
 				hasMore = true;
@@ -21,16 +20,22 @@ const createItemString = (data: any, limit: number) => {
 		}
 	}
 	return `${hasMore ? ">" : ""}${count} ${count !== 1 ? "entries" : "entry"}`;
-};
+}
+
+interface Props extends CommonInternalProps {
+	data: unknown;
+	nodeType: string;
+}
 
 // Configures <JSONNestedNode> to render an iterable
-export function JSONIterableNode({...props}: INestedNodeProps): JSX.Element {
+export default function JSONIterableNode(props: Props) {
 	return (
 		<JSONNestedNode
 			{...props}
 			nodeType="Iterable"
 			nodeTypeIndicator="()"
 			createItemString={createItemString}
+			expandable
 		/>
 	);
 }

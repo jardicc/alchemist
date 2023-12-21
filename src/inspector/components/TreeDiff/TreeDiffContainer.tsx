@@ -7,15 +7,16 @@ import React, {Component} from "react";
 import {stringify} from "javascript-stringify";
 import {getItemString} from "./getItemString";
 import "./TreeDiff.less";
-import {JSONTree} from "../JSONTree";
+import {JSONTree} from "../react-json-tree";
 import {diff} from "jsondiffpatch";
 import {labelRenderer, shouldExpandNode} from "../shared/sharedTreeView";
-import {IDescriptor, TPath, TGenericViewType} from "../../model/types";
+import {IDescriptor, TGenericViewType} from "../../model/types";
 import {TabList} from "../Tabs/TabList";
 import {TabPanel} from "../Tabs/TabPanel";
 import {VisualDiffTab} from "../VisualDiff/VisualDiff";
 import {TreePath} from "../TreePath/TreePath";
 import {Dispatch} from "redux";
+import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree/types";
 
 function stringifyAndShrink(val: any, isWideLayout = false) {
 	if (val === null) {return "null";}
@@ -59,7 +60,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		};
 	}
 
-	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+	private labelRenderer: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
 	};
 
@@ -83,7 +84,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 		this.setState({data: diff(left, right)});
 	}
 
-	private expandClicked = (keyPath: TPath, expanded: boolean, recursive: boolean) => {
+	private expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.state.data);
 	};
 
@@ -203,8 +204,8 @@ interface ITreeDiffState {
 interface ITreeDiffProps {
 	left: any
 	right: any
-	path: string[]
-	expandedKeys: TPath[]
+	path: KeyPath
+	expandedKeys: KeyPath[]
 	invertTheme: boolean,
 	isWideLayout: boolean,
 	leftRawDiff: IDescriptor | null
@@ -227,8 +228,8 @@ const mapStateToProps = (state: IRootState): ITreeDiffProps => ({
 });
 
 interface ITreeDiffDispatch {
-	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: KeyPath, expand: boolean, recursive: boolean, data: any) => void;
 	onSetView: (viewType: TGenericViewType) => void
 	onSetAutoExpandLevel: (level: number) => void
 }

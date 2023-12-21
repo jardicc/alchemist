@@ -1,18 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
-import {JSONNestedNode} from "./JSONNestedNode";
-import {INestedNodeProps} from "./types";
+import JSONNestedNode from "./JSONNestedNode";
+import type {CommonInternalProps} from "./types";
 
 // Returns the "n Items" string for this node,
 // generating and caching it if it hasn't been created yet.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createItemString(data: any) {
+function createItemString(data: unknown) {
 	const len = Object.getOwnPropertyNames(data).length;
 	return `${len} ${len !== 1 ? "keys" : "key"}`;
 }
 
+interface Props extends CommonInternalProps {
+	data: unknown;
+	nodeType: string;
+}
+
 // Configures <JSONNestedNode> to render an Object
-export const JSONObjectNode = ({data, ...props}: INestedNodeProps): JSX.Element => {
+export default function JSONObjectNode({data, ...props}: Props) {
 	return (
 		<JSONNestedNode
 			{...props}
@@ -21,10 +24,6 @@ export const JSONObjectNode = ({data, ...props}: INestedNodeProps): JSX.Element 
 			nodeTypeIndicator={props.nodeType === "Error" ? "Error()" : "{}"}
 			createItemString={createItemString}
 			expandable={Object.getOwnPropertyNames(data).length > 0}
-		/>);
-};
-
-JSONObjectNode.propTypes = {
-	data: PropTypes.object,
-	nodeType: PropTypes.string,
-};
+		/>
+	);
+}

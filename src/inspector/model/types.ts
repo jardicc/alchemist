@@ -4,6 +4,7 @@ import {TFilterState} from "../components/FilterButton/FilterButton";
 import {IActionSetUUID, IATNConverterState} from "../../atnDecoder/atnModel";
 import {ISorcererState} from "../../sorcerer/sorModel";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
+import {KeyPath} from "../components/react-json-tree/types";
 
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"
@@ -27,7 +28,7 @@ export type TCodeViewType = "generated" | "options";
 export type TExportItems = "selected" | "all";
 export type TImportItems = "append" | "replace";
 
-export type TPath = string[];
+//export type TPath = string[];
 export type TCategoryReference = "notSpecified";
 export type THistoryReference = "selected" | number;
 export type TSnapshotReference = "selected" | number;
@@ -355,24 +356,24 @@ export interface ICode {
 }
 
 export interface IDOM {
-	treePath: string[]
+	treePath: KeyPath
 	autoExpandLevels: number
-	expandedTree: TPath[]
+	expandedTree: KeyPath[]
 }
 
 export interface IContent {
 	viewType: TGenericViewType
 	search: string
-	treePath: string[]
+	treePath: KeyPath
 	autoExpandLevels: number
-	expandedTree: TPath[]
+	expandedTree: KeyPath[]
 }
 
 export interface IDifference {
 	viewType: TGenericViewType
-	treePath: string[]
+	treePath: KeyPath
 	autoExpandLevels: number
-	expandedTree: TPath[]
+	expandedTree: KeyPath[]
 }
 
 export interface IReference {

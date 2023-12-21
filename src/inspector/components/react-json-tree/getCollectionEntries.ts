@@ -1,25 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {TProtoMode} from "../../model/types";
-import {TNodeType, TSortObjectKeys} from "./types";
 import {addMoreKeys} from "../../../shared/helpers";
+import type {SortObjectKeys, TNodeType, TProtoMode} from "./types";
 
-function getLength(type: TNodeType, collection: any) {
+function getLength(type: string, collection: unknown) {
 	if (type === "Object") {
-		return Object.keys(collection).length;
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		return Object.keys(collection as {}).length;
 	} else if (type === "Array") {
-		return collection.length;
+		return (collection as unknown[]).length;
 	}
 
 	return Infinity;
 }
 
-function isIterableMap(collection: any) {
-	return typeof collection.set === "function";
+function isIterableMap(collection: unknown) {
+	return typeof (collection as Map<unknown, unknown>).set === "function";
 }
 
-
-
-function getEntries(protoMode: TProtoMode = "none", type: TNodeType, collection: any, sortObjectKeys: TSortObjectKeys, from = 0, to = Infinity) {
+function getEntries(
+	protoMode: TProtoMode = "none",
+	type: TNodeType,
+	collection: any,
+	sortObjectKeys: SortObjectKeys,
+	from = 0,
+	to = Infinity,
+): {entries: {key: string | number; value: any}[]; hasMore?: boolean} {
 	let res;
 	if (type === "Object") {
 		let keys: string[] = Object.getOwnPropertyNames(collection);
@@ -51,7 +55,7 @@ function getEntries(protoMode: TProtoMode = "none", type: TNodeType, collection:
 		res = {
 			entries: collection
 				.slice(from, to + 1)
-				.map((val: any, idx: number) => ({key: idx + from, value: val})),
+				.map((val: unknown, idx: number) => ({key: idx + from, value: val})),
 		};
 	} else {
 		let idx = 0;
@@ -106,19 +110,22 @@ function getRanges(from: number, to: number, limit: number) {
 	return ranges;
 }
 
-export function getCollectionEntries(
+export default function getCollectionEntries(
 	protoMode: TProtoMode,
 	type: TNodeType,
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-	collection: any,
-	sortObjectKeys: TSortObjectKeys,
+	collection: unknown,
+	sortObjectKeys: SortObjectKeys,
 	limit: number,
 	from = 0,
 	to = Infinity,
-): JSX.Element[] {
-	const getEntriesBound = (from?: number, to?: number) => {
-		return getEntries(protoMode, type, collection, sortObjectKeys, from, to);
-	};
+) {
+	const getEntriesBound = getEntries.bind(
+		null,
+		protoMode,
+		type,
+		collection,
+		sortObjectKeys,
+	);
 
 	if (!limit) {
 		return getEntriesBound().entries;

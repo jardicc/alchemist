@@ -6,11 +6,12 @@ import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} 
 import React, {Component} from "react";
 import "./TreeDom.less";
 import {getItemString} from "../TreeDiff/getItemString";
-import {JSONTree} from "./../JSONTree";
-import {TProtoMode, TPath} from "../../model/types";
+import {JSONTree} from "./../react-json-tree";
+import {TProtoMode} from "../../model/types";
 import {labelRenderer, shouldExpandNode} from "../shared/sharedTreeView";
 import {cloneDeep} from "lodash";
 import {TreePath} from "../TreePath/TreePath";
+import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree/types";
 
 export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 
@@ -18,7 +19,7 @@ export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 		super(props);
 	}
 
-	private labelRenderer = ([key, ...rest]: string[], nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
+	private labelRenderer: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
 		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
 	};
 
@@ -26,7 +27,7 @@ export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 		return getItemString(type, data, true, false);
 	};
 
-	private expandClicked = (keyPath: TPath, expanded: boolean, recursive: boolean) => {
+	private expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
 		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
 	};
 
@@ -85,9 +86,9 @@ export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 type TTreeDom = ITreeDomProps & ITreeDomDispatch
 
 interface ITreeDomProps {
-	path: TPath
+	path: KeyPath
 	content: any
-	expandedKeys: TPath[]
+	expandedKeys: KeyPath[]
 	protoMode: TProtoMode
 	autoExpandLevels: number
 }
@@ -101,8 +102,8 @@ const mapStateToProps = (state: IRootState): ITreeDomProps => ({
 });
 
 interface ITreeDomDispatch {
-	onInspectPath: (path: string[], mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: TPath, expand: boolean, recursive: boolean, data: any) => void;
+	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
+	onSetExpandedPath: (path: KeyPath, expand: boolean, recursive: boolean, data: any) => void;
 	onSetAutoExpandLevel: (level: number) => void
 }
 
