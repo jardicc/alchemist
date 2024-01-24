@@ -47,6 +47,7 @@
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
     "react": "^17.0.2",
+    "react-base16-styling": "^0.9.1",
     "react-dom": "^17.0.2",
     "react-notifications": "^1.7.2",
     "react-redux": "^7.2.9",

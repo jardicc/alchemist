@@ -29,7 +29,7 @@
 		"typescript",
 		"html"
 	],
-
+	"jest.autoRun": "off",
 	"editor.formatOnSave": true,
 
 	"typescript.format.enable": true,

@@ -38,7 +38,8 @@
 	"exclude": [
 		"/node_modules",
 		"/dist",
-		"/installer"
+		"/installer",
+		"*.bak/*.*"
 	]
 }
 
