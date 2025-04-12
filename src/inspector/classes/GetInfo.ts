@@ -300,7 +300,7 @@ export class GetInfo {
 				const target: any = calculatedReference._target || calculatedReference.null;
 				if (Array.isArray(target)) {
 					postfix += target.reduceRight((str, current) => {
-						return (str + " " + current?._ref ?? "");
+						return (str + " " + (current?._ref ?? ""));
 					}, "");
 				} else {
 					postfix += " " + (target?._ref ?? "");

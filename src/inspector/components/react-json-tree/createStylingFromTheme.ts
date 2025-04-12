@@ -55,7 +55,9 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 			listStyle: "none",
 			MozUserSelect: "none",
 			WebkitUserSelect: "none",
-			backgroundColor: colors.BACKGROUND_COLOR,
+			//outline: "1px solid lime",
+			backgroundColor: "transparent",
+			fontFamily: "consolas, monaco"
 		},
 
 		value: ({style}, nodeType, keyPath) => ({
@@ -63,13 +65,14 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 				...style,
 				paddingTop: "0.25em",
 				paddingRight: 0,
-				marginLeft: "0.875em",
+				marginLeft: "1.5em", // !
 				WebkitUserSelect: "text",
 				MozUserSelect: "text",
 				wordWrap: "break-word",
-				paddingLeft: (keyPath as unknown[]).length > 1 ? "2.125em" : "1.25em",
+				paddingLeft: (keyPath as unknown[]).length > 1 ? "1.25em" : "1.25em",
 				textIndent: "-0.5em",
 				wordBreak: "break-all",
+				//outline: "1px solid red"
 			},
 		}),
 
@@ -96,6 +99,9 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 			style: {
 				paddingTop: expanded ? 0 : "0.25em",
 				cursor: "pointer",
+				//outline: "1px solid magenta",
+				//marginLeft: "1.5em", // !
+				marginLeft: 0, // !
 				color: colors.LABEL_COLOR,
 			},
 		}),
@@ -107,6 +113,7 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 				position: "relative",
 				lineHeight: "1.1em",
 				fontSize: "0.75em",
+				fontFamily: "tahoma, helvetica"
 			},
 		}),
 
@@ -115,8 +122,11 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 				...style,
 				display: "inline-block",
 				paddingRight: "0.5em",
-				paddingLeft: arrowStyle === "double" ? "1em" : 0,
+				//paddingLeft: arrowStyle === "double" ? "1em" : 0,
+				marginLeft: arrowStyle === "double" ? "1.5em" : 0,
+				paddingLeft: 0,
 				cursor: "pointer",
+				verticalAlign: "middle",
 			},
 		}),
 
@@ -128,14 +138,17 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 			position: "absolute",
 			top: 0,
 			left: "-0.4em",
+			fontSize: "1em"
 		},
 
 		nestedNode: ({style}, keyPath, nodeType, expanded, expandable) => ({
 			style: {
 				...style,
 				position: "relative",
+				//outline: "1px solid yellow",
 				paddingTop: "0.25em",
-				marginLeft: (keyPath as unknown[]).length > 1 ? "0.875em" : 0,
+				//marginLeft: (keyPath as unknown[]).length > 1 ? "1.5em" : 0,
+				marginLeft: "1.5em",
 				paddingLeft: !expandable ? "1.125em" : 0,
 			},
 		}),
