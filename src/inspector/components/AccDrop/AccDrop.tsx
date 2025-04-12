@@ -264,6 +264,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 							alignment="auto"
 							open={this.state.open ? "open" : undefined}
 							class="popover"
+
 						>
 							<div className="popoverContent">
 								{this.renderContent()}

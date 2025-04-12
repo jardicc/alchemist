@@ -57,7 +57,7 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 			WebkitUserSelect: "none",
 			//outline: "1px solid lime",
 			backgroundColor: "transparent",
-			fontFamily: "consolas, monaco"
+			fontFamily: "Consolas, 'Courier New', Monaco, 'Lucida Console'"
 		},
 
 		value: ({style}, nodeType, keyPath) => ({
