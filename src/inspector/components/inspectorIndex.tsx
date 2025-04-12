@@ -1,23 +1,33 @@
-import {render} from "react-dom";
-import React from "react";
+
+import {createRoot} from "react-dom/client";
+import React, {StrictMode} from "react";
 import {Provider} from "react-redux";
 import {InspectorContainer} from "./Inspector/InspectorContainer";
 import {rootStore} from "../../shared/store";
 import {ErrorBoundary} from "./ErrorBoundary/ErrorBoundary";
 import {NotificationContainer} from "react-notifications";
 import "../styleOverrides/notifications.less";
+
+
+
+
 export function renderInspectorUI(): void {
-	const el = document.querySelector("[panelid=inspector]");
-	if (!el) {
-		console.error(el);
+	const element = document.querySelector("[panelid=inspector]");
+	if (!element) {
+		console.error(element);
+		throw new Error("Inspector element not found in the DOM.");
 	}
 
-	render(
-		<Provider store={rootStore}>
-			<ErrorBoundary>
-				<NotificationContainer />
-				<InspectorContainer />
-			</ErrorBoundary>
-		</Provider>, el as HTMLElement,
+	const rootElement = createRoot(element);
+
+	rootElement.render(
+		<StrictMode>
+			<Provider store={rootStore}>
+				<ErrorBoundary>
+					<NotificationContainer />
+					<InspectorContainer />
+				</ErrorBoundary>
+			</Provider>
+		</StrictMode>
 	);
 }
