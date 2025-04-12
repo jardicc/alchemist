@@ -16,7 +16,7 @@ export class GetList {
 		const documents = app.documents.map(d => new DocumentExtra(d));
 		const docs = documents.map(async d => ({
 			value: d.id,
-			label: await d.$title(),
+			label: await d.$title() + ` [ID ${d.id}]`,
 		}));
 		const result = await Promise.all(docs);
 		return result;
@@ -27,7 +27,7 @@ export class GetList {
 		if (!docE) {return [];}
 		const layers = docE.allLayers.reverse().map(d => ({
 			value: d.layerID,
-			label: `${d.name} (${d.layerID})`,
+			label: `${d.name} [ID ${d.layerID}]`,
 		}));
 		return layers;
 	}
