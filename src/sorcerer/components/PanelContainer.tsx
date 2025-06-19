@@ -3,11 +3,11 @@ import SP from "react-uxp-spectrum";
 import React from "react";
 import {connect, useDispatch} from "react-redux";
 import {Dispatch} from "redux";
-import {IRootState} from "../../../shared/store";
-import {IEntrypointPanel, ISnippet} from "../../sorModel";
-import {getActivePanel, getAllSnippets} from "../../sorSelectors";
-import {assignSnippetToPanelAction, setPanelAction, TSetPanelActionPayload} from "../../sorActions";
-import {TActions} from "../../../inspector/actions/inspectorActions";
+import {IRootState} from "../../shared/store";
+import {IEntrypointPanel, ISnippet} from "../sorModel";
+import {getActivePanel, getAllSnippets} from "../sorSelectors";
+import {assignSnippetToPanelAction, setPanelAction, TSetPanelActionPayload} from "../sorActions";
+import {TActions} from "../../inspector/actions/inspectorActions";
 export class Panel extends React.Component<TPanelContainer, IPanelContainerState> {
 	constructor(props: TPanelContainer) {
 		super(props);

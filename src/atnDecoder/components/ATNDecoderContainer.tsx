@@ -1,20 +1,20 @@
 import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState, rootStore} from "../../../shared/store";
+import {IRootState, rootStore} from "../../shared/store";
 
 import React from "react";
 
 import "./ATNDecoderContainer.less";
 
-import {decodeATN} from "../../../atnDecoder/classes/ATNDecoder";
-import {FooterContainer} from "../../../inspector/components/FooterContainer";
-import {IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation} from "../../../inspector/model/types";
-import {getAllDescriptors, getFontSizeSettings, getInspectorSettings} from "../../../inspector/selectors/inspectorSelectors";
-import {getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands} from "../../atnSelectors";
-import {clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction} from "../../atnActions";
-import {IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../../atnModel";
-import {ActionSetContainer} from "../ActionSetContainer/ActionSetContainer";
-import {addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setModeTabAction, toggleDescriptorsGroupingAction} from "../../../inspector/actions/inspectorActions";
-import {alert, Helpers} from "../../../inspector/classes/Helpers";
+import {decodeATN} from "../classes/ATNDecoder";
+import {FooterContainer} from "../../inspector/components/FooterContainer";
+import {IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation} from "../../inspector/model/types";
+import {getAllDescriptors, getFontSizeSettings, getInspectorSettings} from "../../inspector/selectors/inspectorSelectors";
+import {getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands} from "../atnSelectors";
+import {clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction} from "../atnActions";
+import {IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
+import {ActionSetContainer} from "./ActionSetContainer";
+import {addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setModeTabAction, toggleDescriptorsGroupingAction} from "../../inspector/actions/inspectorActions";
+import {alert, Helpers} from "../../inspector/classes/Helpers";
 import {str as crc} from "crc-32";
 import PS from "photoshop";
 import SP from "react-uxp-spectrum";

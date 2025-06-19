@@ -3,12 +3,12 @@ import SP from "react-uxp-spectrum";
 import React from "react";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 import PS from "photoshop";
-import {TSelectedItem, TSelectActionOperation} from "../../../atnDecoder/atnModel";
-import {setSelectAction, setSnippetAction, TSetSnippetActionPayload} from "../../sorActions";
-import {ISnippet} from "../../sorModel";
-import {getActiveSnippet} from "../../sorSelectors";
+import {TSelectedItem, TSelectActionOperation} from "../../atnDecoder/atnModel";
+import {setSelectAction, setSnippetAction, TSetSnippetActionPayload} from "../sorActions";
+import {ISnippet} from "../sorModel";
+import {getActiveSnippet} from "../sorSelectors";
 
 export class Snippet extends React.Component<TSnippetContainer, ISnippetContainerState> {
 	constructor(props: TSnippetContainer) {

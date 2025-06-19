@@ -3,11 +3,11 @@ import SP from "react-uxp-spectrum";
 import React from "react";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
-import {TSelectedItem, TSelectActionOperation} from "../../../atnDecoder/atnModel";
-import {IRootState} from "../../../shared/store";
-import {setCommandAction, setSelectAction, TSetCommandActionPayload} from "../../sorActions";
-import {IEntrypointCommand, ISnippet} from "../../sorModel";
-import {getActiveCommand, getAllSnippets} from "../../sorSelectors";
+import {TSelectedItem, TSelectActionOperation} from "../../atnDecoder/atnModel";
+import {IRootState} from "../../shared/store";
+import {setCommandAction, setSelectAction, TSetCommandActionPayload} from "../sorActions";
+import {IEntrypointCommand, ISnippet} from "../sorModel";
+import {getActiveCommand, getAllSnippets} from "../sorSelectors";
 
 export class Command extends React.Component<TCommandContainer, ICommandContainerState> {
 	constructor(props: TCommandContainer) {

@@ -1,24 +1,24 @@
 import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 
 import React from "react";
 
 import "./SorcererContainer.less";
 
 import SP from "react-uxp-spectrum";
-import {TFontSizeSettings} from "../../../inspector/model/types";
-import {FooterContainer} from "../../../inspector/components/FooterContainer";
-import {getFontSizeSettings} from "../../../inspector/selectors/inspectorSelectors";
-import {IActionSetUUID} from "../../../atnDecoder/atnModel";
-import {GeneralContainer} from "../GeneralContainer/GeneralContainer";
-import {SnippetContainer} from "../SnippetsContainer/SnippetContainer";
-import {Command, CommandContainer} from "../CommandsContainer/CommandContainer";
-import {IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState} from "../../sorModel";
-import {getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove} from "../../sorSelectors";
-import {setSelectActionAction} from "../../../atnDecoder/atnActions";
-import {makeAction, removeAction, setPresetAction, setSelectAction} from "../../sorActions";
-import {PanelContainer} from "../PanelsContainer/PanelContainer";
-import {SorcererBuilder} from "../../classes/Sorcerer";
+import {TFontSizeSettings} from "../../inspector/model/types";
+import {FooterContainer} from "../../inspector/components/FooterContainer";
+import {getFontSizeSettings} from "../../inspector/selectors/inspectorSelectors";
+import {IActionSetUUID} from "../../atnDecoder/atnModel";
+import {GeneralContainer} from "./GeneralContainer";
+import {SnippetContainer} from "./SnippetContainer";
+import {Command, CommandContainer} from "./CommandContainer";
+import {IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState} from "../sorModel";
+import {getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove} from "../sorSelectors";
+import {setSelectActionAction} from "../../atnDecoder/atnActions";
+import {makeAction, removeAction, setPresetAction, setSelectAction} from "../sorActions";
+import {PanelContainer} from "./PanelContainer";
+import {SorcererBuilder} from "../classes/Sorcerer";
 
 
 class Sorcerer extends React.Component<TSorcerer, ISorcererState> {

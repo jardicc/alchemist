@@ -3,11 +3,11 @@ import "./ActionCommandContainer.less";
 import React from "react";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
-import {IRootState} from "../../../shared/store";
-import {setSelectActionAction} from "../../atnActions";
-import {getSelectedItemsCommand} from "../../atnSelectors";
-import {IActionCommandUUID, IActionItemUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../../atnModel";
-import {IconCheck, IconEmpty} from "../../../shared/components/icons";
+import {IRootState} from "../../shared/store";
+import {setSelectActionAction} from "../atnActions";
+import {getSelectedItemsCommand} from "../atnSelectors";
+import {IActionCommandUUID, IActionItemUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
+import {IconCheck, IconEmpty} from "../../shared/components/icons";
 import PS from "photoshop";
 
 export class ActionCommand extends React.Component<TActionCommand, IActionCommandState> {
