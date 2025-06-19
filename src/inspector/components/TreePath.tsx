@@ -1,13 +1,14 @@
 import React, {Component} from "react";
 import "./TreePath.less";
-import {renderPath} from "../shared/sharedTreeView";
+import {renderPath} from "./sharedTreeView";
 import SP from "react-uxp-spectrum";
-import {KeyPath} from "../react-json-tree/types";
+import {KeyPath} from "./react-json-tree/types";
 
 export interface ITreePathProps {
 	autoExpandLevels: number
 	path: KeyPath
 	allowInfinityLevels?: boolean
+	hideLevels?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -47,14 +48,14 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 	};
 
 	public override render(): React.ReactNode {
-		const {autoExpandLevels, allowInfinityLevels} = this.props;
+		const {autoExpandLevels, allowInfinityLevels, hideLevels} = this.props;
 
 		return (
 			<div className="TreePath">
 				<div className="pathWrap">
 					{this.renderPath()}
 				</div>
-				<div className="levelSlider">
+				{!hideLevels && <div className="levelSlider">
 					<span className="levelLabel">Expand: {((autoExpandLevels === 10 && allowInfinityLevels) ? "All" : autoExpandLevels) || "Off"}</span>
 					<SP.Slider
 						variant="filled"
@@ -64,7 +65,7 @@ export class TreePath extends Component<TTreePath, ITreePathState> {
 						//onChange={(e: any) => onSetAutoExpandLevel(e.target.value)}
 						value={autoExpandLevels}
 					/>
-				</div>
+				</div>}
 			</div>
 		);
 	}

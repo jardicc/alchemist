@@ -1,5 +1,5 @@
 import React from "react";
-import {Settings} from "../../classes/Settings";
+import {Settings} from "../classes/Settings";
 
 interface IState {
 	hasError: boolean,

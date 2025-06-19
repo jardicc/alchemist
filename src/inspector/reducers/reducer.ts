@@ -13,7 +13,7 @@ import {atnReducer} from "../../atnDecoder/atnReducer";
 import {TSorActions} from "../../sorcerer/sorActions";
 import {sorReducer} from "../../sorcerer/sorReducer";
 import {ListenerClass} from "../classes/Listener";
-import {TFilterState} from "../components/FilterButton/FilterButton";
+import {TFilterState} from "../components/FilterButton";
 import {KeyPath} from "../components/react-json-tree/types";
 
 export type TAllActions = TActions | TAtnActions | TSorActions;

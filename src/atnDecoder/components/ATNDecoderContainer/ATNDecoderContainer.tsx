@@ -6,7 +6,7 @@ import React from "react";
 import "./ATNDecoderContainer.less";
 
 import {decodeATN} from "../../../atnDecoder/classes/ATNDecoder";
-import {FooterContainer} from "../../../inspector/components/Footer/FooterContainer";
+import {FooterContainer} from "../../../inspector/components/FooterContainer";
 import {IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation} from "../../../inspector/model/types";
 import {getAllDescriptors, getFontSizeSettings, getInspectorSettings} from "../../../inspector/selectors/inspectorSelectors";
 import {getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands} from "../../atnSelectors";

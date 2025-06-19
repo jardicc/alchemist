@@ -1,9 +1,9 @@
 import {connect} from "react-redux";
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 import React from "react";
-import "./Footer.less";
-import {GetInfo} from "../../classes/GetInfo";
-import {Main} from "../../../shared/classes/Main";
+import "./FooterContainer.less";
+import {GetInfo} from "../classes/GetInfo";
+import {Main} from "../../shared/classes/Main";
 import {Dispatch} from "redux";
 import {valid, coerce} from "semver";
 import {versions} from "uxp";

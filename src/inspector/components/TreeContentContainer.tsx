@@ -1,18 +1,18 @@
 import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../../shared/store";
-import {setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction, setSearchContentKeywordAction} from "../../actions/inspectorActions";
-import {getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel, getSearchContentKeyword} from "../../selectors/inspectorContentSelectors";
+import {IRootState} from "../../shared/store";
+import {setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction, setSearchContentKeywordAction} from "../actions/inspectorActions";
+import {getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel, getSearchContentKeyword} from "../selectors/inspectorContentSelectors";
 import React, {Component, Key} from "react";
-import "./TreeContent.less";
-import {getItemString} from "../TreeDiff/getItemString";
-import {JSONTree} from "./../react-json-tree";
-import {TProtoMode, TGenericViewType} from "../../model/types";
-import {labelRenderer, shouldExpandNode} from "../shared/sharedTreeView";
-import {TabList} from "../Tabs/TabList";
-import {TabPanel} from "../Tabs/TabPanel";
-import {TreePath} from "../TreePath/TreePath";
+import "./TreeContentContainer.less";
+import {getItemString} from "./TreeDiff/getItemString";
+import {JSONTree} from "./react-json-tree";
+import {TProtoMode, TGenericViewType} from "../model/types";
+import {labelRenderer, shouldExpandNode} from "./sharedTreeView";
+import {TabList} from "./Tabs/TabList";
+import {TabPanel} from "./Tabs/TabListPanel";
+import {TreePath} from "./TreePath";
 import SP from "react-uxp-spectrum";
-import {KeyPath, TLabelRenderer} from "../react-json-tree/types";
+import {KeyPath, TLabelRenderer} from "./react-json-tree/types";
 
 class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 
@@ -79,9 +79,17 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
 					<div className="textareaWrap">
+						<TreePath
+							autoExpandLevels={autoExpandLevels}
+							onInspectPath={onInspectPath}
+							onSetAutoExpandLevel={onSetAutoExpandLevel}
+							path={path}
+							allowInfinityLevels={false}
+							hideLevels={true}
+						/>
 						<SP.Textarea
 							className="rawCode"
-							value={this.props.descriptorContent}
+							value={content ? JSON.stringify(content, null, 2).replaceAll("$$$noPin_", "") : ""}
 						/>
 					</div>
 				</TabPanel>

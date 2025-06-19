@@ -1,27 +1,27 @@
 import React from "react";
 import "./LeftColumn.less";
-import {GetInfo, ITargetReferenceAM} from "../../classes/GetInfo";
-import {DescriptorItemContainer} from "../DescriptorItem/DescriptorItemContainer";
-import {IDescriptor, IRefListener, IRefNotifier, IRefReplies, ISettings, TAllTargetReferences, TSelectDescriptorOperation} from "../../model/types";
-import {IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop, IconClipboard} from "../../../shared/components/icons";
-import {ListenerClass} from "../../classes/Listener";
+import {GetInfo, ITargetReferenceAM} from "../classes/GetInfo";
+import {DescriptorItemContainer} from "./DescriptorItemContainer";
+import {IDescriptor, IRefListener, IRefNotifier, IRefReplies, ISettings, TAllTargetReferences, TSelectDescriptorOperation} from "../model/types";
+import {IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop, IconClipboard} from "../../shared/components/icons";
+import {ListenerClass} from "../classes/Listener";
 import photoshop from "photoshop";
-import {replayDescriptor} from "../../classes/Helpers";
-import {guessOriginalReference} from "../../classes/guessOriginalReference";
-import {RawDataConverter} from "../../classes/RawDataConverter";
+import {replayDescriptor} from "../classes/Helpers";
+import {guessOriginalReference} from "../classes/guessOriginalReference";
+import {RawDataConverter} from "../classes/RawDataConverter";
 import {NotificationManager} from "react-notifications";
 import {str as crc} from "crc-32";
 import SP from "react-uxp-spectrum";
 
-import {Main} from "../../../shared/classes/Main";
+import {Main} from "../../shared/classes/Main";
 import {MapDispatchToPropsFunction, connect} from "react-redux";
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 import {
 	addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction,
 	setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction,
 	selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction,
 	clearViewAction, importItemsAction, setSpyAction,
-} from "../../actions/inspectorActions";
+} from "../actions/inspectorActions";
 import {
 	getTargetReference, getAutoUpdate, getAddAllowed, getSelectedDescriptorsUUID,
 	getLockedSelection, getPinnedSelection, getRemovableSelection, getDescriptorsListView,
@@ -29,12 +29,12 @@ import {
 	getSelectedDescriptors, getReplayEnabled, getRanameEnabled, getAllDescriptors,
 	getCopyToClipboardEnabled,
 	getActiveRef,
-} from "../../selectors/inspectorSelectors";
+} from "../selectors/inspectorSelectors";
 import {Dispatch} from "redux";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
-import {filterNonExistent} from "../../classes/filterNonExistent";
-import {FiltersContainer} from "../Filters/Filters";
-import {getGeneratedCode} from "../../selectors/inspectorCodeSelectors";
+import {filterNonExistent} from "../classes/filterNonExistent";
+import {FiltersContainer} from "./Filters";
+import {getGeneratedCode} from "../selectors/inspectorCodeSelectors";
 
 export class LeftColumn extends React.Component<TLeftColumn, IState> {
 	constructor(props: TLeftColumn) {

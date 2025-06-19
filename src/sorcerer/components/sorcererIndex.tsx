@@ -2,7 +2,7 @@ import {createRoot} from "react-dom/client";
 import React, {StrictMode} from "react";
 import {Provider} from "react-redux";
 import {rootStore} from "../../shared/store";
-import {ErrorBoundary} from "../../inspector/components/ErrorBoundary/ErrorBoundary";
+import {ErrorBoundary} from "../../inspector/components/ErrorBoundary";
 import {SorcererContainer} from "./SorcererContainer/SorcererContainer";
 
 export function renderSorcererUI(): void {
@@ -15,12 +15,12 @@ export function renderSorcererUI(): void {
 	const rootElement = createRoot(el);
 
 	rootElement.render(
-		<StrictMode>
+		//<StrictMode>
 			<Provider store={rootStore}>
 				<ErrorBoundary>
 					<SorcererContainer />
 				</ErrorBoundary>
 			</Provider>
-		</StrictMode>
+		//</StrictMode>
 	);
 }

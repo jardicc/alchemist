@@ -3,7 +3,7 @@ import {
 	ITreeDataTabs, TFilterEvents, TImportItems, IInspectorState, TGenericViewType,
 	TCodeViewType, TFontSizeSettings, IDescriptorSettings, ISettings, IListenerNotifierFilter, TAllTargetReferences,
 } from "../model/types";
-import {TFilterState} from "../components/FilterButton/FilterButton";
+import {TFilterState} from "../components/FilterButton";
 import {IRootState} from "../../shared/store";
 import {KeyPath} from "../components/react-json-tree/types";
 

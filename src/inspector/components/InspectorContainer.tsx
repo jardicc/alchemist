@@ -1,24 +1,24 @@
 import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {setModeTabAction, setColumnSizeAction, toggleSettingsAction} from "../../actions/inspectorActions";
-import {IRootState} from "../../../shared/store";
-import {getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible} from "../../selectors/inspectorSelectors";
+import {setModeTabAction, setColumnSizeAction, toggleSettingsAction} from "../actions/inspectorActions";
+import {IRootState} from "../../shared/store";
+import {getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible} from "../selectors/inspectorSelectors";
 
 import React from "react";
-import {TabList} from "../Tabs/TabList";
-import {TabPanel} from "../Tabs/TabPanel";
-import "./Inspector.less";
-import {TActiveInspectorTab, TFontSizeSettings} from "../../model/types";
-import {FooterContainer} from "../Footer/FooterContainer";
-import {TreeContentContainer} from "../TreeContent/TreeContentContainer";
-import {TreeDiffContainer} from "../TreeDiff/TreeDiffContainer";
-import {TreeDomContainer} from "../TreeDom/TreeDomContainer";
-import {DispatcherContainer} from "../Dispatcher/DispatcherContainer";
-import {GeneratedCodeContainer} from "../GeneratedCode/GeneratedCodeContainer";
-import {SettingsContainer} from "../Settings/SettingsContainer";
-import {IconCog, IconX} from "../../../shared/components/icons";
-import {LeftColumnContainer} from "../LeftColumn/LeftColumn";
-import {SplitPane} from "../../../shared/components/split-pane-fork/SplitPane";
-import {Pane} from "../../../shared/components/split-pane-fork/Pane";
+import {TabList} from "./Tabs/TabList";
+import {TabPanel} from "./Tabs/TabListPanel";
+import "./InspectorContainer.less";
+import {TActiveInspectorTab, TFontSizeSettings} from "../model/types";
+import {FooterContainer} from "./FooterContainer";
+import {TreeContentContainer} from "./TreeContentContainer";
+import {TreeDiffContainer} from "./TreeDiff/TreeDiffContainer";
+import {TreeDomContainer} from "./TreeDomContainer";
+import {DispatcherContainer} from "./DispatcherContainer";
+import {GeneratedCodeContainer} from "./GeneratedCodeContainer";
+import {SettingsContainer} from "./Settings/SettingsContainer";
+import {IconCog, IconX} from "../../shared/components/icons";
+import {LeftColumnContainer} from "./LeftColumn";
+import {SplitPane} from "../../shared/components/split-pane-fork/SplitPane";
+import {Pane} from "../../shared/components/split-pane-fork/Pane";
 
 
 

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import React from "react";
 import "./FilterButton.less";
-import {TSubTypes} from "../../model/types";
-import {IconEye} from "../../../shared/components/icons";
+import {TSubTypes} from "../model/types";
+import {IconEye} from "../../shared/components/icons";
 
 export type TFilterState = "on" | "off" | "semi";
 

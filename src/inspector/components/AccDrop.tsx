@@ -1,9 +1,9 @@
 import React, {ComponentType, ReactElement} from "react";
-import {IconChevronBottom, IconChevronRight, IconChevronTop} from "../../../shared/components/icons";
-import {IPropertyGroup, IPropertyItem} from "../../model/types";
+import {IconChevronBottom, IconChevronRight, IconChevronTop} from "../../shared/components/icons";
+import {IPropertyGroup, IPropertyItem} from "../model/types";
 import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
-import {getIcon} from "../../helpers";
+import {getIcon} from "../helpers";
 
 export interface IAccDropPostFixProps {
 	value: string

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type {ITargetReferenceAM} from "../classes/GetInfo";
-import {TFilterState} from "../components/FilterButton/FilterButton";
+import {TFilterState} from "../components/FilterButton";
 import {IActionSetUUID, IATNConverterState} from "../../atnDecoder/atnModel";
 import {ISorcererState} from "../../sorcerer/sorModel";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";

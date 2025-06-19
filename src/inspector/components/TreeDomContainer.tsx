@@ -1,17 +1,17 @@
 import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../../shared/store";
-import {setInspectorPathDomAction, setExpandedPathAction, setAutoExpandLevelAction} from "../../actions/inspectorActions";
-import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} from "../../selectors/inspectorDOMSelectors";
+import {IRootState} from "../../shared/store";
+import {setInspectorPathDomAction, setExpandedPathAction, setAutoExpandLevelAction} from "../actions/inspectorActions";
+import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} from "../selectors/inspectorDOMSelectors";
 
 import React, {Component} from "react";
-import "./TreeDom.less";
-import {getItemString} from "../TreeDiff/getItemString";
-import {JSONTree} from "./../react-json-tree";
-import {TProtoMode} from "../../model/types";
-import {labelRenderer, shouldExpandNode} from "../shared/sharedTreeView";
+import "./TreeDomContainer.less";
+import {getItemString} from "./TreeDiff/getItemString";
+import {JSONTree} from "./react-json-tree";
+import {TProtoMode} from "../model/types";
+import {labelRenderer, shouldExpandNode} from "./sharedTreeView";
 import {cloneDeep} from "lodash";
-import {TreePath} from "../TreePath/TreePath";
-import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree/types";
+import {TreePath} from "./TreePath";
+import {KeyPath, TExpandClicked, TLabelRenderer} from "./react-json-tree/types";
 
 export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 

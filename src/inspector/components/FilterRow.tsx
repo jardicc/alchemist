@@ -1,12 +1,12 @@
 import React, {ComponentType} from "react";
-import {AccDrop, IAccDropPostFixProps} from "../AccDrop/AccDrop";
-import {FilterButton, TFilterState} from "../FilterButton/FilterButton";
-import {TSubTypes, IPropertyItem, IPropertyGroup, TTargetReference, TAllTargetReferences} from "../../model/types";
+import {AccDrop, IAccDropPostFixProps} from "./AccDrop";
+import {FilterButton, TFilterState} from "./FilterButton";
+import {TSubTypes, IPropertyItem, IPropertyGroup, TTargetReference, TAllTargetReferences} from "../model/types";
 import {connect} from "react-redux";
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 import {Dispatch} from "redux";
-import {getActiveRef} from "../../selectors/inspectorSelectors";
-import {setFilterStateAction} from "../../actions/inspectorActions";
+import {getActiveRef} from "../selectors/inspectorSelectors";
+import {setFilterStateAction} from "../actions/inspectorActions";
 
 class FilterRow extends React.Component<TFilterRow, IFilterRowState> {
 

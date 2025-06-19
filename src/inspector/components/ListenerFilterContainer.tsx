@@ -1,9 +1,9 @@
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 import {MapDispatchToPropsFunction, connect} from "react-redux";
-import {getListenerNotifierFilterSettings} from "../../selectors/inspectorSelectors";
-import {setListenerNotifierFilterAction} from "../../actions/inspectorActions";
+import {getListenerNotifierFilterSettings} from "../selectors/inspectorSelectors";
+import {setListenerNotifierFilterAction} from "../actions/inspectorActions";
 import React from "react";
-import {IListenerNotifierFilter} from "../../model/types";
+import {IListenerNotifierFilter} from "../model/types";
 import SP from "react-uxp-spectrum";
 
 class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> {

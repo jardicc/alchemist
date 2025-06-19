@@ -7,7 +7,7 @@ import "./SorcererContainer.less";
 
 import SP from "react-uxp-spectrum";
 import {TFontSizeSettings} from "../../../inspector/model/types";
-import {FooterContainer} from "../../../inspector/components/Footer/FooterContainer";
+import {FooterContainer} from "../../../inspector/components/FooterContainer";
 import {getFontSizeSettings} from "../../../inspector/selectors/inspectorSelectors";
 import {IActionSetUUID} from "../../../atnDecoder/atnModel";
 import {GeneralContainer} from "../GeneralContainer/GeneralContainer";

@@ -1,6 +1,6 @@
 import React from "react";
-import {IconPinDown} from "../../../shared/components/icons";
-import {KeyPath, TShouldExpandNode} from "../react-json-tree/types";
+import {IconPinDown} from "../../shared/components/icons";
+import {KeyPath, TShouldExpandNode} from "./react-json-tree/types";
 
 
 export const labelRenderer = ([key, ...rest]: KeyPath, onInspectPath: (path: KeyPath, mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {

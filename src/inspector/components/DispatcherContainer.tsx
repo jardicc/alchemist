@@ -1,16 +1,16 @@
 import {connect} from "react-redux";
-import {IRootState} from "../../../shared/store";
-import {setDispatcherValueAction, addDescriptorAction} from "../../actions/inspectorActions";
-import {getDispatcherSnippet} from "../../selectors/dispatcherSelectors";
-import {getInspectorSettings} from "../../selectors/inspectorSelectors";
+import {IRootState} from "../../shared/store";
+import {setDispatcherValueAction, addDescriptorAction} from "../actions/inspectorActions";
+import {getDispatcherSnippet} from "../selectors/dispatcherSelectors";
+import {getInspectorSettings} from "../selectors/inspectorSelectors";
 
 /* eslint-disable quotes */
 import React from "react";
-import "./Dispatcher.less";
-import {Helpers} from "../../classes/Helpers";
-import {IDescriptor, IRefDispatcher, ISettings} from "../../model/types";
-import {RawDataConverter} from "../../classes/RawDataConverter";
-import {getInitialState} from "../../inspInitialState";
+import "./DispatcherContainer.less";
+import {Helpers} from "../classes/Helpers";
+import {IDescriptor, IRefDispatcher, ISettings} from "../model/types";
+import {RawDataConverter} from "../classes/RawDataConverter";
+import {getInitialState} from "../inspInitialState";
 import {str as crc} from "crc-32";
 import Sval from "sval";
 import {Dispatch} from "redux";

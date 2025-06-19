@@ -3,23 +3,23 @@ import "./Filters.less";
 import {
 	baseItemsActionCommon, baseItemsGuide, baseItemsChannel, baseItemsPath, baseItemsDocument,
 	baseItemsLayer, mainClasses,
-} from "../../model/buildInDropDownValues";
-import {IPropertySettings, TAllTargetReferences, TChannelReferenceValid, TTargetReference} from "../../model/types";
-import {TFilterState} from "../FilterButton/FilterButton";
-import {ListenerFilterContainer} from "../ListenerFilter/ListenerFilterContainer";
+} from "../model/buildInDropDownValues";
+import {IPropertySettings, TAllTargetReferences, TChannelReferenceValid, TTargetReference} from "../model/types";
+import {TFilterState} from "./FilterButton";
+import {ListenerFilterContainer} from "./ListenerFilterContainer";
 
 import {MapDispatchToPropsFunction, connect} from "react-redux";
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 import {
 	getActiveRef,
 	getFilterBySelectedReferenceType, getPropertiesListForActiveRef,
-} from "../../selectors/inspectorSelectors";
+} from "../selectors/inspectorSelectors";
 import {Dispatch} from "redux";
-import {ItemVisibilityButtonWrap} from "../ItemVisibilityButton/ItemVisibilityButton";
-import {FilterRowContainer} from "../FilterRow/FilterRow";
-import {setProperty, setSelectedReferenceTypeAction, setTargetReferenceAction} from "../../actions/inspectorActions";
+import {ItemVisibilityButtonWrap} from "./ItemVisibilityButton";
+import {FilterRowContainer} from "./FilterRow";
+import {setProperty, setSelectedReferenceTypeAction, setTargetReferenceAction} from "../actions/inspectorActions";
 import {cloneDeep} from "lodash";
-import {GetList} from "../../classes/GetList";
+import {GetList} from "../classes/GetList";
 
 
 export class Filters extends React.Component<TFilters, IState> {

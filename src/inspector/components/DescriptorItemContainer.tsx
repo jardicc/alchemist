@@ -1,15 +1,15 @@
 import {connect} from "react-redux";
 import cloneDeep from "lodash/cloneDeep";
-import {IRootState} from "../../../shared/store";
-import {selectDescriptorAction, renameDescriptorAction, setRenameModeAction} from "../../actions/inspectorActions";
-import {IDescriptor, TSelectDescriptorOperation} from "../../model/types";
-import {getAutoSelectedUUIDs} from "../../selectors/inspectorSelectors";
+import {IRootState} from "../../shared/store";
+import {selectDescriptorAction, renameDescriptorAction, setRenameModeAction} from "../actions/inspectorActions";
+import {IDescriptor, TSelectDescriptorOperation} from "../model/types";
+import {getAutoSelectedUUIDs} from "../selectors/inspectorSelectors";
 import React from "react";
-import "./DescriptorItem.less";
-import {IconLockLocked, IconPinDown} from "../../../shared/components/icons";
+import "./DescriptorItemContainer.less";
+import {IconLockLocked, IconPinDown} from "../../shared/components/icons";
 import {Dispatch} from "redux";
 import {default as SP} from "react-uxp-spectrum";
-import {getIcon} from "../../helpers";
+import {getIcon} from "../helpers";
 
 class DescriptorItem extends React.Component<TDescriptorItem, IState> {
 	constructor(props: TDescriptorItem) {

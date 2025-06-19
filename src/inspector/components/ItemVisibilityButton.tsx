@@ -1,12 +1,12 @@
 import "./ItemVisibilityButton.less";
-import {IRootState} from "../../../shared/store";
+import {IRootState} from "../../shared/store";
 import {connect, MapDispatchToPropsNonObject} from "react-redux";
-import {getCategoryItemsVisibility} from "../../selectors/inspectorSelectors";
-import {setCategoryItemVisibilityAction} from "../../actions/inspectorActions";
+import {getCategoryItemsVisibility} from "../selectors/inspectorSelectors";
+import {setCategoryItemVisibilityAction} from "../actions/inspectorActions";
 import React, {MouseEventHandler} from "react";
-import {TTargetReference} from "../../model/types";
-import {IAccDropPostFixProps} from "../AccDrop/AccDrop";
-import {IconEye} from "../../../shared/components/icons";
+import {TTargetReference} from "../model/types";
+import {IAccDropPostFixProps} from "./AccDrop";
+import {IconEye} from "../../shared/components/icons";
 
 
 

@@ -226,6 +226,13 @@ export function getInitialState(): IInspectorState {
 					list: [
 						{label: "(not specified)", value: "notSpecified"},
 						{
+							group: "expermiental",
+							groupLabel: "Experimental",
+							data: [
+								{label:"vectorToolMode",value:"vectorToolMode"},
+							]
+						},
+						{
 							group: "default",
 							groupLabel: "Default",
 							data: [
@@ -354,9 +361,12 @@ export function getInitialState(): IInspectorState {
 								{label: "brush", value: "brush"},
 								{label: "canvasBackgroundColors", value: "canvasBackgroundColors"},
 								{label: "colorProfileList", value: "colorProfileList"},
+								{label: "contentCredentialsAvailable", value: "contentCredentialsAvailable"},
 								{label: "cursorCrosshair", value: "cursorCrosshair"},
 								{label: "cursorShape", value: "cursorShape"},
 								{label: "FileFormats", value: "FileFormats"},
+								{label: "featureAccessLevel", value: "featureAccessLevel"},
+								{label: "foregroundColorRGB", value: "foregroundColorRGB"},
 								{label: "httpsCommandGet", value: "httpsCommandGet"},
 								{label: "LoadedPluginsNames", value: "LoadedPluginsNames"},
 								{label: "menuBarInfo", value: "menuBarInfo"},
@@ -415,6 +425,13 @@ export function getInitialState(): IInspectorState {
 					type: "layer",
 					list: [
 						{label: "(not specified)", value: "notSpecified"},
+						{
+							group: "expermiental",
+							groupLabel: "Experimental",
+							data: [
+								{label:"freeTransformWholePath",value:"freeTransformWholePath"},
+							]
+						},
 						{
 							group: "default",
 							groupLabel: "Default",
@@ -540,6 +557,7 @@ export function getInitialState(): IInspectorState {
 							group: "default",
 							groupLabel: "Default",
 							data: [
+								{label: "backgroundSaveInfo", value: "backgroundSaveInfo"},
 								{label: "bigNudgeH", value: "bigNudgeH"},
 								{label: "bigNudgeV", value: "bigNudgeV"},
 								{label: "center", value: "center"},
@@ -580,6 +598,7 @@ export function getInitialState(): IInspectorState {
 								{label: "rulerOriginH", value: "rulerOriginH"},
 								{label: "rulerOriginV", value: "rulerOriginV"},
 								{label: "rulersVisibility", value: "rulersVisibility"},
+								{label: "selectionEdgesVisible", value: "selectionEdgesVisible"},
 								{label: "slices", value: "slices"},
 								{label: "smartGuidesVisibility", value: "smartGuidesVisibility"},
 								{label: "targetLayers", value: "targetLayers"},
@@ -615,10 +634,14 @@ export function getInitialState(): IInspectorState {
 						{
 							group: "hidden",
 							groupLabel: "Hidden",
-							data: [
+							data: [							
+								{label: "adjustmentLayerIds", value: "adjustmentLayerIds"},
 								{label: "artboards", value: "artboards"},
+								{label: "contentCredentialsDebugInfo", value: "contentCredentialsDebugInfo"},
+								{label: "contentCredentialsEnabled", value: "contentCredentialsEnabled"},
 								{label: "globalAngle", value: "globalAngle"},
 								{label: "json", value: "json"},
+								{label: "modifiedSinceOpen", value: "modifiedSinceOpen"},
 								{label: "numberOfGuides", value: "numberOfGuides"},
 								{label: "pageSetup", value: "pageSetup"},
 								{label: "printSettings", value: "printSettings"},
@@ -626,6 +649,7 @@ export function getInitialState(): IInspectorState {
 								{label: "selection", value: "selection"},
 								{label: "slicesVisibility", value: "slicesVisibility"},
 								{label: "viewTransform", value: "viewTransform"},
+								{label: "viewInfo2", value: "viewInfo2"},
 							],
 						},
 					],

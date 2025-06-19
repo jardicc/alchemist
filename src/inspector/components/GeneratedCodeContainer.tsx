@@ -1,9 +1,9 @@
 import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../../shared/store";
-import {getGeneratedCode} from "../../selectors/inspectorCodeSelectors";
+import {IRootState} from "../../shared/store";
+import {getGeneratedCode} from "../selectors/inspectorCodeSelectors";
 
 import React, {Component} from "react";
-import "./GeneratedCode.less";
+import "./GeneratedCodeContainer.less";
 import {Dispatch} from "redux";
 import SP from "react-uxp-spectrum";
 

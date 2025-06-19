@@ -6,15 +6,15 @@ import {getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, ge
 import React, {Component} from "react";
 import {stringify} from "javascript-stringify";
 import {getItemString} from "./getItemString";
-import "./TreeDiff.less";
+import "./TreeDiffContainer.less";
 import {JSONTree} from "../react-json-tree";
 import {diff} from "jsondiffpatch";
-import {labelRenderer, shouldExpandNode} from "../shared/sharedTreeView";
+import {labelRenderer, shouldExpandNode} from "../sharedTreeView";
 import {IDescriptor, TGenericViewType} from "../../model/types";
 import {TabList} from "../Tabs/TabList";
-import {TabPanel} from "../Tabs/TabPanel";
-import {VisualDiffTab} from "../VisualDiff/VisualDiff";
-import {TreePath} from "../TreePath/TreePath";
+import {TabPanel} from "../Tabs/TabListPanel";
+import {VisualDiffTab} from "../VisualDiff";
+import {TreePath} from "../TreePath";
 import {Dispatch} from "redux";
 import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree/types";
 
@@ -143,6 +143,14 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 					</div>
 				</TabPanel>
 				<TabPanel id="raw" title="Raw" >
+					<TreePath
+						autoExpandLevels={autoExpandLevels}
+						onInspectPath={onInspectPath}
+						onSetAutoExpandLevel={onSetAutoExpandLevel}
+						path={path}
+						allowInfinityLevels={false}
+						hideLevels={true}
+					/>
 					<VisualDiffTab
 						left={this.props.leftRawDiff}
 						right={this.props.rightRawDiff}

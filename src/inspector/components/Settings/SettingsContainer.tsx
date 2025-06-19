@@ -9,7 +9,7 @@ import "./Settings.less";
 import {Dispatch} from "redux";
 import {Settings as SettingsClass} from "../../../inspector/classes/Settings";
 import {getDescriptorOptions} from "../../selectors/inspectorCodeSelectors";
-import {Accordion} from "../Accordion/Accordion";
+import {Accordion} from "../Accordion";
 
 class Settings extends Component<TSettings, ISettingsState> {
 
