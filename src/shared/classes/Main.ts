@@ -6,7 +6,7 @@ import {core} from "photoshop";
 import {renderATNDecoderUI} from "../../atnDecoder/components/atnDecoderIndex";
 import {renderSorcererUI} from "../../sorcerer/components/sorcererIndex";
 import {FlyoutMenu} from "../../inspector/classes/Flyoutmenu";
-import manifest from "./../../../uxp/manifest.json";
+import manifest from "./../../../build/manifest.json";
 import uxp from "uxp";
 
 export class Main {

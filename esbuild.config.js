@@ -1,16 +1,11 @@
-/* eslint-disable require-await */
-/* eslint-disable no-promise-executor-return */
-/* eslint-disable no-constant-condition */
 console.log("ESBuild config loaded");
 import http from "http";
 import {lessLoader} from "esbuild-plugin-less";
 import {clean} from "esbuild-plugin-clean";
-import {copy} from "esbuild-plugin-copy";
 import {merge} from "webpack-merge";
 import {build, context} from "esbuild";
 import {zip} from "zip-a-folder";
-import manifest from "./uxp/manifest.json" with {type: "json"};
-import chokidar from "chokidar";
+import manifest from "./build/manifest.json" with {type: "json"};
 import {typecheckPlugin} from "@jgoz/esbuild-plugin-typecheck";
 
 const mode = process.argv[2];
@@ -36,7 +31,7 @@ let reloadResult;
 let reloadPlugin = {
 	name: "reloadPlugin",
 	setup(build) {
-		// eslint-disable-next-line require-await
+
 		build.onEnd(async result => {
 			if (!reloadResult) {
 				console.log("Nothing to reload.");
@@ -79,21 +74,9 @@ const esBuildConfigBase = {
 	platform: "browser",
 	target: ["es2022", "node18"],
 	external: ["photoshop", "uxp", "fs", "os"],
-	outfile: "./dist/index.js",
+	outfile: "./build/bundle/index.js",
 	// adds less plugin
 	plugins: [
-		clean({
-			patterns: "./dist",
-			cleanOn: "start",
-		}),
-		copy({
-			assets: {
-				from: "./uxp/**",
-				to: "./",
-			},
-			watch: true,
-			copyOnStart: true,
-		}),
 		lessLoader(),
 		typecheckPlugin({
 			watch: true,
@@ -125,6 +108,14 @@ const esBuildConfigProduction = {
 	sourcemap: false,
 	footer: {js: ""},
 	legalComments: "inline",
+	plugins: [
+		clean({
+			patterns: "./build/bundle",
+			cleanOn: "start",
+		}),
+		lessLoader(),
+		typecheckPlugin(),
+	],
 };
 
 const config = merge(
@@ -146,7 +137,7 @@ if (!isProduction) {
 			await build(config);
 
 			// pack plugin into installer
-			await zip("./dist", `./installer/${manifest.name}_${manifest.id}_v${manifest.version.replace(/\./gm, "-")}.ccx`);
+			await zip("./build", `./installer/${manifest.name}_${manifest.id}_v${manifest.version.replace(/\./gm, "-")}.ccx`);
 		} else {
 			const hostname = "127.0.0.1";
 			const port = 3033;
@@ -170,6 +161,7 @@ if (!isProduction) {
 			let ctx = await context(config);
 			// add some extra files to watch for
 
+			/*
 			chokidar.watch("./uxp/**",
 				{
 					// only after change happened
@@ -189,6 +181,7 @@ if (!isProduction) {
 				// start watching again
 				await ctx.watch();
 			});
+			*/
 
 			// start watching
 			await ctx.watch();

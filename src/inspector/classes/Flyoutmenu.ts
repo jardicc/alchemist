@@ -3,7 +3,7 @@ import {importItemsAction, importStateAction} from "../actions/inspectorActions"
 import {TExportItems, TImportItems} from "../model/types";
 import {getAllDescriptors, getSelectedDescriptors} from "../selectors/inspectorSelectors";
 import {Settings} from "./Settings";
-import manifest from "../../../uxp/manifest.json";
+import manifest from "../../../build/manifest.json";
 import {Main} from "../../shared/classes/Main";
 import {entrypoints} from "uxp";
 
