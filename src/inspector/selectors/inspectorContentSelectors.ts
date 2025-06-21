@@ -18,10 +18,21 @@ export const getSearchContentKeyword = createSelector([getInspectorContentTab], 
 	return t.search;
 });
 
-export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, getContentPath, getAutoActiveDescriptor], (t, d, autoActive) => {
+export const getTreeContentUnfiltered = createSelector([getSelectedDescriptors, getContentPath, getAutoActiveDescriptor], (desc, d, autoActive) => {
 	const path = cloneDeep(d);
+
+	let data: any = null;
+
+	if (desc.length === 1) {
+		data = cloneDeep(desc[0].recordedData);
+	} else if (desc.length > 1) {
+		data = cloneDeep(desc.map(item => item.recordedData));
+	} else if (autoActive?.recordedData) {
+		data = cloneDeep(autoActive.recordedData);
+	}
+
 	// selected or auto-selected
-	let data: any = cloneDeep(t?.[0]?.recordedData ?? autoActive?.recordedData);
+	//let data: any = cloneDeep(desc?.[0]?.recordedData ?? autoActive?.recordedData);
 
 	for (const part of path) {
 		data = (data)?.[part];
