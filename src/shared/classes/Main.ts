@@ -19,7 +19,7 @@ export class Main {
 		const pluginBaseSymbol = symbols.find(s => s.toString() === "Symbol(pluginBase)");
 
 		const result = pluginBaseSymbol ? plugin[pluginBaseSymbol] : plugin;
-		if ("developerPlugin" in result === false) {
+		if (!("developerPlugin" in result)) {
 			throw new Error("Cannot get proper plugin object from pluginManager");
 		}
 		Main.plugin = result;
@@ -55,28 +55,30 @@ export class Main {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function run() {
 	window.Main = Main;
 	if (Main.isFirstParty) {
 		Main.plugin.showPanel("inspector");
 	}
 
-	document.addEventListener("uxpcommand", (event: any) => {
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	document.addEventListener("uxpcommand", async (event: any) => {
 		console.log(event);
 		if (event.commandId === "resetStateFn") {
-			Settings.reset();
+			await Settings.reset();
 		}
 	});
 	Main.start();
 }
 
 if (Main.devMode) {
-	run();
+	void run();
 } else {
 	try {
-		run();
+		void run();
 	} catch (e: any) {
-		core.showAlert({
+		void core.showAlert({
 			message: e.stack,
 		});
 	}

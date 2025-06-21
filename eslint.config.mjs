@@ -1,7 +1,9 @@
 import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
 	tseslint.configs.strictTypeChecked,
+	reactHooks.configs["recommended-latest"],
 	tseslint.configs.stylisticTypeChecked.map((config) => ({
 		...config,
 		files: ["**/*.ts", "**/*.tsx"], // We use TS config only for TS files
@@ -39,6 +41,7 @@ export default tseslint.config(
 	},
 	{
 		files: ["**/*.js", "**/*.mjs"],
-		extends: [tseslint.configs.disableTypeChecked],
+		extends: [
+			tseslint.configs.disableTypeChecked],
 	},
 );
