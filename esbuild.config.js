@@ -8,6 +8,10 @@ import {zip} from "zip-a-folder";
 import manifest from "./build/manifest.json" with {type: "json"};
 import {typecheckPlugin} from "@jgoz/esbuild-plugin-typecheck";
 
+// store request to send reload signal later
+let serverRes, server;
+const port = 3033;
+
 const mode = process.argv[2];
 //console.log(copy);
 console.log(`Mode: ${mode}`);
@@ -24,43 +28,42 @@ switch (mode) {
 		process.exit(1);
 }
 
-// store request to send reload signal later
-let reloadResult;
-
 /** @type {import("esbuild").Plugin} */
 let reloadPlugin = {
 	name: "reloadPlugin",
 	setup(build) {
-
 		build.onEnd(async result => {
-			if (!reloadResult) {
+			console.log("\n⟳ Done... Reload plugin in PS");
+
+			if (!serverRes) {
 				console.log("Nothing to reload.");
 				return;
 			}
-			console.log("Sending reload signal...");
-			reloadResult.statusCode = 200;
-			reloadResult.setHeader("Content-Type", "text/plain");
-			reloadResult.end("Reload now!");
+
+			serverRes?.end("done");
+			server.closeAllConnections();
 		});
 	},
 };
 
 // reload code injection
 const reloadCode = `
-(async () => {
-	async function sleep(ms) {
-		return new Promise(resolve => setTimeout(resolve, ms));
-	}
-	while (true) {
-		try {
-			await fetch("http://127.0.0.1:3033");
-			location.reload();			
-		}catch(err) {
-			console.log(err);
-			await sleep(500);
+	/* this will reload the plugin in PS when webpack detects changes*/
+	void (async function () {
+		async function sleep(ms) {
+			return new Promise(resolve => {window.setTimeout(resolve, ms);});
 		}
-	}
-})();
+		while (true) {
+			try {
+				await fetch("http://localhost:3033/");
+				console.log("⟳ Got webpack reload request");
+				location.reload();
+			} catch (e) {
+				console.info("⟳ Waiting for webpack start in watch mode...");
+				await sleep(1000);
+			}
+		}
+	})();
 `;
 
 /** @type {import("esbuild").CommonOptions} */
@@ -139,49 +142,19 @@ if (!isProduction) {
 			// pack plugin into installer
 			await zip("./build", `./installer/${manifest.name}_${manifest.id}_v${manifest.version.replace(/\./gm, "-")}.ccx`);
 		} else {
-			const hostname = "127.0.0.1";
-			const port = 3033;
+			console.log("⟳ Plugin reloader initialized");
 
-			const server = http.createServer((req, res) => {
-				console.log("Waiting for reload signal...");
-				reloadResult = res;
+			server = http.createServer((req, res) => {
+				res.writeHead(200, {"Content-Type": "text/plain"});
+				console.log("\n⟳ Got request to reload plugin. Time: " + new Date().toLocaleTimeString());
+				serverRes = res;
+			}).listen(port, () => {
+				console.log(`\n⟳ Plugin reloader running on port ${port.toString()}`);
 			});
-
-			server.setTimeout(0);
 			server.timeout = 0;
-			server.keepAliveTimeout = 0;
-			server.requestTimeout = 0;
-			server.headersTimeout = 0;
-
-			server.listen(port, hostname, () => {
-				console.log(`Reload server running at http://${hostname}:${port}/`);
-			});
 
 			// prepare watcher
 			let ctx = await context(config);
-			// add some extra files to watch for
-
-			/*
-			chokidar.watch("./uxp/**",
-				{
-					// only after change happened
-					ignoreInitial: true,
-					// polling to group changes
-					usePolling: true,
-					interval: 500,
-				},
-			).on("all", async (event, path) => {
-				console.log(event, path);
-				// cancel already running build
-				await ctx.cancel();
-				// dispose old context
-				await ctx.dispose();
-				// create new context
-				ctx = await context(config);
-				// start watching again
-				await ctx.watch();
-			});
-			*/
 
 			// start watching
 			await ctx.watch();
