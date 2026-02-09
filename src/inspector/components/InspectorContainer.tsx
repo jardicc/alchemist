@@ -19,7 +19,6 @@ import {IconCog, IconX} from "../../shared/components/icons";
 import {LeftColumnContainer} from "./LeftColumn";
 import {SplitPane} from "../../shared/components/split-pane-fork/SplitPane";
 import {Pane} from "../../shared/components/split-pane-fork/Pane";
-import {VirtualList} from "./VirtualList";
 
 
 
@@ -110,17 +109,6 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 											<TabPanel id="reference" title="Code" noPadding={true}>
 												<GeneratedCodeContainer />
 											</TabPanel>
-											<TabPanel id="virtualScrollTest" title="virtualScrollTest" noPadding={true}>
-												
-												<virtual-list overScanCount={10} containerHeight={300} itemHeight={16} style={{height: "100%", width: "100%"}}>
-													{Array.from({length: 3000}, (_, i) => (
-														<div key={i} style={{height: "16px", lineHeight: 0, borderBottom: "1px solid #333", padding: 0}}>
-															Item {i + 1}
-														</div>
-													))}
-												</virtual-list>
-												
-											</TabPanel>
 											<TabPanel id="dispatcher" title="Dispatch" marginRight={true}>
 												<DispatcherContainer />
 											</TabPanel>
@@ -144,8 +132,6 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		);
 	}
 }
-
-customElements.define("virtual-list", VirtualList);
 
 type TInspector = IInspectorProps & IInspectorDispatch
 

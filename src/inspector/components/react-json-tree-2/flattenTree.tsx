@@ -6,7 +6,7 @@ import type {
 	KeyPath, GetItemString, TLabelRenderer, ValueRenderer,
 	ShouldExpandNodeInitially, PostprocessValue, IsCustomNode,
 	SortObjectKeys, Styling, TNodeType, TStylingArgs, TExpandClicked,
-	TProtoMode, CircularCache, TShouldExpandNode,
+	TProtoMode, TShouldExpandNode,
 } from "./types";
 
 export interface FlattenTreeOptions {
@@ -26,6 +26,69 @@ export interface FlattenTreeOptions {
 	shouldExpandNodeInitially: ShouldExpandNodeInitially;
 	shouldExpandNode: TShouldExpandNode;
 }
+
+// ── Descriptor types (plain objects, no JSX) ──
+
+const enum RowKind {
+	Nested = 0,
+	Value = 1,
+	Range = 2,
+}
+
+interface NestedRow {
+	kind: RowKind.Nested;
+	pathKey: string;
+	keyPath: KeyPath;
+	nodeType: TNodeType;
+	nodeTypeIndicator: string;
+	expanded: boolean;
+	expandable: boolean;
+	level: number;
+	value: unknown;
+}
+
+interface ValueRow {
+	kind: RowKind.Value;
+	pathKey: string;
+	keyPath: KeyPath;
+	nodeType: TNodeType;
+	level: number;
+	value: unknown;
+}
+
+interface RangeRow {
+	kind: RowKind.Range;
+	rangeKey: string;
+	nodeType: TNodeType;
+	from: number;
+	to: number;
+}
+
+type RowDescriptor = NestedRow | ValueRow | RangeRow;
+
+export interface FlattenResult {
+	descriptors: RowDescriptor[];
+	renderItem: (index: number) => React.ReactElement;
+}
+
+// ── Cached value getters ──
+
+const valueGetters: Partial<Record<TNodeType, (raw: any) => unknown>> = {
+	String: (raw: string) => `"${raw}"`,
+	Number: (raw: any) => raw,
+	Boolean: (raw: boolean) => (raw ? "true" : "false"),
+	Date: (raw: Date) => raw.toISOString(),
+	Null: () => "null",
+	Undefined: () => "undefined",
+	Function: (raw: any) => raw.toString(),
+	AsyncFunction: (raw: any) => raw.toString(),
+	GeneratorFunction: (raw: any) => raw.toString(),
+	Symbol: (raw: any) => raw.toString(),
+	Custom: (raw: any) => raw,
+};
+const defaultValueGetter = (raw: any) => raw;
+
+// ── Helpers ──
 
 function getPathKey(keyPath: KeyPath): string {
 	return keyPath.join("/");
@@ -94,24 +157,10 @@ function createItemStringForType(nodeType: TNodeType, data: unknown, collectionL
 	}
 }
 
-function getValueGetter(nodeType: TNodeType): (raw: any) => unknown {
-	switch (nodeType) {
-		case "String": return (raw: string) => `"${raw}"`;
-		case "Number": return (raw: any) => raw;
-		case "Boolean": return (raw: boolean) => (raw ? "true" : "false");
-		case "Date": return (raw: Date) => raw.toISOString();
-		case "Null": return () => "null";
-		case "Undefined": return () => "undefined";
-		case "Function": case "Symbol": return (raw: any) => raw.toString();
-		case "Custom": return (raw: any) => raw;
-		default: return () => `<${nodeType}>`;
-	}
-}
+// ── Phase 1: Build descriptor array (cheap, no JSX) ──
 
-/**
- * Flattens collection entries (which may include ItemRanges) into a flat array of ReactElements.
- */
-function flattenEntries(
+function collectEntries(
+	out: RowDescriptor[],
 	entries: any[],
 	nodeType: TNodeType,
 	data: unknown,
@@ -119,14 +168,13 @@ function flattenEntries(
 	parentPathKey: string,
 	options: FlattenTreeOptions,
 	level: number,
-	circularCache: CircularCache,
-): React.ReactElement[] {
-	const result: React.ReactElement[] = [];
-	const {styling, postprocessValue, protoMode, sortObjectKeys, collectionLimit, expandedPaths, onToggle} = options;
+	circularCache: Set<unknown>,
+): void {
+	const {postprocessValue, protoMode, sortObjectKeys, collectionLimit, expandedPaths} = options;
 
-	for (const entry of entries) {
+	for (let i = 0, len = entries.length; i < len; i++) {
+		const entry = entries[i];
 		if ("to" in entry && "from" in entry) {
-			// ItemRange
 			const rangeKey = `${parentPathKey}/ItemRange--${entry.from}-${entry.to}`;
 			const rangeExpanded = expandedPaths.get(rangeKey) ?? false;
 
@@ -135,74 +183,60 @@ function flattenEntries(
 					protoMode, nodeType, data,
 					sortObjectKeys, collectionLimit, entry.from, entry.to,
 				);
-				result.push(...flattenEntries(
-					subEntries, nodeType, data, keyPath, rangeKey,
+				collectEntries(
+					out, subEntries, nodeType, data, keyPath, rangeKey,
 					options, level, circularCache,
-				));
-			} else {
-				const handleRangeClick = () => {
-					expandedPaths.set(rangeKey, true);
-					onToggle();
-				};
-				result.push(
-					<li key={rangeKey} className="treeRow" {...styling("itemRange", false)} onClick={handleRangeClick}>
-						<JSONArrow
-							nodeType={nodeType}
-							styling={styling}
-							expanded={false}
-							onClick={handleRangeClick}
-							arrowStyle="double"
-						/>
-						{`${entry.from} ... ${entry.to}`}
-					</li>,
 				);
+			} else {
+				out.push({
+					kind: RowKind.Range,
+					rangeKey,
+					nodeType,
+					from: entry.from,
+					to: entry.to,
+				});
 			}
 		} else if ("key" in entry) {
 			const {key, value: childValue} = entry;
-			const childIsCircular = circularCache.includes(childValue);
-			result.push(...flattenTree(
+			const childIsCircular = circularCache.has(childValue);
+			const childKeyPath: KeyPath = [key, ...keyPath];
+			circularCache.add(childValue);
+			collectNode(
+				out,
 				postprocessValue(childValue),
-				[key, ...keyPath],
+				childKeyPath,
 				options,
 				level + 1,
-				[...circularCache, childValue],
+				circularCache,
 				childIsCircular,
-			));
+			);
+			circularCache.delete(childValue);
 		}
 	}
-
-	return result;
 }
 
-/**
- * Recursively walks a data structure and produces a flat array of `<li>` elements,
- * replicating the output of JSONNestedNode / JSONValueNode without React component nesting.
- */
-export function flattenTree(
+function collectNode(
+	out: RowDescriptor[],
 	value: unknown,
 	keyPath: KeyPath,
 	options: FlattenTreeOptions,
-	level: number = 0,
-	circularCache: CircularCache = [],
-	isCircular: boolean = false,
-): React.ReactElement[] {
+	level: number,
+	circularCache: Set<unknown>,
+	isCircular: boolean,
+): void {
 	const {
-		styling, labelRenderer, valueRenderer, getItemString,
 		isCustomNode, collectionLimit, sortObjectKeys, protoMode,
-		hideRoot, expandedPaths, onToggle, expandClicked,
+		hideRoot, expandedPaths,
 		shouldExpandNodeInitially, shouldExpandNode,
 	} = options;
 
 	const nodeType = isCustomNode(value) ? "Custom" : objType(value);
-	const result: React.ReactElement[] = [];
 
 	if (isNestedType(nodeType)) {
-		// ── Nested node (Object, Array, Iterable, etc.) ──
 		const expandable = !isCircular && isExpandable(nodeType, value);
 		const pathKey = getPathKey(keyPath);
 		const nodeTypeIndicator = getNodeTypeIndicator(nodeType)!;
 
-		// Determine expanded state
 		let expanded: boolean;
 		if (isCircular) {
 			expanded = false;
@@ -214,89 +248,168 @@ export function flattenTree(
 		}
 		expanded = expanded || shouldExpandNode(keyPath, value, level);
 
-		const stylingArgs: TStylingArgs = [keyPath, nodeType, expanded, expandable, level];
-
-		const itemType = (
-			<span {...styling("nestedNodeItemType", expanded)}>
-				{nodeTypeIndicator}
-			</span>
-		);
-		const renderedItemString = getItemString(
-			nodeType, value, itemType,
-			createItemStringForType(nodeType, value, collectionLimit),
-			keyPath,
-		);
-
-		const handleClick = () => {
-			if (expandable) {
-				expandedPaths.set(pathKey, !expanded);
-				onToggle();
-			}
-		};
-
-		const handleClickWrapped = (e: React.MouseEvent<HTMLDivElement>) => {
-			if (expandable) {
-				const path = [...keyPath].reverse();
-				expandClicked(path, !expanded, e.altKey);
-			}
-			handleClick();
-		};
-
-		// Render header row (unless it's a hidden root)
 		if (!(hideRoot && level === 0)) {
-			result.push(
-				<li key={pathKey} className="treeRow" {...styling("nestedNode", ...stylingArgs)}>
-					{expandable && (
-						<JSONArrow
-							styling={styling}
-							nodeType={nodeType}
-							expanded={expanded}
-							onClick={handleClickWrapped}
-						/>
-					)}
-					<label
-						{...styling(["label", "nestedNodeLabel"], ...stylingArgs)}
-						onClick={handleClick}
-					>
-						{labelRenderer(...stylingArgs)}
-					</label>
-					<span
-						{...styling("nestedNodeItemString", ...stylingArgs)}
-						onClick={handleClick}
-					>
-						{renderedItemString}
-					</span>
-				</li>,
-			);
+			out.push({
+				kind: RowKind.Nested,
+				pathKey,
+				keyPath,
+				nodeType,
+				nodeTypeIndicator,
+				expanded,
+				expandable,
+				level,
+				value,
+			});
 		}
 
-		// Render children if expanded
 		if (expanded || (hideRoot && level === 0)) {
 			const entries = getCollectionEntries(
 				protoMode, nodeType, value,
 				sortObjectKeys, collectionLimit,
 			);
-			result.push(...flattenEntries(
-				entries, nodeType, value, keyPath, pathKey,
+			collectEntries(
+				out, entries, nodeType, value, keyPath, pathKey,
 				options, level, circularCache,
-			));
+			);
 		}
 	} else {
-		// ── Value node (String, Number, Boolean, etc.) ──
-		const valueGetter = getValueGetter(nodeType);
 		const pathKey = getPathKey(keyPath);
-
-		result.push(
-			<li key={pathKey} className="treeRow" {...styling("value", nodeType, keyPath, level)}>
-				<label {...styling(["label", "valueLabel"], nodeType, keyPath)}>
-					{labelRenderer(keyPath, nodeType, false, false, level)}
-				</label>
-				<span {...styling("valueText", nodeType, keyPath)}>
-					{valueRenderer(valueGetter(value), value, nodeType, ...keyPath)}
-				</span>
-			</li>,
-		);
+		out.push({
+			kind: RowKind.Value,
+			pathKey,
+			keyPath,
+			nodeType,
+			level,
+			value,
+		});
 	}
+}
 
-	return result;
+// ── Phase 2: Render a single descriptor to JSX (only called for visible rows) ──
+
+function renderNestedRow(
+	row: NestedRow,
+	options: FlattenTreeOptions,
+): React.ReactElement {
+	const {styling, labelRenderer, getItemString, expandedPaths, onToggle, expandClicked, collectionLimit} = options;
+	const {pathKey, keyPath, nodeType, nodeTypeIndicator, expanded, expandable, level} = row;
+	const stylingArgs: TStylingArgs = [keyPath, nodeType, expanded, expandable, level];
+
+	const handleClick = expandable ? () => {
+		expandedPaths.set(pathKey, !expanded);
+		onToggle();
+	} : undefined;
+
+	const handleClickWrapped = expandable ? (e: React.MouseEvent<HTMLDivElement>) => {
+		const path = [...keyPath].reverse();
+		expandClicked(path, !expanded, e.altKey);
+		expandedPaths.set(pathKey, !expanded);
+		onToggle();
+	} : undefined;
+
+	const itemType = (
+		<span {...styling("nestedNodeItemType", expanded)}>
+			{nodeTypeIndicator}
+		</span>
+	);
+	const renderedItemString = getItemString(
+		nodeType, row.value, itemType,
+		createItemStringForType(nodeType, row.value, collectionLimit),
+		keyPath,
+	);
+
+	return (
+		<li key={pathKey} className="treeRow" {...styling("nestedNode", ...stylingArgs)}>
+			{expandable && (
+				<JSONArrow
+					styling={styling}
+					nodeType={nodeType}
+					expanded={expanded}
+					onClick={handleClickWrapped!}
+				/>
+			)}
+			<label
+				{...styling(["label", "nestedNodeLabel"], ...stylingArgs)}
+				onClick={handleClick}
+			>
+				{labelRenderer(...stylingArgs)}
+			</label>
+			<span
+				{...styling("nestedNodeItemString", ...stylingArgs)}
+				onClick={handleClick}
+			>
+				{renderedItemString}
+			</span>
+		</li>
+	);
+}
+
+function renderValueRow(
+	row: ValueRow,
+	options: FlattenTreeOptions,
+): React.ReactElement {
+	const {styling, labelRenderer, valueRenderer} = options;
+	const {pathKey, keyPath, nodeType, level, value} = row;
+	const valueGetter = valueGetters[nodeType] ?? defaultValueGetter;
+
+	return (
+		<li key={pathKey} className="treeRow" {...styling("value", nodeType, keyPath, level)}>
+			<label {...styling(["label", "valueLabel"], nodeType, keyPath)}>
+				{labelRenderer(keyPath, nodeType, false, false, level)}
+			</label>
+			<span {...styling("valueText", nodeType, keyPath)}>
+				{valueRenderer(valueGetter(value), value, nodeType, ...keyPath)}
+			</span>
+		</li>
+	);
+}
+
+function renderRangeRow(
+	row: RangeRow,
+	options: FlattenTreeOptions,
+): React.ReactElement {
+	const {styling, expandedPaths, onToggle} = options;
+	const {rangeKey, nodeType, from, to} = row;
+
+	const handleRangeClick = () => {
+		expandedPaths.set(rangeKey, true);
+		onToggle();
+	};
+
+	return (
+		<li key={rangeKey} className="treeRow" {...styling("itemRange", false)} onClick={handleRangeClick}>
+			<JSONArrow
+				nodeType={nodeType}
+				styling={styling}
+				expanded={false}
+				onClick={handleRangeClick}
+				arrowStyle="double"
+			/>
+			{`${from} ... ${to}`}
+		</li>
+	);
+}
+
+// ── Public API ──
+
+export function flattenTree(
+	value: unknown,
+	keyPath: KeyPath,
+	options: FlattenTreeOptions,
+	level: number = 0,
+): FlattenResult {
+	const descriptors: RowDescriptor[] = [];
+	const circularCache = new Set<unknown>();
+	collectNode(descriptors, value, keyPath, options, level, circularCache, false);
+
+	const renderItem = (index: number): React.ReactElement => {
+		const row = descriptors[index];
+		switch (row.kind) {
+			case RowKind.Nested: return renderNestedRow(row, options);
+			case RowKind.Value: return renderValueRow(row, options);
+			case RowKind.Range: return renderRangeRow(row, options);
+		}
+	};
+
+	return {descriptors, renderItem};
 }

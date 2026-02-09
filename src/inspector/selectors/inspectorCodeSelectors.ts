@@ -8,7 +8,7 @@ import {all, getActiveDescriptors, getAutoActiveDescriptor, getInspectorSettings
 import stringifyObject from "stringify-object";
 import {ActionDescriptor, BatchPlayCommandOptions} from "photoshop/dom/CoreModules";
 import {js_beautify} from "js-beautify";
-import {KeyPath} from "../components/react-json-tree/types";
+import {KeyPath} from "../components/react-json-tree-2/types";
 
 type BatchPlayCommandOptionsExtended = BatchPlayCommandOptions & {synchronousExecution?: boolean}
 
@@ -181,7 +181,7 @@ export const getGeneratedCode = createSelector([
 		let strPinned = "";
 
 		if (treePath.length) {
-			// eslint-disable-next-line quotes
+			 
 			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
 
@@ -358,7 +358,7 @@ export const getGeneratedCode2 = createSelector([
 		let strPinned = "";
 
 		if (treePath.length) {
-			// eslint-disable-next-line quotes
+			 
 			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
 

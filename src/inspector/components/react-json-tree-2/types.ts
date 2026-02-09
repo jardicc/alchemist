@@ -59,7 +59,7 @@ export interface CommonInternalProps extends CommonExternalProps {
   isCircular?: boolean;
 }
 
-export type TNodeType = "Object" | "Error" | "WeakMap" | "WeakSet" | "Array" | "Iterable" | "Map" | "Set" | "String" | "Number" | "Boolean" | "Date" | "Null" | "Undefined" | "Function" | "Symbol" | "Custom" | "Proxy";
+export type TNodeType = "Object" | "Error" | "WeakMap" | "WeakSet" | "Array" | "Iterable" | "Map" | "Set" | "String" | "Number" | "Boolean" | "Date" | "Null" | "Undefined" | "Function" | "AsyncFunction" | "GeneratorFunction" | "Symbol" | "Custom" | "Proxy";
 export type TShouldExpandNode = (keyPath: KeyPath, data: unknown, level?: number) => boolean;
 export type TNonNullish = Record<string, unknown>;
 export type TLabelRenderer = (keyPath: KeyPath, nodeType: TNodeType, expanded: boolean, expandable: boolean, level:number) => React.ReactNode;

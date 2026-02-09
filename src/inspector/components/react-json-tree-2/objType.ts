@@ -3,7 +3,7 @@
 
 import {TNodeType} from "./types";
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+ 
 export function objType(obj: any): TNodeType {
 	let type: TNodeType;
 	try {
@@ -15,6 +15,7 @@ export function objType(obj: any): TNodeType {
 		}
 		return "Proxy";
 	}
+
 	if (type === "Object" && typeof obj[Symbol.iterator] === "function") {
 		return "Iterable";
 	}

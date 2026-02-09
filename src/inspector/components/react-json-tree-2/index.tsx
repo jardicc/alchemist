@@ -28,6 +28,12 @@ const identity: ValueRenderer = (displayValue, rawValue, nodeType, ...keyPath): 
 	if (nodeType === "Function") {
 		return "<Function>";
 	}
+	if (nodeType === "AsyncFunction") {
+		return "<AsyncFunction>";
+	}
+	if (nodeType === "GeneratorFunction") {
+		return "<GeneratorFunction>";
+	}
 	return displayValue;
 };
 const expandRootNode: ShouldExpandNodeInitially = (keyPath, data, level) =>
@@ -68,7 +74,8 @@ export function JSONTree({
 	const [, setRenderTick] = useState(0);
 	const handleToggle = useCallback(() => setRenderTick((t) => t + 1), []);
 
-	const items = flattenTree(
+	const startTime = performance.now();
+	const {descriptors, renderItem} = flattenTree(
 		postprocessValue(value),
 		hideRoot ? [] : keyPath,
 		{
@@ -89,16 +96,18 @@ export function JSONTree({
 			shouldExpandNode,
 		},
 	);
-
-	//console.log("JSONTree flat items:", items.length);
+	const endTime = performance.now();
+	console.log(`JSONTree flattening time: ${endTime - startTime}ms, ${descriptors.length} descriptors`);
 
 	return (
 		<ul {...styling("tree")}>
 			<VirtualScroll
-				fixedHeight={400}
+				//fixedHeight={400}
+				flex={true}
 				itemHeight={16}
-				overscan={5}
-				items={items}
+				overscan={20}
+				itemCount={descriptors.length}
+				renderItem={renderItem}
 			/>
 		</ul>
 	);
