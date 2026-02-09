@@ -3,8 +3,7 @@
 // Dave Vedder <veddermatic@gmail.com> http://www.eskimospy.com/
 // port by Daniele Zannotti http://www.github.com/dzannotti <dzannotti@me.com>
 
-import React, {useMemo} from "react";
-import JSONNode from "./JSONNode";
+import React, {useCallback, useRef, useMemo, useState} from "react";
 import createStylingFromTheme from "./createStylingFromTheme";
 import {invertTheme} from "react-base16-styling";
 import type {StylingValue, Theme} from "react-base16-styling";
@@ -16,6 +15,8 @@ import type {
 	ShouldExpandNodeInitially,
 	ValueRenderer,
 } from "./types";
+import {VirtualScroll} from "../VirtualScroll";
+import {flattenTree} from "./flattenTree";
 
 interface Props extends Partial<CommonExternalProps> {
 	data: any;
@@ -51,7 +52,7 @@ export function JSONTree({
 	getItemString = defaultItemString,
 	postprocessValue = identity,
 	isCustomNode = noCustomNode,
-	collectionLimit = 50,
+	collectionLimit = 200,
 	sortObjectKeys = false,
 	shouldExpandNode = () => false,
 	expandClicked = () => { },
@@ -63,24 +64,41 @@ export function JSONTree({
 		[theme, shouldInvertTheme],
 	);
 
+	const expandedPathsRef = useRef(new Map<string, boolean>());
+	const [, setRenderTick] = useState(0);
+	const handleToggle = useCallback(() => setRenderTick((t) => t + 1), []);
+
+	const items = flattenTree(
+		postprocessValue(value),
+		hideRoot ? [] : keyPath,
+		{
+			styling,
+			labelRenderer,
+			valueRenderer,
+			getItemString,
+			postprocessValue,
+			isCustomNode,
+			collectionLimit,
+			sortObjectKeys,
+			protoMode,
+			hideRoot,
+			expandedPaths: expandedPathsRef.current,
+			onToggle: handleToggle,
+			expandClicked,
+			shouldExpandNodeInitially,
+			shouldExpandNode,
+		},
+	);
+
+	//console.log("JSONTree flat items:", items.length);
+
 	return (
 		<ul {...styling("tree")}>
-			<JSONNode
-				protoMode={protoMode}
-				expandClicked={expandClicked}
-				shouldExpandNode={shouldExpandNode}
-				keyPath={hideRoot ? [] : keyPath}
-				value={postprocessValue(value)}
-				isCustomNode={isCustomNode}
-				styling={styling}
-				labelRenderer={labelRenderer}
-				valueRenderer={valueRenderer}
-				shouldExpandNodeInitially={shouldExpandNodeInitially}
-				hideRoot={hideRoot}
-				getItemString={getItemString}
-				postprocessValue={postprocessValue}
-				collectionLimit={collectionLimit}
-				sortObjectKeys={sortObjectKeys}
+			<VirtualScroll
+				fixedHeight={400}
+				itemHeight={16}
+				overscan={5}
+				items={items}
 			/>
 		</ul>
 	);

@@ -57,6 +57,8 @@ export class Main {
 
 // eslint-disable-next-line @typescript-eslint/require-await
 async function run() {
+	console.clear();
+	console.log("Alchemist plugin started");
 	window.Main = Main;
 	if (Main.isFirstParty) {
 		Main.plugin.showPanel("inspector");

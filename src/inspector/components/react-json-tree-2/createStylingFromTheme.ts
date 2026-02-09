@@ -26,9 +26,7 @@ const colorMap = (theme: Base16Theme) => ({
 });
 
 type Color = keyof ReturnType<typeof colorMap>;
-type Colors = {
-	[color in Color]: string;
-};
+type Colors = Record<Color, string>;
 
 const valueColorMap = (colors: Colors) => ({
 	String: colors.STRING_COLOR,
@@ -53,19 +51,17 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 			marginLeft: "0.125em",
 			marginRight: 0,
 			listStyle: "none",
-			MozUserSelect: "none",
-			WebkitUserSelect: "none",
-			//outline: "1px solid lime",
 			backgroundColor: "transparent",
-			fontFamily: "Consolas, 'Courier New', Monaco, 'Lucida Console'"
+			fontFamily: "Consolas, 'Courier New', Monaco, 'Lucida Console'",
 		},
 
-		value: ({style}, nodeType, keyPath) => ({
+		value: ({style}, nodeType, keyPath, level) => ({
 			style: {
 				...style,
 				paddingTop: "0.25em",
 				paddingRight: 0,
-				marginLeft: "1.5em", // !
+				//marginLeft: "1.5em", // !
+				marginLeft: `${(1.5 * (level as number)).toFixed(1)}em`,
 				WebkitUserSelect: "text",
 				MozUserSelect: "text",
 				wordWrap: "break-word",
@@ -113,7 +109,7 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 				position: "relative",
 				lineHeight: "1.1em",
 				fontSize: "0.75em",
-				fontFamily: "tahoma, helvetica"
+				fontFamily: "tahoma, helvetica",
 			},
 		}),
 
@@ -138,17 +134,17 @@ const getDefaultThemeStyling = (theme: Base16Theme): StylingConfig => {
 			position: "absolute",
 			top: 0,
 			left: "-0.4em",
-			fontSize: "1em"
+			fontSize: "1em",
 		},
 
-		nestedNode: ({style}, keyPath, nodeType, expanded, expandable) => ({
+		nestedNode: ({style}, keyPath, nodeType, expanded, expandable, level) => ({
 			style: {
 				...style,
 				position: "relative",
 				//outline: "1px solid yellow",
 				paddingTop: "0.25em",
 				//marginLeft: (keyPath as unknown[]).length > 1 ? "1.5em" : 0,
-				marginLeft: "1.5em",
+				marginLeft: `${(1.5 * (level as number)).toFixed(1)}em`,
 				paddingLeft: !expandable ? "1.125em" : 0,
 			},
 		}),

@@ -16,7 +16,7 @@ export type GetItemString = (
 export type ValueRenderer = (
   displayValue: any,
   rawValue?: any,
-  nodeType?: TNodeType | undefined,
+  nodeType?: TNodeType  ,
   ...keyPath: KeyPath
 ) => React.ReactNode;
 
@@ -62,7 +62,7 @@ export interface CommonInternalProps extends CommonExternalProps {
 export type TNodeType = "Object" | "Error" | "WeakMap" | "WeakSet" | "Array" | "Iterable" | "Map" | "Set" | "String" | "Number" | "Boolean" | "Date" | "Null" | "Undefined" | "Function" | "Symbol" | "Custom" | "Proxy";
 export type TShouldExpandNode = (keyPath: KeyPath, data: unknown, level?: number) => boolean;
 export type TNonNullish = Record<string, unknown>;
-export type TLabelRenderer = (keyPath: KeyPath, nodeType: TNodeType, expanded: boolean, expandable: boolean) => React.ReactNode;
+export type TLabelRenderer = (keyPath: KeyPath, nodeType: TNodeType, expanded: boolean, expandable: boolean, level:number) => React.ReactNode;
 export type TExpandClicked = (keyPath: KeyPath, expanded: boolean, recursive: boolean) => void;
 export type TProtoMode = "none" | "uxp" | "advanced" | "all";
-export type TStylingArgs = [KeyPath, TNodeType, boolean, boolean]
+export type TStylingArgs = [KeyPath, TNodeType, boolean, boolean, number]

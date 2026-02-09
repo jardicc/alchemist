@@ -14,7 +14,7 @@ import {TSorActions} from "../../sorcerer/sorActions";
 import {sorReducer} from "../../sorcerer/sorReducer";
 import {ListenerClass} from "../classes/Listener";
 import {TFilterState} from "../components/FilterButton";
-import {KeyPath} from "../components/react-json-tree/types";
+import {KeyPath} from "../components/react-json-tree-2/types";
 
 export type TAllActions = TActions | TAtnActions | TSorActions;
 
@@ -79,7 +79,7 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 					} else if (operation === "addContinuous" || operation === "subtractContinuous") {
 						const view = getDescriptorsListView({inspector: state});
 						const lastSelectedItemIndex = view.map(item => item.id).indexOf(state.settings.lastSelectedItem ?? "n/a");
-						const thisItemIndex = view.map(item => item.id).indexOf(uuid as string);
+						const thisItemIndex = view.map(item => item.id).indexOf(uuid!);
 						if (lastSelectedItemIndex !== -1 && thisItemIndex !== -1) {
 							const ids: string[] = [];
 							for (let i = Math.min(lastSelectedItemIndex, thisItemIndex), end = Math.max(lastSelectedItemIndex, thisItemIndex); i <= end; i++) {
@@ -192,10 +192,10 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 					const selectedByID = state.descriptors.filter(d => (action.payload.includes(d.id) && !d.locked));
 					// remove by crc instead of ID. 
 					const crcs = Array.from(new Set(selectedByID.map(d => d.crc)));
-					draft.descriptors = state.descriptors.filter(d => (crcs.includes(d.crc) === false || d.locked));
+					draft.descriptors = state.descriptors.filter(d => (!crcs.includes(d.crc) || d.locked));
 
 				} else if (state.settings.groupDescriptors === "none") {
-					draft.descriptors = state.descriptors.filter(d => (action.payload.includes(d.id) === false || d.locked));
+					draft.descriptors = state.descriptors.filter(d => (!action.payload.includes(d.id) || d.locked));
 				}
 			});
 			break;
@@ -320,7 +320,7 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 				}));
 
 				function disableAllNonMain() {
-					map.forEach(item => item.assign("off"));
+					map.forEach(item => { item.assign("off"); });
 				}
 
 				if (subType === "main") {

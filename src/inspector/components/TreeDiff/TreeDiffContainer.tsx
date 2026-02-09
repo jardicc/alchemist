@@ -7,7 +7,7 @@ import React, {Component} from "react";
 import {stringify} from "javascript-stringify";
 import {getItemString} from "./getItemString";
 import "./TreeDiffContainer.less";
-import {JSONTree} from "../react-json-tree";
+import {JSONTree} from "../react-json-tree-2";
 import {diff} from "jsondiffpatch";
 import {labelRenderer, shouldExpandNode} from "../sharedTreeView";
 import {IDescriptor, TGenericViewType} from "../../model/types";
@@ -16,7 +16,7 @@ import {TabPanel} from "../Tabs/TabListPanel";
 import {VisualDiffTab} from "../VisualDiff";
 import {TreePath} from "../TreePath";
 import {Dispatch} from "redux";
-import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree/types";
+import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree-2/types";
 
 function stringifyAndShrink(val: any, isWideLayout = false) {
 	if (val === null) {return "null";}
@@ -35,11 +35,11 @@ function prepareDelta(value: any) {
 		const res: any = {};
 		for (const key in value) {
 			if (key !== "_t") {
-				if (key[0] === "_" && !value[key.substr(1)]) {
+				if (key.startsWith("_") && !value[key.substr(1)]) {
 					res[key.substr(1)] = value[key];
 				} else if (value["_" + key]) {
 					res[key] = [value["_" + key][0], value[key][0]];
-				} else if (!value["_" + key] && key[0] !== "_") {
+				} else if (!value["_" + key] && !key.startsWith("_")) {
 					res[key] = value[key];
 				}
 			}

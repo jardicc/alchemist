@@ -5,14 +5,14 @@ import {getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescri
 import React, {Component, Key} from "react";
 import "./TreeContentContainer.less";
 import {getItemString} from "./TreeDiff/getItemString";
-import {JSONTree} from "./react-json-tree";
+import {JSONTree} from "./react-json-tree-2";
 import {TProtoMode, TGenericViewType} from "../model/types";
 import {labelRenderer, shouldExpandNode} from "./sharedTreeView";
 import {TabList} from "./Tabs/TabList";
 import {TabPanel} from "./Tabs/TabListPanel";
 import {TreePath} from "./TreePath";
 import SP from "react-uxp-spectrum";
-import {KeyPath, TLabelRenderer} from "./react-json-tree/types";
+import {KeyPath, TLabelRenderer} from "./react-json-tree-2/types";
 
 class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 
@@ -39,7 +39,7 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 				type="search"
 				placeholder="Filter..."
 				value={this.props.search}
-				onInput={(e) => this.props.onSetSearch(e.target?.value ?? "")}
+				onInput={(e) => { this.props.onSetSearch(e.target?.value ?? ""); }}
 			/>
 		);
 	};
@@ -63,16 +63,16 @@ class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 							{(content === undefined || content === null) ?
 								<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
 								:
-								<JSONTree
-									expandClicked={this.expandClicked}
-									labelRenderer={this.labelRenderer}
-									shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
-									data={content}
-									getItemString={this.getItemString} // shows object content shortcut
-									hideRoot={true}
-									sortObjectKeys={true}
-									protoMode={protoMode}
-								/>
+									<JSONTree
+										expandClicked={this.expandClicked}
+										labelRenderer={this.labelRenderer}
+										shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
+										data={content}
+										getItemString={this.getItemString} // shows object content shortcut
+										hideRoot={true}
+										sortObjectKeys={true}
+										protoMode={protoMode}
+									/>
 							}
 						</div>
 					</div>

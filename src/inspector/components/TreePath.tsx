@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import "./TreePath.less";
 import {renderPath} from "./sharedTreeView";
 import SP from "react-uxp-spectrum";
-import {KeyPath} from "./react-json-tree/types";
+import {KeyPath} from "./react-json-tree-2/types";
 
 export interface ITreePathProps {
 	autoExpandLevels: number
@@ -11,13 +11,13 @@ export interface ITreePathProps {
 	hideLevels?: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+ 
 export interface ITreePathDispatch {
 	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
 	onSetAutoExpandLevel: (level: number) => void
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+ 
 interface ITreePathState { }
 
 export type TTreePath = ITreePathProps & ITreePathDispatch

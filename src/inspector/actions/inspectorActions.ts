@@ -5,7 +5,7 @@ import {
 } from "../model/types";
 import {TFilterState} from "../components/FilterButton";
 import {IRootState} from "../../shared/store";
-import {KeyPath} from "../components/react-json-tree/types";
+import {KeyPath} from "../components/react-json-tree-2/types";
 
 
 

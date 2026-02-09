@@ -4,6 +4,7 @@ import getCollectionEntries from "./getCollectionEntries";
 import JSONNode from "./JSONNode";
 import ItemRange from "./ItemRange";
 import type {CircularCache, CommonInternalProps, TNodeType, TStylingArgs} from "./types";
+//import {treeItemsRegister} from "./index";
 
 /**
  * Renders nested values (eg. objects, arrays, lists, etc.)
@@ -68,7 +69,7 @@ function renderChildNodes(
 			);
 		} else {
 			const {key, value} = entry;
-			const isCircular = circularCache.indexOf(value) !== -1;
+			const isCircular = circularCache.includes(value);
 
 			childNodes.push(
 				<JSONNode
@@ -142,7 +143,7 @@ export default function JSONNestedNode(props: Props) {
 		[expandable, expanded],
 	);
 
-	const handleClickWrapped = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+	const handleClickWrapped = (e: React.MouseEvent<HTMLDivElement>): void => {
 		if (expandable) {
 			let path = [...keyPath];
 			path = path.reverse();
@@ -172,16 +173,10 @@ export default function JSONNestedNode(props: Props) {
 		createItemString(data, collectionLimit),
 		keyPath,
 	);
-	const stylingArgs: TStylingArgs = [keyPath, nodeType, expanded, expandable];
+	const stylingArgs: TStylingArgs = [keyPath, nodeType, expanded, expandable, level];
 
-	return hideRoot ? (
-		<li {...styling("rootNode", ...stylingArgs)}>
-			<ul {...styling("rootNodeChildren", ...stylingArgs)}>
-				{renderedChildren}
-			</ul>
-		</li>
-	) : (
-		<li {...styling("nestedNode", ...stylingArgs)}>
+	const itemNode = (
+		<li className="treeRow" {...styling("nestedNode", ...stylingArgs)}>
 			{expandable && (
 				<JSONArrow
 					styling={styling}
@@ -202,9 +197,19 @@ export default function JSONNestedNode(props: Props) {
 			>
 				{renderedItemString}
 			</span>
-			<ul {...styling("nestedNodeChildren", ...stylingArgs)}>
-				{renderedChildren}
-			</ul>
 		</li>
+	);
+
+	//treeItemsRegister.push(itemNode);
+
+	return hideRoot ? (
+		<>
+			{...renderedChildren ?? []}
+		</>
+	) : (
+		<>
+			{itemNode}
+			{...renderedChildren ?? []}
+		</>
 	);
 }

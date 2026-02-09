@@ -1,6 +1,6 @@
 import React from "react";
 import {IconPinDown} from "../../shared/components/icons";
-import {KeyPath, TShouldExpandNode} from "./react-json-tree/types";
+import {KeyPath, TShouldExpandNode} from "./react-json-tree-2/types";
 
 
 export const labelRenderer = ([key, ...rest]: KeyPath, onInspectPath: (path: KeyPath, mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
@@ -18,7 +18,7 @@ export const labelRenderer = ([key, ...rest]: KeyPath, onInspectPath: (path: Key
 			{(noPin) ? null : <span
 				className="treeItemPin"
 				onClick={
-					() => onInspectPath([...[key, ...rest].reverse()], "add")
+					() => { onInspectPath([...[key, ...rest].reverse()], "add"); }
 				}
 			>
 				<IconPinDown />

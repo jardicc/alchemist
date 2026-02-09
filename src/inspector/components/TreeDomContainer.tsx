@@ -6,12 +6,12 @@ import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} 
 import React, {Component} from "react";
 import "./TreeDomContainer.less";
 import {getItemString} from "./TreeDiff/getItemString";
-import {JSONTree} from "./react-json-tree";
+import {JSONTree} from "./react-json-tree-2";
 import {TProtoMode} from "../model/types";
 import {labelRenderer, shouldExpandNode} from "./sharedTreeView";
 import {cloneDeep} from "lodash";
 import {TreePath} from "./TreePath";
-import {KeyPath, TExpandClicked, TLabelRenderer} from "./react-json-tree/types";
+import {KeyPath, TExpandClicked, TLabelRenderer} from "./react-json-tree-2/types";
 
 export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
 

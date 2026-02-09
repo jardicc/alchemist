@@ -21,11 +21,11 @@ export default function ItemRange(props: Props) {
 	}, [expanded]);
 
 	return expanded ? (
-		<div {...styling("itemRange", expanded)}>
+		<div data-label="ItemRange" {...styling("itemRange", expanded)}>
 			{renderChildNodes(props, from, to)}
 		</div>
 	) : (
-		<div {...styling("itemRange", expanded)} onClick={handleClick}>
+		<div data-label="ItemRange" {...styling("itemRange", expanded)} onClick={handleClick}>
 			<JSONArrow
 				nodeType={nodeType}
 				styling={styling}

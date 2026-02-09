@@ -18,6 +18,7 @@ export default function JSONNode({
 	value,
 	valueRenderer,
 	isCustomNode,
+	level=0,
 	...rest
 }: Props) {
 	const nodeType = isCustomNode(value) ? "Custom" : objType(value);
@@ -31,6 +32,7 @@ export default function JSONNode({
 		styling,
 		value,
 		valueRenderer,
+		level,
 	};
 
 	const nestedNodeProps = {
@@ -38,6 +40,7 @@ export default function JSONNode({
 		...simpleNodeProps,
 		data: value,
 		isCustomNode,
+		level,
 	};
 
 	switch (nodeType) {

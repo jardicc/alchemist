@@ -4,7 +4,7 @@ import {TFilterState} from "../components/FilterButton";
 import {IActionSetUUID, IATNConverterState} from "../../atnDecoder/atnModel";
 import {ISorcererState} from "../../sorcerer/sorModel";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
-import {KeyPath} from "../components/react-json-tree/types";
+import {KeyPath} from "../components/react-json-tree-2/types";
 
 export type TDialogOptions = "silent" | "dontDisplay" | "display";
 export type TModalBehavior = "wait" | "execute" | "fail"

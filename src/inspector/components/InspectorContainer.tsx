@@ -19,6 +19,7 @@ import {IconCog, IconX} from "../../shared/components/icons";
 import {LeftColumnContainer} from "./LeftColumn";
 import {SplitPane} from "../../shared/components/split-pane-fork/SplitPane";
 import {Pane} from "../../shared/components/split-pane-fork/Pane";
+import {VirtualList} from "./VirtualList";
 
 
 
@@ -70,7 +71,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		return (
 			<div className={`Inspector ${fontSizeSettings}`} key={fontSizeSettings}>
 				<div className="descriptorsColumns">
-					<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => setColumnSize(px, "left")} minSize={210}>
+					<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => { setColumnSize(px, "left"); }} minSize={210}>
 						<Pane className="leftPane">
 							<LeftColumnContainer />
 						</Pane>
@@ -81,7 +82,7 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 									className="split"
 									split="vertical"
 									defaultSize={visible ? rightColumnWidthPx : 0}
-									onDragFinished={(px) => setColumnSize(px, "right")}
+									onDragFinished={(px) => { setColumnSize(px, "right"); }}
 									maxSize={visible ? undefined : 0}
 									minSize={visible ? 200 : 0}
 									primary={"second"}
@@ -109,6 +110,17 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 											<TabPanel id="reference" title="Code" noPadding={true}>
 												<GeneratedCodeContainer />
 											</TabPanel>
+											<TabPanel id="virtualScrollTest" title="virtualScrollTest" noPadding={true}>
+												
+												<virtual-list overScanCount={10} containerHeight={300} itemHeight={16} style={{height: "100%", width: "100%"}}>
+													{Array.from({length: 3000}, (_, i) => (
+														<div key={i} style={{height: "16px", lineHeight: 0, borderBottom: "1px solid #333", padding: 0}}>
+															Item {i + 1}
+														</div>
+													))}
+												</virtual-list>
+												
+											</TabPanel>
 											<TabPanel id="dispatcher" title="Dispatch" marginRight={true}>
 												<DispatcherContainer />
 											</TabPanel>
@@ -132,6 +144,8 @@ class Inspector extends React.Component<TInspector, IInspectorState> {
 		);
 	}
 }
+
+customElements.define("virtual-list", VirtualList);
 
 type TInspector = IInspectorProps & IInspectorDispatch
 
