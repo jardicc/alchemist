@@ -97,7 +97,7 @@ export function JSONTree({
 		},
 	);
 	const endTime = performance.now();
-	console.log(`JSONTree flattening time: ${endTime - startTime}ms, ${descriptors.length} descriptors`);
+	//console.log(`JSONTree flattening time: ${endTime - startTime}ms, ${descriptors.length} descriptors`);
 
 	return (
 		<ul {...styling("tree")}>
