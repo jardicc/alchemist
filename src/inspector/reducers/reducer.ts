@@ -19,7 +19,6 @@ import {KeyPath} from "../components/react-json-tree-2/types";
 export type TAllActions = TActions | TAtnActions | TSorActions;
 
 export const inspectorReducer = (state: IInspectorState = Settings.importState() || getInitialState(), action: TAllActions): IInspectorState => {
-	console.log(action/*JSON.stringify(action, null, "\t")*/);
 	switch (action.type) {
 		// ALCHEMIST
 		case "SET_MODE_TAB": {
@@ -150,14 +149,6 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 			});
 			break;
 		}
-		/*
-		case "CLEAR_NON_EXISTENT": {
-			state = produce(state, draft => {
-				console.log("empty");
-			});
-			break;
-		}
-		*/
 		case "LOCK_DESC": {
 			state = produce(state, draft => {
 				if (state.settings.groupDescriptors === "strict") {
@@ -251,26 +242,6 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 			});
 			break;
 		}
-		/*
-		case "EXPORT_SELECTED_DESC": {
-			state = produce(state, draft => {
-				console.log("empty");
-			});
-			break;
-		}
-		case "EXPORT_ALL_DESC": {
-			state = produce(state, draft => {
-				console.log("empty");
-			});
-			break;
-		}
-		case "EXPORT_STATE": {
-			state = produce(state, draft => {
-				console.log("empty");
-			});
-			break;
-		}
-		*/
 		case "SET_FILTER_STATE": {
 			state = produce(state, draft => {
 				const {payload: {state: filterState, subType, type}} = action;
@@ -448,7 +419,7 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 					case "content": draftPart = draft.inspector.content; break;
 					case "difference": draftPart = draft.inspector.difference; break;
 					case "dom": draftPart = draft.inspector.dom; break;
-					default: console.warn("You shouldn't see this line logged in console");
+					default: throw new Error("Unknown type in SET_EXPANDED_PATH_ACTION");
 				}
 
 				if (type === "dom") {
@@ -489,7 +460,6 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 					}
 				}
 			});
-			console.log(state.inspector);
 			break;
 		}
 		case "SET_SEARCH_TERM_ACTION": {
@@ -709,6 +679,5 @@ export const inspectorReducer = (state: IInspectorState = Settings.importState()
 	state = atnReducer(state, action);
 	state = sorReducer(state, action);
 
-	Settings.saveSettings(state);
 	return state;
 };
