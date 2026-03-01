@@ -124,6 +124,7 @@ The Alchemist plugin for Photoshop was developed with support from the **Adobe F
 ### Individual donors
 
 - Cameron McEfee (€1,000) - <https://cameronmcefee.com/>
+- Tony Kuyper ($200) - <https://goodlight.us/panels-and-videos.html>
 - Pierre Guidera - <https://github.com/pierreGuidera>
 - and other anonymous developers
 
