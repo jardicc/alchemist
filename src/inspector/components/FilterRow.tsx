@@ -17,6 +17,22 @@ export const FilterRow: React.FC<TFilterRow> = (props) => {
 		setListState([...(initialItems || []), ...newList]);
 	};
 
+	// Auto-fetch list on mount when the selected value isn't among the static initialItems.
+	// This happens when FilterRow remounts (e.g. because it is defined as an inline sub-component)
+	// and the user had previously selected a numeric document/layer ID.
+	React.useEffect(() => {
+		if (!onUpdateList) {return;}
+		const flatValues = (initialItems ?? []).flatMap(item =>
+			"group" in item ? item.data.map((d: IPropertyItem) => d.value) : [(item as IPropertyItem).value],
+		);
+		const currentValues = Array.isArray(content) ? content : [content];
+		const hasUnresolved = currentValues.some(v => !flatValues.includes(v));
+		if (hasUnresolved) {
+			onUpdateList().then(newList => setList(newList ?? []));
+		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	let newContent: (string | number)[];
 	if (!Array.isArray(content)) {
 		newContent = [content];
