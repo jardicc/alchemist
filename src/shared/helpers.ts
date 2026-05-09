@@ -32,3 +32,7 @@ export function isValidRef(ref: any): boolean {
 	const res = action.validateReference(ref);
 	return res;
 }
+
+export async function sleep(ms: number): Promise<void> {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
