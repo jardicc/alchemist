@@ -8,48 +8,42 @@ import {IEntrypointPanel, ISnippet} from "../sorModel";
 import {getActivePanel, getAllSnippets} from "../sorSelectors";
 import {assignSnippetToPanelAction, setPanelAction, TSetPanelActionPayload} from "../sorActions";
 import {TActions} from "../../inspector/actions/inspectorActions";
-export class Panel extends React.Component<TPanelContainer, IPanelContainerState> {
-	constructor(props: TPanelContainer) {
-		super(props);
-	}
+export const Panel: React.FC<TPanelContainer> = (props) => {
+	const {activePanel, onSet, snippets, onAssignSnippet} = props;
 
-	public override render(): React.ReactNode {
-		const {activePanel, onSet, snippets, onAssignSnippet} = this.props;
-
-		if (!activePanel) {return null;}
-		//debugger;
-		return (
-			<div className="PanelContainerContainer" key="panelPanel">
-				<div className="row">
-					Label: <SP.Textfield
-						value={activePanel.label.default}
-						onInput={e => onSet(activePanel.$$$uuid, {label: {default: e?.target?.value ?? ""}})}
-					/>
-				</div>
-				<div className="row">
-					ID: <SP.Textfield
-						value={activePanel.id}
-						onInput={e => onSet(activePanel.$$$uuid, {id: e?.target?.value ?? ""})}
-					/>
-				</div>
-				<div className="row">
-					Assigned snippet(s):
-				</div>
-				<div className="column">
-					{snippets.map((checkboxItem, index) => (
-						<div className="row" key={index}>
-							<SP.Checkbox
-								key={checkboxItem.$$$uuid}
-								checked={activePanel.$$$snippetUUIDs.includes(checkboxItem.$$$uuid) ? true : undefined}
-								onChange={e => onAssignSnippet(activePanel.$$$uuid, e?.target?.checked ? "on" : "off", checkboxItem.$$$uuid)}
-							>{checkboxItem.label.default}</SP.Checkbox>
-						</div>
-					))}
-				</div>
+	if (!activePanel) {return null;}
+	//debugger;
+	return (
+		<div className="PanelContainerContainer" key="panelPanel">
+			<div className="row">
+				Label: <SP.Textfield
+					value={activePanel.label.default}
+					onInput={e => onSet(activePanel.$$$uuid, {label: {default: e?.target?.value ?? ""}})}
+				/>
 			</div>
-		);
-	}
-}
+			<div className="row">
+				ID: <SP.Textfield
+					value={activePanel.id}
+					onInput={e => onSet(activePanel.$$$uuid, {id: e?.target?.value ?? ""})}
+				/>
+			</div>
+			<div className="row">
+				Assigned snippet(s):
+			</div>
+			<div className="column">
+				{snippets.map((checkboxItem, index) => (
+					<div className="row" key={index}>
+						<SP.Checkbox
+							key={checkboxItem.$$$uuid}
+							checked={activePanel.$$$snippetUUIDs.includes(checkboxItem.$$$uuid) ? true : undefined}
+							onChange={e => onAssignSnippet(activePanel.$$$uuid, e?.target?.checked ? "on" : "off", checkboxItem.$$$uuid)}
+						>{checkboxItem.label.default}</SP.Checkbox>
+					</div>
+				))}
+			</div>
+		</div>
+	);
+};
 
 type TPanelContainer = IPanelContainerProps & IPanelContainerDispatch
 

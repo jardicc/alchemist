@@ -209,7 +209,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 			data.offset += 4; // txtu key
 			data.offset += 4; // block length
 			const nameLen = data.getUint16(undefined, true); // filename length. Character length not bytes
-			console.log(nameLen);
+			//console.log(nameLen);
 			data.offset += 1; // x00 prefix
 
 			// filename as Unicode
@@ -217,7 +217,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 			const sub = new Uint8Array(data.buffer.slice(data.offset, end));
 
 			const decoded: string = decode(sub as any, "utf16be").replace(/\0/g, "");
-			console.log(decoded);
+			//console.log(decoded);
 			data.offset = end;
 
 			// unicode terminator
@@ -312,7 +312,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 
 				if (listType === "UnFl") {
 					unit = charIDToStringID[data.readASCII(undefined, 4)];
-					console.log(unit);
+					//console.log(unit);
 					const unitCount = data.getUint32();
 
 
@@ -325,7 +325,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 					throw new Error(`Unkown data type "${listType}" in ObjectArray "ObAr`);
 				}
 
-				console.log(unit);
+				//console.log(unit);
 				list[key] = {
 					_unit: unit,
 					list: valuesList,

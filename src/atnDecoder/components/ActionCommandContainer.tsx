@@ -10,29 +10,15 @@ import {IActionCommandUUID, IActionItemUUID, IActionSetUUID, TSelectActionOperat
 import {IconCheck, IconEmpty} from "../../shared/components/icons";
 import PS from "photoshop";
 
-export class ActionCommand extends React.Component<TActionCommand, IActionCommandState> {
-	constructor(props: TActionCommand) {
-		super(props);
-	}
+export const ActionCommand: React.FC<TActionCommand> = (props) => {
+	const combinedUUID: [string, string, string] = [props.parentSet.__uuid__, props.parentAction.__uuid__, props.actionCommand.__uuid__];
 
-	private get combinedUUID(): [string, string, string] {
-		const {parentSet, parentAction, actionCommand} = this.props;
-		const res: [string, string, string] = [parentSet.__uuid__, parentAction.__uuid__, actionCommand.__uuid__];
-		return res;
-	}
+	const isSelected: boolean = !!props.selectedItems.find(item =>
+		item[0] === combinedUUID[0] &&
+		item[1] === combinedUUID[1] &&
+		item[2] === combinedUUID[2]);
 
-	private get isSelected(): boolean {
-		const {selectedItems} = this.props;
-		const uuids = this.combinedUUID;
-		const found = selectedItems.find(item =>
-			item[0] === uuids[0] &&
-			item[1] === uuids[1] &&
-			item[2] === uuids[2]);
-
-		return !!found;
-	}
-
-	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
 
 		let operation: TSelectActionOperation = "replace";
@@ -42,32 +28,30 @@ export class ActionCommand extends React.Component<TActionCommand, IActionComman
 		} else if (e.shiftKey) {
 			operation = "addContinuous";
 		} else if (e.ctrlKey || e.metaKey) {
-			if (this.isSelected) {
+			if (isSelected) {
 				operation = "subtract";
 			} else {
 				operation = "add";
 			}
 		}
-		this.props.setSelectedItem(this.combinedUUID, operation);
+		props.setSelectedItem(combinedUUID, operation);
 	};
 
-	public override render(): React.ReactNode {
-		const {actionCommand} = this.props;
+	const {actionCommand} = props;
 
-		return (
-			<div className="ActionCommandContainer">
-				<div className={"wrap " + (this.isSelected ? "selected" : "")} onClick={this.select}>
-					<div className="checkmark">
-						{actionCommand.enabled ? <IconCheck /> : <IconEmpty />}
-					</div>
-					<span className="title">
-						{PS.core.translateUIString(actionCommand.commandName)}
-					</span>
+	return (
+		<div className="ActionCommandContainer">
+			<div className={"wrap " + (isSelected ? "selected" : "")} onClick={select}>
+				<div className="checkmark">
+					{actionCommand.enabled ? <IconCheck /> : <IconEmpty />}
 				</div>
+				<span className="title">
+					{PS.core.translateUIString(actionCommand.commandName)}
+				</span>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 
 type TActionCommand = IActionCommandProps & IActionCommandDispatch
 

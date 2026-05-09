@@ -50,126 +50,39 @@ function prepareDelta(value: any) {
 	return value;
 }
 
-class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
+const TreeDiff: React.FC<TTreeDiff> = (props) => {
+	const {left, right, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys} = props;
 
-	constructor(props: TTreeDiff) {
-		super(props);
+	const [data, setData] = React.useState<any>(() => diff(left, right));
+	const prevLeft = React.useRef(left);
+	const prevRight = React.useRef(right);
 
-		this.state = {
-			data: {},
-		};
-	}
+	React.useEffect(() => {
+		if (prevLeft.current !== left && prevRight.current !== right) {
+			setData(diff(left, right));
+		}
+		prevLeft.current = left;
+		prevRight.current = right;
+	}, [left, right]);
 
-	private labelRenderer: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
-		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
+	const labelRendererFn: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
+		return labelRenderer([key, ...rest], props.onInspectPath, nodeType, expanded, expandable);
 	};
 
-	public override componentDidMount(): void {
-		this.updateData();
-	}
-
-	public override componentDidUpdate(prevProps: TTreeDiff): void {
-		if (prevProps.left !== this.props.left && prevProps.right !== this.props.right) {
-			this.updateData();
-		}
-	}
-
-	public updateData(): void {
-		// this magically fixes weird React error, where it can't find a node in tree
-		// if we set `delta` as JSONTree data right away
-		// https://github.com/alexkuz/redux-devtools-inspector/issues/17
-
-		const {left, right} = this.props;
-
-		this.setState({data: diff(left, right)});
-	}
-
-	private expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
-		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.state.data);
+	const expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
+		props.onSetExpandedPath(keyPath, expanded, recursive, data);
 	};
 
-	public override render(): React.ReactNode {
-		const {...props} = this.props;
-
-		const {left, right, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys} = this.props;
-		const delta = this.state.data;
-
-		let jsonTreeContent: JSX.Element;
-
-		if (!delta && left && right) {
-			jsonTreeContent = (
-				<div className="TreeDiff">
-					<div className="message">Content is same</div>
-				</div>
-			);
-		} else if (!this.state.data) {
-			jsonTreeContent = (
-				<div className="TreeDiff">
-					<div className="stateDiffEmpty message">
-						(states are equal or missing)
-					</div>
-				</div>
-			);
-		} else {
-			jsonTreeContent = (<div className="TreeDiffBox">
-				{left && right ? <JSONTree {...props} // node module
-					shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
-					expandClicked={this.expandClicked}
-					labelRenderer={this.labelRenderer}
-					data={this.state.data}
-					getItemString={this.getItemString}
-					valueRenderer={this.valueRenderer}
-					postprocessValue={prepareDelta}
-					isCustomNode={Array.isArray as any}
-					hideRoot={true}
-					sortObjectKeys={true}
-				/> : <div className="message">Select 2 descriptors. (Hold Ctrl + click on descriptor item)</div>}
-			</div>);
-		}
-
-
-		return (
-			<TabList className="tabsView" activeKey={this.props.viewType} onChange={this.props.onSetView}>
-				<TabPanel id="tree" title="Tree" noPadding={true}>
-					<div className="TreeDiff">
-						<TreePath
-							autoExpandLevels={autoExpandLevels}
-							onInspectPath={onInspectPath}
-							onSetAutoExpandLevel={onSetAutoExpandLevel}
-							path={path}
-							allowInfinityLevels={true}
-						/>
-						{jsonTreeContent}
-					</div>
-				</TabPanel>
-				<TabPanel id="raw" title="Raw" >
-					<TreePath
-						autoExpandLevels={autoExpandLevels}
-						onInspectPath={onInspectPath}
-						onSetAutoExpandLevel={onSetAutoExpandLevel}
-						path={path}
-						allowInfinityLevels={false}
-						hideLevels={true}
-					/>
-					<VisualDiffTab
-						left={this.props.leftRawDiff}
-						right={this.props.rightRawDiff}
-					/>
-				</TabPanel>
-			</TabList>
-		);
-	}
-
-	public getItemString = (type: any, data: any): JSX.Element => (
-		getItemString(type, data, this.props.isWideLayout, true)
+	const getItemStringFn = (type: any, payload: any): JSX.Element => (
+		getItemString(type, payload, props.isWideLayout, true)
 	);
 
-	public valueRenderer = (raw: any, value: any) => {
-		const { /*styling,*/ isWideLayout} = this.props;
+	const valueRenderer = (raw: any, value: any) => {
+		const {isWideLayout} = props;
 
 		function renderSpan(name: string, body: React.ReactNode) {
 			return (
-				<span key={name} /*{...styling(["diff", name])}*/ className={"diffHighlight" + " " + name}>{body}</span>
+				<span key={name} className={"diffHighlight" + " " + name}>{body}</span>
 			);
 		}
 
@@ -177,13 +90,13 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 			switch (value.length) {
 				case 1:
 					return (
-						<span /*{...styling("diffWrap")}*/ className="diffWrap">
+						<span className="diffWrap">
 							{renderSpan("diffAdd", stringifyAndShrink(value[0], isWideLayout))}
 						</span>
 					);
 				case 2:
 					return (
-						<span /*{...styling("diffWrap")}*/ className="diffWrap">
+						<span className="diffWrap">
 							{renderSpan("diffUpdateFrom", stringifyAndShrink(value[0], isWideLayout))}
 							{renderSpan("diffUpdateArrow", " => ")}
 							{renderSpan("diffUpdateTo", stringifyAndShrink(value[1], isWideLayout))}
@@ -191,7 +104,7 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 					);
 				case 3:
 					return (
-						<span /*{...styling("diffWrap")}*/ className="diffWrap">
+						<span className="diffWrap">
 							{renderSpan("diffRemove", stringifyAndShrink(value[0]))}
 						</span>
 					);
@@ -200,7 +113,73 @@ class TreeDiff extends Component<TTreeDiff, ITreeDiffState> {
 
 		return raw;
 	};
-}
+
+	const delta = data;
+
+	let jsonTreeContent: JSX.Element;
+
+	if (!delta && left && right) {
+		jsonTreeContent = (
+			<div className="TreeDiff">
+				<div className="message">Content is same</div>
+			</div>
+		);
+	} else if (!data) {
+		jsonTreeContent = (
+			<div className="TreeDiff">
+				<div className="stateDiffEmpty message">
+					(states are equal or missing)
+				</div>
+			</div>
+		);
+	} else {
+		jsonTreeContent = (<div className="TreeDiffBox">
+			{left && right ? <JSONTree {...props}
+				shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
+				expandClicked={expandClicked}
+				labelRenderer={labelRendererFn}
+				data={data}
+				getItemString={getItemStringFn}
+				valueRenderer={valueRenderer}
+				postprocessValue={prepareDelta}
+				isCustomNode={Array.isArray as any}
+				hideRoot={true}
+				sortObjectKeys={true}
+			/> : <div className="message">Select 2 descriptors. (Hold Ctrl + click on descriptor item)</div>}
+		</div>);
+	}
+
+	return (
+		<TabList className="tabsView" activeKey={props.viewType} onChange={props.onSetView}>
+			<TabPanel id="tree" title="Tree" noPadding={true}>
+				<div className="TreeDiff">
+					<TreePath
+						autoExpandLevels={autoExpandLevels}
+						onInspectPath={onInspectPath}
+						onSetAutoExpandLevel={onSetAutoExpandLevel}
+						path={path}
+						allowInfinityLevels={true}
+					/>
+					{jsonTreeContent}
+				</div>
+			</TabPanel>
+			<TabPanel id="raw" title="Raw" >
+				<TreePath
+					autoExpandLevels={autoExpandLevels}
+					onInspectPath={onInspectPath}
+					onSetAutoExpandLevel={onSetAutoExpandLevel}
+					path={path}
+					allowInfinityLevels={false}
+					hideLevels={true}
+				/>
+				<VisualDiffTab
+					left={props.leftRawDiff}
+					right={props.rightRawDiff}
+				/>
+			</TabPanel>
+		</TabList>
+	);
+};
 
 
 type TTreeDiff = ITreeDiffProps & ITreeDiffDispatch

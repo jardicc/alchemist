@@ -22,13 +22,9 @@ import {cloneDeep} from "lodash";
 import {GetList} from "../classes/GetList";
 
 
-export class Filters extends React.Component<TFilters, IState> {
-	constructor(props: TFilters) {
-		super(props);
-	}
-
-	private MainCategory = (): JSX.Element => {
-		const {activeRef, filterBySelectedReferenceType} = this.props;
+export const Filters: React.FC<TFilters> = (props) => {
+	const MainCategory = (): JSX.Element => {
+		const {activeRef, filterBySelectedReferenceType} = props;
 		return (
 			<FilterRowContainer
 				header="Type:"
@@ -39,13 +35,13 @@ export class Filters extends React.Component<TFilters, IState> {
 				doNotCollapse={true}
 				filterBy={filterBySelectedReferenceType}
 				value={activeRef.type}
-				onSelect={(value) => this.props.onSetSelectedReferenceType(value as TTargetReference)}
+				onSelect={(value) => props.onSetSelectedReferenceType(value as TTargetReference)}
 			/>
 		);
 	};
 
-	private Document = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const Document = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 
 		switch (activeRef.type) {
 			case "channel":
@@ -71,8 +67,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		}
 	};
 
-	private Layer = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const Layer = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 
 		// only these three classes support layer in reference
 		if ((activeRef.type !== "layer" && activeRef.type !== "channel" && activeRef.type !== "path")) {
@@ -103,8 +99,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private Channel = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const Channel = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "channel") {return null;}
 
 		return (
@@ -122,8 +118,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private Path = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const Path = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "path") {return null;}
 
 		return (
@@ -141,8 +137,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private ActionSet = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const ActionSet = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "actions") {return null;}
 
 		return (
@@ -160,8 +156,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private ActionItem = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const ActionItem = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "actions" || activeRef.actionSetID === "none") {return null;}
 
 		const id = activeRef.actionSetID;
@@ -181,8 +177,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private Command = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const Command = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "actions" ||
 			activeRef.actionID === "none" ||
 			activeRef.actionSetID === "none"
@@ -205,8 +201,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private Guide = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const Guide = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "guide") {return null;}
 
 		return (
@@ -224,8 +220,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private History = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const History = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "historyState") {return null;}
 
 		return (
@@ -243,8 +239,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private Snapshots = (): JSX.Element | null => {
-		const {activeRef, onSetTargetReference} = this.props;
+	const Snapshots = (): JSX.Element | null => {
+		const {activeRef, onSetTargetReference} = props;
 		if (activeRef.type !== "snapshotClass") {return null;}
 
 		return (
@@ -262,8 +258,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private Property = (): JSX.Element | null => {
-		const {activeRef, activeRefProperties, onSetProperty} = this.props;
+	const Property = (): JSX.Element | null => {
+		const {activeRef, activeRefProperties, onSetProperty} = props;
 
 		switch (activeRef.type) {
 			case "generator":
@@ -293,8 +289,8 @@ export class Filters extends React.Component<TFilters, IState> {
 		);
 	};
 
-	private ListenerFilter = (): JSX.Element | null => {
-		switch (this.props.activeRef.type) {
+	const ListenerFilter = (): JSX.Element | null => {
+		switch (props.activeRef.type) {
 			case "listener":
 			case "notifier":
 				return <ListenerFilterContainer />;
@@ -302,26 +298,24 @@ export class Filters extends React.Component<TFilters, IState> {
 		}
 	};
 
-	public override render(): JSX.Element {
-		return (
-			<>
-				<this.MainCategory />
-				<this.ListenerFilter />
-				<this.Document />
-				<this.History />
-				<this.Snapshots />
-				<this.Guide />
-				<this.Channel />
-				<this.Path />
-				<this.Layer />
-				<this.ActionSet />
-				<this.ActionItem />
-				<this.Command />
-				<this.Property />
-			</>
-		);
-	}
-}
+	return (
+		<>
+			<MainCategory />
+			<ListenerFilter />
+			<Document />
+			<History />
+			<Snapshots />
+			<Guide />
+			<Channel />
+			<Path />
+			<Layer />
+			<ActionSet />
+			<ActionItem />
+			<Command />
+			<Property />
+		</>
+	);
+};
 
 interface IState {
 }

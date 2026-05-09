@@ -19,17 +19,8 @@ export interface ITabPanelState {
 }
 
 export type TTabPanel = ITabPanelProps & ITabPanelDispatch
-export type TTabPanelComponent = React.Component<TTabPanel, ITabPanelState>
+export type TTabPanelComponent = React.FC<TTabPanel>
 
-export class TabPanel extends React.Component<TTabPanel, ITabPanelState> {
-	constructor(props: TTabPanel) {
-		super(props);
-
-		this.state = {
-		};
-	}
-
-	public override render(): React.ReactNode {
-		return this.props.children;
-	}
-}
+export const TabPanel: React.FC<TTabPanel> = (props) => {
+	return <>{props.children}</>;
+};

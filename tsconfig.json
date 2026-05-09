@@ -40,7 +40,13 @@
 		"node_modules",
 		"/dist",
 		"/installer",
-		"*.bak/*.*"
+		"*.bak/*.*",
+		"**/__tests__/**",
+		"**/_tests_/**",
+		"**/*.test.ts",
+		"**/*.test.tsx",
+		"**/*.spec.ts",
+		"**/*.spec.tsx"
 	]
 }
 

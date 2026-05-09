@@ -7,43 +7,39 @@ import {IListenerNotifierFilter} from "../model/types";
 import SP from "react-uxp-spectrum";
 
 
-export class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> {
-	constructor(props: TListenerFilter) {
-		super(props);
-	}
-
-	private setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.onSetNotifierListenerFilter({
+export const ListenerFilter: React.FC<TListenerFilter> = (props) => {
+	const setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
+		props.onSetNotifierListenerFilter({
 			exclude: e.currentTarget.value.split(";"),
 		});
 	};
 
-	private setInclude = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.props.onSetNotifierListenerFilter({
+	const setInclude = (e: React.ChangeEvent<HTMLInputElement>) => {
+		props.onSetNotifierListenerFilter({
 			include: e.currentTarget.value.split(";"),
 		});
 	};
 
-	private onSetFilterEventsType = (e: any) => {
-		this.props.onSetNotifierListenerFilter({
+	const onSetFilterEventsType = (e: any) => {
+		props.onSetNotifierListenerFilter({
 			type: e.target.value,
 		});
 	};
 
-	private renderFilterFields = (): JSX.Element | null => {
-		const {exclude, include, type} = this.props.settings;
+	const renderFilterFields = (): JSX.Element | null => {
+		const {exclude, include, type} = props.settings;
 		switch (type) {
 			case "exclude": {
 				return (
 					<>
-						<div className="label">Exclude: </div><SP.Textfield onInput={this.setExclude as any} value={exclude.join(";")} className="input" quiet />
+						<div className="label">Exclude: </div><SP.Textfield onInput={setExclude as any} value={exclude.join(";")} className="input" quiet />
 					</>
 				);
 			}
 			case "include": {
 				return (
 					<>
-						<div className="label">Include: </div><SP.Textfield onInput={this.setInclude as any} value={include.join(";")} className="input" quiet />
+						<div className="label">Include: </div><SP.Textfield onInput={setInclude as any} value={include.join(";")} className="input" quiet />
 					</>
 				);
 			}
@@ -51,37 +47,35 @@ export class ListenerFilter extends React.Component<TListenerFilter, Record<stri
 		return null;
 	};
 
-	public override render(): JSX.Element {
-		const {type} = this.props.settings;
-		return (
-			<>
-				<div className="filter excludeIncludeDropdownRow">
-					<div className="label">Filter:</div>
-					<SP.Dropdown quiet={true}>
-						<SP.Menu slot="options" onChange={this.onSetFilterEventsType}>
-							{
-								[
-									{value: "none", label: "None"},
-									{value: "include", label: "Include"},
-									{value: "exclude", label: "Exclude"},
-								].map(item => (
-									<SP.MenuItem
-										key={item.value}
-										value={item.value}
-										selected={type === item.value ? true : undefined}
-									>{item.label}</SP.MenuItem>
-								))
-							}
-						</SP.Menu>
-					</SP.Dropdown>
-				</div>
-				<div className="excludeIncludeInput">
-					{this.renderFilterFields()}
-				</div>
-			</>
-		);
-	}
-}
+	const {type} = props.settings;
+	return (
+		<>
+			<div className="filter excludeIncludeDropdownRow">
+				<div className="label">Filter:</div>
+				<SP.Dropdown quiet={true}>
+					<SP.Menu slot="options" onChange={onSetFilterEventsType}>
+						{
+							[
+								{value: "none", label: "None"},
+								{value: "include", label: "Include"},
+								{value: "exclude", label: "Exclude"},
+							].map(item => (
+								<SP.MenuItem
+									key={item.value}
+									value={item.value}
+									selected={type === item.value ? true : undefined}
+								>{item.label}</SP.MenuItem>
+							))
+						}
+					</SP.Menu>
+				</SP.Dropdown>
+			</div>
+			<div className="excludeIncludeInput">
+				{renderFilterFields()}
+			</div>
+		</>
+	);
+};
 
 
 type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch

@@ -13,7 +13,7 @@ describe("unicode string", () => {
 		const data = new DataViewCustom([0, 0, 0, 2, 1, 89, 0, 0], false);
 		const res = data.getUtf16String();
 
-		console.log(Buffer.from(res));
+		//console.log(Buffer.from(res));
 
 		expect(res).toBe("ř");
 	});

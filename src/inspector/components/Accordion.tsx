@@ -22,38 +22,27 @@ interface IAccordionState {
 
 export type TAccordion = IAccordionProps & IAccordionDispatch
 
-export class Accordion extends React.Component<TAccordion, IAccordionState> {
-	constructor(props: TAccordion) {
-		super(props);
+export const Accordion: React.FC<TAccordion> = (props) => {
+	const isExpanded = typeof props.expanded === "boolean"
+		? props.expanded
+		: props.expanded.includes(props.id);
 
-		this.state = {
-		};
-	}
-
-	private get isExpanded() {
-		if (typeof this.props.expanded === "boolean") {
-			return this.props.expanded;
-		} else {
-			return this.props.expanded.includes(this.props.id);
-		}
-	}
-
-	private onHeaderClick = () => {
-		this.props.onChange(this.props.id, !this.isExpanded);
+	const onHeaderClick = () => {
+		props.onChange(props.id, !isExpanded);
 	};
 
-	private renderHeader = (): JSX.Element => {
+	const renderHeader = (): JSX.Element => {
 		return (
-			<div className="header" onClick={this.onHeaderClick}>
-				{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
-				<span className="title">{this.props.header}</span>
+			<div className="header" onClick={onHeaderClick}>
+				{isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
+				<span className="title">{props.header}</span>
 			</div>
 		);
 	};
 
-	private renderContent = (): React.ReactNode => {
-		const {children} = this.props;
-		if (!this.isExpanded) {
+	const renderContent = (): React.ReactNode => {
+		const {children} = props;
+		if (!isExpanded) {
 			return null;
 		}
 
@@ -64,13 +53,10 @@ export class Accordion extends React.Component<TAccordion, IAccordionState> {
 		);
 	};
 
-	public override render(): JSX.Element {
-
-		return (
-			<div className={"Accordion " + (this.props.className || "")}>
-				{this.renderHeader()}
-				{this.renderContent()}
-			</div>
-		);
-	}
-}
+	return (
+		<div className={"Accordion " + (props.className || "")}>
+			{renderHeader()}
+			{renderContent()}
+		</div>
+	);
+};

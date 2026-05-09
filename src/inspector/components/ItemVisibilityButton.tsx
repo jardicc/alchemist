@@ -10,31 +10,22 @@ import {IconEye} from "../../shared/components/icons";
 
 
 
-class ItemVisibilityButton extends React.Component<TItemVisibilityButton, Record<string, unknown>> {
-	constructor(props: TItemVisibilityButton) {
-		super(props);
-	}
+const ItemVisibilityButton: React.FC<TItemVisibilityButton> = (props) => {
+	const visible = props.visibleItems.includes(props.value);
 
-	private get visible(): boolean {
-		return this.props.visibleItems.includes(this.props.value);
-	}
-
-	private toggle = () => {
-		this.props.onChangeVisibility(this.props.value, this.visible ? "remove" : "add");
+	const toggle = () => {
+		props.onChangeVisibility(props.value, visible ? "remove" : "add");
 	};
 
-
-	public override render(): JSX.Element {
-		return (
-			<div
-				className={"ItemVisibilityButton " + (this.visible ? "visible" : "hidden")}
-				onClick={(e) => {e.stopPropagation(); this.toggle();}}
-			>
-				<IconEye />
-			</div>
-		);
-	}
-}
+	return (
+		<div
+			className={"ItemVisibilityButton " + (visible ? "visible" : "hidden")}
+			onClick={(e) => {e.stopPropagation(); toggle();}}
+		>
+			<IconEye />
+		</div>
+	);
+};
 
 
 type TItemVisibilityButton = IItemVisibilityButtonProps & IItemVisibilityButtonDispatch
@@ -64,14 +55,8 @@ const ItemVisibilityButtonContainer = connect(mapStateToProps, mapDispatchToProp
 
 
 // I don't know how to pass container as a prop and do typings correctly but I can do that with simple component }:-)
-export class ItemVisibilityButtonWrap extends React.Component<IAccDropPostFixProps>{
-	constructor(props: IAccDropPostFixProps) {
-		super(props);
-	}
-
-	public override render(): React.ReactNode {
-		return (
-			<ItemVisibilityButtonContainer value={this.props.value as TTargetReference} />
-		);
-	}
-}
+export const ItemVisibilityButtonWrap: React.FC<IAccDropPostFixProps> = (props) => {
+	return (
+		<ItemVisibilityButtonContainer value={props.value as TTargetReference} />
+	);
+};

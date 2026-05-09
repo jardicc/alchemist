@@ -21,13 +21,9 @@ import {PanelContainer} from "./PanelContainer";
 import {SorcererBuilder} from "../classes/Sorcerer";
 
 
-class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
-	constructor(props: TSorcerer) {
-		super(props);
-	}
-
-	private menuItemActiveClass = (item: IEntrypointCommand | IEntrypointPanel | ISnippet) => {
-		const {selectedItem} = this.props;
+const Sorcerer: React.FC<TSorcerer> = (props) => {
+	const menuItemActiveClass = (item: IEntrypointCommand | IEntrypointPanel | ISnippet) => {
+		const {selectedItem} = props;
 		if (!selectedItem) {
 			return "";
 		}
@@ -38,74 +34,72 @@ class Sorcerer extends React.Component<TSorcerer, ISorcererState> {
 		return "";
 	};
 
-	private renderItems = (items: IEntrypointPanel[] | IEntrypointCommand[] | ISnippet[]) => {
-		const {selectItem} = this.props;
+	const renderItems = (items: IEntrypointPanel[] | IEntrypointCommand[] | ISnippet[]) => {
+		const {selectItem} = props;
 		const res = items.map((p, index) => (
-			<div key={index} className={"menuItem " + this.menuItemActiveClass(p)} onClick={() => selectItem(p.type, p.$$$uuid)}>
+			<div key={index} className={"menuItem " + menuItemActiveClass(p)} onClick={() => selectItem(p.type, p.$$$uuid)}>
 				{p.label.default || "(none)"}
 			</div>
 		));
 		return res;
 	};
 
-	private export = () => {
+	const exportFn = () => {
 		SorcererBuilder.exportPreset();
 	};
 
-	private import = async () => {
+	const importFn = async () => {
 		const data = await SorcererBuilder.importPreset();
 		if (!data) {
 			return;
 		}
-		this.props.setPreset(data);
+		props.setPreset(data);
 	};
 
-	public override render(): JSX.Element {
-		const {fontSizeSettings, commands, snippets, panels, selectItem, make, remove, selectedItem, manifestCode, enableRemove} = this.props;
+	const {fontSizeSettings, commands, snippets, panels, selectItem, make, remove, selectedItem, manifestCode, enableRemove} = props;
 
-		return (
-			<div className={`SorcererContainer ${fontSizeSettings}`} key={fontSizeSettings}>
-				<div className="info spread flex">
-					<div className="tree">
-						<div className={"menuItem general " + (this.props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
+	return (
+		<div className={`SorcererContainer ${fontSizeSettings}`} key={fontSizeSettings}>
+			<div className="info spread flex">
+				<div className="tree">
+					<div className={"menuItem general " + (props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
 
-						<div className="menuItemHeader"><span> Snippets</span><div className="button" title="Add new" onClick={() => make("snippet")}>+</div></div>
-						{this.renderItems(snippets)}
+					<div className="menuItemHeader"><span> Snippets</span><div className="button" title="Add new" onClick={() => make("snippet")}>+</div></div>
+					{renderItems(snippets)}
 
-						<div className="menuItemHeader"><span> Commands</span><div className="button" title="Add new" onClick={() => make("command")}>+</div></div>
-						{this.renderItems(commands)}
+					<div className="menuItemHeader"><span> Commands</span><div className="button" title="Add new" onClick={() => make("command")}>+</div></div>
+					{renderItems(commands)}
 
-						<div className="menuItemHeader"><span> Panels</span><div className="button" title="Add new" onClick={() => make("panel")}>+</div></div>
-						{this.renderItems(panels)}
+					<div className="menuItemHeader"><span> Panels</span><div className="button" title="Add new" onClick={() => make("panel")}>+</div></div>
+					{renderItems(panels)}
 
-					</div>
-					<div className="noShrink details">
-						<GeneralContainer />
-						<SnippetContainer />
-						<CommandContainer />
-						<PanelContainer />
-					</div>
-					<div className="manifest">
-						<SP.Textarea className="manifestCode" value={manifestCode} />
-					</div>
 				</div>
-				<div className="buttonBar">
-					<div className={"button"} onClick={() => SorcererBuilder.buildPlugin()}>Build plugin</div>
-					<div className={"button " + (enableRemove ? "" : "disallowed")}
-						onClick={() => {
-							const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
-							remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
-						}}>Remove selected</div>
-					<div className="spread"></div>
-					<div className={"button"} onClick={this.export}>Export as preset</div>
-					<div className={"button"} onClick={this.import}>Import preset</div>
+				<div className="noShrink details">
+					<GeneralContainer />
+					<SnippetContainer />
+					<CommandContainer />
+					<PanelContainer />
 				</div>
-
-				<FooterContainer parentPanel="atnConverter" />
+				<div className="manifest">
+					<SP.Textarea className="manifestCode" value={manifestCode} />
+				</div>
 			</div>
-		);
-	}
-}
+			<div className="buttonBar">
+				<div className={"button"} onClick={() => SorcererBuilder.buildPlugin()}>Build plugin</div>
+				<div className={"button " + (enableRemove ? "" : "disallowed")}
+					onClick={() => {
+						const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
+						remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
+					}}>Remove selected</div>
+				<div className="spread"></div>
+				<div className={"button"} onClick={exportFn}>Export as preset</div>
+				<div className={"button"} onClick={importFn}>Import preset</div>
+			</div>
+
+			<FooterContainer parentPanel="atnConverter" />
+		</div>
+	);
+};
 
 
 

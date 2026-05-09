@@ -18,21 +18,14 @@ import SP from "react-uxp-spectrum";
 import uxp from "uxp";
 import os from "os";
 
-class Dispatcher extends React.Component<TDispatcher, Record<string, unknown>> {
-
-	constructor(props: TDispatcher) {
-		super(props);
-
-		this.state = {};
-	}
-
-	private change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		this.props.setDispatcherValue(e.currentTarget.value);
+const Dispatcher: React.FC<TDispatcher> = (props) => {
+	const change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		props.setDispatcherValue(e.currentTarget.value);
 	};
 
-	private send = async () => {
+	const send = async () => {
 		try {
-			const snippet = this.props.snippet;
+			const snippet = props.snippet;
 			const startTime = Date.now();
 			let data: any;
 			try {
@@ -74,29 +67,26 @@ class Dispatcher extends React.Component<TDispatcher, Record<string, unknown>> {
 				renameMode: false,
 				playAbleData: data,
 				title: "Dispatched",
-				descriptorSettings: this.props.settings.initialDescriptorSettings,
+				descriptorSettings: props.settings.initialDescriptorSettings,
 			};
 
 			//this.props.setLastHistoryID;
-			this.props.onAddDescriptor(result);
+			props.onAddDescriptor(result);
 		} catch (e) {
 			console.error(e);
 		}
 	};
 
-
-	public override render(): JSX.Element {
-		return (
-			<div className="Dispatcher">
-				<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
-				<div className="textareaWrap">
-					<SP.Textarea value={this.props.snippet} onInput={this.change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
-				</div>
-				<div className="button" onClick={this.send}>Send</div>
+	return (
+		<div className="Dispatcher">
+			<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
+			<div className="textareaWrap">
+				<SP.Textarea value={props.snippet} onInput={change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
 			</div>
-		);
-	}
-}
+			<div className="button" onClick={send}>Send</div>
+		</div>
+	);
+};
 
 
 type TDispatcher = IDispatcherProps & IDispatcherDispatch

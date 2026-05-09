@@ -10,37 +10,31 @@ import {setSelectAction, setSnippetAction, TSetSnippetActionPayload} from "../so
 import {ISnippet} from "../sorModel";
 import {getActiveSnippet} from "../sorSelectors";
 
-export class Snippet extends React.Component<TSnippetContainer, ISnippetContainerState> {
-	constructor(props: TSnippetContainer) {
-		super(props);
-	}
+export const Snippet: React.FC<TSnippetContainer> = (props) => {
+	const {activeSnippet, onSet} = props;
 
-	public override render(): React.ReactNode {
-		const {activeSnippet, onSet} = this.props;
+	if (activeSnippet === null) {return null;}
 
-		if (activeSnippet === null) {return null;}
-
-		return (
-			<div className="SnippetContainerContainer" key="snippetPanel">
-				<div className="row">
-					Name: <SP.Textfield value={activeSnippet.label.default} onInput={e => onSet(activeSnippet.$$$uuid, {label: {default: e.target?.value ?? ""}})} />
-				</div>
-				<div className="row">
-					Version: <SP.Textfield value={activeSnippet.version} onInput={e => onSet(activeSnippet.$$$uuid, {version: e.target?.value})} />
-				</div>
-				<div className="row">
-					Author: <SP.Textfield value={activeSnippet.author} onInput={e => onSet(activeSnippet.$$$uuid, {author: e.target?.value})} />
-				</div>
-				<div className="row">
-					Code:
-				</div>
-				<div className="row codeWrap">
-					<SP.Textarea className="snippetCode" value={activeSnippet.code} onInput={e => onSet(activeSnippet.$$$uuid, {code: e.target?.value})} />
-				</div>
+	return (
+		<div className="SnippetContainerContainer" key="snippetPanel">
+			<div className="row">
+				Name: <SP.Textfield value={activeSnippet.label.default} onInput={e => onSet(activeSnippet.$$$uuid, {label: {default: e.target?.value ?? ""}})} />
 			</div>
-		);
-	}
-}
+			<div className="row">
+				Version: <SP.Textfield value={activeSnippet.version} onInput={e => onSet(activeSnippet.$$$uuid, {version: e.target?.value})} />
+			</div>
+			<div className="row">
+				Author: <SP.Textfield value={activeSnippet.author} onInput={e => onSet(activeSnippet.$$$uuid, {author: e.target?.value})} />
+			</div>
+			<div className="row">
+				Code:
+			</div>
+			<div className="row codeWrap">
+				<SP.Textarea className="snippetCode" value={activeSnippet.code} onInput={e => onSet(activeSnippet.$$$uuid, {code: e.target?.value})} />
+			</div>
+		</div>
+	);
+};
 
 type TSnippetContainer = ISnippetContainerProps & ISnippetContainerDispatch
 

@@ -19,34 +19,23 @@ interface IVisualDiffState {
 
 export type TVisualDiff = IVisualDiffProps & IVisualDiffDispatch
 
-export class VisualDiffTab extends Component<TVisualDiff, IVisualDiffState> {
+export const VisualDiffTab: React.FC<TVisualDiff> = (props) => {
+	const elRef = React.useRef<HTMLDivElement | null>(null);
 
-	constructor(props: TVisualDiff) {
-		super(props);
-
-		this.state = {
-		};
+	const {left, right} = props;
+	if (!left || !right) {
+		return <>{"n/a"}</>;
 	}
 
-	private el: HTMLDivElement | null = null;
-
-	public override render(): React.ReactNode {
-
-		let __html;
-		const {left, right} = this.props;
-		if (left && right) {
-			const delta = diff(left, right);
-			if (!delta) {
-				return "Content is same";
-			}
-			__html = formatters.html.format(delta, left);
-
-			const element = <div className="VisualDiff" dangerouslySetInnerHTML={{__html}} ref={(ref) => this.el = ref} />;
-			formatters.html.hideUnchanged(this.el, 500);
-			//jsondiffpatch.formatters.html.showUnchanged(true, this.el, 10);
-
-			return element;
-		}
-		return "n/a";
+	const delta = diff(left, right);
+	if (!delta) {
+		return <>{"Content is same"}</>;
 	}
-}
+	const __html = formatters.html.format(delta, left);
+
+	const element = <div className="VisualDiff" dangerouslySetInnerHTML={{__html}} ref={(ref) => { elRef.current = ref; }} />;
+	formatters.html.hideUnchanged(elRef.current, 500);
+	//jsondiffpatch.formatters.html.showUnchanged(true, elRef.current, 10);
+
+	return element;
+};

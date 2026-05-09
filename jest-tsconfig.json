@@ -19,7 +19,6 @@
 		],
 		"typeRoots": [
 			"./node_modules/@types",
-			"./node_modules/@adobe/cc-ext-uxp-types",
 			"./src/types",
 			"./src/inspector/model"
 		],

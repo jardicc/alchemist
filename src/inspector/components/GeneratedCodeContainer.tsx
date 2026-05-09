@@ -2,33 +2,22 @@ import {connect, MapDispatchToPropsFunction} from "react-redux";
 import {IRootState} from "../../shared/store";
 import {getGeneratedCode} from "../selectors/inspectorCodeSelectors";
 
-import React, {Component} from "react";
+import React from "react";
 import "./GeneratedCodeContainer.less";
 import {Dispatch} from "redux";
 import SP from "react-uxp-spectrum";
 
 
-export class GeneratedCode extends Component<TGeneratedCode, Record<string, unknown>> {
-
-	constructor(props: TGeneratedCode) {
-		super(props);
-
-		this.state = {
-		};
-	}
-
-	public override render(): React.ReactNode {
-
-		return (
-			<div className="GeneratedCode">
-				<SP.Textarea
-					className="generatedCodeBox"
-					value={this.props.code}
-				/>
-			</div>
-		);
-	}
-}
+export const GeneratedCode: React.FC<TGeneratedCode> = (props) => {
+	return (
+		<div className="GeneratedCode">
+			<SP.Textarea
+				className="generatedCodeBox"
+				value={props.code}
+			/>
+		</div>
+	);
+};
 
 
 type TGeneratedCode = IGeneratedCodeProps & IGeneratedCodeDispatch

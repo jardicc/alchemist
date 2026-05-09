@@ -15,89 +15,81 @@ import SP from "react-uxp-spectrum";
 import {KeyPath, TLabelRenderer} from "./react-json-tree-2/types";
 
 
-export class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
-
-	constructor(props: TTreeContent) {
-		super(props);
-	}
-
-	private labelRenderer: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable): JSX.Element => {
-		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
+export const TreeContent: React.FC<TTreeContent> = (props) => {
+	const labelRendererFn: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable): JSX.Element => {
+		return labelRenderer([key, ...rest], props.onInspectPath, nodeType, expanded, expandable);
 	};
 
-	public getItemString = (type: any, data: any): JSX.Element => {
+	const getItemStringFn = (type: any, data: any): JSX.Element => {
 		return getItemString(type, data, true, false);
 	};
 
-	private expandClicked = (keyPath: KeyPath, expanded: boolean, recursive: boolean) => {
-		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
+	const expandClicked = (keyPath: KeyPath, expanded: boolean, recursive: boolean) => {
+		props.onSetExpandedPath(keyPath, expanded, recursive, props.content);
 	};
 
-	private renderSearchField = () => {
+	const renderSearchField = () => {
 		return (
 			<SP.Textfield
 				className="filterContent"
 				type="search"
 				placeholder="Filter..."
-				value={this.props.search}
-				onInput={(e) => { this.props.onSetSearch(e.target?.value ?? ""); }}
+				value={props.search}
+				onInput={(e) => { props.onSetSearch(e.target?.value ?? ""); }}
 			/>
 		);
 	};
 
-
-	public override render(): React.ReactNode {
-		const {content, protoMode, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys, viewType, onSetView} = this.props;
-		//console.log(content);
-		return (
-			<TabList className="tabsView" activeKey={viewType} onChange={onSetView} postFix={this.renderSearchField()} >
-				<TabPanel id="tree" title="Tree" noPadding={true}>
-					<div className="TreeContent">
-						<TreePath
-							autoExpandLevels={autoExpandLevels}
-							onInspectPath={onInspectPath}
-							onSetAutoExpandLevel={onSetAutoExpandLevel}
-							path={path}
-							allowInfinityLevels={true}
-						/>
-						<div className="TreeContentBox">
-							{(content === undefined || content === null) ?
-								<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
-								:
-									<JSONTree
-										expandClicked={this.expandClicked}
-										labelRenderer={this.labelRenderer}
-										shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
-										data={content}
-										getItemString={this.getItemString} // shows object content shortcut
-										hideRoot={true}
-										sortObjectKeys={true}
-										protoMode={protoMode}
-									/>
-							}
-						</div>
+	const {content, protoMode, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys, viewType, onSetView} = props;
+	//console.log(content);
+	return (
+		<TabList className="tabsView" activeKey={viewType} onChange={onSetView} postFix={renderSearchField()} >
+			<TabPanel id="tree" title="Tree" noPadding={true}>
+				<div className="TreeContent">
+					<TreePath
+						autoExpandLevels={autoExpandLevels}
+						onInspectPath={onInspectPath}
+						onSetAutoExpandLevel={onSetAutoExpandLevel}
+						path={path}
+						allowInfinityLevels={true}
+					/>
+					<div className="TreeContentBox">
+						{(content === undefined || content === null) ?
+							<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
+							:
+								<JSONTree
+									expandClicked={expandClicked}
+									labelRenderer={labelRendererFn}
+									shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
+									data={content}
+									getItemString={getItemStringFn} // shows object content shortcut
+									hideRoot={true}
+									sortObjectKeys={true}
+									protoMode={protoMode}
+								/>
+						}
 					</div>
-				</TabPanel>
-				<TabPanel id="raw" title="Raw" >
-					<div className="textareaWrap">
-						<TreePath
-							autoExpandLevels={autoExpandLevels}
-							onInspectPath={onInspectPath}
-							onSetAutoExpandLevel={onSetAutoExpandLevel}
-							path={path}
-							allowInfinityLevels={false}
-							hideLevels={true}
-						/>
-						<SP.Textarea
-							className="rawCode"
-							value={content ? JSON.stringify(content, null, 2).replaceAll("$$$noPin_", "") : ""}
-						/>
-					</div>
-				</TabPanel>
-			</TabList>
-		);
-	}
-}
+				</div>
+			</TabPanel>
+			<TabPanel id="raw" title="Raw" >
+				<div className="textareaWrap">
+					<TreePath
+						autoExpandLevels={autoExpandLevels}
+						onInspectPath={onInspectPath}
+						onSetAutoExpandLevel={onSetAutoExpandLevel}
+						path={path}
+						allowInfinityLevels={false}
+						hideLevels={true}
+					/>
+					<SP.Textarea
+						className="rawCode"
+						value={content ? JSON.stringify(content, null, 2).replaceAll("$$$noPin_", "") : ""}
+					/>
+				</div>
+			</TabPanel>
+		</TabList>
+	);
+};
 
 type TTreeContent = ITreeContentProps & ITreeContentDispatch
 

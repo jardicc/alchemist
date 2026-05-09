@@ -20,39 +20,32 @@ interface ITabListState {
 
 export type TTabList = ITabListProps & ITabListDispatch
 
-export class TabList extends React.Component<TTabList, ITabListState> {
-	constructor(props: TTabList) {
-		super(props);
-
-		this.state = {
-		};
-	}
-
-	private renderTabs = (): JSX.Element | null => {
-		const {activeKey} = this.props;
-		if (Array.isArray(this.props.children)) {
+export const TabList: React.FC<TTabList> = (props) => {
+	const renderTabs = (): JSX.Element | null => {
+		const {activeKey} = props;
+		if (Array.isArray(props.children)) {
 			return (
 				<div className="tabRow">
-					{this.props.children.map(item => (
+					{props.children.map(item => (
 						<div
 							className={"tabHeader" + ((item.props.id === activeKey) ? " active" : "")}
 							key={item.props.id}
 							onClick={() => {
 								console.log(item.props.id);
-								this.props.onChange(item.props.id);
+								props.onChange(item.props.id);
 							}}
 							style={item.props.marginRight && {marginRight: "auto"}}
 						>{item.props.title}</div>
 					))}
-					{this.props.postFix}
+					{props.postFix}
 				</div>
 			);
 		}
 		return null;
 	};
 
-	private renderTabContent = (): React.ReactNode => {
-		const {activeKey, children} = this.props;
+	const renderTabContent = (): React.ReactNode => {
+		const {activeKey, children} = props;
 
 		let clsName = "tabContent ";
 
@@ -70,13 +63,10 @@ export class TabList extends React.Component<TTabList, ITabListState> {
 		return <div className={clsName}>not array</div>;
 	};
 
-	public override render(): JSX.Element {
-
-		return (
-			<div className={"TabList " + (this.props.className || "")}>
-				{this.renderTabs()}
-				{this.renderTabContent()}
-			</div>
-		);
-	}
-}
+	return (
+		<div className={"TabList " + (props.className || "")}>
+			{renderTabs()}
+			{renderTabContent()}
+		</div>
+	);
+};

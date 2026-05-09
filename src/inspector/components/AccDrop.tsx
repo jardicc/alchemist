@@ -42,60 +42,39 @@ interface IAccDropState {
 
 export type TAccDrop = IAccDropProps & IAccDropDispatch
 
-export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
+export const AccDrop: React.FC<TAccDrop> = (props) => {
+	const searchRef = React.useRef<HTMLDivElement>(null);
+	const popoverRef = React.useRef<HTMLDivElement>(null);
 
-	private searchRef: React.RefObject<HTMLDivElement>;
-	private popoverRef: React.RefObject<HTMLDivElement>;
+	const [searchValue, setSearchValue] = React.useState("");
+	const [open, setOpen] = React.useState(false);
 
-	constructor(props: TAccDrop) {
-		super(props);
-
-		this.searchRef = React.createRef();
-		this.popoverRef = React.createRef();
-
-
-		this.state = {
-			searchValue: "",
-			open: false,
-		};
-	}
-
-
-	private headerClick = async () => {
-		const opened = this.popoverRef.current?.hasAttribute("open") ?? false;
-		if (this.props.onHeaderClick) {
-			await this.props.onHeaderClick(this.props.id, opened);
+	const headerClick = async () => {
+		const opened = popoverRef.current?.hasAttribute("open") ?? false;
+		if (props.onHeaderClick) {
+			await props.onHeaderClick(props.id, opened);
 		}
 
 		if (!opened) {
 			// brute force checking because there is no event for closing
 			const intervalID = setInterval(() => {
-				const opened = this.popoverRef.current?.hasAttribute("open") ?? false;
-				if (!opened) {
-					this.setState({
-						...this.state,
-						open: false,
-					});
+				const stillOpened = popoverRef.current?.hasAttribute("open") ?? false;
+				if (!stillOpened) {
+					setOpen(false);
 					clearInterval(intervalID);
 				}
 			}, 100);
 		}
 
-		this.setState({
-			...this.state,
-			open: !opened,
-		});
-
-
-
+		setOpen(!opened);
 	};
 
 
-	private getLabel = () => {
+	const getLabel = () => {
 
 		const newList: IPropertyItem[] = [];
 
-		this.props.items.forEach(item => {
+		props.items.forEach(item => {
 			if ("group" in item) {
 				newList.push(...item.data);
 			} else {
@@ -104,7 +83,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		});
 
 		const labels = newList.filter(item =>
-			this.props.selected.includes(item.value),
+			props.selected.includes(item.value),
 		).map(item => item.label);
 
 		if (!labels.length) {
@@ -119,30 +98,30 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 
 	};
 
-	private renderGroup = (group: IPropertyGroup) => {
+	const renderGroup = (group: IPropertyGroup) => {
 		return (
 			<React.Fragment key={"f_" + group.group}>
 				<div className="groupHeader" key={"g_" + group.group}>{group.groupLabel}</div>
 				<div key={"gw_" + group.group} className="groupWrapper">
 					{
-						group.data.map(item => this.renderItem(item))
+						group.data.map(item => renderItem(item))
 					}
 				</div>
 			</React.Fragment>
 		);
 	};
 
-	private renderSearchField = () => {
-		if (!this.props.showSearch) {
+	const renderSearchField = () => {
+		if (!props.showSearch) {
 			return null;
 		}
-		if (!this.state.open) {
+		if (!open) {
 			return null;
 		}
 		return (
 			<div className="searchField">
 				<SP.Textfield
-					value={this.state.searchValue}
+					value={searchValue}
 					className="filterContent"
 					type="search"
 					//placeholder="Filter..."
@@ -154,20 +133,17 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 					}}
 					onInput={(e) => {
 						console.log(e);
-						this.setState({
-							...this.state,
-							searchValue: (e.target?.value ?? ""),
-						});
+						setSearchValue(e.target?.value ?? "");
 					}}
 				/>
 			</div>
 		);
 	};
 
-	private renderItem = (item: IPropertyItem) => {
-		const {id, selected, onSelect, showSearch, ItemPostFix, icons} = this.props;
+	const renderItem = (item: IPropertyItem) => {
+		const {id, selected, onSelect, showSearch, ItemPostFix, icons} = props;
 		if (
-			showSearch && item.label.toLocaleLowerCase().includes((this.state.searchValue.toLocaleLowerCase())) ||
+			showSearch && item.label.toLocaleLowerCase().includes((searchValue.toLocaleLowerCase())) ||
 			!showSearch
 		) {
 			return (
@@ -180,7 +156,7 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 							onSelect(id, item.value, true);
 						} else {
 							onSelect(id, item.value);
-							this.popoverRef.current?.removeAttribute("open");
+							popoverRef.current?.removeAttribute("open");
 						}
 
 					}}
@@ -201,18 +177,18 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		return null;
 	};
 
-	private renderContent = (): React.ReactNode => {
-		const {id, items} = this.props;
+	const renderContent = (): React.ReactNode => {
+		const {id, items} = props;
 
 		return (
-			<div key={"c_" + id} className={"container " + (this.props.className || "")}>
+			<div key={"c_" + id} className={"container " + (props.className || "")}>
 				{
 					items.map((item) => {
 						if ("group" in item) {
 							//return null;
-							return this.renderGroup(item);
+							return renderGroup(item);
 						} else {
-							return this.renderItem(item);
+							return renderItem(item);
 						}
 					})
 				}
@@ -220,79 +196,41 @@ export class AccDrop extends React.Component<TAccDrop, IAccDropState> {
 		);
 	};
 
+	const {id, className, header, headerPostFix} = props;
 
+	return (
+		<div className="AccDrop">
+			<div key={"h_" + id} className={"header " + (className || "")}>
 
-	public override render(): JSX.Element {
-		const {id, className, header, headerPostFix} = this.props;
+				{
 
-		return (
-			<div className="AccDrop">
-				<div key={"h_" + id} className={"header " + (className || "")}>
+					<sp-popover
+						ref={popoverRef}
+						placement="auto"
+						alignment="auto"
+						open={open ? "open" : undefined}
+						class="popover"
 
-					{
-						/*
-					<sp-overlay class="overlay" onClick={() => {console.log("aaa");}}>
-						<div slot="trigger" className="triggerGroup" onMouseDown={this.headerClick}>
-							<div className="titleType">{header}</div>
-							<div className="title">{this.getLabel()}</div>
+					>
+						<div className="popoverContent">
+							{renderContent()}
 
-							{this.renderSearchField()}
 						</div>
+						<div slot="anchor" className="triggerGroup" onClick={headerClick}>
+							<div className="titleType">{header}</div>
+							<div className="title">{getLabel()}</div>
 
-						<sp-popover
-							ref={this.popoverRef}
-							onClose={() => console.log("Close")}
-							placement="auto"
-							alignment="auto"
-							slot="click"
-							//open={this.state.open ? "open" : undefined}
-							class="popover"
-						>
-							<div className="popoverContent">
-								{this.renderContent()}
+							{renderSearchField()}
+						</div>
+					</sp-popover>
 
-							</div>
-						</sp-popover>
-					</sp-overlay>
-					*/
-					}
-					{
+				}
 
-						<sp-popover
-							ref={this.popoverRef}
-							placement="auto"
-							alignment="auto"
-							open={this.state.open ? "open" : undefined}
-							class="popover"
-
-						>
-							<div className="popoverContent">
-								{this.renderContent()}
-
-							</div>
-							<div slot="anchor" className="triggerGroup" onClick={this.headerClick}>
-								<div className="titleType">{header}</div>
-								<div className="title">{this.getLabel()}</div>
-
-								{this.renderSearchField()}
-							</div>
-						</sp-popover>
-
-					}
-
-					{headerPostFix}
-					{
-						/*
-							<div className="chevron">
-								{this.state.expanded ? <IconChevronTop /> : <IconChevronBottom />}
-							</div>
-							*/
-					}
-				</div>
-
-
+				{headerPostFix}
 			</div>
 
-		);
-	}
-}
+
+		</div>
+
+	);
+};

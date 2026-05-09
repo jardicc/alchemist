@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import {render} from "@testing-library/react";
+import {render, within} from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 // Stub the redux-connected children so we can render <Filters /> in isolation
@@ -58,7 +58,7 @@ const baseProps = (over: Partial<any> = {}): any => ({
 });
 
 const subtypes = (container: HTMLElement): string[] =>
-	Array.from(container.querySelectorAll("[data-testid='filter-row']")).map(el =>
+	within(container).queryAllByTestId("filter-row").map(el =>
 		el.getAttribute("data-subtype") ?? "",
 	);
 

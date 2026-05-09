@@ -14,6 +14,7 @@ jest.mock("../TreePath", () => ({
 }));
 
 import {TreeDom} from "../TreeDomContainer";
+import {getItemString} from "../TreeDiff/getItemString";
 
 const baseProps = (overrides: Partial<any> = {}) => ({
 	path: ["root"],
@@ -46,8 +47,7 @@ describe("<TreeDom />", () => {
 	});
 
 	it("getItemString delegates to the shared item string helper", () => {
-		const dom = new TreeDom(baseProps() as any);
-		const out = dom.getItemString("Object", {a: 1});
+		const out = getItemString("Object", {a: 1}, true, false);
 		expect(React.isValidElement(out)).toBe(true);
 	});
 });

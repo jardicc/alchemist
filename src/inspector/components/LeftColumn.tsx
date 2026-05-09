@@ -36,30 +36,29 @@ import {filterNonExistent} from "../classes/filterNonExistent";
 import {FiltersContainer} from "./Filters";
 import {getGeneratedCode} from "../selectors/inspectorCodeSelectors";
 
-export class LeftColumn extends React.Component<TLeftColumn, IState> {
-	constructor(props: TLeftColumn) {
-		super(props);
-		this.marketplaceDialogRef = React.createRef();
-		this.clearMenuRef = React.createRef();
-	}
+export const LeftColumn: React.FC<TLeftColumn> = (props) => {
+	const marketplaceDialogRef = React.useRef<any>(null);
+	const clearMenuRef = React.useRef<any>(null);
+	const lastDescRef = React.useRef<HTMLDivElement>(null);
+	const wrapperDescRef = React.useRef<HTMLDivElement>(null);
 
-	private marketplaceDialogRef: React.RefObject<any>;
-	private clearMenuRef: React.RefObject<any>;
-	private lastDescRef: React.RefObject<HTMLDivElement> = React.createRef();
-	private wrapperDescRef: React.RefObject<HTMLDivElement> = React.createRef();
-
-	public override componentDidUpdate = (): void => {
-		const itemElement = this.lastDescRef?.current;
-		const wrapperElement = this.wrapperDescRef?.current;
+	const didMountRef = React.useRef(false);
+	React.useEffect(() => {
+		if (!didMountRef.current) {
+			didMountRef.current = true;
+			return;
+		}
+		const itemElement = lastDescRef.current;
+		const wrapperElement = wrapperDescRef.current;
 		if (!itemElement || !wrapperElement) {return;}
 		if (wrapperElement.scrollHeight - wrapperElement.offsetHeight - wrapperElement.scrollTop <= 20) {
-			itemElement.scrollIntoView();
+			itemElement.scrollIntoView(true);
 		}
-	};
+	});
 
-	private getDescriptor = async (): Promise<void> => {
-		const {activeRef} = this.props;
-		if (!this.props.addAllowed) {
+	const getDescriptor = async (): Promise<void> => {
+		const {activeRef} = props;
+		if (!props.addAllowed) {
 			return;
 		}
 		const result = await GetInfo.getAM(activeRef);
@@ -67,11 +66,11 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			NotificationManager.error("Please make sure that item you want to add exists in Photoshop", "Failed", 3500);
 			return;
 		}
-		this.props.onAddDescriptor(result);
+		props.onAddDescriptor(result);
 
 	};
 
-	public autoInspector = async (event: string, descriptor: any): Promise<void> => {
+	const autoInspector = async (event: string, descriptor: any): Promise<void> => {
 		if (event !== "select") {return;}
 		const startTime = Date.now();
 		const calculatedReference: ITargetReferenceAM = {
@@ -98,18 +97,17 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			selected: false,
 			title: GetInfo.generateTitle(originalReference, calculatedReference),
 			playAbleData: calculatedReference,
-			descriptorSettings: this.props.settings.initialDescriptorSettings,
+			descriptorSettings: props.settings.initialDescriptorSettings,
 		};
 
-		//this.props.setLastHistoryID;
-		this.props.onAddDescriptor(result);
+		props.onAddDescriptor(result);
 	};
 
 	/**
 	 * Listener to be attached to all Photoshop notifications.
 	 */
-	public listener = async (event: string, descriptor: any, spy = false): Promise<void> => {
-		if (this.props.settings.neverRecordActionNames.includes(event)) {
+	const listener = async (event: string, descriptor: any, spy = false): Promise<void> => {
+		if (props.settings.neverRecordActionNames.includes(event)) {
 			return;
 		}
 
@@ -143,27 +141,26 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 			renameMode: false,
 			playAbleData: descWithEvent,
 			title: (spy ? "[S] " : "") + GetInfo.generateTitle(originalReference, descWithEvent),
-			descriptorSettings: this.props.settings.initialDescriptorSettings,
+			descriptorSettings: props.settings.initialDescriptorSettings,
 		};
 
-		//this.props.setLastHistoryID;
-		this.props.onAddDescriptor(result);
+		props.onAddDescriptor(result);
 	};
 
 	/**
 	 * Listen to more PS events
 	 */
-	public spy = async (event: string, descriptor: any): Promise<void> => {
-		await this.listener(event, descriptor, true);
+	const spy = async (event: string, descriptor: any): Promise<void> => {
+		await listener(event, descriptor, true);
 	};
 
 	/**
 	 * Attaches the simple listener to the app.
 	 */
-	private attachListener = async () => {
-		const {settings: {dontShowMarketplaceInfo, autoUpdateListener}} = this.props;
+	const attachListener = async () => {
+		const {settings: {dontShowMarketplaceInfo, autoUpdateListener}} = props;
 		if (!dontShowMarketplaceInfo && !autoUpdateListener && !Main.devMode && !Main.isFirstParty) {
-			const res = await this.marketplaceDialogRef.current.uxpShowModal({
+			const res = await marketplaceDialogRef.current.uxpShowModal({
 				title: "Advice",
 				size: {
 					width: 400,
@@ -173,46 +170,40 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		}
 
 		if (autoUpdateListener) {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			//ListenerClass.listenerCb = async () => { };
 			ListenerClass.stopListener();
-
 		} else {
-			//ListenerClass.listenerCb = this.listener;
-			ListenerClass.startListener(this.listener);
-
+			ListenerClass.startListener(listener);
 		}
-		this.props.setListener(!autoUpdateListener);
+		props.setListener(!autoUpdateListener);
 	};
 
-	private attachSpy = async () => {
-		const {settings: {autoUpdateSpy}} = this.props;
+	const attachSpy = async () => {
+		const {settings: {autoUpdateSpy}} = props;
 		if (autoUpdateSpy) {
 			ListenerClass.stopSpy();
 		} else {
-			ListenerClass.startSpy(this.spy);
+			ListenerClass.startSpy(spy);
 		}
-		this.props.setSpy(!autoUpdateSpy);
+		props.setSpy(!autoUpdateSpy);
 	};
 
-	private attachAutoInspector = async () => {
-		const {settings: {autoUpdateInspector}} = this.props;
-		this.props.setAutoInspector(!autoUpdateInspector);
+	const attachAutoInspector = async () => {
+		const {settings: {autoUpdateInspector}} = props;
+		props.setAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			ListenerClass.stopInspector();
 		} else {
-			ListenerClass.startInspector(this.autoInspector);
+			ListenerClass.startInspector(autoInspector);
 		}
-		this.props.setAutoInspector(!autoUpdateInspector);
+		props.setAutoInspector(!autoUpdateInspector);
 	};
 
-	private renderDescriptorsList = (): React.ReactNode => {
-		const {allInViewDescriptors} = this.props;
+	const renderDescriptorsList = (): React.ReactNode => {
+		const {allInViewDescriptors} = props;
 		return (
 			allInViewDescriptors.map((d, index) => {
 				return (
-					<div className={"DescriptorItem"} key={index} ref={index === allInViewDescriptors.length - 1 ? this.lastDescRef as any : null}>
+					<div className={"DescriptorItem"} key={index} ref={index === allInViewDescriptors.length - 1 ? lastDescRef as any : null}>
 						<DescriptorItemContainer descriptor={d} key={d.id} />
 					</div>
 				);
@@ -220,12 +211,12 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 		);
 	};
 
-	private onSearch = (e: string) => {
-		this.props.setSearchTerm(e);
+	const onSearch = (e: string) => {
+		props.setSearchTerm(e);
 	};
 
-	private onPlaySeparated = async () => {
-		const toPlay = this.props.selectedDescriptors;
+	const onPlaySeparated = async () => {
+		const toPlay = props.selectedDescriptors;
 		for await (const item of toPlay) {
 			const startTime = Date.now();
 			let descriptors: ActionDescriptor[] | null;
@@ -255,25 +246,24 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				renameMode: false,
 				playAbleData: descriptors,
 				title: GetInfo.generateTitle(originalReference, item.playAbleData as ITargetReferenceAM),
-				descriptorSettings: this.props.settings.initialDescriptorSettings,
+				descriptorSettings: props.settings.initialDescriptorSettings,
 			};
 
-			//this.props.setLastHistoryID;
-			this.props.onAddDescriptor(result);
+			props.onAddDescriptor(result);
 		}
 	};
 
-	private rename = () => {
-		const {setRenameMode, selectedDescriptorsUUIDs} = this.props;
+	const rename = () => {
+		const {setRenameMode, selectedDescriptorsUUIDs} = props;
 		if (selectedDescriptorsUUIDs.length) {
 			setRenameMode(selectedDescriptorsUUIDs[0], true);
 		}
 	};
 
-	private renderMarketplaceDialog = () => {
-		const {onSetDontShowMarketplaceInfo} = this.props;
+	const renderMarketplaceDialog = () => {
+		const {onSetDontShowMarketplaceInfo} = props;
 
-		return (<dialog className="MarketplaceAdvice" ref={this.marketplaceDialogRef}>
+		return (<dialog className="MarketplaceAdvice" ref={marketplaceDialogRef}>
 			<form>
 				<sp-heading>This is marketplace version of Alchemist</sp-heading>
 				<sp-body>
@@ -283,98 +273,89 @@ export class LeftColumn extends React.Component<TLeftColumn, IState> {
 				<footer>
 					<label className="dontShowLabel"><SP.Checkbox onChange={(e: any) => onSetDontShowMarketplaceInfo(e.currentTarget.checked)} />{"Don't show again"}</label>
 					{/*<sp-button quiet={true} variant="secondary">Cancel</sp-button>*/}
-					<sp-button variant="cta" onClick={() => {this.marketplaceDialogRef.current.close("true");}}>Continue</sp-button>
+					<sp-button variant="cta" onClick={() => {marketplaceDialogRef.current.close("true");}}>Continue</sp-button>
 				</footer>
 			</form>
 		</dialog>);
 	};
 
-	private copyToClipboard = () => {
-		(navigator.clipboard as any).setContent({"text/plain": this.props.generatedCode});
+	const copyToClipboard = () => {
+		(navigator.clipboard as any).setContent({"text/plain": props.generatedCode});
 	};
 
-	private closeClearMenu = () => {
-		//this.clearMenuRef.current.close();
-		this.clearMenuRef.current.removeAttribute("open");
-	}
+	const closeClearMenu = () => {
+		clearMenuRef.current.removeAttribute("open");
+	};
 
-
-	public override render(): JSX.Element {
-		const {addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
-			selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
-			settings: {autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors, autoUpdateSpy},
-			onClear, onClearView, onClearNonExistent, allDescriptors, copyToClipboardEnabled,
-		} = this.props;
-		return (
-			<div className="Filters LeftColumn">
-				<div className="oneMore">
-					<FiltersContainer />
-					<div className="search">
-						<SP.Textfield placeholder="Search..." onInput={(e: any) => this.onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
-						<SP.Checkbox onChange={this.props.toggleDescGrouping} checked={groupDescriptors === "strict"}> <span className="groupLabel">Group</span></SP.Checkbox>
-					</div>
-					<div className="descriptorsWrapper" ref={this.wrapperDescRef} onClick={() => this.props.onSelect("none")}>
-						{this.renderDescriptorsList()}
-					</div>
-
-					<div className="descriptorButtons">
-
-						<sp-overlay>
-							<div slot="trigger" className="button">
-								Clear...
-							</div>
-							<sp-popover
-								ref={this.clearMenuRef}
-								placement="auto"
-								alignment="auto"
-								slot="click"
-							>
-								<div className="column">
-									<div className="button" onClick={() => {this.closeClearMenu(); onClear();}}>All</div>
-									<div className="button" onClick={() => {this.closeClearMenu(); onClearView(false);}}>In view</div>
-									<div className="button" onClick={() => {this.closeClearMenu(); onClearView(true);}}>Not in view</div>
-									<div className="button" onClick={() => {this.closeClearMenu(); onClearNonExistent(filterNonExistent(allDescriptors));}}>Non-existent</div>
-								</div>
-							</sp-popover>
-						</sp-overlay>
-
-						<div className="spread"></div>
-
-						{/*
-							<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
-						*/}
-						<div title="Rename" className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={this.rename}><IconPencil /></div>
-						<div title="Copy to clipboard" className={"clipboard buttonIcon " + (copyToClipboardEnabled ? "allowed" : "disallowed")} onClick={this.copyToClipboard}><IconClipboard /></div>
-						<div title="Replay" className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={this.onPlaySeparated}><IconPlayIcon /></div>
-						<div title="(Un)lock" className={"lock buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => {onLock(!lockedSelection, selectedDescriptorsUUIDs);}}>
-							{selectedDescriptors.some(desc => desc.locked) ? <IconLockUnlocked /> : <IconLockLocked />}
-						</div>
-						<div title="(Un)pin" className={"pin buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => {onPin(!pinnedSelection, selectedDescriptorsUUIDs);}}>
-							{selectedDescriptors.some(desc => desc.pinned) ? <IconPinLeft /> : <IconPinDown />}
-						</div>
-						<div title="Remove" className={"remove buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => {onRemove(selectedDescriptorsUUIDs);}}><IconTrash /></div>
-					</div>
-					<div className="filterButtons">
-						<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={this.getDescriptor}><IconPlus /> Add</div>
-						<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={this.attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>
-						{
-							// helper tool to listen to more events
-							Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={this.attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
-						}
-						<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={this.attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
-					</div>
+	const {addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
+		selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
+		settings: {autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors, autoUpdateSpy},
+		onClear, onClearView, onClearNonExistent, allDescriptors, copyToClipboardEnabled,
+	} = props;
+	return (
+		<div className="Filters LeftColumn">
+			<div className="oneMore">
+				<FiltersContainer />
+				<div className="search">
+					<SP.Textfield placeholder="Search..." onInput={(e: any) => onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
+					<SP.Checkbox onChange={props.toggleDescGrouping} checked={groupDescriptors === "strict"}> <span className="groupLabel">Group</span></SP.Checkbox>
 				</div>
-				{this.renderMarketplaceDialog()}
+				<div className="descriptorsWrapper" ref={wrapperDescRef} onClick={() => props.onSelect("none")}>
+					{renderDescriptorsList()}
+				</div>
+
+				<div className="descriptorButtons">
+
+					<sp-overlay>
+						<div slot="trigger" className="button">
+							Clear...
+						</div>
+						<sp-popover
+							ref={clearMenuRef}
+							placement="auto"
+							alignment="auto"
+							slot="click"
+						>
+							<div className="column">
+								<div className="button" onClick={() => {closeClearMenu(); onClear();}}>All</div>
+								<div className="button" onClick={() => {closeClearMenu(); onClearView(false);}}>In view</div>
+								<div className="button" onClick={() => {closeClearMenu(); onClearView(true);}}>Not in view</div>
+								<div className="button" onClick={() => {closeClearMenu(); onClearNonExistent(filterNonExistent(allDescriptors));}}>Non-existent</div>
+							</div>
+						</sp-popover>
+					</sp-overlay>
+
+					<div className="spread"></div>
+
+					{/*
+						<div className="settings buttonIcon" onClick={() => { onLock(!lockedSelection, selectedDescriptors); }}><IconCog/></div>
+					*/}
+					<div title="Rename" className={"rename buttonIcon " + (renameEnabled ? "allowed" : "disallowed")} onClick={rename}><IconPencil /></div>
+					<div title="Copy to clipboard" className={"clipboard buttonIcon " + (copyToClipboardEnabled ? "allowed" : "disallowed")} onClick={copyToClipboard}><IconClipboard /></div>
+					<div title="Replay" className={"play buttonIcon " + (replayEnabled ? "" : "disallowed")} onClick={onPlaySeparated}><IconPlayIcon /></div>
+					<div title="(Un)lock" className={"lock buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => {onLock(!lockedSelection, selectedDescriptorsUUIDs);}}>
+						{selectedDescriptors.some(desc => desc.locked) ? <IconLockUnlocked /> : <IconLockLocked />}
+					</div>
+					<div title="(Un)pin" className={"pin buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => {onPin(!pinnedSelection, selectedDescriptorsUUIDs);}}>
+						{selectedDescriptors.some(desc => desc.pinned) ? <IconPinLeft /> : <IconPinDown />}
+					</div>
+					<div title="Remove" className={"remove buttonIcon " + ((selectedDescriptors?.length) ? "" : "disallowed")} onClick={() => {onRemove(selectedDescriptorsUUIDs);}}><IconTrash /></div>
+				</div>
+				<div className="filterButtons">
+					<div className={"add button" + (addAllowed ? " allowed" : " disallowed")} onClick={getDescriptor}><IconPlus /> Add</div>
+					<div className={"listenerSwitch button" + (autoUpdateListener ? " activated" : " deactivated")} onClick={attachListener}>{autoUpdateListener ? <IconMediaStop /> : <IconMediaRecord />}Listener</div>
+					{
+						// helper tool to listen to more events
+						Main.isFirstParty && <div className={"listenerSwitch button" + (autoUpdateSpy ? " activated" : " deactivated")} onClick={attachSpy}>{autoUpdateSpy ? <IconMediaStop /> : <IconMediaRecord />}Spy</div>
+					}
+					<div className={"autoInspectorSwitch button" + (autoUpdateInspector ? " activated" : " deactivated")} onClick={attachAutoInspector}>{autoUpdateInspector ? <IconMediaStop /> : <IconMediaRecord />}Inspector</div>
+				</div>
 			</div>
-		);
-	}
-}
+			{renderMarketplaceDialog()}
+		</div>
+	);
+};
 
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IState {
-	//
-}
 
 type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
 

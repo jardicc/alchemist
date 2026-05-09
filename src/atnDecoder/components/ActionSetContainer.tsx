@@ -11,27 +11,13 @@ import {ActionItemContainer} from "./ActionItemContainer";
 import {IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty, IconFolder} from "../../shared/components/icons";
 import PS from "photoshop";
 
-export class ActionSet extends React.Component<TActionSet, IActionSetState> {
-	constructor(props: TActionSet) {
-		super(props);
-	}
+export const ActionSet: React.FC<TActionSet> = (props) => {
+	const combinedUUID: [string] = [props.actionSet.__uuid__];
 
-	private get combinedUUID(): [string] {
-		const {actionSet} = this.props;
-		const res: [string] = [actionSet.__uuid__];
-		return res;
-	}
+	const isSelected: boolean = !!props.selectedItems.find(item =>
+		item[0] === combinedUUID[0]);
 
-	private get isSelected(): boolean {
-		const {selectedItems} = this.props;
-		const uuids = this.combinedUUID;
-		const found = selectedItems.find(item =>
-			item[0] === uuids[0]);
-
-		return !!found;
-	}
-
-	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
 
 		let operation: TSelectActionOperation = "replace";
@@ -41,52 +27,44 @@ export class ActionSet extends React.Component<TActionSet, IActionSetState> {
 		} else if (e.shiftKey) {
 			operation = "addContinuous";
 		} else if (e.ctrlKey || e.metaKey) {
-			if (this.isSelected) {
+			if (isSelected) {
 				operation = "subtract";
 			} else {
 				operation = "add";
 			}
 		}
-		this.props.setSelectedItem(this.combinedUUID, operation);
+		props.setSelectedItem(combinedUUID, operation);
 	};
 
-	private get isExpanded() {
-		const {actionSet, expandedItems} = this.props;
-		const expanded = expandedItems.flat().includes(actionSet.__uuid__);
-		return expanded;
-	}
+	const isExpanded = props.expandedItems.flat().includes(props.actionSet.__uuid__);
 
-	private onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
-		const {actionSet} = this.props;
+		const {actionSet} = props;
 		const recursive = (e.ctrlKey || e.metaKey);
-		this.props.setExpandedItem([actionSet.__uuid__], !this.isExpanded, recursive);
+		props.setExpandedItem([actionSet.__uuid__], !isExpanded, recursive);
 	};
 
-	public override render(): React.ReactNode {
+	const {actionSet} = props;
 
-		const {actionSet} = this.props;
-
-
-		return (
-			<div className="ActionSet">
-				<div className={"wrap " + (this.isSelected ? "selected" : "")} onClick={this.select}>
-					<div className="checkmark">
-						{(actionSet.actionItems?.every(aItem => aItem.commands?.every(item => item.enabled) ?? true) ?? true) ? <IconCheck /> : <IconEmpty />}
-					</div>
-					<div className="expand" onClick={this.onExpand}>
-						{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
-					</div>
-					<IconFolder />
-					<span className="title">
-						{PS.core.translateUIString(actionSet.actionSetName)}
-					</span>
+	return (
+		<div className="ActionSet">
+			<div className={"wrap " + (isSelected ? "selected" : "")} onClick={select}>
+				<div className="checkmark">
+					{(actionSet.actionItems?.every(aItem => aItem.commands?.every(item => item.enabled) ?? true) ?? true) ? <IconCheck /> : <IconEmpty />}
 				</div>
-				{this.isExpanded && actionSet.actionItems.map((item, key) => <ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}
+				<div className="expand" onClick={onExpand}>
+					{isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
+				</div>
+				<IconFolder />
+				<span className="title">
+					{PS.core.translateUIString(actionSet.actionSetName)}
+				</span>
 			</div>
-		);
-	}
-}
+			{isExpanded && actionSet.actionItems.map((item, key) => <ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}
+		</div>
+	);
+};
 
 type TActionSet = IActionSetProps & IActionSetDispatch
 

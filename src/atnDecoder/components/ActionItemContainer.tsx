@@ -11,28 +11,14 @@ import {ActionCommandContainer} from "./ActionCommandContainer";
 import {IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty} from "../../shared/components/icons";
 import PS from "photoshop";
 
-export class ActionItem extends React.Component<TActionItem, IActionItemState> {
-	constructor(props: TActionItem) {
-		super(props);
-	}
+export const ActionItem: React.FC<TActionItem> = (props) => {
+	const combinedUUID: [string, string] = [props.parentSet.__uuid__, props.actionItem.__uuid__];
 
-	private get combinedUUID(): [string, string] {
-		const {parentSet, actionItem} = this.props;
-		const res: [string, string] = [parentSet.__uuid__, actionItem.__uuid__];
-		return res;
-	}
+	const isSelected: boolean = !!props.selectedItems.find(item =>
+		item[0] === combinedUUID[0] &&
+		item[1] === combinedUUID[1]);
 
-	private get isSelected(): boolean {
-		const {selectedItems} = this.props;
-		const uuids = this.combinedUUID;
-		const found = selectedItems.find(item =>
-			item[0] === uuids[0] &&
-			item[1] === uuids[1]);
-
-		return !!found;
-	}
-
-	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
 
 		let operation: TSelectActionOperation = "replace";
@@ -42,49 +28,42 @@ export class ActionItem extends React.Component<TActionItem, IActionItemState> {
 		} else if (e.shiftKey) {
 			operation = "addContinuous";
 		} else if (e.ctrlKey || e.metaKey) {
-			if (this.isSelected) {
+			if (isSelected) {
 				operation = "subtract";
 			} else {
 				operation = "add";
 			}
 		}
-		this.props.setSelectedItem(this.combinedUUID, operation);
+		props.setSelectedItem(combinedUUID, operation);
 	};
 
-	private get isExpanded() {
-		const {actionItem, expandedItems} = this.props;
-		const expanded = expandedItems.flat().includes(actionItem.__uuid__);
-		return expanded;
-	}
+	const isExpanded = props.expandedItems.flat().includes(props.actionItem.__uuid__);
 
-	private onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
-		const {actionItem, parentSet: parent} = this.props;
-		this.props.setExpandedItem([parent.__uuid__, actionItem.__uuid__], !this.isExpanded);
+		const {actionItem, parentSet: parent} = props;
+		props.setExpandedItem([parent.__uuid__, actionItem.__uuid__], !isExpanded);
 	};
 
-	public override render(): React.ReactNode {
+	const {actionItem, parentSet} = props;
 
-		const {actionItem, parentSet} = this.props;
-
-		return (
-			<div className="ActionItem">
-				<div className={"wrap " + (this.isSelected ? "selected" : "")} onClick={this.select}>
-					<div className="checkmark">
-						{(actionItem.commands?.every(item => item.enabled) ?? true) ? <IconCheck /> : <IconEmpty />}
-					</div>
-					<div className="expand" onClick={this.onExpand}>
-						{this.isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
-					</div>
-					<span className="title">
-						{PS.core.translateUIString(actionItem.actionItemName)}
-					</span>
+	return (
+		<div className="ActionItem">
+			<div className={"wrap " + (isSelected ? "selected" : "")} onClick={select}>
+				<div className="checkmark">
+					{(actionItem.commands?.every(item => item.enabled) ?? true) ? <IconCheck /> : <IconEmpty />}
 				</div>
-				{this.isExpanded && actionItem.commands?.map((item, key) => <ActionCommandContainer parentAction={actionItem} parentSet={parentSet} actionCommand={item} key={key} />)}
+				<div className="expand" onClick={onExpand}>
+					{isExpanded ? <IconChevronBottom /> : <IconChevronRight />}
+				</div>
+				<span className="title">
+					{PS.core.translateUIString(actionItem.actionItemName)}
+				</span>
 			</div>
-		);
-	}
-}
+			{isExpanded && actionItem.commands?.map((item, key) => <ActionCommandContainer parentAction={actionItem} parentSet={parentSet} actionCommand={item} key={key} />)}
+		</div>
+	);
+};
 
 type TActionItem = IActionItemProps & IActionItemDispatch
 

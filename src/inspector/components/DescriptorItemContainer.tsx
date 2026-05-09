@@ -12,15 +12,10 @@ import {default as SP} from "react-uxp-spectrum";
 import {getIcon} from "../helpers";
 
 
-export class DescriptorItem extends React.Component<TDescriptorItem, IState> {
-	constructor(props: TDescriptorItem) {
-		super(props);
+export const DescriptorItem: React.FC<TDescriptorItem> = (props) => {
+	const [tempName, setTempName] = React.useState(props.descriptor.title);
 
-		this.state = {
-			tempName: this.props.descriptor.title,
-		};
-	}
-	private select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
 		let operation: TSelectDescriptorOperation = "replace";
 
@@ -29,62 +24,56 @@ export class DescriptorItem extends React.Component<TDescriptorItem, IState> {
 		} else if (e.shiftKey) {
 			operation = "addContinuous";
 		} else if (e.ctrlKey || e.metaKey) {
-			if (this.props.descriptor.selected) {
+			if (props.descriptor.selected) {
 				operation = "subtract";
 			} else {
 				operation = "add";
 			}
 		}
-		this.props.onSelect(this.props.descriptor.id, operation, this.props.descriptor.crc);
+		props.onSelect(props.descriptor.id, operation, props.descriptor.crc);
 	};
 
-	private get autoSelected(): boolean {
-		return this.props.autoSelected.includes(this.props.descriptor.id);
-	}
+	const autoSelected = props.autoSelected.includes(props.descriptor.id);
 
-	private onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		this.setState({
-			tempName: e.currentTarget.value,
-		});
+	const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setTempName(e.currentTarget.value);
 	};
 
-	private get hasError(): boolean {
-		return (this.props.descriptor.recordedData as any)?.[0]?._obj === "error";
-	}
+	const hasError = (props.descriptor.recordedData as any)?.[0]?._obj === "error";
 
-	private generateClassName = () => {
-		const {descriptor} = this.props;
+	const generateClassName = () => {
+		const {descriptor} = props;
 
-		const errorClass = this.hasError ? " error" : "";
+		const errorClass = hasError ? " error" : "";
 
-		return "wrap" + (descriptor.selected ? " selected" : "") + (this.autoSelected ? " autoSelected" : "") + errorClass;
+		return "wrap" + (descriptor.selected ? " selected" : "") + (autoSelected ? " autoSelected" : "") + errorClass;
 	};
 
-	private rename = () => {
-		const {descriptor} = this.props;
-		this.props.onChangeName(descriptor.id, this.state.tempName);
-		this.props.setRenameMode(descriptor.id, false);
+	const rename = () => {
+		const {descriptor} = props;
+		props.onChangeName(descriptor.id, tempName);
+		props.setRenameMode(descriptor.id, false);
 	};
-	private cancel = () => {
-		const {descriptor} = this.props;
-		this.props.setRenameMode(descriptor.id, false);
+	const cancel = () => {
+		const {descriptor} = props;
+		props.setRenameMode(descriptor.id, false);
 	};
 
-	private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		switch (e.key) {
 			case "Escape":
-				this.cancel();
+				cancel();
 				break;
 			case "Enter":
-				this.rename();
+				rename();
 				break;
 		}
 	};
 
-	private Icon = (): JSX.Element => {
-		const type = this.props.descriptor.originalReference.type;
+	const Icon = (): JSX.Element => {
+		const type = props.descriptor.originalReference.type;
 
-		const icon = getIcon(this.hasError ? "error" : type);
+		const icon = getIcon(hasError ? "error" : type);
 
 		return (
 			<div className="titleIcon">
@@ -93,32 +82,32 @@ export class DescriptorItem extends React.Component<TDescriptorItem, IState> {
 		);
 	};
 
-	private renderEditState = () => {
-		const {descriptor} = this.props;
+	const renderEditState = () => {
+		const {descriptor} = props;
 		return (
-			<div className={"editMode " + this.generateClassName()} onClick={this.select}>
+			<div className={"editMode " + generateClassName()} onClick={select}>
 				<sp-textfield
 					class="renameInput"
-					onInput={this.onNameChange}
+					onInput={onNameChange}
 					value={descriptor.title}
 					type="text"
-					onKeyDown={this.onKeyPress}
+					onKeyDown={onKeyPress}
 					size={SP.SpectrumComponetDefaults.defaultSize}
 				/>
-				<div className="button" onClick={this.rename}>OK</div>
-				<div className="button" onClick={this.cancel}>×</div>
+				<div className="button" onClick={rename}>OK</div>
+				<div className="button" onClick={cancel}>×</div>
 			</div>
 		);
 	};
 
-	private renderNormalState = () => {
-		const {descriptor} = this.props;
+	const renderNormalState = () => {
+		const {descriptor} = props;
 
 
-		const {descriptor: {locked, pinned, groupCount}} = this.props;
+		const {descriptor: {locked, pinned, groupCount}} = props;
 		return (
-			<div className={"normalMode " + this.generateClassName()} onClick={this.select}>
-				<this.Icon />
+			<div className={"normalMode " + generateClassName()} onClick={select}>
+				<Icon />
 				<div className="name">{descriptor.title}</div>
 				<div className="spread"></div>
 				{(groupCount && groupCount > 1) && <div>{groupCount}×</div>}
@@ -129,15 +118,13 @@ export class DescriptorItem extends React.Component<TDescriptorItem, IState> {
 		);
 	};
 
-	public override render(): React.ReactNode {
-		const {renameMode} = this.props.descriptor;
-		if (renameMode) {
-			return this.renderEditState();
-		} else {
-			return this.renderNormalState();
-		}
+	const {renameMode} = props.descriptor;
+	if (renameMode) {
+		return renderEditState();
+	} else {
+		return renderNormalState();
 	}
-}
+};
 
 
 type TDescriptorItem = IDescriptorItemProps & IDescriptorItemDispatch

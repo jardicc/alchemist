@@ -10,13 +10,9 @@ import {setHostApp, setMainAction, setSelectAction, TSetMainActionPayload, TSetP
 import {getManifestGeneric, isGenericModuleVisible} from "../sorSelectors";
 import {IManifestInfo} from "../sorModel";
 
-export class General extends React.Component<TGeneralContainer, IGeneralContainerState> {
-	constructor(props: TGeneralContainer) {
-		super(props);
-	}
-
-	private renderHostInfo = () => {
-		const {manifestGeneric: {host}, onSetHost} = this.props;
+export const General: React.FC<TGeneralContainer> = (props) => {
+	const renderHostInfo = () => {
+		const {manifestGeneric: {host}, onSetHost} = props;
 
 		const res = host.map((h, i) =>
 			<div key={i} className="host">
@@ -33,37 +29,35 @@ export class General extends React.Component<TGeneralContainer, IGeneralContaine
 		return res;
 	};
 
-	public override render(): React.ReactNode {
-		const {manifestGeneric, isGenericVisible, onSet: onSetMain} = this.props;
+	const {manifestGeneric, isGenericVisible, onSet: onSetMain} = props;
 
-		if (!isGenericVisible) {
-			return null;
-		}
-
-		return (
-			<div className="GeneralContainerContainer" key="generalPanel">
-				<h3>Main</h3>
-				<div className="row">
-					Manifest version: <SP.Textfield value={manifestGeneric.manifestVersion.toString()} disabled={true} />
-				</div>
-				<div className="row">
-					Plugin name: <SP.Textfield value={manifestGeneric.name} onInput={e => onSetMain({name: e.target?.value})} />
-				</div>
-				<div className="row">
-					Plugin ID: <SP.Textfield value={manifestGeneric.id} onInput={e => onSetMain({id: e.target?.value})} />
-				</div>
-				<div className="row">
-					Main file: <SP.Textfield value={manifestGeneric.main} disabled={true} />
-				</div>
-				<div className="row">
-					Plugin version: <SP.Textfield value={manifestGeneric.version} onInput={e => onSetMain({version: e.target?.value})} />
-				</div>
-				<h3>Host app</h3>
-				{this.renderHostInfo()}
-			</div>
-		);
+	if (!isGenericVisible) {
+		return null;
 	}
-}
+
+	return (
+		<div className="GeneralContainerContainer" key="generalPanel">
+			<h3>Main</h3>
+			<div className="row">
+				Manifest version: <SP.Textfield value={manifestGeneric.manifestVersion.toString()} disabled={true} />
+			</div>
+			<div className="row">
+				Plugin name: <SP.Textfield value={manifestGeneric.name} onInput={e => onSetMain({name: e.target?.value})} />
+			</div>
+			<div className="row">
+				Plugin ID: <SP.Textfield value={manifestGeneric.id} onInput={e => onSetMain({id: e.target?.value})} />
+			</div>
+			<div className="row">
+				Main file: <SP.Textfield value={manifestGeneric.main} disabled={true} />
+			</div>
+			<div className="row">
+				Plugin version: <SP.Textfield value={manifestGeneric.version} onInput={e => onSetMain({version: e.target?.value})} />
+			</div>
+			<h3>Host app</h3>
+			{renderHostInfo()}
+		</div>
+	);
+};
 
 type TGeneralContainer = IGeneralContainerProps & IGeneralContainerDispatch
 

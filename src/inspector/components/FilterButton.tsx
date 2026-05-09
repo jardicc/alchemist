@@ -22,28 +22,19 @@ interface IFilterButtonState {
 
 export type TFilterButton = IFilterButtonProps & IFilterButtonDispatch
 
-export class FilterButton extends React.Component<TFilterButton, IFilterButtonState> {
-	constructor(props: TFilterButton) {
-		super(props);
+export const FilterButton: React.FC<TFilterButton> = (props) => {
+	const {state, onClick, subtype} = props;
 
-		this.state = {
-		};
-	}
-
-	public override render(): JSX.Element {
-		const {state, onClick, subtype} = this.props;
-
-		return (
-			<div
-				className={"FilterButton" + " " + state}
-				onClick={(e) => onClick(subtype, state, e)}
-				title="Filter"
-				data-testid="filter-button"
-				data-subtype={subtype}
-				data-state={state}
-			>
-				<div className="icon" data-testid="filter-button-icon"><IconEye /></div>
-			</div>
-		);
-	}
-}
+	return (
+		<div
+			className={"FilterButton" + " " + state}
+			onClick={(e) => onClick(subtype, state, e)}
+			title="Filter"
+			data-testid="filter-button"
+			data-subtype={subtype}
+			data-state={state}
+		>
+			<div className="icon" data-testid="filter-button-icon"><IconEye /></div>
+		</div>
+	);
+};

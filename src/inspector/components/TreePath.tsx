@@ -22,51 +22,43 @@ interface ITreePathState { }
 
 export type TTreePath = ITreePathProps & ITreePathDispatch
 
-export class TreePath extends Component<TTreePath, ITreePathState> {
+export const TreePath: React.FC<TTreePath> = (props) => {
+	const levelDelay = React.useRef<number | null>(null);
 
-	constructor(props: TTreePath) {
-		super(props);
-	}
-
-
-	private levelDelay: number | null = null;
-
-	private renderPath = () => {
-		const {path, onInspectPath} = this.props;
+	const renderPathFn = () => {
+		const {path, onInspectPath} = props;
 		return renderPath(path, onInspectPath);
 	};
 
-	private throttleSlider = (e: any) => {
-		if (this.levelDelay) {
-			clearTimeout(this.levelDelay);
+	const throttleSlider = (e: any) => {
+		if (levelDelay.current) {
+			clearTimeout(levelDelay.current);
 		}
 		const value = e.target.value;
 
-		this.levelDelay = window.setTimeout(() => {
-			this.props.onSetAutoExpandLevel(value);
+		levelDelay.current = window.setTimeout(() => {
+			props.onSetAutoExpandLevel(value);
 		}, 50);
 	};
 
-	public override render(): React.ReactNode {
-		const {autoExpandLevels, allowInfinityLevels, hideLevels} = this.props;
+	const {autoExpandLevels, allowInfinityLevels, hideLevels} = props;
 
-		return (
-			<div className="TreePath">
-				<div className="pathWrap">
-					{this.renderPath()}
-				</div>
-				{!hideLevels && <div className="levelSlider">
-					<span className="levelLabel">Expand: {((autoExpandLevels === 10 && allowInfinityLevels) ? "All" : autoExpandLevels) || "Off"}</span>
-					<SP.Slider
-						variant="filled"
-						min={0}
-						max={10}
-						onInput={this.throttleSlider}
-						//onChange={(e: any) => onSetAutoExpandLevel(e.target.value)}
-						value={autoExpandLevels}
-					/>
-				</div>}
+	return (
+		<div className="TreePath">
+			<div className="pathWrap">
+				{renderPathFn()}
 			</div>
-		);
-	}
-}
+			{!hideLevels && <div className="levelSlider">
+				<span className="levelLabel">Expand: {((autoExpandLevels === 10 && allowInfinityLevels) ? "All" : autoExpandLevels) || "Off"}</span>
+				<SP.Slider
+					variant="filled"
+					min={0}
+					max={10}
+					onInput={throttleSlider}
+					//onChange={(e: any) => onSetAutoExpandLevel(e.target.value)}
+					value={autoExpandLevels}
+				/>
+			</div>}
+		</div>
+	);
+};

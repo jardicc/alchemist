@@ -21,19 +21,25 @@ import SP from "react-uxp-spectrum";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
 
-class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
-	constructor(props: TATNDecoder) {
-		super(props);
-	}
+const ATNDecoder: React.FC<TATNDecoder> = (props) => {
+	const renderAddButton = () => (
+		<div className="button" onClick={async (e) => {
+			e.stopPropagation();
+			const res = await decodeATN();
+			props.setData(res);
+		}}>
+			Read .ATN file
+		</div>
+	);
 
-	private renderSet = () => {
-		const {data} = this.props;
+	const renderSet = () => {
+		const {data} = props;
 
 		if (!data.length) {
 			return (
 				<div className="ctaEmpty">
 					<span>Please open some Photoshop Action files (.atn)</span>
-					{this.renderAddButton()}
+					{renderAddButton()}
 				</div>
 			);
 		}
@@ -45,9 +51,9 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 		);
 	};
 
-	private pass = (replace = false) => {
+	const pass = (replace = false) => {
 		// eslint-disable-next-line prefer-const
-		let {selectedCommands, onPassSelected, onSelectAlchemistDescriptors, dontSendDisabled, allAlchemistDescriptors, settingsAlchemist} = this.props;
+		let {selectedCommands, onPassSelected, onSelectAlchemistDescriptors, dontSendDisabled, allAlchemistDescriptors, settingsAlchemist} = props;
 
 		onSelectAlchemistDescriptors("none");
 
@@ -93,48 +99,32 @@ class ATNDecoder extends React.Component<TATNDecoder, IATNDecoderState> {
 
 	};
 
-	private renderAddButton = () => (
-		<div className="button" onClick={async (e) => {
-			e.stopPropagation();
-			const res = await decodeATN();
-			this.props.setData(res);
-		}}>
-			Read .ATN file
+	const {fontSizeSettings, data, setData, textData, onClearAll, selectedCommands, setSelectedItem, onSetDontSendDisabled, dontSendDisabled} = props;
+
+	return (
+		<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
+			<div className="info spread flex">
+				<div className="tree" onClick={(e) => {e.stopPropagation(); setSelectedItem([""], "none");}}>{renderSet()}</div>
+				<div className="atnCode">
+					<SP.Textarea
+						className="infoBlock"
+						value={textData}
+					/>
+				</div>
+			</div>
+			<div className="buttonBar">
+				{renderAddButton()}
+				<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => pass()}>Add to Alchemist</div>
+				<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => pass(true)}>Replace in Alchemist</div>
+				<SP.Checkbox onChange={() => onSetDontSendDisabled(!dontSendDisabled)} checked={dontSendDisabled}>{"Don't send disabled"}</SP.Checkbox>
+				<div className="spread"></div>
+				<div className={"button " + (!data.length ? "disallowed" : "")} onClick={onClearAll}>Clear all</div>
+			</div>
+
+			<FooterContainer parentPanel="atnConverter" />
 		</div>
 	);
-
-
-	public override render(): JSX.Element {
-
-		const {fontSizeSettings, data, setData, textData, onClearAll, selectedCommands, setSelectedItem, onSetDontSendDisabled, dontSendDisabled} = this.props;
-
-
-
-		return (
-			<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
-				<div className="info spread flex">
-					<div className="tree" onClick={(e) => {e.stopPropagation(); setSelectedItem([""], "none");}}>{this.renderSet()}</div>
-					<div className="atnCode">
-						<SP.Textarea
-							className="infoBlock"
-							value={textData}
-						/>
-					</div>
-				</div>
-				<div className="buttonBar">
-					{this.renderAddButton()}
-					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => this.pass()}>Add to Alchemist</div>
-					<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => this.pass(true)}>Replace in Alchemist</div>
-					<SP.Checkbox onChange={() => onSetDontSendDisabled(!dontSendDisabled)} checked={dontSendDisabled}>{"Don't send disabled"}</SP.Checkbox>
-					<div className="spread"></div>
-					<div className={"button " + (!data.length ? "disallowed" : "")} onClick={onClearAll}>Clear all</div>
-				</div>
-
-				<FooterContainer parentPanel="atnConverter" />
-			</div>
-		);
-	}
-}
+};
 
 
 

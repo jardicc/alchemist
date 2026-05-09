@@ -9,61 +9,49 @@ import {getActiveRef} from "../selectors/inspectorSelectors";
 import {setFilterStateAction} from "../actions/inspectorActions";
 
 
-export class FilterRow extends React.Component<TFilterRow, IFilterRowState> {
+export const FilterRow: React.FC<TFilterRow> = (props) => {
+	const {value: content, subtype, filterBy, onSelect, onUpdateList, initialItems, items} = props;
+	const [list, setListState] = React.useState<(IPropertyItem | IPropertyGroup)[]>(initialItems ?? []);
 
-	constructor(props: TFilterRow) {
-		super(props);
-
-		this.state = {list: props.initialItems ?? []};
-	}
-
-	private setList = (list: (IPropertyItem | IPropertyGroup)[]) => {
-		const {initialItems} = this.props;
-
-		this.setState({
-			...this.state,
-			list: [...(initialItems || []), ...list],
-		});
+	const setList = (newList: (IPropertyItem | IPropertyGroup)[]) => {
+		setListState([...(initialItems || []), ...newList]);
 	};
 
-	public override render(): React.ReactNode {
-		const {value: content, subtype, filterBy, onSelect, onUpdateList, initialItems, items} = this.props;
-		let newContent: (string | number)[];
-		if (!Array.isArray(content)) {
-			newContent = [content];
-		} else {
-			newContent = content;
-		}
-
-		return (
-			<AccDrop
-				{...this.props}
-				id={subtype}
-				selected={newContent}
-				onSelect={(id, value, toggleProperty) => onSelect(value, !!toggleProperty)}
-				onHeaderClick={async () => {
-					if (!onUpdateList) {
-						// this.setList(initialItems ?? []);
-						return;
-					}
-					const list = await onUpdateList() || [];
-					this.setList(list);
-				}}
-				items={items || this.state.list}
-				headerPostFix={
-					<FilterButton
-						subtype={subtype}
-						state={filterBy}
-						onClick={(subtype, state, e) => {
-							this.props.onSetFilter(this.props.activeRef.type, subtype, state);
-							e.stopPropagation();
-						}}
-					/>
-				}
-			/>
-		);
+	let newContent: (string | number)[];
+	if (!Array.isArray(content)) {
+		newContent = [content];
+	} else {
+		newContent = content;
 	}
-}
+
+	return (
+		<AccDrop
+			{...props}
+			id={subtype}
+			selected={newContent}
+			onSelect={(id, value, toggleProperty) => onSelect(value, !!toggleProperty)}
+			onHeaderClick={async () => {
+				if (!onUpdateList) {
+					// setList(initialItems ?? []);
+					return;
+				}
+				const newList = await onUpdateList() || [];
+				setList(newList);
+			}}
+			items={items || list}
+			headerPostFix={
+				<FilterButton
+					subtype={subtype}
+					state={filterBy}
+					onClick={(subtype, state, e) => {
+						props.onSetFilter(props.activeRef.type, subtype, state);
+						e.stopPropagation();
+					}}
+				/>
+			}
+		/>
+	);
+};
 interface IFilterRowState {
 	list: (IPropertyItem | IPropertyGroup)[]
 }

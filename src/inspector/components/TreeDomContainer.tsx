@@ -13,74 +13,67 @@ import {cloneDeep} from "lodash";
 import {TreePath} from "./TreePath";
 import {KeyPath, TExpandClicked, TLabelRenderer} from "./react-json-tree-2/types";
 
-export class TreeDom extends Component<TTreeDom, Record<string, unknown>> {
-
-	constructor(props: TTreeDom) {
-		super(props);
-	}
-
-	private labelRenderer: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
-		return labelRenderer([key, ...rest], this.props.onInspectPath, nodeType, expanded, expandable);
+export const TreeDom: React.FC<TTreeDom> = (props) => {
+	const labelRendererFn: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
+		return labelRenderer([key, ...rest], props.onInspectPath, nodeType, expanded, expandable);
 	};
 
-	public getItemString = (type: any, data: any): JSX.Element => {
+	const getItemStringFn = (type: any, data: any): JSX.Element => {
 		return getItemString(type, data, true, false);
 	};
 
-	private expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
-		this.props.onSetExpandedPath(keyPath, expanded, recursive, this.props.content);
+	const expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
+		props.onSetExpandedPath(keyPath, expanded, recursive, props.content);
 	};
 
-	public override render(): React.ReactNode {
-		const {content, protoMode, onInspectPath, autoExpandLevels, onSetAutoExpandLevel} = this.props;
-		if (!content) {
-			return "Nothing to see there";
-		}
-
-		//let data:any = GetInfo.getDom(content.ref);
-		let data: any = this.props.content;
-
-		const path = cloneDeep(this.props.path);
-
-		/*for (const part of path) {
-			data = (data)?.[part];
-		}*/
-
-		// make primitive types pin-able
-		if (typeof data !== "object" && data !== undefined && data !== null) {
-			const lastPart = path[path.length - 1];
-			data = {["$$$noPin_" + lastPart]: data};
-		}
-		//console.log(content);
-		return (
-			<div className="TreeDom">
-				<TreePath
-					autoExpandLevels={autoExpandLevels}
-					onInspectPath={onInspectPath}
-					onSetAutoExpandLevel={onSetAutoExpandLevel}
-					path={path}
-				/>
-				<div className="TreeDomBox">
-					{(content === undefined || content === null) ?
-						<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
-						:
-						<JSONTree
-							shouldExpandNode={shouldExpandNode(this.props.expandedKeys, autoExpandLevels)}
-							expandClicked={this.expandClicked}
-							data={data}
-							keyPath={path}
-							protoMode={protoMode}
-							labelRenderer={this.labelRenderer}
-							getItemString={this.getItemString} // shows object content shortcut
-							hideRoot={true}
-							sortObjectKeys={true}
-						/>
-					}
-				</div>
-			</div>
-		);
+	const {content, protoMode, onInspectPath, autoExpandLevels, onSetAutoExpandLevel} = props;
+	if (!content) {
+		return <>{"Nothing to see there"}</>;
 	}
-}
+
+	//let data:any = GetInfo.getDom(content.ref);
+	let data: any = props.content;
+
+	const path = cloneDeep(props.path);
+
+	/*for (const part of path) {
+		data = (data)?.[part];
+	}*/
+
+	// make primitive types pin-able
+	if (typeof data !== "object" && data !== undefined && data !== null) {
+		const lastPart = path[path.length - 1];
+		data = {["$$$noPin_" + lastPart]: data};
+	}
+	//console.log(content);
+	return (
+		<div className="TreeDom">
+			<TreePath
+				autoExpandLevels={autoExpandLevels}
+				onInspectPath={onInspectPath}
+				onSetAutoExpandLevel={onSetAutoExpandLevel}
+				path={path}
+			/>
+			<div className="TreeDomBox">
+				{(content === undefined || content === null) ?
+					<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
+					:
+					<JSONTree
+						shouldExpandNode={shouldExpandNode(props.expandedKeys, autoExpandLevels)}
+						expandClicked={expandClicked}
+						data={data}
+						keyPath={path}
+						protoMode={protoMode}
+						labelRenderer={labelRendererFn}
+						getItemString={getItemStringFn} // shows object content shortcut
+						hideRoot={true}
+						sortObjectKeys={true}
+					/>
+				}
+			</div>
+		</div>
+	);
+};
 
 
 type TTreeDom = ITreeDomProps & ITreeDomDispatch

@@ -5,7 +5,7 @@ module.exports = {
 	collectCoverage: false,
 	testEnvironment: "jest-environment-jsdom",
 	transform: {
-		"^.+\\.tsx?$": "ts-jest",
+		"^.+\\.tsx?$": ["ts-jest", {tsconfig: "jest-tsconfig.json"}],
 	},
 	testRegex: "(/test/.*|(\\.|/)(test|spec))\\.(tsx?)$",
 	moduleFileExtensions: ["ts", "tsx", "js", "json", "node"],
@@ -16,10 +16,5 @@ module.exports = {
 		"^photoshop/dom/CoreModules$": "<rootDir>/src/__mocks__/photoshopCoreModules.js",
 		"^uxp$": "<rootDir>/src/__mocks__/uxp.js",
 		"^react-uxp-spectrum$": "<rootDir>/src/__mocks__/react-uxp-spectrum.js",
-	},
-	globals: {
-		"ts-jest": {
-			tsconfig: "jest-tsconfig.json",
-		},
 	},
 };

@@ -9,9 +9,17 @@ import {FlyoutMenu} from "../../inspector/classes/Flyoutmenu";
 import manifest from "./../../../build/manifest.json";
 import uxp from "uxp";
 
+interface PluginBase {
+	developerPlugin: boolean;
+	isFirstParty: boolean;
+	isThirdParty: boolean;
+	privileged: boolean;
+	showPanel(panelId: string): void;
+}
+
 export class Main {
 
-	public static plugin: any = null;
+	public static plugin: PluginBase = null!;
 
 	static {
 		const plugin = [...uxp.pluginManager.plugins].find(p => p.id.endsWith(manifest.id));
@@ -29,16 +37,32 @@ export class Main {
 		return Main.plugin.developerPlugin;
 	}
 
+	public static set devMode(value: boolean) {
+		Main.plugin.developerPlugin = value;
+	}
+
 	public static get isFirstParty(): boolean {
 		return Main.plugin.isFirstParty;
+	}
+
+	public static set isFirstParty(value: boolean) {
+		Main.plugin.isFirstParty = value;
 	}
 
 	public static get isThirdParty(): boolean {
 		return Main.plugin.isThirdParty;
 	}
 
+	public static set isThirdParty(value: boolean) {
+		Main.plugin.isThirdParty = value;
+	}
+
 	public static get privileged(): boolean {
 		return Main.plugin.privileged;
+	}
+
+	public static set privileged(value: boolean) {
+		Main.plugin.privileged = value;
 	}
 
 	public static start(): void {
