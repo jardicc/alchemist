@@ -9,6 +9,7 @@ export default (wallaby) => {
 
 		tests: [
 			"**/_tests_/**/*.ts",
+			"**/_tests_/**/*.tsx",
 		],
 
 		env: {

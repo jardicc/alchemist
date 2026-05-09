@@ -41,4 +41,7 @@
 	"javascript.format.enable": true,
 	"javascript.format.insertSpaceAfterCommaDelimiter": true,
 	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+	"chat.tools.terminal.autoApprove": {
+		"npx jest": true
+	},
 }

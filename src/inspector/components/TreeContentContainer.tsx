@@ -14,7 +14,8 @@ import {TreePath} from "./TreePath";
 import SP from "react-uxp-spectrum";
 import {KeyPath, TLabelRenderer} from "./react-json-tree-2/types";
 
-class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
+
+export class TreeContent extends Component<TTreeContent, Record<string, unknown>> {
 
 	constructor(props: TTreeContent) {
 		super(props);

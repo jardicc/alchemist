@@ -8,7 +8,8 @@ import {Dispatch} from "redux";
 import {getActiveRef} from "../selectors/inspectorSelectors";
 import {setFilterStateAction} from "../actions/inspectorActions";
 
-class FilterRow extends React.Component<TFilterRow, IFilterRowState> {
+
+export class FilterRow extends React.Component<TFilterRow, IFilterRowState> {
 
 	constructor(props: TFilterRow) {
 		super(props);

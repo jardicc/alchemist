@@ -6,7 +6,8 @@ import React from "react";
 import {IListenerNotifierFilter} from "../model/types";
 import SP from "react-uxp-spectrum";
 
-class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> {
+
+export class ListenerFilter extends React.Component<TListenerFilter, Record<string, unknown>> {
 	constructor(props: TListenerFilter) {
 		super(props);
 	}

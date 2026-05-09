@@ -7,7 +7,8 @@ import "./GeneratedCodeContainer.less";
 import {Dispatch} from "redux";
 import SP from "react-uxp-spectrum";
 
-class GeneratedCode extends Component<TGeneratedCode, Record<string, unknown>> {
+
+export class GeneratedCode extends Component<TGeneratedCode, Record<string, unknown>> {
 
 	constructor(props: TGeneratedCode) {
 		super(props);

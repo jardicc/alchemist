@@ -1,11 +1,38 @@
 {
-	"compileOnSave": true,	
-	"compilerOptions": {		
+	"compileOnSave": true,
+	"compilerOptions": {
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"module": "es6",
-		"target":"esnext",
-		"lib":[ "esnext"],
-		"esModuleInterop": true
+		"target": "esnext",
+		"lib": [
+			"esnext",
+			"dom"
+		],
+		"esModuleInterop": true,
+		"jsx": "react",
+		"allowSyntheticDefaultImports": true,
+		"types": [
+			"jest",
+			"node",
+			"@testing-library/jest-dom"
+		],
+		"typeRoots": [
+			"./node_modules/@types",
+			"./node_modules/@adobe/cc-ext-uxp-types",
+			"./src/types",
+			"./src/inspector/model"
+		],
+		"paths": {
+			"uxp": [
+				"./node_modules/@adobe/cc-ext-uxp-types/uxp/index.d.ts"
+			],
+			"photoshop": [
+				"./node_modules/@types/photoshop/index.d.ts"
+			],
+			"photoshop/dom/CoreModules": [
+				"./node_modules/@types/photoshop/dom/CoreModules.d.ts"
+			]
+		}
 	}
 }

@@ -486,7 +486,7 @@ describe("parseDescriptor", () => {
 		expect(out).toEqual({
 			_obj: "null",
 			"antiAlias": true,
-			"null": [{
+			"_target": [{
 				"_property": "selection",
 				"_ref": "channel",
 			}],

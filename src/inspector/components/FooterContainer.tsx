@@ -8,7 +8,8 @@ import {Dispatch} from "redux";
 import {valid, coerce} from "semver";
 import {versions} from "uxp";
 
-class Footer extends React.Component<TFooter, Record<string, unknown>> {
+
+export class Footer extends React.Component<TFooter, Record<string, unknown>> {
 	constructor(props: TFooter) {
 		super(props);
 	}

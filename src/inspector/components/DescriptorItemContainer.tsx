@@ -11,7 +11,8 @@ import {Dispatch} from "redux";
 import {default as SP} from "react-uxp-spectrum";
 import {getIcon} from "../helpers";
 
-class DescriptorItem extends React.Component<TDescriptorItem, IState> {
+
+export class DescriptorItem extends React.Component<TDescriptorItem, IState> {
 	constructor(props: TDescriptorItem) {
 		super(props);
 
