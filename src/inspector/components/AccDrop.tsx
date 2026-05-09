@@ -4,6 +4,7 @@ import {IPropertyGroup, IPropertyItem} from "../model/types";
 import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
 import {getIcon} from "../helpers";
+import {sleep} from "../../shared/helpers";
 
 export interface IAccDropPostFixProps {
 	value: string
@@ -150,13 +151,13 @@ export const AccDrop: React.FC<TAccDrop> = (props) => {
 				<div
 					className="item"
 					key={"i_" + item.value + id}
-					onClick={(e) => {
-						e.stopPropagation();
+					onClick={async (e) => {
+						e.stopPropagation();						
 						if (e.ctrlKey || e.metaKey) {
 							onSelect(id, item.value, true);
 						} else {
 							onSelect(id, item.value);
-							popoverRef.current?.removeAttribute("open");
+							//popoverRef.current?.removeAttribute("open");
 						}
 
 					}}
