@@ -8,6 +8,7 @@ export interface ITreePathProps {
 	autoExpandLevels: number
 	path: KeyPath
 	allowInfinityLevels?: boolean
+	maxLevels?: number
 	hideLevels?: boolean
 }
 
@@ -41,7 +42,7 @@ export const TreePath: React.FC<TTreePath> = (props) => {
 		}, 50);
 	};
 
-	const {autoExpandLevels, allowInfinityLevels, hideLevels} = props;
+	const {autoExpandLevels, allowInfinityLevels, hideLevels, maxLevels = 10} = props;
 
 	return (
 		<div className="TreePath">
@@ -49,11 +50,11 @@ export const TreePath: React.FC<TTreePath> = (props) => {
 				{renderPathFn()}
 			</div>
 			{!hideLevels && <div className="levelSlider">
-				<span className="levelLabel">Expand: {((autoExpandLevels === 10 && allowInfinityLevels) ? "All" : autoExpandLevels) || "Off"}</span>
+				<span className="levelLabel">Expand: {((autoExpandLevels === maxLevels && allowInfinityLevels) ? "All" : autoExpandLevels) || "Off"}</span>
 				<SP.Slider
 					variant="filled"
 					min={0}
-					max={10}
+					max={maxLevels}
 					onInput={throttleSlider}
 					//onChange={(e: any) => onSetAutoExpandLevel(e.target.value)}
 					value={autoExpandLevels}

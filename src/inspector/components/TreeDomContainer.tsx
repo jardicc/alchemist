@@ -49,6 +49,8 @@ export const TreeDom: React.FC<TTreeDom> = (props) => {
 	return (
 		<div className="TreeDom">
 			<TreePath
+				allowInfinityLevels={false}
+				maxLevels={3}
 				autoExpandLevels={autoExpandLevels}
 				onInspectPath={onInspectPath}
 				onSetAutoExpandLevel={onSetAutoExpandLevel}
