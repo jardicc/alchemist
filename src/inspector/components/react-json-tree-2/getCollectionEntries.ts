@@ -51,12 +51,26 @@ function getEntries(
 				return {key, value};
 			}),
 		};
-	} else if (type === "Array") {
-		res = {
-			entries: collection
-				.slice(from, to + 1)
-				.map((val: unknown, idx: number) => ({key: idx + from, value: val})),
-		};
+	}
+	else if (type === "Array") {
+		const arr = collection as ArrayLike<unknown>;
+		const len = arr.length;
+		if (!len) {
+			res = {entries: []};
+		} else {
+			const end = to === Infinity ? len : Math.min(to + 1, len);
+			const entries: {key: number; value: unknown}[] = [];
+			for (let i = from; i < end; i++) {
+				let value: unknown;
+				try {
+					value = arr[i];
+				} catch (e: any) {
+					value = "!!! ERROR !!! " + (e?.message || "");
+				}
+				entries.push({key: i, value});
+			}
+			res = {entries};
+		}
 	} else {
 		let idx = 0;
 		const entries = [];
