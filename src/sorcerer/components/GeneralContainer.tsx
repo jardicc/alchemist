@@ -1,18 +1,22 @@
 import "./GeneralContainer.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
-import {connect} from "react-redux";
-import {Dispatch} from "redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import PS from "photoshop";
 import {TSelectedItem, TSelectActionOperation} from "../../atnDecoder/atnModel";
 import {setHostApp, setMainAction, setSelectAction, TSetMainActionPayload, TSetPanelHostActionPayload} from "../sorActions";
 import {getManifestGeneric, isGenericModuleVisible} from "../sorSelectors";
 import {IManifestInfo} from "../sorModel";
 
-export const General: React.FC<TGeneralContainer> = (props) => {
+export const General: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const manifestGeneric = useAppSelector(getManifestGeneric);
+	const isGenericVisible = useAppSelector(isGenericModuleVisible);
+	const onSetMain = (value: TSetMainActionPayload) => dispatch(setMainAction(value));
+	const onSetHost = (app: "PS" | "XD", arg: TSetPanelHostActionPayload) => dispatch(setHostApp(app, arg));
+
 	const renderHostInfo = () => {
-		const {manifestGeneric: {host}, onSetHost} = props;
+		const {host} = manifestGeneric;
 
 		const res = host.map((h, i) =>
 			<div key={i} className="host">
@@ -28,8 +32,6 @@ export const General: React.FC<TGeneralContainer> = (props) => {
 
 		return res;
 	};
-
-	const {manifestGeneric, isGenericVisible, onSet: onSetMain} = props;
 
 	if (!isGenericVisible) {
 		return null;
@@ -58,38 +60,3 @@ export const General: React.FC<TGeneralContainer> = (props) => {
 		</div>
 	);
 };
-
-type TGeneralContainer = IGeneralContainerProps & IGeneralContainerDispatch
-
-interface IGeneralContainerState {
-
-}
-
-interface IOwn {
-
-}
-
-interface IGeneralContainerProps {
-	manifestGeneric: IManifestInfo
-	isGenericVisible: boolean
-}
-
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IGeneralContainerProps => (state = state as IRootState, {
-	//general: ownProps.general,
-	manifestGeneric: getManifestGeneric(state),
-	isGenericVisible: isGenericModuleVisible(state),
-});
-
-interface IGeneralContainerDispatch {
-	//setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
-	onSet: (value: TSetMainActionPayload) => void
-	onSetHost: (app: "PS" | "XD", arg: TSetPanelHostActionPayload) => void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): IGeneralContainerDispatch => ({
-	onSet: (value) => dispatch(setMainAction(value)),
-	onSetHost: (app, arg) => dispatch(setHostApp(app, arg)),
-	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
-});
-
-export const GeneralContainer = connect<IGeneralContainerProps, IGeneralContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(General);

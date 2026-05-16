@@ -1,19 +1,25 @@
 import "./ActionCommandContainer.less";
 
 import React from "react";
-import {connect} from "react-redux";
-import {Dispatch} from "redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setSelectActionAction} from "../atnActions";
 import {getSelectedItemsCommand} from "../atnSelectors";
 import {IActionCommandUUID, IActionItemUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
 import {IconCheck, IconEmpty} from "../../shared/components/icons";
 import PS from "photoshop";
 
-export const ActionCommand: React.FC<TActionCommand> = (props) => {
-	const combinedUUID: [string, string, string] = [props.parentSet.__uuid__, props.parentAction.__uuid__, props.actionCommand.__uuid__];
+interface IOwn {
+	actionCommand: IActionCommandUUID
+	parentSet: IActionSetUUID
+	parentAction: IActionItemUUID
+}
 
-	const isSelected: boolean = !!props.selectedItems.find(item =>
+export const ActionCommand: React.FC<IOwn> = ({actionCommand, parentSet, parentAction}) => {
+	const dispatch = useAppDispatch();
+	const selectedItems = useAppSelector(getSelectedItemsCommand);
+	const combinedUUID: [string, string, string] = [parentSet.__uuid__, parentAction.__uuid__, actionCommand.__uuid__];
+
+	const isSelected: boolean = !!selectedItems.find(item =>
 		item[0] === combinedUUID[0] &&
 		item[1] === combinedUUID[1] &&
 		item[2] === combinedUUID[2]);
@@ -34,10 +40,8 @@ export const ActionCommand: React.FC<TActionCommand> = (props) => {
 				operation = "add";
 			}
 		}
-		props.setSelectedItem(combinedUUID, operation);
+		dispatch(setSelectActionAction(operation, combinedUUID));
 	};
-
-	const {actionCommand} = props;
 
 	return (
 		<div className="ActionCommandContainer">
@@ -52,39 +56,3 @@ export const ActionCommand: React.FC<TActionCommand> = (props) => {
 		</div>
 	);
 };
-
-type TActionCommand = IActionCommandProps & IActionCommandDispatch
-
-interface IActionCommandState {
-
-}
-
-interface IOwn {
-	actionCommand: IActionCommandUUID
-	parentSet: IActionSetUUID
-	parentAction: IActionItemUUID
-}
-
-interface IActionCommandProps {
-	parentSet: IActionSetUUID
-	parentAction: IActionItemUUID
-	selectedItems: TSelectedItem[]
-	actionCommand: IActionCommandUUID
-}
-
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IActionCommandProps => (state = state as IRootState, {
-	actionCommand: ownProps.actionCommand,
-	selectedItems: getSelectedItemsCommand(state),
-	parentSet: ownProps.parentSet,
-	parentAction: ownProps.parentAction,
-});
-
-interface IActionCommandDispatch {
-	setSelectedItem(uuid: TSelectedItem, operation: TSelectActionOperation): void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): IActionCommandDispatch => ({
-	setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation, uuid)),
-});
-
-export const ActionCommandContainer = connect<IActionCommandProps, IActionCommandDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(ActionCommand);

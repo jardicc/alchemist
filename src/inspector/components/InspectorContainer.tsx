@@ -1,6 +1,5 @@
-import {connect, MapDispatchToPropsFunction} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setModeTabAction, setColumnSizeAction, toggleSettingsAction} from "../actions/inspectorActions";
-import {IRootState} from "../../shared/store";
 import {getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible} from "../selectors/inspectorSelectors";
 
 import React from "react";
@@ -8,21 +7,29 @@ import {TabList} from "./Tabs/TabList";
 import {TabPanel} from "./Tabs/TabListPanel";
 import "./InspectorContainer.less";
 import {TActiveInspectorTab, TFontSizeSettings} from "../model/types";
-import {FooterContainer} from "./FooterContainer";
-import {TreeContentContainer} from "./TreeContentContainer";
-import {TreeDiffContainer} from "./TreeDiff/TreeDiffContainer";
-import {TreeDomContainer} from "./TreeDomContainer";
-import {DispatcherContainer} from "./DispatcherContainer";
-import {GeneratedCodeContainer} from "./GeneratedCodeContainer";
-import {SettingsContainer} from "./Settings/SettingsContainer";
+import {Footer} from "./FooterContainer";
+import {TreeContent} from "./TreeContentContainer";
+import {TreeDiff} from "./TreeDiff/TreeDiffContainer";
+import {TreeDom} from "./TreeDomContainer";
+import {Dispatcher} from "./DispatcherContainer";
+import {GeneratedCode} from "./GeneratedCodeContainer";
+import {Settings} from "./Settings/SettingsContainer";
 import {IconCog, IconX} from "../../shared/components/icons";
-import {LeftColumnContainer} from "./LeftColumn";
+import {LeftColumn} from "./LeftColumn";
 import {SplitPane} from "../../shared/components/split-pane-fork/SplitPane";
 import {Pane} from "../../shared/components/split-pane-fork/Pane";
 
 
-
-const Inspector: React.FC<TInspector> = (props) => {
+export const Inspector: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const modeTab = useAppSelector(getModeTabID);
+	const leftColumnWidthPx = useAppSelector(getLeftColumnWidth);
+	const rightColumnWidthPx = useAppSelector(getRightColumnWidth);
+	const fontSizeSettings = useAppSelector(getFontSizeSettings);
+	const visible = useAppSelector(getSettingsVisible);
+	const setModeTab = (key: TActiveInspectorTab) => dispatch(setModeTabAction(key));
+	const setColumnSize = (px: number, location: "left" | "right") => dispatch(setColumnSizeAction(px, location));
+	const setToggleSettings = () => dispatch(toggleSettingsAction());
 	const [showMessage, setShowMessage] = React.useState(false);
 	const [message, setMessage] = React.useState("");
 	const [link, setLink] = React.useState("");
@@ -45,8 +52,6 @@ const Inspector: React.FC<TInspector> = (props) => {
 		})();
 	}, []);
 
-	const {fontSizeSettings, leftColumnWidthPx, rightColumnWidthPx, setColumnSize, settingsVisible: visible, setToggleSettings} = props;
-
 	const btnSettings = (
 		<div className={"FilterButton settings " + (visible ? "on " : "off ")} title="Show settings" onClick={setToggleSettings}>
 			<div className="icon flex row">{/*<IconCog />&nbsp;*/}<span> Settings</span></div>
@@ -58,7 +63,7 @@ const Inspector: React.FC<TInspector> = (props) => {
 			<div className="descriptorsColumns">
 				<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => { setColumnSize(px, "left"); }} minSize={210}>
 					<Pane className="leftPane">
-						<LeftColumnContainer />
+						<LeftColumn />
 					</Pane>
 					<SplitPane split="horizontal" primary="second" maxSize={25} minSize={25} defaultSize={25} allowResize={false} resizerStyle={{display: "none"}} pane1ClassName="" pane2ClassName="" paneClassName="">
 
@@ -79,34 +84,34 @@ const Inspector: React.FC<TInspector> = (props) => {
 								<Pane className="rightPane" >
 									<TabList
 										className="tabsDescriptor"
-										activeKey={props.modeTab}
-										onChange={props.setModeTab}
+										activeKey={modeTab}
+										onChange={setModeTab}
 										postFix={visible ? undefined : btnSettings}
 									>
 										<TabPanel id="content" title="Content" noPadding={true}>
-											<TreeContentContainer />
+											<TreeContent />
 										</TabPanel>
 										<TabPanel id="difference" title="Difference" noPadding={true}>
-											<TreeDiffContainer />
+											<TreeDiff />
 										</TabPanel>
 										<TabPanel id="dom" title="DOM (live)" noPadding={true} >
-											<TreeDomContainer />
+											<TreeDom />
 										</TabPanel>
 										<TabPanel id="reference" title="Code" noPadding={true}>
-											<GeneratedCodeContainer />
+											<GeneratedCode />
 										</TabPanel>
 										<TabPanel id="dispatcher" title="Dispatch" marginRight={true}>
-											<DispatcherContainer />
+											<Dispatcher />
 										</TabPanel>
 									</TabList>
 								</Pane>
 								<Pane className="rightPane" style={{overflow: "auto"}}>
-									{visible && <SettingsContainer />}
+									{visible && <Settings />}
 								</Pane>
 							</SplitPane>
 						</Pane>
 						<Pane className="footerPane">
-							<FooterContainer parentPanel="inspector" />
+							<Footer parentPanel="inspector" />
 
 						</Pane>
 					</SplitPane>
@@ -117,48 +122,3 @@ const Inspector: React.FC<TInspector> = (props) => {
 		</div>
 	);
 };
-
-type TInspector = IInspectorProps & IInspectorDispatch
-
-interface IInspectorState {
-	showMessage: boolean
-	message: string
-	link: string
-}
-
-interface IInspectorProps {
-	modeTab: TActiveInspectorTab
-	calculatedReference: string
-	leftColumnWidthPx: number
-	rightColumnWidthPx: number
-	fontSizeSettings: TFontSizeSettings
-	settingsVisible: boolean
-}
-
-const mapStateToProps = (state: any): IInspectorProps => (state = state as IRootState, {
-	modeTab: getModeTabID(state),
-	calculatedReference: getActiveDescriptorOriginalReference(state),
-	leftColumnWidthPx: getLeftColumnWidth(state),
-	rightColumnWidthPx: getRightColumnWidth(state),
-	fontSizeSettings: getFontSizeSettings(state),
-	settingsVisible: getSettingsVisible(state),
-});
-
-interface IInspectorDispatch {
-	setModeTab(mode: TActiveInspectorTab): void
-	//setWholeState(): void
-	setColumnSize(px: number, location: "left" | "right"): void
-	setToggleSettings(): void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<IInspectorDispatch, Record<string, unknown>> = (dispatch): IInspectorDispatch => ({
-	setModeTab: (key) => dispatch(setModeTabAction(key)),
-	/*setWholeState: async () => {
-		dispatch(replaceWholeStateAction(await Settings.importState()));
-		Settings.loaded = true;
-	},*/
-	setColumnSize: (px, location: "left" | "right") => dispatch(setColumnSizeAction(px, location)),
-	setToggleSettings: () => dispatch(toggleSettingsAction()),
-});
-
-export const InspectorContainer = connect<IInspectorProps, IInspectorDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Inspector);

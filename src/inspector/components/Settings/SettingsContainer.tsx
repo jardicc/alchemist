@@ -1,37 +1,43 @@
-import {connect} from "react-redux";
-import {IRootState} from "../../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../../shared/store";
 import {getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings, getSettingsVisible} from "../../selectors/inspectorSelectors";
 import {setDescriptorOptionsAction, setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction, setSettingsAction, toggleAccordion, toggleSettingsAction} from "../../actions/inspectorActions";
 import SP from "react-uxp-spectrum";
 import React, {Component} from "react";
 import {IDescriptor, IDescriptorSettings, ISettings, TFontSizeSettings} from "../../model/types";
 import "./Settings.less";
-import {Dispatch} from "redux";
 import {Settings as SettingsClass} from "../../../inspector/classes/Settings";
 import {getDescriptorOptions} from "../../selectors/inspectorCodeSelectors";
 import {Accordion} from "../Accordion";
 
-const Settings: React.FC<TSettings> = (props) => {
-	const levelDelay = React.useRef<number | null>(null);
-
+export const Settings: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const settings = useAppSelector(getInspectorSettings);
+	const autoSelectedUUIDs = useAppSelector(getAutoSelectedUUIDs);
+	const globalSettings = useAppSelector(getInspectorSettings);
+	const descriptorSettings = useAppSelector(getDescriptorOptions);
+	const selected = useAppSelector(getActiveDescriptors);
+	const settingsVisible = useAppSelector(getSettingsVisible);
+	const onSetRecordRaw = (value: boolean) => dispatch(setRecordRawAction(value));
+	const onSetMaximumItems = (value: string) => dispatch(setMaximumItems(value));
+	const onSetFontSize = (value: TFontSizeSettings) => dispatch(setFontSizeAction(value));
+	const onNeverRecordActionNamesChanged = (value: string) => dispatch(setNeverRecordActionNamesAction(value));
+	const onSetGlobalOptions = (options: Partial<ISettings>) => dispatch(setSettingsAction(options));
+	const onSetDescriptorOptions = (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => dispatch(setDescriptorOptionsAction(uuids, options));
+	const setToggleSettings = () => dispatch(toggleSettingsAction());
+	const onToggleAccordion = (id: string, expanded: boolean) => dispatch(toggleAccordion(id, expanded));
 	const common = (options: Partial<IDescriptorSettings>) => {
-		const {autoSelectedUUIDs, selected, onSetDescriptorOptions: onSetOptions} = props;
 		if (autoSelectedUUIDs?.length) {
-			onSetOptions("default", options);
+			onSetDescriptorOptions("default", options);
 		} else {
-			onSetOptions(selected.map(item => item.id), options);
+			onSetDescriptorOptions(selected.map(item => item.id), options);
 		}
 	};
 
 	const renderOptionsScope = (): React.ReactNode => {
-		const auto = props.autoSelectedUUIDs;
-
-		if (auto?.length) {
-			return (
-				<>Will affect all new items</>
-			);
+		if (autoSelectedUUIDs?.length) {
+			return (<>Will affect all new items</>);
 		} else {
-			return (<>Will change {props.selected?.length ?? 0} selected item(s)</>);
+			return (<>Will change {selected?.length ?? 0} selected item(s)</>);
 		}
 	};
 
@@ -62,7 +68,7 @@ const Settings: React.FC<TSettings> = (props) => {
 
 	const onSetIndent = (e: any) => {
 		const value = e.currentTarget.value;
-		props.onSetGlobalOptions({indent: value});
+		onSetGlobalOptions({indent: value});
 	};
 
 	const wrappersString = (num: 0 | 1 | 2 | 3) => {
@@ -85,14 +91,16 @@ const Settings: React.FC<TSettings> = (props) => {
 		const value = wrappersString(e.target.value);
 
 		levelDelay.current = window.setTimeout(() => {
-			props.onSetGlobalOptions({
+			onSetGlobalOptions({
 				codeWrappers: value,
 			});
 		}, 50);
 	};
 
+	const levelDelay = React.useRef<number | null>(null);
+
 	const wrappersValue: number = (() => {
-		switch (props.settings.codeWrappers) {
+		switch (settings.codeWrappers) {
 			case "modal":
 				return 0;
 			case "batchPlay":
@@ -105,7 +113,7 @@ const Settings: React.FC<TSettings> = (props) => {
 	})();
 
 	const wrappersLabel: string = (() => {
-		switch (props.settings.codeWrappers) {
+		switch (settings.codeWrappers) {
 			case "modal":
 				return "Execute as modal";
 			case "batchPlay":
@@ -118,13 +126,13 @@ const Settings: React.FC<TSettings> = (props) => {
 	})();
 
 	const onSetImports = (e: any) => {
-		props.onSetGlobalOptions({codeImports: e.target?.checked ? "require" : "none"});
+		onSetGlobalOptions({codeImports: e.target?.checked ? "require" : "none"});
 	};
 
-	const {settings: {makeRawDataEasyToInspect: ignoreRawData, maximumItems, fontSize, neverRecordActionNames, accordionExpandedIDs}, onSetRecordRaw, onSetFontSize, onNeverRecordActionNamesChanged} = props;
-	const {onSetGlobalOptions, settingsVisible: visible, setToggleSettings, onToggleAccordion} = props;
-	const {dialogOptions, modalBehavior, synchronousExecution, supportRawDataType} = props.descriptorSettings;
-	const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand, codeImports, codeWrappers, tokenify} = props.globalSettings;
+	const {makeRawDataEasyToInspect: ignoreRawData, maximumItems, fontSize, neverRecordActionNames, accordionExpandedIDs} = settings;
+	const visible = settingsVisible;
+	const {dialogOptions, modalBehavior, synchronousExecution, supportRawDataType} = descriptorSettings;
+	const {indent, singleQuotes, hideDontRecord, hideForceNotify, hide_isCommand, codeImports, codeWrappers, tokenify} = globalSettings;
 
 	const items: {val: TFontSizeSettings, label: string}[] = [
 		{label: "Tiny", val: "size-tiny"},
@@ -310,65 +318,10 @@ const Settings: React.FC<TSettings> = (props) => {
 						className="fullW"
 						type="number"
 						value={maximumItems.toString()}
-						onChange={(e: any) => props.onSetMaximumItems(e.currentTarget.value)}
+						onChange={(e: any) => onSetMaximumItems(e.currentTarget.value)}
 					/>
 				</div>
 			</Accordion>
 		</div>
 	);
 };
-
-
-
-
-type TSettings = ISettingsProps & ISettingsDispatch
-
-interface ISettingsState {
-	maxItemsTempValue: string
-	maxItemsFocus: boolean
-}
-
-interface ISettingsProps {
-	settings: ISettings
-	autoSelectedUUIDs: string[]
-	globalSettings: ISettings
-	descriptorSettings: IDescriptorSettings
-	selected: IDescriptor[]
-	settingsVisible: boolean
-}
-
-const mapStateToProps = (state: IRootState): ISettingsProps => ({
-	settings: getInspectorSettings(state),
-	autoSelectedUUIDs: getAutoSelectedUUIDs(state),
-	descriptorSettings: getDescriptorOptions(state),
-	globalSettings: getInspectorSettings(state),
-	selected: getActiveDescriptors(state),
-	settingsVisible: getSettingsVisible(state),
-});
-
-interface ISettingsDispatch {
-	onSetRecordRaw: (value: boolean) => void
-	onSetMaximumItems: (value: string) => void
-	onSetFontSize: (value: TFontSizeSettings) => void
-	onNeverRecordActionNamesChanged: (value: string) => void
-
-	onSetGlobalOptions: (options: Partial<ISettings>) => void
-	onSetDescriptorOptions: (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => void
-	setToggleSettings(): void
-
-	onToggleAccordion(id: string, expanded: boolean): void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): ISettingsDispatch => ({
-	onSetRecordRaw: (value) => dispatch(setRecordRawAction(value)),
-	onSetMaximumItems: (value) => dispatch(setMaximumItems(value)),
-	onSetFontSize: (value) => dispatch(setFontSizeAction(value)),
-	onNeverRecordActionNamesChanged: (value) => dispatch(setNeverRecordActionNamesAction(value)),
-
-	onSetGlobalOptions: (options) => dispatch(setSettingsAction(options)),
-	onSetDescriptorOptions: (uuids, options) => dispatch(setDescriptorOptionsAction(uuids, options)),
-	setToggleSettings: () => dispatch(toggleSettingsAction()),
-	onToggleAccordion: (id, expanded) => dispatch(toggleAccordion(id, expanded)),
-});
-
-export const SettingsContainer = connect<ISettingsProps, ISettingsDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Settings);

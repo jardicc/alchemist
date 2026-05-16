@@ -2,7 +2,7 @@
 import {createRoot} from "react-dom/client";
 import React, {StrictMode} from "react";
 import {Provider} from "react-redux";
-import {InspectorContainer} from "./InspectorContainer";
+import {Inspector} from "./InspectorContainer";
 import {rootStore} from "../../shared/store";
 import {ErrorBoundary} from "./ErrorBoundary";
 import {NotificationContainer} from "react-notifications";
@@ -25,7 +25,7 @@ export function renderInspectorUI(): void {
 			<Provider store={rootStore}>
 				<ErrorBoundary>
 					<NotificationContainer />
-					<InspectorContainer />
+					<Inspector />
 				</ErrorBoundary>
 			</Provider>
 		//</StrictMode>

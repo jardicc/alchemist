@@ -1,20 +1,25 @@
 import "./ActionSetContainer.less";
 
 import React, {MouseEventHandler} from "react";
-import {connect} from "react-redux";
-import {Dispatch} from "redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setExpandActionAction, setSelectActionAction} from "../atnActions";
 import {getExpandedItemsSet, getSelectedItemsSet} from "../atnSelectors";
 import {IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem} from "../atnModel";
-import {ActionItemContainer} from "./ActionItemContainer";
+import {ActionItem} from "./ActionItemContainer";
 import {IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty, IconFolder} from "../../shared/components/icons";
 import PS from "photoshop";
 
-export const ActionSet: React.FC<TActionSet> = (props) => {
-	const combinedUUID: [string] = [props.actionSet.__uuid__];
+interface IOwn {
+	actionSet: IActionSetUUID
+}
 
-	const isSelected: boolean = !!props.selectedItems.find(item =>
+export const ActionSet: React.FC<IOwn> = ({actionSet}) => {
+	const dispatch = useAppDispatch();
+	const selectedItems = useAppSelector(getSelectedItemsSet);
+	const expandedItems = useAppSelector(getExpandedItemsSet);
+	const combinedUUID: [string] = [actionSet.__uuid__];
+
+	const isSelected: boolean = !!selectedItems.find(item =>
 		item[0] === combinedUUID[0]);
 
 	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -33,19 +38,16 @@ export const ActionSet: React.FC<TActionSet> = (props) => {
 				operation = "add";
 			}
 		}
-		props.setSelectedItem(combinedUUID, operation);
+		dispatch(setSelectActionAction(operation, combinedUUID));
 	};
 
-	const isExpanded = props.expandedItems.flat().includes(props.actionSet.__uuid__);
+	const isExpanded = expandedItems.flat().includes(actionSet.__uuid__);
 
 	const onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		e.stopPropagation();
-		const {actionSet} = props;
 		const recursive = (e.ctrlKey || e.metaKey);
-		props.setExpandedItem([actionSet.__uuid__], !isExpanded, recursive);
+		dispatch(setExpandActionAction([actionSet.__uuid__], !isExpanded, recursive));
 	};
-
-	const {actionSet} = props;
 
 	return (
 		<div className="ActionSet">
@@ -61,42 +63,7 @@ export const ActionSet: React.FC<TActionSet> = (props) => {
 					{PS.core.translateUIString(actionSet.actionSetName)}
 				</span>
 			</div>
-			{isExpanded && actionSet.actionItems.map((item, key) => <ActionItemContainer actionItem={item} parent={actionSet} key={key} />)}
+			{isExpanded && actionSet.actionItems.map((item, key) => <ActionItem actionItem={item} parent={actionSet} key={key} />)}
 		</div>
 	);
 };
-
-type TActionSet = IActionSetProps & IActionSetDispatch
-
-interface IActionSetState {
-
-}
-
-interface IOwn {
-	actionSet: IActionSetUUID
-}
-
-interface IActionSetProps {
-	selectedItems: TSelectedItem[]
-	expandedItems: TExpandedItem[]
-	actionSet: IActionSetUUID
-}
-
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IActionSetProps => (state = state as IRootState, {
-	actionSet: ownProps.actionSet,
-	expandedItems: getExpandedItemsSet(state),
-	selectedItems: getSelectedItemsSet(state),
-
-});
-
-interface IActionSetDispatch {
-	setSelectedItem(uuid: TSelectedItem, operation: TSelectActionOperation): void
-	setExpandedItem(uuid: TExpandedItem, expand: boolean, recursive: boolean): void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): IActionSetDispatch => ({
-	setExpandedItem: (uuid, expand, recursive) => dispatch(setExpandActionAction(uuid, expand, recursive)),
-	setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation, uuid)),
-});
-
-export const ActionSetContainer = connect<IActionSetProps, IActionSetDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(ActionSet);

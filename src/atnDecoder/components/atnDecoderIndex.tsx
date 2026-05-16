@@ -2,7 +2,7 @@ import {createRoot} from "react-dom/client";
 import React, {StrictMode} from "react";
 import {Provider} from "react-redux";
 import {rootStore} from "../../shared/store";
-import {ATNDecoderContainer} from "./ATNDecoderContainer";
+import {ATNDecoder} from "./ATNDecoderContainer";
 import {ErrorBoundary} from "../../inspector/components/ErrorBoundary";
 
 export function renderATNDecoderUI(): void {
@@ -18,7 +18,7 @@ export function renderATNDecoderUI(): void {
 		//<StrictMode>
 			<Provider store={rootStore}>
 				<ErrorBoundary>
-					<ATNDecoderContainer />
+					<ATNDecoder />
 				</ErrorBoundary>
 			</Provider>
 		//</StrictMode>

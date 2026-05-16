@@ -1,5 +1,4 @@
-import {connect} from "react-redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setDispatcherValueAction, addDescriptorAction} from "../actions/inspectorActions";
 import {getDispatcherSnippet} from "../selectors/dispatcherSelectors";
 import {getInspectorSettings} from "../selectors/inspectorSelectors";
@@ -13,19 +12,23 @@ import {RawDataConverter} from "../classes/RawDataConverter";
 import {getInitialState} from "../inspInitialState";
 import {str as crc} from "crc-32";
 import Sval from "sval";
-import {Dispatch} from "redux";
 import SP from "react-uxp-spectrum";
 import uxp from "uxp";
 import os from "os";
 
-const Dispatcher: React.FC<TDispatcher> = (props) => {
+export const Dispatcher: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const snippet = useAppSelector(getDispatcherSnippet);
+	const settings = useAppSelector(getInspectorSettings);
+	const setDispatcherValue = (value: string) => dispatch(setDispatcherValueAction(value));
+	const onAddDescriptor = (desc: IDescriptor) => dispatch(addDescriptorAction(desc, false));
+
 	const change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		props.setDispatcherValue(e.currentTarget.value);
+		setDispatcherValue(e.currentTarget.value);
 	};
 
 	const send = async () => {
 		try {
-			const snippet = props.snippet;
 			const startTime = Date.now();
 			let data: any;
 			try {
@@ -67,11 +70,11 @@ const Dispatcher: React.FC<TDispatcher> = (props) => {
 				renameMode: false,
 				playAbleData: data,
 				title: "Dispatched",
-				descriptorSettings: props.settings.initialDescriptorSettings,
+				descriptorSettings: settings.initialDescriptorSettings,
 			};
 
 			//this.props.setLastHistoryID;
-			props.onAddDescriptor(result);
+			onAddDescriptor(result);
 		} catch (e) {
 			console.error(e);
 		}
@@ -81,34 +84,9 @@ const Dispatcher: React.FC<TDispatcher> = (props) => {
 		<div className="Dispatcher">
 			<div className="help">Use <code>{`return`}</code> to add result into descriptor list. E.g. <code>{`return await batchPlay([{_obj:"invert"}])`}</code><br /></div>
 			<div className="textareaWrap">
-				<SP.Textarea value={props.snippet} onInput={change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
+				<SP.Textarea value={snippet} onInput={change as any} placeholder={getInitialState().dispatcher.snippets[0].content} />
 			</div>
 			<div className="button" onClick={send}>Send</div>
 		</div>
 	);
 };
-
-
-type TDispatcher = IDispatcherProps & IDispatcherDispatch
-
-interface IDispatcherProps {
-	snippet: string
-	settings: ISettings
-}
-
-const mapStateToProps = (state: IRootState): IDispatcherProps => ({
-	snippet: getDispatcherSnippet(state),
-	settings: getInspectorSettings(state),
-});
-
-interface IDispatcherDispatch {
-	setDispatcherValue: (value: string) => void
-	onAddDescriptor: (descriptor: IDescriptor) => void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): IDispatcherDispatch => ({
-	setDispatcherValue: (value) => dispatch(setDispatcherValueAction(value)),
-	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc, false)),
-});
-
-export const DispatcherContainer = connect<IDispatcherProps, IDispatcherDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Dispatcher);

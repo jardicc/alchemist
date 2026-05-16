@@ -1,18 +1,17 @@
-import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState, rootStore} from "../../shared/store";
+import {useAppDispatch, useAppSelector, rootStore} from "../../shared/store";
 
 import React from "react";
 
 import "./ATNDecoderContainer.less";
 
 import {decodeATN} from "../classes/ATNDecoder";
-import {FooterContainer} from "../../inspector/components/FooterContainer";
+import {Footer} from "../../inspector/components/FooterContainer";
 import {IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation} from "../../inspector/model/types";
 import {getAllDescriptors, getFontSizeSettings, getInspectorSettings} from "../../inspector/selectors/inspectorSelectors";
-import {getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands} from "../atnSelectors";
+import {getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands as getSelectedCommands} from "../atnSelectors";
 import {clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction} from "../atnActions";
 import {IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
-import {ActionSetContainer} from "./ActionSetContainer";
+import {ActionSet} from "./ActionSetContainer";
 import {addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setModeTabAction, toggleDescriptorsGroupingAction} from "../../inspector/actions/inspectorActions";
 import {alert, Helpers} from "../../inspector/classes/Helpers";
 import {str as crc} from "crc-32";
@@ -21,20 +20,38 @@ import SP from "react-uxp-spectrum";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
 
-const ATNDecoder: React.FC<TATNDecoder> = (props) => {
+export const ATNDecoder: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const fontSizeSettings = useAppSelector(getFontSizeSettings);
+	const data = useAppSelector(getData);
+	const textData = useAppSelector(getTextData);
+	const selectedCommands = useAppSelector(getSelectedCommands);
+	const dontSendDisabled = useAppSelector(getDontSendDisabled);
+	const allAlchemistDescriptors = useAppSelector(getAllDescriptors);
+	const settingsAlchemist = useAppSelector(getInspectorSettings);
+
+	const setData = (d: IActionSetUUID[]) => dispatch(setDataAction(d));
+	const onClearAll = () => dispatch(clearAllAction());
+	const onPassSelected = (desc: IDescriptor, replace: boolean) => {
+		dispatch(setModeTabAction("reference"));
+		dispatch(setInspectorViewAction("code", "generated"));
+		dispatch(toggleDescriptorsGroupingAction("none"));
+		dispatch(addDescriptorAction(desc, replace));
+	};
+	const onSelectAlchemistDescriptors = (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptorAction(operation, uuid));
+	const setSelectedItem = (uuid: TSelectedItem, operation: TSelectActionOperation) => dispatch(setSelectActionAction(operation, uuid));
+	const onSetDontSendDisabled = (value: boolean) => dispatch(setDontSendDisabledAction(value));
 	const renderAddButton = () => (
 		<div className="button" onClick={async (e) => {
 			e.stopPropagation();
 			const res = await decodeATN();
-			props.setData(res);
+			setData(res);
 		}}>
 			Read .ATN file
 		</div>
 	);
 
 	const renderSet = () => {
-		const {data} = props;
-
 		if (!data.length) {
 			return (
 				<div className="ctaEmpty">
@@ -46,26 +63,26 @@ const ATNDecoder: React.FC<TATNDecoder> = (props) => {
 
 		return (
 			data.map((set, i) => (
-				<ActionSetContainer actionSet={set} key={i} />
+				<ActionSet actionSet={set} key={i} />
 			))
 		);
 	};
 
 	const pass = (replace = false) => {
 		// eslint-disable-next-line prefer-const
-		let {selectedCommands, onPassSelected, onSelectAlchemistDescriptors, dontSendDisabled, allAlchemistDescriptors, settingsAlchemist} = props;
+		let cmds = selectedCommands;
 
 		onSelectAlchemistDescriptors("none");
 
 		if (dontSendDisabled) {
-			selectedCommands = selectedCommands.filter(c => c.enabled);
+			cmds = cmds.filter(c => c.enabled);
 		}
 
-		if (selectedCommands.length > settingsAlchemist.maximumItems) {
-			alert(`Alchemist can currently show only ${settingsAlchemist.maximumItems} items. Increase limit in Alchemist settings if you want to see ${selectedCommands.length - settingsAlchemist.maximumItems} additional items`);
+		if (cmds.length > settingsAlchemist.maximumItems) {
+			alert(`Alchemist can currently show only ${settingsAlchemist.maximumItems} items. Increase limit in Alchemist settings if you want to see ${cmds.length - settingsAlchemist.maximumItems} additional items`);
 		}
 
-		selectedCommands.forEach((command, index) => {
+		cmds.forEach((command, index) => {
 
 			const commandParrent = getActionByUUID(rootStore.getState().inspector, command.__uuidParentSet__, command.__uuidParentAction__);
 			const descCrc = crc(JSON.stringify(command.descriptor));
@@ -99,8 +116,6 @@ const ATNDecoder: React.FC<TATNDecoder> = (props) => {
 
 	};
 
-	const {fontSizeSettings, data, setData, textData, onClearAll, selectedCommands, setSelectedItem, onSetDontSendDisabled, dontSendDisabled} = props;
-
 	return (
 		<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 			<div className="info spread flex">
@@ -121,61 +136,7 @@ const ATNDecoder: React.FC<TATNDecoder> = (props) => {
 				<div className={"button " + (!data.length ? "disallowed" : "")} onClick={onClearAll}>Clear all</div>
 			</div>
 
-			<FooterContainer parentPanel="atnConverter" />
+			<Footer parentPanel="atnConverter" />
 		</div>
 	);
 };
-
-
-
-type TATNDecoder = IATNDecoderProps & IATNDecoderDispatch
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IATNDecoderState {
-
-}
-
-interface IATNDecoderProps {
-	fontSizeSettings: TFontSizeSettings
-	data: IActionSetUUID[]
-	textData: string
-	selectedCommands: IActionCommandUUID[]
-	dontSendDisabled: boolean
-	allAlchemistDescriptors: IDescriptor[]
-	settingsAlchemist: ISettings
-}
-
-const mapStateToProps = (state: IRootState): IATNDecoderProps => (state = state as IRootState, {
-	fontSizeSettings: getFontSizeSettings(state),
-	data: getData(state),
-	textData: getTextData(state),
-	selectedCommands: selectedCommands(state),
-	dontSendDisabled: getDontSendDisabled(state),
-	allAlchemistDescriptors: getAllDescriptors(state),
-	settingsAlchemist: getInspectorSettings(state),
-});
-
-interface IATNDecoderDispatch {
-	setData(data: IActionSetUUID[]): void
-	onClearAll(): void
-	onPassSelected(desc: IDescriptor, replace: boolean): void
-	onSelectAlchemistDescriptors(operation: TSelectDescriptorOperation, uuid?: string): void
-	setSelectedItem(uuid: TSelectedItem, operation: TSelectActionOperation): void
-	onSetDontSendDisabled(value: boolean): void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<IATNDecoderDispatch, Record<string, unknown>> = (dispatch): IATNDecoderDispatch => ({
-	setData: (data) => dispatch(setDataAction(data)),
-	onClearAll: () => dispatch(clearAllAction()),
-	onPassSelected: (desc, replace) => {
-		dispatch(setModeTabAction("reference"));
-		dispatch(setInspectorViewAction("code", "generated"));
-		dispatch(toggleDescriptorsGroupingAction("none"));
-		dispatch(addDescriptorAction(desc, replace));
-	},
-	onSelectAlchemistDescriptors: (operation, uuid) => dispatch(selectDescriptorAction(operation, uuid)),
-	setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation, uuid)),
-	onSetDontSendDisabled: (value) => dispatch(setDontSendDisabledAction(value)),
-});
-
-export const ATNDecoderContainer = connect<IATNDecoderProps, IATNDecoderDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(ATNDecoder);

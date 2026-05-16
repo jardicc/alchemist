@@ -1,15 +1,16 @@
 import "./PanelContainer.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
-import {connect, useDispatch} from "react-redux";
-import {Dispatch} from "redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {IEntrypointPanel, ISnippet} from "../sorModel";
 import {getActivePanel, getAllSnippets} from "../sorSelectors";
 import {assignSnippetToPanelAction, setPanelAction, TSetPanelActionPayload} from "../sorActions";
-import {TActions} from "../../inspector/actions/inspectorActions";
-export const Panel: React.FC<TPanelContainer> = (props) => {
-	const {activePanel, onSet, snippets, onAssignSnippet} = props;
+export const Panel: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const activePanel = useAppSelector(getActivePanel);
+	const snippets = useAppSelector(getAllSnippets);
+	const onSet = (uuid: string, value: TSetPanelActionPayload) => dispatch(setPanelAction(value, uuid));
+	const onAssignSnippet = (uuid: string, operation: "on" | "off", snippetUuid: string) => dispatch(assignSnippetToPanelAction(operation, uuid, snippetUuid));
 
 	if (!activePanel) {return null;}
 	//debugger;
@@ -44,38 +45,3 @@ export const Panel: React.FC<TPanelContainer> = (props) => {
 		</div>
 	);
 };
-
-type TPanelContainer = IPanelContainerProps & IPanelContainerDispatch
-
-interface IPanelContainerState {
-
-}
-
-interface IOwn {
-
-}
-
-interface IPanelContainerProps {
-	activePanel: IEntrypointPanel | null
-	snippets: ISnippet[]
-}
-
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IPanelContainerProps => (state = state as IRootState, {
-	activePanel: getActivePanel(state),
-	snippets: getAllSnippets(state),
-});
-
-interface IPanelContainerDispatch {
-	//setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
-	onSet: (uuid: string, value: TSetPanelActionPayload) => void
-	onAssignSnippet: (uuid: string, operation: "on" | "off", snippetUuid: string) => void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): IPanelContainerDispatch => ({
-	//setSelectedItem: (uuid, operation) => dispatch(setSelectAction(operation,uuid)),
-
-	onSet: (uuid, value) => dispatch(setPanelAction(value, uuid)),
-	onAssignSnippet: (uuid, operation, snippetUuid) => dispatch(assignSnippetToPanelAction(operation, uuid, snippetUuid)),
-});
-
-export const PanelContainer = connect<IPanelContainerProps, IPanelContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(Panel);

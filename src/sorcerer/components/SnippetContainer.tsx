@@ -1,17 +1,17 @@
 import "./SnippetContainer.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
-import {connect} from "react-redux";
-import {Dispatch} from "redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import PS from "photoshop";
 import {TSelectedItem, TSelectActionOperation} from "../../atnDecoder/atnModel";
 import {setSelectAction, setSnippetAction, TSetSnippetActionPayload} from "../sorActions";
 import {ISnippet} from "../sorModel";
 import {getActiveSnippet} from "../sorSelectors";
 
-export const Snippet: React.FC<TSnippetContainer> = (props) => {
-	const {activeSnippet, onSet} = props;
+export const Snippet: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const activeSnippet = useAppSelector(getActiveSnippet);
+	const onSet = (uuid: string, value: TSetSnippetActionPayload) => dispatch(setSnippetAction(value, uuid));
 
 	if (activeSnippet === null) {return null;}
 
@@ -35,33 +35,3 @@ export const Snippet: React.FC<TSnippetContainer> = (props) => {
 		</div>
 	);
 };
-
-type TSnippetContainer = ISnippetContainerProps & ISnippetContainerDispatch
-
-interface ISnippetContainerState {
-
-}
-
-interface IOwn {
-
-}
-
-interface ISnippetContainerProps {
-	activeSnippet: ISnippet | null
-}
-
-const mapStateToProps = (state: IRootState, ownProps: IOwn): ISnippetContainerProps => (state = state as IRootState, {
-	activeSnippet: getActiveSnippet(state),
-});
-
-interface ISnippetContainerDispatch {
-	//setSelectedItem?(uuid:TSelectedItem,operation:TSelectActionOperation): void
-	onSet: (uuid: string, value: TSetSnippetActionPayload) => void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): ISnippetContainerDispatch => ({
-	//setSelectedItem: (uuid, operation) => dispatch(setSelectActionAction(operation,uuid)),
-	onSet: (uuid, value) => dispatch(setSnippetAction(value, uuid)),
-});
-
-export const SnippetContainer = connect<ISnippetContainerProps, ISnippetContainerDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(Snippet);

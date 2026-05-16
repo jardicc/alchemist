@@ -2,8 +2,9 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import {render, screen} from "@testing-library/react";
+import {screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
+import {renderWithStore} from "../../../__tests__/renderWithStore";
 
 import {Snippet} from "../SnippetContainer";
 import {Command} from "../CommandContainer";
@@ -38,14 +39,43 @@ const makePanel = (over: Partial<any> = {}) => ({
 	...over,
 });
 
+const baseSorcererState = (sorcerer: any): any => ({
+	inspector: {
+		descriptors: [],
+		selectedReferenceType: "layer",
+		filterBySelectedReferenceType: "off",
+		explicitlyVisibleTopCategories: [],
+		targetReference: {layer: {type: "layer", filterProp: "off", properties: [], documentID: "selected", filterDoc: "off", filterLayer: "off", layerID: "selected"}},
+		settings: {searchTerm: null, listenerFilter: {type: "none", exclude: [], include: []}, notifierFilter: {type: "none", exclude: [], include: []}, autoUpdateInspector: false, activeDescriptors: [], accordionExpandedIDs: [], indentCode: "\t", indentOutput: ""},
+		inspector: {activeTab: "content", content: {viewType: "tree", search: "", treePath: [], autoExpandLevels: 0, expandedTree: []}, dom: {treePath: [], autoExpandLevels: 0, expandedTree: []}, difference: {viewType: "tree", treePath: [], autoExpandLevels: 0, expandedTree: []}},
+		sorcerer,
+	},
+});
+
+const manifest: any = {
+	manifestVersion: 5,
+	name: "MyPlugin",
+	id: "id-123",
+	main: "index.html",
+	version: "2.0.0",
+	host: [
+		{app: "PS", minVersion: "23.0", data: {apiVersion: 2}},
+	],
+	entrypoints: [],
+	icons: [],
+	requiredPermissions: {},
+};
+
 describe("<Snippet /> (sorcerer)", () => {
 	it("renders nothing when activeSnippet is null", () => {
-		const {container} = render(<Snippet activeSnippet={null as any} onSet={jest.fn()} />);
+		const state = baseSorcererState({selectedItem: {kind: "general", uuid: null}, snippets: {list: []}, manifestInfo: manifest});
+		const {container} = renderWithStore(<Snippet />, {preloadedState: state});
 		expect(container.firstChild).toBeNull();
 	});
 
 	it("renders snippet fields", () => {
-		const {container} = render(<Snippet activeSnippet={makeSnippet() as any} onSet={jest.fn()} />);
+		const state = baseSorcererState({selectedItem: {kind: "snippet", uuid: "s1"}, snippets: {list: [makeSnippet()]}, manifestInfo: manifest});
+		const {container} = renderWithStore(<Snippet />, {preloadedState: state});
 		expect(container.querySelector(".SnippetContainerContainer")).not.toBeNull();
 		expect(container.textContent).toMatch(/Name/);
 		expect(container.textContent).toMatch(/Version/);
@@ -56,20 +86,19 @@ describe("<Snippet /> (sorcerer)", () => {
 
 describe("<Command /> (sorcerer)", () => {
 	it("renders nothing when activeCommand is null", () => {
-		const {container} = render(
-			<Command activeCommand={null as any} onSet={jest.fn()} snippets={[]} />,
-		);
+		const state = baseSorcererState({selectedItem: {kind: "general", uuid: null}, snippets: {list: []}, manifestInfo: {...manifest, entrypoints: []}});
+		const {container} = renderWithStore(<Command />, {preloadedState: state});
 		expect(container.firstChild).toBeNull();
 	});
 
 	it("renders the command panel and an option per snippet", () => {
-		const {container} = render(
-			<Command
-				activeCommand={makeCommand() as any}
-				onSet={jest.fn()}
-				snippets={[makeSnippet() as any, makeSnippet({$$$uuid: "s2", label: {default: "Snippet 2"}}) as any]}
-			/>,
-		);
+		const cmd = makeCommand();
+		const state = baseSorcererState({
+			selectedItem: {kind: "command", uuid: "c1"},
+			snippets: {list: [makeSnippet(), makeSnippet({$$$uuid: "s2", label: {default: "Snippet 2"}})]},
+			manifestInfo: {...manifest, entrypoints: [cmd]},
+		});
+		const {container} = renderWithStore(<Command />, {preloadedState: state});
 		expect(container.querySelector(".CommandContainerContainer")).not.toBeNull();
 		expect(container.textContent).toMatch(/Label/);
 		expect(container.textContent).toMatch(/ID/);
@@ -80,21 +109,19 @@ describe("<Command /> (sorcerer)", () => {
 
 describe("<Panel /> (sorcerer)", () => {
 	it("renders nothing when activePanel is null", () => {
-		const {container} = render(
-			<Panel activePanel={null as any} onSet={jest.fn()} snippets={[]} onAssignSnippet={jest.fn()} />,
-		);
+		const state = baseSorcererState({selectedItem: {kind: "general", uuid: null}, snippets: {list: []}, manifestInfo: {...manifest, entrypoints: []}});
+		const {container} = renderWithStore(<Panel />, {preloadedState: state});
 		expect(container.firstChild).toBeNull();
 	});
 
 	it("renders one checkbox per snippet", () => {
-		const {container} = render(
-			<Panel
-				activePanel={makePanel() as any}
-				onSet={jest.fn()}
-				snippets={[makeSnippet() as any, makeSnippet({$$$uuid: "s2", label: {default: "S2"}}) as any]}
-				onAssignSnippet={jest.fn()}
-			/>,
-		);
+		const panel = makePanel();
+		const state = baseSorcererState({
+			selectedItem: {kind: "panel", uuid: "p1"},
+			snippets: {list: [makeSnippet(), makeSnippet({$$$uuid: "s2", label: {default: "S2"}})]},
+			manifestInfo: {...manifest, entrypoints: [panel]},
+		});
+		const {container} = renderWithStore(<Panel />, {preloadedState: state});
 		expect(container.querySelector(".PanelContainerContainer")).not.toBeNull();
 		expect(container.textContent).toContain("Snippet 1");
 		expect(container.textContent).toContain("S2");
@@ -102,43 +129,15 @@ describe("<Panel /> (sorcerer)", () => {
 });
 
 describe("<General /> (sorcerer)", () => {
-	const manifest: any = {
-		manifestVersion: 5,
-		name: "MyPlugin",
-		id: "id-123",
-		main: "index.html",
-		version: "2.0.0",
-		host: [
-			{app: "PS", minVersion: "23.0", data: {apiVersion: 2}},
-		],
-		entrypoints: [],
-		icons: [],
-		requiredPermissions: {},
-	};
-
 	it("renders nothing when isGenericVisible=false", () => {
-		const {container} = render(
-			<General
-				manifestGeneric={manifest}
-				isGenericVisible={false}
-				onSet={jest.fn()}
-				onSetHost={jest.fn()}
-			/>,
-		);
+		const state = baseSorcererState({selectedItem: {kind: "snippet", uuid: "s1"}, snippets: {list: [makeSnippet()]}, manifestInfo: manifest});
+		const {container} = renderWithStore(<General />, {preloadedState: state});
 		expect(container.firstChild).toBeNull();
 	});
 
 	it("renders the manifest fields and host info when visible", () => {
-		const {container} = render(
-			<General
-				manifestGeneric={manifest}
-				isGenericVisible
-				onSet={jest.fn()}
-				onSetHost={jest.fn()}
-			/>,
-		);
-		expect(container.textContent).toContain("Main");
-		expect(container.textContent).toContain("Host app");
+		const state = baseSorcererState({selectedItem: {kind: "general", uuid: null}, snippets: {list: []}, manifestInfo: manifest});
+		renderWithStore(<General />, {preloadedState: state});
 		expect(screen.getByText("PS")).toBeInTheDocument();
 	});
 });

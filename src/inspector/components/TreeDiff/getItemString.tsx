@@ -1,10 +1,10 @@
 import React from "react";
-import {Iterable} from "immutable";
+import {isKeyed, isIndexed, } from "immutable";
 
 const IS_IMMUTABLE_KEY = "@@__IS_IMMUTABLE__@@";
 
 function isImmutable(value: any) {
-	return Iterable.isKeyed(value) || Iterable.isIndexed(value) || Iterable.isIterable(value);
+	return isKeyed(value) || isIndexed(value) || isIterable(value);
 }
 
 function isIterable(obj: any) {

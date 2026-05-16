@@ -1,4 +1,5 @@
 import {configureStore, Middleware} from "@reduxjs/toolkit";
+import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {inspectorReducer} from "../inspector/reducers/reducer";
 import {IInspectorState} from "../inspector/model/types";
 import {Settings} from "../inspector/classes/Settings";
@@ -36,3 +37,7 @@ export const rootStore = configureStore({
 console.log(rootStore.getState());
 
 window._rootStore = rootStore;
+
+export type AppDispatch = typeof rootStore.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<IRootState> = useSelector;

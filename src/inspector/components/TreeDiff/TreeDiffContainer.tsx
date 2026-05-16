@@ -1,5 +1,4 @@
-import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../../shared/store";
 import {setInspectorPathDiffAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction} from "../../actions/inspectorActions";
 import {getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, getLeftRawDiff, getRightRawDiff, getDiffActiveView, getDiffExpandLevel} from "../../selectors/inspectorDiffSelectors";
 
@@ -15,7 +14,6 @@ import {TabList} from "../Tabs/TabList";
 import {TabPanel} from "../Tabs/TabListPanel";
 import {VisualDiffTab} from "../VisualDiff";
 import {TreePath} from "../TreePath";
-import {Dispatch} from "redux";
 import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree-2/types";
 
 function stringifyAndShrink(val: any, isWideLayout = false) {
@@ -50,8 +48,22 @@ function prepareDelta(value: any) {
 	return value;
 }
 
-const TreeDiff: React.FC<TTreeDiff> = (props) => {
-	const {left, right, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys} = props;
+export const TreeDiff: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const left = useAppSelector(getLeftTreeDiff);
+	const right = useAppSelector(getRightTreeDiff);
+	const path = useAppSelector(getDiffPath);
+	const expandedKeys = useAppSelector(getDiffExpandedNodes);
+	const leftRawDiff = useAppSelector(getLeftRawDiff);
+	const rightRawDiff = useAppSelector(getRightRawDiff);
+	const viewType = useAppSelector(getDiffActiveView);
+	const autoExpandLevels = useAppSelector(getDiffExpandLevel);
+	const invertTheme = false;
+	const isWideLayout = true;
+	const onInspectPath = (p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDiffAction(p, mode));
+	const onSetExpandedPath = (p: KeyPath, expand: boolean, recursive: boolean, data: any) => dispatch(setExpandedPathAction("difference", p, expand, recursive, data));
+	const onSetView = (vt: TGenericViewType) => dispatch(setInspectorViewAction("diff", vt));
+	const onSetAutoExpandLevel = (level: number) => dispatch(setAutoExpandLevelAction("diff", level));
 
 	const [data, setData] = React.useState<any>(() => diff(left, right));
 	const prevLeft = React.useRef(left);
@@ -66,20 +78,18 @@ const TreeDiff: React.FC<TTreeDiff> = (props) => {
 	}, [left, right]);
 
 	const labelRendererFn: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
-		return labelRenderer([key, ...rest], props.onInspectPath, nodeType, expanded, expandable);
+		return labelRenderer([key, ...rest], onInspectPath, nodeType, expanded, expandable);
 	};
 
 	const expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
-		props.onSetExpandedPath(keyPath, expanded, recursive, data);
+		onSetExpandedPath(keyPath, expanded, recursive, data);
 	};
 
 	const getItemStringFn = (type: any, payload: any): JSX.Element => (
-		getItemString(type, payload, props.isWideLayout, true)
+		getItemString(type, payload, isWideLayout, true)
 	);
 
 	const valueRenderer = (raw: any, value: any) => {
-		const {isWideLayout} = props;
-
 		function renderSpan(name: string, body: React.ReactNode) {
 			return (
 				<span key={name} className={"diffHighlight" + " " + name}>{body}</span>
@@ -134,7 +144,7 @@ const TreeDiff: React.FC<TTreeDiff> = (props) => {
 		);
 	} else {
 		jsonTreeContent = (<div className="TreeDiffBox">
-			{left && right ? <JSONTree {...props}
+			{left && right ? <JSONTree
 				shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
 				expandClicked={expandClicked}
 				labelRenderer={labelRendererFn}
@@ -150,7 +160,7 @@ const TreeDiff: React.FC<TTreeDiff> = (props) => {
 	}
 
 	return (
-		<TabList className="tabsView" activeKey={props.viewType} onChange={props.onSetView}>
+		<TabList className="tabsView" activeKey={viewType} onChange={onSetView}>
 			<TabPanel id="tree" title="Tree" noPadding={true}>
 				<div className="TreeDiff">
 					<TreePath
@@ -173,59 +183,10 @@ const TreeDiff: React.FC<TTreeDiff> = (props) => {
 					hideLevels={true}
 				/>
 				<VisualDiffTab
-					left={props.leftRawDiff}
-					right={props.rightRawDiff}
+					left={leftRawDiff}
+					right={rightRawDiff}
 				/>
 			</TabPanel>
 		</TabList>
 	);
 };
-
-
-type TTreeDiff = ITreeDiffProps & ITreeDiffDispatch
-
-interface ITreeDiffState {
-	data: any
-}
-
-interface ITreeDiffProps {
-	left: any
-	right: any
-	path: KeyPath
-	expandedKeys: KeyPath[]
-	invertTheme: boolean,
-	isWideLayout: boolean,
-	leftRawDiff: IDescriptor | null
-	rightRawDiff: IDescriptor | null
-	viewType: TGenericViewType
-	autoExpandLevels: number
-}
-
-const mapStateToProps = (state: IRootState): ITreeDiffProps => ({
-	left: getLeftTreeDiff(state),
-	right: getRightTreeDiff(state),
-	path: getDiffPath(state),
-	invertTheme: false,
-	isWideLayout: true,
-	expandedKeys: getDiffExpandedNodes(state),
-	rightRawDiff: getRightRawDiff(state),
-	leftRawDiff: getLeftRawDiff(state),
-	viewType: getDiffActiveView(state),
-	autoExpandLevels: getDiffExpandLevel(state),
-});
-
-interface ITreeDiffDispatch {
-	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: KeyPath, expand: boolean, recursive: boolean, data: any) => void;
-	onSetView: (viewType: TGenericViewType) => void
-	onSetAutoExpandLevel: (level: number) => void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDiffDispatch, Record<string, unknown>> = (dispatch: Dispatch): ITreeDiffDispatch => ({
-	onInspectPath: (path, mode) => dispatch(setInspectorPathDiffAction(path, mode)),
-	onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("difference", path, expand, recursive, data)),
-	onSetView: (viewType) => dispatch(setInspectorViewAction("diff", viewType)),
-	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("diff", level)),
-});
-
-export const TreeDiffContainer = connect<ITreeDiffProps, ITreeDiffDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(TreeDiff);

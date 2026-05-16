@@ -1,5 +1,4 @@
-import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction, setSearchContentKeywordAction} from "../actions/inspectorActions";
 import {getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel, getSearchContentKeyword} from "../selectors/inspectorContentSelectors";
 import React, {Component, Key} from "react";
@@ -15,9 +14,22 @@ import SP from "react-uxp-spectrum";
 import {KeyPath, TLabelRenderer} from "./react-json-tree-2/types";
 
 
-export const TreeContent: React.FC<TTreeContent> = (props) => {
+export const TreeContent: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const content = useAppSelector(getTreeContent);
+	const path = useAppSelector(getContentPath);
+	const expandedKeys = useAppSelector(getContentExpandedNodes);
+	const viewType = useAppSelector(getContentActiveView);
+	const autoExpandLevels = useAppSelector(getContentExpandLevel);
+	const search = useAppSelector(getSearchContentKeyword);
+	const protoMode: TProtoMode = "none";
+	const onInspectPath = (p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathContentAction(p, mode));
+	const onSetExpandedPath = (p: KeyPath, expand: boolean, recursive: boolean, data: any) => dispatch(setExpandedPathAction("content", p, expand, recursive, data));
+	const onSetView = (vt: TGenericViewType) => dispatch(setInspectorViewAction("content", vt));
+	const onSetAutoExpandLevel = (level: number) => dispatch(setAutoExpandLevelAction("content", level));
+	const onSetSearch = (keyword: string) => dispatch(setSearchContentKeywordAction(keyword));
 	const labelRendererFn: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable): JSX.Element => {
-		return labelRenderer([key, ...rest], props.onInspectPath, nodeType, expanded, expandable);
+		return labelRenderer([key, ...rest], onInspectPath, nodeType, expanded, expandable);
 	};
 
 	const getItemStringFn = (type: any, data: any): JSX.Element => {
@@ -25,7 +37,7 @@ export const TreeContent: React.FC<TTreeContent> = (props) => {
 	};
 
 	const expandClicked = (keyPath: KeyPath, expanded: boolean, recursive: boolean) => {
-		props.onSetExpandedPath(keyPath, expanded, recursive, props.content);
+		onSetExpandedPath(keyPath, expanded, recursive, content);
 	};
 
 	const renderSearchField = () => {
@@ -34,13 +46,12 @@ export const TreeContent: React.FC<TTreeContent> = (props) => {
 				className="filterContent"
 				type="search"
 				placeholder="Filter..."
-				value={props.search}
-				onInput={(e) => { props.onSetSearch(e.target?.value ?? ""); }}
+				value={search}
+				onInput={(e) => { onSetSearch(e.target?.value ?? ""); }}
 			/>
 		);
 	};
 
-	const {content, protoMode, autoExpandLevels, onInspectPath, onSetAutoExpandLevel, path, expandedKeys, viewType, onSetView} = props;
 	//console.log(content);
 	return (
 		<TabList className="tabsView" activeKey={viewType} onChange={onSetView} postFix={renderSearchField()} >
@@ -90,46 +101,4 @@ export const TreeContent: React.FC<TTreeContent> = (props) => {
 		</TabList>
 	);
 };
-
-type TTreeContent = ITreeContentProps & ITreeContentDispatch
-
-interface ITreeContentProps {
-	content: any
-	path: KeyPath
-	expandedKeys: KeyPath[]
-	protoMode: TProtoMode
-	descriptorContent: string
-	viewType: TGenericViewType
-	autoExpandLevels: number
-	search: string
-}
-
-const mapStateToProps = (state: IRootState): ITreeContentProps => ({
-	content: getTreeContent(state),
-	path: getContentPath(state),
-	search: getSearchContentKeyword(state),
-	protoMode: "none",
-	expandedKeys: getContentExpandedNodes(state),
-	descriptorContent: getActiveDescriptorContent(state),
-	viewType: getContentActiveView(state),
-	autoExpandLevels: getContentExpandLevel(state),
-});
-
-interface ITreeContentDispatch {
-	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: KeyPath, expand: boolean, recursive: boolean, data: any) => void;
-	onSetView: (viewType: TGenericViewType) => void
-	onSetAutoExpandLevel: (level: number) => void
-	onSetSearch: (keyword: string) => void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<ITreeContentDispatch, Record<string, unknown>> = (dispatch): ITreeContentDispatch => ({
-	onInspectPath: (path, mode) => dispatch(setInspectorPathContentAction(path, mode)),
-	onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("content", path, expand, recursive, data)),
-	onSetView: (viewType) => dispatch(setInspectorViewAction("content", viewType)),
-	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("content", level)),
-	onSetSearch: (keyword) => dispatch(setSearchContentKeywordAction(keyword)),
-});
-
-export const TreeContentContainer = connect(mapStateToProps, mapDispatchToProps)(TreeContent);
 

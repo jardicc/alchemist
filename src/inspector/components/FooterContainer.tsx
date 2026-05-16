@@ -1,15 +1,12 @@
-import {connect} from "react-redux";
-import {IRootState} from "../../shared/store";
 import React from "react";
 import "./FooterContainer.less";
 import {GetInfo} from "../classes/GetInfo";
 import {Main} from "../../shared/classes/Main";
-import {Dispatch} from "redux";
 import {valid, coerce} from "semver";
 import {versions} from "uxp";
 
 
-export const Footer: React.FC<TFooter> = () => {
+export const Footer: React.FC<IOwnProps> = () => {
 	const psVersionSegments = GetInfo.getBuildString();
 	const uxpVersion = valid(coerce(versions?.uxp?.split?.("-")?.[1])) ?? "Parser error";
 	const psVersion = valid(coerce(psVersionSegments?.split?.(" ")?.[0])) ?? "Parser error";
@@ -43,22 +40,6 @@ export const Footer: React.FC<TFooter> = () => {
 };
 
 
-type TFooter = IFooterProps & IDispatcherDispatch & IOwnProps
-
-interface IFooterProps {
-}
-
 interface IOwnProps {
 	parentPanel: "inspector" | "atnConverter"
 }
-
-const mapStateToProps = (state: IRootState, ownProps: IOwnProps): IFooterProps => ({
-});
-
-interface IDispatcherDispatch {
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): IDispatcherDispatch => ({
-});
-
-export const FooterContainer = connect(mapStateToProps, mapDispatchToProps)(Footer);

@@ -1,29 +1,36 @@
-import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 
 import React from "react";
 
 import "./SorcererContainer.less";
 
 import SP from "react-uxp-spectrum";
-import {TFontSizeSettings} from "../../inspector/model/types";
-import {FooterContainer} from "../../inspector/components/FooterContainer";
+import {Footer} from "../../inspector/components/FooterContainer";
 import {getFontSizeSettings} from "../../inspector/selectors/inspectorSelectors";
-import {IActionSetUUID} from "../../atnDecoder/atnModel";
-import {GeneralContainer} from "./GeneralContainer";
-import {SnippetContainer} from "./SnippetContainer";
-import {Command, CommandContainer} from "./CommandContainer";
+import {General} from "./GeneralContainer";
+import {Snippet} from "./SnippetContainer";
+import {Command} from "./CommandContainer";
 import {IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState} from "../sorModel";
 import {getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove} from "../sorSelectors";
-import {setSelectActionAction} from "../../atnDecoder/atnActions";
 import {makeAction, removeAction, setPresetAction, setSelectAction} from "../sorActions";
-import {PanelContainer} from "./PanelContainer";
+import {Panel} from "./PanelContainer";
 import {SorcererBuilder} from "../classes/Sorcerer";
 
 
-const Sorcerer: React.FC<TSorcerer> = (props) => {
+export const Sorcerer: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const fontSizeSettings = useAppSelector(getFontSizeSettings);
+	const panels = useAppSelector(getAllPanels);
+	const commands = useAppSelector(getAllCommands);
+	const snippets = useAppSelector(getAllSnippets);
+	const selectedItem = useAppSelector(getActiveItem);
+	const manifestCode = useAppSelector(getManifestCode);
+	const enableRemove = useAppSelector(shouldEnableRemove);
+	const selectItem = (type: "panel" | "command" | "snippet" | "general", uuid: null | string) => dispatch(setSelectAction(type, uuid));
+	const make = (type: "panel" | "command" | "snippet") => dispatch(makeAction(type));
+	const remove = (type: "panel" | "command" | "snippet", uuid: string) => dispatch(removeAction(type, uuid));
+	const setPreset = (data: ISorcererState) => dispatch(setPresetAction(data));
 	const menuItemActiveClass = (item: IEntrypointCommand | IEntrypointPanel | ISnippet) => {
-		const {selectedItem} = props;
 		if (!selectedItem) {
 			return "";
 		}
@@ -35,7 +42,6 @@ const Sorcerer: React.FC<TSorcerer> = (props) => {
 	};
 
 	const renderItems = (items: IEntrypointPanel[] | IEntrypointCommand[] | ISnippet[]) => {
-		const {selectItem} = props;
 		const res = items.map((p, index) => (
 			<div key={index} className={"menuItem " + menuItemActiveClass(p)} onClick={() => selectItem(p.type, p.$$$uuid)}>
 				{p.label.default || "(none)"}
@@ -53,16 +59,14 @@ const Sorcerer: React.FC<TSorcerer> = (props) => {
 		if (!data) {
 			return;
 		}
-		props.setPreset(data);
+		setPreset(data);
 	};
-
-	const {fontSizeSettings, commands, snippets, panels, selectItem, make, remove, selectedItem, manifestCode, enableRemove} = props;
 
 	return (
 		<div className={`SorcererContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 			<div className="info spread flex">
 				<div className="tree">
-					<div className={"menuItem general " + (props.selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
+					<div className={"menuItem general " + (selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
 
 					<div className="menuItemHeader"><span> Snippets</span><div className="button" title="Add new" onClick={() => make("snippet")}>+</div></div>
 					{renderItems(snippets)}
@@ -75,10 +79,10 @@ const Sorcerer: React.FC<TSorcerer> = (props) => {
 
 				</div>
 				<div className="noShrink details">
-					<GeneralContainer />
-					<SnippetContainer />
-					<CommandContainer />
-					<PanelContainer />
+					<General />
+					<Snippet />
+					<Command />
+					<Panel />
 				</div>
 				<div className="manifest">
 					<SP.Textarea className="manifestCode" value={manifestCode} />
@@ -96,50 +100,7 @@ const Sorcerer: React.FC<TSorcerer> = (props) => {
 				<div className={"button"} onClick={importFn}>Import preset</div>
 			</div>
 
-			<FooterContainer parentPanel="atnConverter" />
+			<Footer parentPanel="atnConverter" />
 		</div>
 	);
 };
-
-
-
-type TSorcerer = ISorcererProps & ISorcererDispatch
-
-
-interface ISorcererProps {
-	fontSizeSettings: TFontSizeSettings
-	panels: IEntrypointPanel[]
-	commands: IEntrypointCommand[]
-	snippets: ISnippet[]
-	selectedItem: ISnippet | IEntrypointPanel | IEntrypointCommand | {type: "general"} | null
-	manifestCode: string
-	enableRemove: boolean
-}
-
-const mapStateToProps = (state: IRootState): ISorcererProps => (state = state as IRootState, {
-	fontSizeSettings: getFontSizeSettings(state),
-	panels: getAllPanels(state),
-	commands: getAllCommands(state),
-	snippets: getAllSnippets(state),
-	selectedItem: getActiveItem(state),
-	manifestCode: getManifestCode(state),
-	enableRemove: shouldEnableRemove(state),
-});
-
-interface ISorcererDispatch {
-	setData?(data: IActionSetUUID[]): void
-	selectItem(type: "panel" | "command" | "snippet" | "general", uuid: null | string): void
-	make(type: "panel" | "command" | "snippet"): void
-	remove(type: "panel" | "command" | "snippet", uuid: string): void
-	setPreset(data: ISorcererState): void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<ISorcererDispatch, Record<string, unknown>> = (dispatch): ISorcererDispatch => ({
-	//setData: (data) => dispatch(setDataAction(data)),
-	selectItem: (type, uuid) => dispatch(setSelectAction(type, uuid)),
-	make: (type) => dispatch(makeAction(type)),
-	remove: (type, uuid) => dispatch(removeAction(type, uuid)),
-	setPreset: (data) => dispatch(setPresetAction(data)),
-});
-
-export const SorcererContainer = connect<ISorcererProps, ISorcererDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(Sorcerer);

@@ -3,7 +3,7 @@ import React, {StrictMode} from "react";
 import {Provider} from "react-redux";
 import {rootStore} from "../../shared/store";
 import {ErrorBoundary} from "../../inspector/components/ErrorBoundary";
-import {SorcererContainer} from "./SorcererContainer";
+import {Sorcerer} from "./SorcererContainer";
 
 export function renderSorcererUI(): void {
 	const el = document.querySelector("[panelid=sorcerer]");
@@ -18,7 +18,7 @@ export function renderSorcererUI(): void {
 		//<StrictMode>
 			<Provider store={rootStore}>
 				<ErrorBoundary>
-					<SorcererContainer />
+					<Sorcerer />
 				</ErrorBoundary>
 			</Provider>
 		//</StrictMode>

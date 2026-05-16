@@ -1,5 +1,4 @@
-import {IRootState} from "../../shared/store";
-import {MapDispatchToPropsFunction, connect} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getListenerNotifierFilterSettings} from "../selectors/inspectorSelectors";
 import {setListenerNotifierFilterAction} from "../actions/inspectorActions";
 import React from "react";
@@ -7,27 +6,31 @@ import {IListenerNotifierFilter} from "../model/types";
 import SP from "react-uxp-spectrum";
 
 
-export const ListenerFilter: React.FC<TListenerFilter> = (props) => {
+export const ListenerFilter: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const settings = useAppSelector(getListenerNotifierFilterSettings);
+	const onSetNotifierListenerFilter = (arg: Partial<IListenerNotifierFilter>) => dispatch(setListenerNotifierFilterAction(arg));
+
 	const setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
-		props.onSetNotifierListenerFilter({
+		onSetNotifierListenerFilter({
 			exclude: e.currentTarget.value.split(";"),
 		});
 	};
 
 	const setInclude = (e: React.ChangeEvent<HTMLInputElement>) => {
-		props.onSetNotifierListenerFilter({
+		onSetNotifierListenerFilter({
 			include: e.currentTarget.value.split(";"),
 		});
 	};
 
 	const onSetFilterEventsType = (e: any) => {
-		props.onSetNotifierListenerFilter({
+		onSetNotifierListenerFilter({
 			type: e.target.value,
 		});
 	};
 
 	const renderFilterFields = (): JSX.Element | null => {
-		const {exclude, include, type} = props.settings;
+		const {exclude, include, type} = settings;
 		switch (type) {
 			case "exclude": {
 				return (
@@ -47,7 +50,7 @@ export const ListenerFilter: React.FC<TListenerFilter> = (props) => {
 		return null;
 	};
 
-	const {type} = props.settings;
+	const {type} = settings;
 	return (
 		<>
 			<div className="filter excludeIncludeDropdownRow">
@@ -76,24 +79,3 @@ export const ListenerFilter: React.FC<TListenerFilter> = (props) => {
 		</>
 	);
 };
-
-
-type TListenerFilter = IListenerFilterProps & IListenerFilterDispatch
-
-interface IListenerFilterProps {
-	settings: IListenerNotifierFilter
-}
-
-const mapStateToProps = (state: IRootState): IListenerFilterProps => ({
-	settings: getListenerNotifierFilterSettings(state),
-});
-
-interface IListenerFilterDispatch {
-	onSetNotifierListenerFilter: (arg: Partial<IListenerNotifierFilter>) => void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<IListenerFilterDispatch, Record<string, unknown>> = (dispatch): IListenerFilterDispatch => ({
-	onSetNotifierListenerFilter: (arg) => dispatch(setListenerNotifierFilterAction(arg)),
-});
-
-export const ListenerFilterContainer = connect(mapStateToProps, mapDispatchToProps)(ListenerFilter);

@@ -1,9 +1,8 @@
-import {connect, MapDispatchToPropsFunction} from "react-redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setInspectorPathDomAction, setExpandedPathAction, setAutoExpandLevelAction} from "../actions/inspectorActions";
 import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} from "../selectors/inspectorDOMSelectors";
 
-import React, {Component} from "react";
+import React from "react";
 import "./TreeDomContainer.less";
 import {getItemString} from "./TreeDiff/getItemString";
 import {JSONTree} from "./react-json-tree-2";
@@ -13,9 +12,19 @@ import {cloneDeep} from "lodash";
 import {TreePath} from "./TreePath";
 import {KeyPath, TExpandClicked, TLabelRenderer} from "./react-json-tree-2/types";
 
-export const TreeDom: React.FC<TTreeDom> = (props) => {
+export const TreeDom: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const content = useAppSelector(getTreeDomInstance);
+	const rawPath = useAppSelector(getDomPath);
+	const expandedKeys = useAppSelector(getDomExpandedNodes);
+	const autoExpandLevels = useAppSelector(getDOMExpandLevel);
+	const protoMode: TProtoMode = "uxp";
+	const onInspectPath = (p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDomAction(p, mode));
+	const onSetExpandedPath = (p: KeyPath, expand: boolean, recursive: boolean, data: any) => dispatch(setExpandedPathAction("dom", p, expand, recursive, data));
+	const onSetAutoExpandLevel = (level: number) => dispatch(setAutoExpandLevelAction("DOM", level));
+
 	const labelRendererFn: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
-		return labelRenderer([key, ...rest], props.onInspectPath, nodeType, expanded, expandable);
+		return labelRenderer([key, ...rest], onInspectPath, nodeType, expanded, expandable);
 	};
 
 	const getItemStringFn = (type: any, data: any): JSX.Element => {
@@ -23,18 +32,17 @@ export const TreeDom: React.FC<TTreeDom> = (props) => {
 	};
 
 	const expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
-		props.onSetExpandedPath(keyPath, expanded, recursive, props.content);
+		onSetExpandedPath(keyPath, expanded, recursive, content);
 	};
 
-	const {content, protoMode, onInspectPath, autoExpandLevels, onSetAutoExpandLevel} = props;
 	if (!content) {
 		return <>{"Nothing to see there"}</>;
 	}
 
 	//let data:any = GetInfo.getDom(content.ref);
-	let data: any = props.content;
+	let data: any = content;
 
-	const path = cloneDeep(props.path);
+	const path = cloneDeep(rawPath);
 
 	/*for (const part of path) {
 		data = (data)?.[part];
@@ -61,7 +69,7 @@ export const TreeDom: React.FC<TTreeDom> = (props) => {
 					<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
 					:
 					<JSONTree
-						shouldExpandNode={shouldExpandNode(props.expandedKeys, autoExpandLevels)}
+						shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels)}
 						expandClicked={expandClicked}
 						data={data}
 						keyPath={path}
@@ -76,37 +84,3 @@ export const TreeDom: React.FC<TTreeDom> = (props) => {
 		</div>
 	);
 };
-
-
-type TTreeDom = ITreeDomProps & ITreeDomDispatch
-
-interface ITreeDomProps {
-	path: KeyPath
-	content: any
-	expandedKeys: KeyPath[]
-	protoMode: TProtoMode
-	autoExpandLevels: number
-}
-
-const mapStateToProps = (state: IRootState): ITreeDomProps => ({
-	content: getTreeDomInstance(state),
-	path: getDomPath(state),
-	protoMode: "uxp",
-	expandedKeys: getDomExpandedNodes(state),
-	autoExpandLevels: getDOMExpandLevel(state),
-});
-
-interface ITreeDomDispatch {
-	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
-	onSetExpandedPath: (path: KeyPath, expand: boolean, recursive: boolean, data: any) => void;
-	onSetAutoExpandLevel: (level: number) => void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<ITreeDomDispatch, Record<string, unknown>> = (dispatch): ITreeDomDispatch => ({
-	onInspectPath: (path, mode) => dispatch(setInspectorPathDomAction(path, mode)),
-	onSetExpandedPath: (path, expand, recursive, data) => dispatch(setExpandedPathAction("dom", path, expand, recursive, data)),
-	onSetAutoExpandLevel: (level) => dispatch(setAutoExpandLevelAction("DOM", level)),
-});
-
-export const TreeDomContainer = connect<ITreeDomProps, ITreeDomDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(TreeDom);
-

@@ -2,22 +2,34 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import {render, fireEvent} from "@testing-library/react";
+import {fireEvent} from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import {ActionCommand} from "../ActionCommandContainer";
 import {ActionItem} from "../ActionItemContainer";
 import {ActionSet} from "../ActionSetContainer";
 import {renderWithStore} from "../../../__tests__/renderWithStore";
+import {configureStore} from "@reduxjs/toolkit";
+
+const makeStore = (preloadedState: any = {}) => configureStore({
+	reducer: (s: any = preloadedState) => s,
+	preloadedState,
+	middleware: (g) => g({serializableCheck: false, immutableCheck: false, thunk: false}),
+});
 
 // Stub selectors so the connected child containers don't require real state shape.
 jest.mock("../../atnSelectors", () => ({
-	getSelectedItemsCommand: () => [],
-	getSelectedItemsAction: () => [],
-	getSelectedItemsSet: () => [],
-	getExpandedItemsAction: () => [],
-	getExpandedItemsSet: () => [],
+	getSelectedItemsCommand: jest.fn().mockReturnValue([]),
+	getSelectedItemsAction: jest.fn().mockReturnValue([]),
+	getSelectedItemsSet: jest.fn().mockReturnValue([]),
+	getExpandedItemsAction: jest.fn().mockReturnValue([]),
+	getExpandedItemsSet: jest.fn().mockReturnValue([]),
 }));
+
+import {
+	getSelectedItemsCommand, getSelectedItemsSet, getSelectedItemsAction,
+	getExpandedItemsAction, getExpandedItemsSet,
+} from "../../atnSelectors";
 
 const makeSet = (over: Partial<any> = {}): any => ({
 	__uuid__: "set-1",
@@ -52,88 +64,107 @@ const makeCommand = (over: Partial<any> = {}): any => ({
 	...over,
 });
 
+const atnState: any = {atn: {selectedItems: [], expandedItems: []}};
+
 describe("<ActionCommand />", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		(getSelectedItemsCommand as jest.Mock).mockReturnValue([]);
+		(getSelectedItemsAction as jest.Mock).mockReturnValue([]);
+		(getSelectedItemsSet as jest.Mock).mockReturnValue([]);
+		(getExpandedItemsAction as jest.Mock).mockReturnValue([]);
+		(getExpandedItemsSet as jest.Mock).mockReturnValue([]);
+	});
+
 	it("renders the (translated) command name", () => {
-		const {container} = render(
+		const {container} = renderWithStore(
 			<ActionCommand
 				parentSet={makeSet()}
 				parentAction={makeAction()}
 				actionCommand={makeCommand()}
-				selectedItems={[]}
-				setSelectedItem={jest.fn()}
 			/>,
+			{preloadedState: atnState},
 		);
 		expect(container.textContent).toContain("My Command");
 	});
 
 	it("does not get 'selected' class when uuid not selected", () => {
-		const {container} = render(
+		const {container} = renderWithStore(
 			<ActionCommand
 				parentSet={makeSet()}
 				parentAction={makeAction()}
 				actionCommand={makeCommand()}
-				selectedItems={[]}
-				setSelectedItem={jest.fn()}
 			/>,
+			{preloadedState: atnState},
 		);
 		expect(container.querySelector(".wrap")?.className).not.toContain("selected");
 	});
 
 	it("gets 'selected' class when matching uuid present", () => {
-		const {container} = render(
+		(getSelectedItemsCommand as jest.Mock).mockReturnValue([["set-1", "act-1", "cmd-1"]]);
+		const {container} = renderWithStore(
 			<ActionCommand
 				parentSet={makeSet()}
 				parentAction={makeAction()}
 				actionCommand={makeCommand()}
-				selectedItems={[["set-1", "act-1", "cmd-1"]]}
-				setSelectedItem={jest.fn()}
 			/>,
+			{preloadedState: atnState},
 		);
 		expect(container.querySelector(".wrap")?.className).toContain("selected");
 	});
 
-	it("calls setSelectedItem with 'replace' on plain click", () => {
-		const setSelectedItem = jest.fn();
-		const {container} = render(
+	it("dispatches setSelectAction with 'replace' on plain click", () => {
+		const store = makeStore(atnState);
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(
 			<ActionCommand
 				parentSet={makeSet()}
 				parentAction={makeAction()}
 				actionCommand={makeCommand()}
-				selectedItems={[]}
-				setSelectedItem={setSelectedItem}
 			/>,
+			{store},
 		);
 		fireEvent.click(container.querySelector(".wrap")!);
-		expect(setSelectedItem).toHaveBeenCalledWith(["set-1", "act-1", "cmd-1"], "replace");
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({operation: "replace"})}),
+		);
 	});
 
-	it("calls setSelectedItem with 'add' on ctrl-click of unselected item", () => {
-		const setSelectedItem = jest.fn();
-		const {container} = render(
+	it("dispatches setSelectAction with 'add' on ctrl-click of unselected item", () => {
+		const store = makeStore(atnState);
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(
 			<ActionCommand
 				parentSet={makeSet()}
 				parentAction={makeAction()}
 				actionCommand={makeCommand()}
-				selectedItems={[]}
-				setSelectedItem={setSelectedItem}
 			/>,
+			{store},
 		);
 		fireEvent.click(container.querySelector(".wrap")!, {ctrlKey: true});
-		expect(setSelectedItem).toHaveBeenCalledWith(["set-1", "act-1", "cmd-1"], "add");
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({operation: "add"})}),
+		);
 	});
 });
 
 describe("<ActionItem />", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		(getSelectedItemsCommand as jest.Mock).mockReturnValue([]);
+		(getSelectedItemsAction as jest.Mock).mockReturnValue([]);
+		(getSelectedItemsSet as jest.Mock).mockReturnValue([]);
+		(getExpandedItemsAction as jest.Mock).mockReturnValue([]);
+		(getExpandedItemsSet as jest.Mock).mockReturnValue([]);
+	});
+
 	it("renders item name and is collapsed by default", () => {
-		const {container} = render(
+		const {container} = renderWithStore(
 			<ActionItem
-				parentSet={makeSet()}
+				parent={makeSet()}
 				actionItem={makeAction({commands: [makeCommand()]})}
-				selectedItems={[]}
-				expandedItems={[]}
-				setSelectedItem={jest.fn()}
-				setExpandedItem={jest.fn()}
 			/>,
+			{preloadedState: atnState},
 		);
 		expect(container.textContent).toContain("Action A");
 		// Children commands should not render when collapsed
@@ -141,98 +172,85 @@ describe("<ActionItem />", () => {
 	});
 
 	it("expands and renders child commands when uuid is present in expandedItems", () => {
-		// Children are <ActionCommandContainer/> (Redux-connected) – wrap with a store.
-		const preloadedState = {atn: {selectedItems: [], expandedItems: [["set-1", "act-1"]]}} as any;
+		(getExpandedItemsAction as jest.Mock).mockReturnValue([["set-1", "act-1"]]);
 		const {container} = renderWithStore(
 			<ActionItem
-				parentSet={makeSet()}
+				parent={makeSet()}
 				actionItem={makeAction({commands: [makeCommand()]})}
-				selectedItems={[]}
-				expandedItems={[["set-1", "act-1"]]}
-				setSelectedItem={jest.fn()}
-				setExpandedItem={jest.fn()}
 			/>,
-			{preloadedState},
+			{preloadedState: atnState},
 		);
 		expect(container.textContent).toContain("My Command");
 	});
 
-	it("calls setExpandedItem on expand click", () => {
-		const setExpandedItem = jest.fn();
-		const {container} = render(
+	it("dispatches expandAction on expand click", () => {
+		const store = makeStore(atnState);
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(
 			<ActionItem
-				parentSet={makeSet()}
+				parent={makeSet()}
 				actionItem={makeAction({commands: [makeCommand()]})}
-				selectedItems={[]}
-				expandedItems={[]}
-				setSelectedItem={jest.fn()}
-				setExpandedItem={setExpandedItem}
 			/>,
+			{store},
 		);
 		fireEvent.click(container.querySelector(".expand")!);
-		expect(setExpandedItem).toHaveBeenCalledWith(["set-1", "act-1"], true);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({expand: true})}),
+		);
 	});
 });
 
 describe("<ActionSet />", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		(getSelectedItemsCommand as jest.Mock).mockReturnValue([]);
+		(getSelectedItemsAction as jest.Mock).mockReturnValue([]);
+		(getSelectedItemsSet as jest.Mock).mockReturnValue([]);
+		(getExpandedItemsAction as jest.Mock).mockReturnValue([]);
+		(getExpandedItemsSet as jest.Mock).mockReturnValue([]);
+	});
+
 	const setData = makeSet({
 		actionItems: [makeAction({commands: [makeCommand()]})],
 	});
 
 	it("renders set name and is collapsed by default", () => {
-		const {container} = render(
-			<ActionSet
-				actionSet={setData}
-				selectedItems={[]}
-				expandedItems={[]}
-				setSelectedItem={jest.fn()}
-				setExpandedItem={jest.fn()}
-			/>,
+		const {container} = renderWithStore(
+			<ActionSet actionSet={setData} />,
+			{preloadedState: atnState},
 		);
 		expect(container.textContent).toContain("Set A");
 		expect(container.textContent).not.toContain("Action A");
 	});
 
 	it("renders child action items when expanded", () => {
-		const preloadedState = {atn: {selectedItems: [], expandedItems: [["set-1"]]}} as any;
+		(getExpandedItemsSet as jest.Mock).mockReturnValue([["set-1"]]);
 		const {container} = renderWithStore(
-			<ActionSet
-				actionSet={setData}
-				selectedItems={[]}
-				expandedItems={[["set-1"]]}
-				setSelectedItem={jest.fn()}
-				setExpandedItem={jest.fn()}
-			/>,
-			{preloadedState},
+			<ActionSet actionSet={setData} />,
+			{preloadedState: atnState},
 		);
 		expect(container.textContent).toContain("Action A");
 	});
 
 	it("flags 'selected' when matching uuid is in selectedItems", () => {
-		const {container} = render(
-			<ActionSet
-				actionSet={setData}
-				selectedItems={[["set-1"]]}
-				expandedItems={[]}
-				setSelectedItem={jest.fn()}
-				setExpandedItem={jest.fn()}
-			/>,
+		(getSelectedItemsSet as jest.Mock).mockReturnValue([["set-1"]]);
+		const {container} = renderWithStore(
+			<ActionSet actionSet={setData} />,
+			{preloadedState: atnState},
 		);
 		expect(container.querySelector(".wrap")?.className).toContain("selected");
 	});
 
-	it("calls setExpandedItem with recursive=true on ctrl/meta expand click", () => {
-		const setExpandedItem = jest.fn();
-		const {container} = render(
-			<ActionSet
-				actionSet={setData}
-				selectedItems={[]}
-				expandedItems={[]}
-				setSelectedItem={jest.fn()}
-				setExpandedItem={setExpandedItem}
-			/>,
+	it("dispatches expandAction with recursive=true on ctrl/meta expand click", () => {
+		const store = makeStore(atnState);
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(
+			<ActionSet actionSet={setData} />,
+			{store},
 		);
 		fireEvent.click(container.querySelector(".expand")!, {ctrlKey: true});
-		expect(setExpandedItem).toHaveBeenCalledWith(["set-1"], true, true);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({recursive: true})}),
+		);
 	});
 });

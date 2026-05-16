@@ -2,23 +2,23 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import {render, screen} from "@testing-library/react";
+import {screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import {ListenerFilter} from "../ListenerFilterContainer";
+import {renderWithStore} from "../../../__tests__/renderWithStore";
 
-const renderLF = (overrides: Partial<any> = {}) => {
-	const props = {
+const makeState = (filter: {type: string; exclude: string[]; include: string[]}) => ({
+	inspector: {
+		selectedReferenceType: "listener",
 		settings: {
-			type: "none",
-			exclude: [],
-			include: [],
+			listenerFilter: filter,
 		},
-		onSetNotifierListenerFilter: jest.fn(),
-		...overrides,
-	};
-	return {...render(<ListenerFilter {...(props as any)} />), props};
-};
+	},
+});
+
+const renderLF = (filter: {type: string; exclude: string[]; include: string[]} = {type: "none", exclude: [], include: []}) =>
+	renderWithStore(<ListenerFilter />, {preloadedState: makeState(filter)});
 
 describe("<ListenerFilter />", () => {
 	it("always renders a 'Filter:' label and the dropdown options", () => {
@@ -30,19 +30,19 @@ describe("<ListenerFilter />", () => {
 	});
 
 	it("shows no extra input row when type is 'none'", () => {
-		const {container} = renderLF({settings: {type: "none", exclude: [], include: []}});
+		const {container} = renderLF({type: "none", exclude: [], include: []});
 		// Only the 'Filter:' label should exist.
 		const labels = container.querySelectorAll(".label");
 		expect(labels).toHaveLength(1);
 	});
 
 	it("shows the Include input when type is 'include'", () => {
-		renderLF({settings: {type: "include", exclude: [], include: ["a", "b"]}});
+		renderLF({type: "include", exclude: [], include: ["a", "b"]});
 		expect(screen.getByText("Include:")).toBeInTheDocument();
 	});
 
 	it("shows the Exclude input when type is 'exclude'", () => {
-		renderLF({settings: {type: "exclude", exclude: ["x"], include: []}});
+		renderLF({type: "exclude", exclude: ["x"], include: []});
 		expect(screen.getByText("Exclude:")).toBeInTheDocument();
 	});
 });

@@ -3,6 +3,8 @@
  */
 import React from "react";
 import {render, fireEvent, screen} from "@testing-library/react";
+import {renderWithStore} from "../../../__tests__/renderWithStore";
+import {configureStore} from "@reduxjs/toolkit";
 import "@testing-library/jest-dom";
 
 // Stub the icon helper to avoid pulling SVG modules.
@@ -17,6 +19,24 @@ jest.mock("../../../shared/components/icons", () => ({
 }));
 
 import {DescriptorItem} from "../DescriptorItemContainer";
+
+const makeState = (descriptors: any[] = []): any => ({
+	inspector: {
+		descriptors,
+		selectedReferenceType: "layer",
+		filterBySelectedReferenceType: "off",
+		explicitlyVisibleTopCategories: [],
+		targetReference: {layer: {type: "layer", filterProp: "off", properties: [], documentID: "selected", filterDoc: "off", filterLayer: "off", layerID: "selected"}},
+		settings: {searchTerm: null, listenerFilter: {type: "none", exclude: [], include: []}, notifierFilter: {type: "none", exclude: [], include: []}, autoUpdateInspector: false, activeDescriptors: [], accordionExpandedIDs: [], groupDescriptors: "strict"},
+		inspector: {activeTab: "content", content: {viewType: "tree", search: "", treePath: [], autoExpandLevels: 0, expandedTree: []}, dom: {treePath: [], autoExpandLevels: 0, expandedTree: []}, difference: {viewType: "tree", treePath: [], autoExpandLevels: 0, expandedTree: []}},
+	},
+});
+
+const makeStore = (descriptors: any[] = []) => configureStore({
+	reducer: (s: any = makeState(descriptors)) => s,
+	preloadedState: makeState(descriptors),
+	middleware: (g) => g({serializableCheck: false, immutableCheck: false, thunk: false}),
+});
 
 const baseDescriptor = (over: Partial<any> = {}): any => ({
 	id: "id-1",
@@ -54,129 +74,148 @@ const baseProps = (over: Partial<any> = {}): any => {
 
 describe("<DescriptorItem />", () => {
 	it("renders the descriptor title in normal mode", () => {
-		render(<DescriptorItem {...baseProps()} />);
+		renderWithStore(<DescriptorItem descriptor={baseDescriptor()} />, {preloadedState: makeState()});
 		expect(screen.getByText("My descriptor")).toBeInTheDocument();
 	});
 
 	it("adds 'selected' class when descriptor.selected is true", () => {
-		const {container} = render(
-			<DescriptorItem {...baseProps({descriptor: {selected: true}})} />,
+		const {container} = renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({selected: true})} />,
+			{preloadedState: makeState()},
 		);
 		expect(container.querySelector(".wrap")?.className).toContain("selected");
 	});
 
 	it("adds 'autoSelected' class when descriptor id is in autoSelected[]", () => {
-		const {container} = render(
-			<DescriptorItem {...baseProps({autoSelected: ["id-1"]})} />,
+		// Provide the descriptor in state as unselected — it becomes the auto-active item.
+		const desc = baseDescriptor();
+		const {container} = renderWithStore(
+			<DescriptorItem descriptor={desc} />,
+			{preloadedState: makeState([desc])},
 		);
 		expect(container.querySelector(".wrap")?.className).toContain("autoSelected");
 	});
 
 	it("adds 'error' class when recordedData[0]._obj === 'error'", () => {
-		const {container} = render(
-			<DescriptorItem
-				{...baseProps({descriptor: {recordedData: [{_obj: "error"}]}})}
-			/>,
+		const {container} = renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({recordedData: [{_obj: "error"}]})} />,
+			{preloadedState: makeState()},
 		);
 		expect(container.querySelector(".wrap")?.className).toContain("error");
 	});
 
 	it("renders the elapsed time when start/end are non-zero", () => {
-		const {container} = render(
-			<DescriptorItem {...baseProps({descriptor: {startTime: 100, endTime: 250}})} />,
+		const {container} = renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({startTime: 100, endTime: 250})} />,
+			{preloadedState: makeState()},
 		);
 		expect(container.querySelector(".time")?.textContent).toBe("150 ms");
 	});
 
 	it("hides the time when startTime is 0", () => {
-		const {container} = render(<DescriptorItem {...baseProps()} />);
+		const {container} = renderWithStore(<DescriptorItem descriptor={baseDescriptor()} />, {preloadedState: makeState()});
 		expect(container.querySelector(".time")).toBeNull();
 	});
 
 	it("renders groupCount when > 1", () => {
-		render(
-			<DescriptorItem {...baseProps({descriptor: {groupCount: 3}})} />,
+		renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({groupCount: 3})} />,
+			{preloadedState: makeState()},
 		);
 		expect(screen.getByText("3×")).toBeInTheDocument();
 	});
 
-	it("calls onSelect with 'replace' on plain click", () => {
-		const onSelect = jest.fn();
-		const {container} = render(<DescriptorItem {...baseProps({onSelect})} />);
+	it("dispatches selectDescriptor with 'replace' on plain click", () => {
+		const store = makeStore();
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(<DescriptorItem descriptor={baseDescriptor()} />, {store});
 		fireEvent.click(container.querySelector(".wrap")!);
-		expect(onSelect).toHaveBeenCalledWith("id-1", "replace", 1);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({operation: "replace", uuid: "id-1"})}),
+		);
 	});
 
-	it("calls onSelect with 'addContinuous' on shift+click", () => {
-		const onSelect = jest.fn();
-		const {container} = render(<DescriptorItem {...baseProps({onSelect})} />);
+	it("dispatches selectDescriptor with 'addContinuous' on shift+click", () => {
+		const store = makeStore();
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(<DescriptorItem descriptor={baseDescriptor()} />, {store});
 		fireEvent.click(container.querySelector(".wrap")!, {shiftKey: true});
-		expect(onSelect).toHaveBeenCalledWith("id-1", "addContinuous", 1);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({operation: "addContinuous", uuid: "id-1"})}),
+		);
 	});
 
-	it("calls onSelect with 'add' on ctrl+click of an unselected item", () => {
-		const onSelect = jest.fn();
-		const {container} = render(<DescriptorItem {...baseProps({onSelect})} />);
+	it("dispatches selectDescriptor with 'add' on ctrl+click of an unselected item", () => {
+		const store = makeStore();
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(<DescriptorItem descriptor={baseDescriptor()} />, {store});
 		fireEvent.click(container.querySelector(".wrap")!, {ctrlKey: true});
-		expect(onSelect).toHaveBeenCalledWith("id-1", "add", 1);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({operation: "add", uuid: "id-1"})}),
+		);
 	});
 
-	it("calls onSelect with 'subtract' on ctrl+click of a selected item", () => {
-		const onSelect = jest.fn();
-		const {container} = render(
-			<DescriptorItem {...baseProps({onSelect, descriptor: {selected: true}})} />,
+	it("dispatches selectDescriptor with 'subtract' on ctrl+click of a selected item", () => {
+		const store = makeStore();
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({selected: true})} />,
+			{store},
 		);
 		fireEvent.click(container.querySelector(".wrap")!, {ctrlKey: true});
-		expect(onSelect).toHaveBeenCalledWith("id-1", "subtract", 1);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({operation: "subtract", uuid: "id-1"})}),
+		);
 	});
 
-	it("calls onSelect with 'subtractContinuous' on shift+ctrl+click", () => {
-		const onSelect = jest.fn();
-		const {container} = render(<DescriptorItem {...baseProps({onSelect})} />);
+	it("dispatches selectDescriptor with 'subtractContinuous' on shift+ctrl+click", () => {
+		const store = makeStore();
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(<DescriptorItem descriptor={baseDescriptor()} />, {store});
 		fireEvent.click(container.querySelector(".wrap")!, {shiftKey: true, ctrlKey: true});
-		expect(onSelect).toHaveBeenCalledWith("id-1", "subtractContinuous", 1);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({operation: "subtractContinuous", uuid: "id-1"})}),
+		);
 	});
 
 	it("renders the edit-mode UI when renameMode is true", () => {
-		const {container} = render(
-			<DescriptorItem {...baseProps({descriptor: {renameMode: true}})} />,
+		const {container} = renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({renameMode: true})} />,
+			{preloadedState: makeState()},
 		);
 		expect(container.querySelector(".editMode")).not.toBeNull();
 		expect(screen.getByText("OK")).toBeInTheDocument();
 		expect(screen.getByText("×")).toBeInTheDocument();
 	});
 
-	it("OK button calls onChangeName + setRenameMode(false)", () => {
-		const onChangeName = jest.fn();
-		const setRenameMode = jest.fn();
-		render(
-			<DescriptorItem
-				{...baseProps({
-					onChangeName,
-					setRenameMode,
-					descriptor: {renameMode: true, title: "tempTitle"},
-				})}
-			/>,
+	it("OK button dispatches renameDescriptor + setRenameMode(false)", () => {
+		const store = makeStore();
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({renameMode: true, title: "tempTitle"})} />,
+			{store},
 		);
 		fireEvent.click(screen.getByText("OK"));
-		expect(onChangeName).toHaveBeenCalledWith("id-1", "tempTitle");
-		expect(setRenameMode).toHaveBeenCalledWith("id-1", false);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({uuid: "id-1", name: "tempTitle"})}),
+		);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({uuid: "id-1", on: false})}),
+		);
 	});
 
-	it("× button cancels rename mode without renaming", () => {
-		const onChangeName = jest.fn();
-		const setRenameMode = jest.fn();
-		render(
-			<DescriptorItem
-				{...baseProps({
-					onChangeName,
-					setRenameMode,
-					descriptor: {renameMode: true},
-				})}
-			/>,
+	it("× button dispatches setRenameMode(false) without renaming", () => {
+		const store = makeStore();
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		renderWithStore(
+			<DescriptorItem descriptor={baseDescriptor({renameMode: true})} />,
+			{store},
 		);
 		fireEvent.click(screen.getByText("×"));
-		expect(onChangeName).not.toHaveBeenCalled();
-		expect(setRenameMode).toHaveBeenCalledWith("id-1", false);
+		const calls = dispatchSpy.mock.calls.map(c => c[0]) as any[];
+		expect(calls.some(a => a?.payload?.name !== undefined)).toBe(false);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({uuid: "id-1", on: false})}),
+		);
 	});
 });

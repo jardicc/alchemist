@@ -2,14 +2,16 @@ import React, {ComponentType} from "react";
 import {AccDrop, IAccDropPostFixProps} from "./AccDrop";
 import {FilterButton, TFilterState} from "./FilterButton";
 import {TSubTypes, IPropertyItem, IPropertyGroup, TTargetReference, TAllTargetReferences} from "../model/types";
-import {connect} from "react-redux";
-import {IRootState} from "../../shared/store";
-import {Dispatch} from "redux";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getActiveRef} from "../selectors/inspectorSelectors";
 import {setFilterStateAction} from "../actions/inspectorActions";
 
 
-export const FilterRow: React.FC<TFilterRow> = (props) => {
+export const FilterRow: React.FC<IOwn> = (props) => {
+	const activeRef = useAppSelector(getActiveRef);
+	const dispatch = useAppDispatch();
+	const onSetFilter = (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => dispatch(setFilterStateAction(type, subType, state));
+
 	const {value: content, subtype, filterBy, onSelect, onUpdateList, initialItems, items} = props;
 	const [list, setListState] = React.useState<(IPropertyItem | IPropertyGroup)[]>(initialItems ?? []);
 
@@ -60,7 +62,7 @@ export const FilterRow: React.FC<TFilterRow> = (props) => {
 					subtype={subtype}
 					state={filterBy}
 					onClick={(subtype, state, e) => {
-						props.onSetFilter(props.activeRef.type, subtype, state);
+						onSetFilter(activeRef.type, subtype, state);
 						e.stopPropagation();
 					}}
 				/>
@@ -74,10 +76,10 @@ interface IFilterRowState {
 
 interface IOwn {
 	subtype: TSubTypes | "main"
+	header: string | React.ReactElement
 	initialItems?: (IPropertyItem | IPropertyGroup)[]
 	items?: (IPropertyItem | IPropertyGroup)[]
 	icons?: boolean
-	header: string | React.ReactElement
 	filterBy: TFilterState
 	value: string | number | string[]
 	showSearch?: boolean
@@ -88,25 +90,6 @@ interface IOwn {
 	onUpdateList?: () => Promise<(IPropertyItem | IPropertyGroup)[]>
 }
 
-export type TFilterRow = IFilterRowProps & IFilterRowDispatch
-
-export interface IFilterRowProps extends IOwn {
-	activeRef: TAllTargetReferences;
-}
-
+export type TFilterRow = IOwn & {activeRef: TAllTargetReferences};
+export interface IFilterRowProps extends IOwn {activeRef: TAllTargetReferences;}
 export type TFilterRowProps = IFilterRowProps & IOwn;
-
-const mapStateToProps = (state: IRootState, ownProps: IOwn): IFilterRowProps => ({
-	activeRef: getActiveRef(state),
-	...ownProps,
-});
-
-interface IFilterRowDispatch {
-	onSetFilter: (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => void
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): IFilterRowDispatch => ({
-	onSetFilter: (type, subType, state) => dispatch(setFilterStateAction(type, subType, state)),
-});
-
-export const FilterRowContainer = connect<IFilterRowProps, IFilterRowDispatch, IOwn, IRootState>(mapStateToProps, mapDispatchToProps)(FilterRow);

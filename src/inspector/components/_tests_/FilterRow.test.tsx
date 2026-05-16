@@ -2,8 +2,9 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import {render, fireEvent, act} from "@testing-library/react";
+import {fireEvent, act} from "@testing-library/react";
 import "@testing-library/jest-dom";
+import {configureStore} from "@reduxjs/toolkit";
 
 // Stub heavy children so this test only exercises FilterRow's wiring.
 jest.mock("../AccDrop", () => {
@@ -60,6 +61,20 @@ jest.mock("../FilterButton", () => {
 });
 
 import {FilterRow} from "../FilterRow";
+import {renderWithStore} from "../../../__tests__/renderWithStore";
+import {setFilterStateAction} from "../../actions/inspectorActions";
+
+const layerState = {
+	inspector: {
+		descriptors: [],
+		selectedReferenceType: "layer",
+		filterBySelectedReferenceType: "off",
+		explicitlyVisibleTopCategories: [],
+		targetReference: {layer: {type: "layer", filterProp: "off", properties: [], documentID: "selected", filterDoc: "off", filterLayer: "off", layerID: "selected"}},
+		settings: {searchTerm: null, listenerFilter: {type: "none", exclude: [], include: []}, notifierFilter: {type: "none", exclude: [], include: []}, autoUpdateInspector: false, activeDescriptors: [], accordionExpandedIDs: []},
+		inspector: {activeTab: "content", content: {viewType: "tree", search: "", treePath: [], autoExpandLevels: 0, expandedTree: []}, dom: {treePath: [], autoExpandLevels: 0, expandedTree: []}, difference: {viewType: "tree", treePath: [], autoExpandLevels: 0, expandedTree: []}},
+	},
+} as any;
 
 const baseProps = (overrides: Partial<any> = {}) => ({
 	subtype: "main",
@@ -75,41 +90,50 @@ const baseProps = (overrides: Partial<any> = {}) => ({
 
 describe("<FilterRow />", () => {
 	it("renders an AccDrop using the subtype as id", () => {
-		const {getByTestId} = render(<FilterRow {...(baseProps() as any)} />);
+		const {getByTestId} = renderWithStore(<FilterRow {...(baseProps() as any)} />, {preloadedState: layerState});
 		expect(getByTestId("acc-drop-stub").getAttribute("data-id")).toBe("main");
 	});
 
 	it("normalizes a single value into an array for `selected`", () => {
-		const {getByTestId} = render(<FilterRow {...(baseProps({value: "x"}) as any)} />);
+		const {getByTestId} = renderWithStore(<FilterRow {...(baseProps({value: "x"}) as any)} />, {preloadedState: layerState});
 		expect(getByTestId("acc-drop-stub").getAttribute("data-selected")).toBe(JSON.stringify(["x"]));
 	});
 
 	it("passes through array values unchanged", () => {
-		const {getByTestId} = render(
+		const {getByTestId} = renderWithStore(
 			<FilterRow {...(baseProps({value: ["a", "b"]}) as any)} />,
+			{preloadedState: layerState},
 		);
 		expect(getByTestId("acc-drop-stub").getAttribute("data-selected")).toBe(JSON.stringify(["a", "b"]));
 	});
 
 	it("forwards onSelect to the parent (without the AccDrop id)", () => {
 		const onSelect = jest.fn();
-		const {getByTestId} = render(<FilterRow {...(baseProps({onSelect}) as any)} />);
+		const {getByTestId} = renderWithStore(<FilterRow {...(baseProps({onSelect}) as any)} />, {preloadedState: layerState});
 		fireEvent.click(getByTestId("stub-select"));
 		// (value, !!toggleProperty) -> (the-value, false) here since toggleProperty undefined
 		expect(onSelect).toHaveBeenCalledWith("the-value", false);
 	});
 
-	it("calls onSetFilter on FilterButton click using activeRef.type and subtype", () => {
-		const onSetFilter = jest.fn();
-		const {getByTestId} = render(
-			<FilterRow {...(baseProps({onSetFilter, subtype: "documentID"}) as any)} />,
+	it("calls setFilterStateAction dispatch on FilterButton click using activeRef.type and subtype", () => {
+		const store = configureStore({
+			reducer: (s: any = layerState) => s,
+			preloadedState: layerState,
+			middleware: (g) => g({serializableCheck: false, immutableCheck: false, thunk: false}),
+		});
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {getByTestId} = renderWithStore(
+			<FilterRow {...(baseProps({subtype: "documentID"}) as any)} />,
+			{store},
 		);
 		fireEvent.click(getByTestId("filter-button-stub"));
-		expect(onSetFilter).toHaveBeenCalledWith("layer", "documentID", "off");
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: expect.objectContaining({type: "layer", subType: "documentID", state: "off"})}),
+		);
 	});
 
 	it("uses prop items directly when provided (no internal list)", () => {
-		const {getByTestId} = render(<FilterRow {...(baseProps() as any)} />);
+		const {getByTestId} = renderWithStore(<FilterRow {...(baseProps() as any)} />, {preloadedState: layerState});
 		expect(getByTestId("acc-drop-stub").getAttribute("data-items-len")).toBe("2");
 	});
 
@@ -120,7 +144,7 @@ describe("<FilterRow />", () => {
 			initialItems: [{label: "A", value: "a"}],
 			onUpdateList,
 		});
-		const {getByTestId} = render(<FilterRow {...(props as any)} />);
+		const {getByTestId} = renderWithStore(<FilterRow {...(props as any)} />, {preloadedState: layerState});
 
 		await act(async () => {
 			fireEvent.click(getByTestId("stub-header"));
@@ -135,7 +159,7 @@ describe("<FilterRow />", () => {
 	});
 
 	it("does nothing on header click when onUpdateList is missing", async () => {
-		const {getByTestId} = render(<FilterRow {...(baseProps() as any)} />);
+		const {getByTestId} = renderWithStore(<FilterRow {...(baseProps() as any)} />, {preloadedState: layerState});
 		await fireEvent.click(getByTestId("stub-header"));
 		// Still 2 items (the original ones), no throw
 		expect(getByTestId("acc-drop-stub").getAttribute("data-items-len")).toBe("2");

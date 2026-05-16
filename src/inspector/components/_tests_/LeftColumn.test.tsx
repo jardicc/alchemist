@@ -2,20 +2,20 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import {render, fireEvent, screen} from "@testing-library/react";
+import {fireEvent, screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 // ---- Mocks for heavy / side-effecting children ----
 jest.mock("../FiltersContainer", () => ({}), {virtual: true}); // just in case
 jest.mock("../Filters", () => {
 	const React = require("react");
-	return {FiltersContainer: () => React.createElement("div", {"data-testid": "filters-stub"})};
+	return {Filters: () => React.createElement("div", {"data-testid": "filters-stub"})};
 });
 
 jest.mock("../DescriptorItemContainer", () => {
 	const React = require("react");
 	return {
-		DescriptorItemContainer: (props: any) =>
+		DescriptorItem: (props: any) =>
 			React.createElement("div", {
 				"data-testid": "descriptor-item",
 				"data-id": props.descriptor.id,
@@ -42,6 +42,7 @@ jest.mock("../../classes/GetInfo", () => ({
 }));
 
 jest.mock("../../classes/Helpers", () => ({
+	Helpers: {uuidCustom: () => "mock-uuid"},
 	replayDescriptor: jest.fn(),
 }));
 
@@ -76,6 +77,42 @@ jest.mock("../../../shared/components/icons", () => new Proxy({}, {get: () => ()
 
 import {LeftColumn} from "../LeftColumn";
 import {ListenerClass} from "../../classes/Listener";
+import {renderWithStore} from "../../../__tests__/renderWithStore";
+import {configureStore} from "@reduxjs/toolkit";
+
+// ---- Selector mocks so the component can read from them ----
+// Use jest.fn() so individual tests can override via mockReturnValue
+jest.mock("../../selectors/inspectorSelectors", () => ({
+	getTargetReference: jest.fn(() => ({})),
+	getActiveRef: jest.fn(() => ({type: "layer"})),
+	getCopyToClipboardEnabled: jest.fn(() => false),
+	getAddAllowed: jest.fn(() => true),
+	getAllDescriptors: jest.fn(() => []),
+	getDescriptorsListView: jest.fn(() => []),
+	getLockedSelection: jest.fn(() => false),
+	getPinnedSelection: jest.fn(() => false),
+	getRanameEnabled: jest.fn(() => false),
+	getReplayEnabled: jest.fn(() => false),
+	getSelectedDescriptors: jest.fn(() => []),
+	getSelectedDescriptorsUUID: jest.fn(() => []),
+	getRemovableSelection: jest.fn(() => true),
+	getHasAutoActiveDescriptor: jest.fn(() => false),
+	getAutoUpdate: jest.fn(() => false),
+	getInspectorSettings: jest.fn(() => ({
+		autoUpdateListener: false, autoUpdateInspector: false, autoUpdateSpy: false,
+		searchTerm: "", groupDescriptors: "off", dontShowMarketplaceInfo: true,
+		neverRecordActionNames: [], initialDescriptorSettings: {}, maximumItems: 100,
+		fontSize: "size-default", makeRawDataEasyToInspect: false, accordionExpandedIDs: [],
+	})),
+}));
+jest.mock("../../selectors/inspectorCodeSelectors", () => ({
+	getGeneratedCode: jest.fn(() => ""),
+}));
+
+import {
+	getAddAllowed, getDescriptorsListView, getReplayEnabled,
+	getSelectedDescriptorsUUID, getInspectorSettings,
+} from "../../selectors/inspectorSelectors";
 
 const baseSettings = (over: Partial<any> = {}): any => ({
 	autoUpdateListener: false,
@@ -148,10 +185,16 @@ const baseProps = (over: Partial<any> = {}): any => ({
 describe("<LeftColumn />", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		// Restore selector defaults after clearAllMocks
+		(getAddAllowed as jest.Mock).mockReturnValue(true);
+		(getDescriptorsListView as jest.Mock).mockReturnValue([]);
+		(getReplayEnabled as jest.Mock).mockReturnValue(false);
+		(getSelectedDescriptorsUUID as jest.Mock).mockReturnValue([]);
+		(getInspectorSettings as jest.Mock).mockReturnValue(baseSettings());
 	});
 
 	it("renders the Filters slot and the action buttons", () => {
-		render(<LeftColumn {...baseProps()} />);
+		renderWithStore(<LeftColumn />, {preloadedState: {}});
 		expect(screen.getByTestId("filters-stub")).toBeInTheDocument();
 		expect(screen.getByText(/^Add$/)).toBeInTheDocument();
 		expect(screen.getByText(/Listener/)).toBeInTheDocument();
@@ -159,81 +202,67 @@ describe("<LeftColumn />", () => {
 	});
 
 	it("renders one DescriptorItem per visible descriptor", () => {
-		const props = baseProps({
-			allInViewDescriptors: [makeDescriptor("a"), makeDescriptor("b"), makeDescriptor("c")],
-		});
-		render(<LeftColumn {...props} />);
+		(getDescriptorsListView as jest.Mock).mockReturnValue([makeDescriptor("a"), makeDescriptor("b"), makeDescriptor("c")]);
+		renderWithStore(<LeftColumn />, {preloadedState: {}});
 		expect(screen.getAllByTestId("descriptor-item")).toHaveLength(3);
 	});
 
 	it("Add button gets 'allowed' class when addAllowed=true", () => {
-		const {container} = render(<LeftColumn {...baseProps({addAllowed: true})} />);
+		(getAddAllowed as jest.Mock).mockReturnValue(true);
+		const {container} = renderWithStore(<LeftColumn />, {preloadedState: {}});
 		const add = container.querySelector(".add");
 		expect(add?.className).toContain("allowed");
 		expect(add?.className).not.toContain("disallowed");
 	});
 
 	it("Add button gets 'disallowed' class when addAllowed=false", () => {
-		const {container} = render(<LeftColumn {...baseProps({addAllowed: false})} />);
+		(getAddAllowed as jest.Mock).mockReturnValue(false);
+		const {container} = renderWithStore(<LeftColumn />, {preloadedState: {}});
 		expect(container.querySelector(".add")?.className).toContain("disallowed");
 	});
 
-	it("Search field forwards input via setSearchTerm", () => {
-		const setSearchTerm = jest.fn();
-		const {container} = render(<LeftColumn {...baseProps({setSearchTerm})} />);
+	it("Search field renders without crashing", () => {
+		const {container} = renderWithStore(<LeftColumn />, {preloadedState: {}});
 		const search = container.querySelector(".search input, .search sp-textfield") as HTMLElement | null;
-		// react-uxp-spectrum is mocked as a Fragment, so the Textfield emits no
-		// real DOM node. We trigger the input handler programmatically through
-		// the .search wrapper to keep the test independent of the mock impl.
-		// Fall back to firing on the wrapper if no input exists.
 		const target = search ?? container.querySelector(".search")!;
 		fireEvent.input(target, {target: {value: "abc", currentTarget: {value: "abc"}}} as any);
-		// Don't strictly assert the call (the mock may swallow the event),
-		// but the render should not crash.
 		expect(container.querySelector(".search")).not.toBeNull();
 	});
 
 	it("Replay button is disallowed when replayEnabled=false", () => {
-		const {container} = render(<LeftColumn {...baseProps({replayEnabled: false})} />);
+		(getReplayEnabled as jest.Mock).mockReturnValue(false);
+		const {container} = renderWithStore(<LeftColumn />, {preloadedState: {}});
 		expect(container.querySelector(".play")?.className).toContain("disallowed");
 	});
 
-	it("Remove button calls onRemove with selectedDescriptorsUUIDs", () => {
-		const onRemove = jest.fn();
-		const {container} = render(
-			<LeftColumn
-				{...baseProps({
-					onRemove,
-					selectedDescriptors: [makeDescriptor("x")],
-					selectedDescriptorsUUIDs: ["x"],
-				})}
-			/>,
-		);
+	it("Remove button dispatches removeDescAction with selectedDescriptorsUUIDs", () => {
+		(getSelectedDescriptorsUUID as jest.Mock).mockReturnValue(["x"]);
+		const store = configureStore({
+			reducer: (s: any = {}) => s,
+			preloadedState: {},
+			middleware: (g) => g({serializableCheck: false, immutableCheck: false, thunk: false}),
+		});
+		const dispatchSpy = jest.spyOn(store, "dispatch");
+		const {container} = renderWithStore(<LeftColumn />, {store});
 		fireEvent.click(container.querySelector(".remove")!);
-		expect(onRemove).toHaveBeenCalledWith(["x"]);
+		expect(dispatchSpy).toHaveBeenCalledWith(
+			expect.objectContaining({payload: ["x"]}),
+		);
 	});
 
 	it("Listener button toggles ListenerClass.startListener when off", async () => {
-		const setListener = jest.fn();
-		const {container} = render(
-			<LeftColumn {...baseProps({setListener, settings: baseSettings({autoUpdateListener: false})})} />,
-		);
+		(getInspectorSettings as jest.Mock).mockReturnValue(baseSettings({autoUpdateListener: false}));
+		const {container} = renderWithStore(<LeftColumn />, {preloadedState: {}});
 		await fireEvent.click(container.querySelector(".listenerSwitch")!);
-		// async chain may not have flushed; but we can assert at least one of
-		// the side effects happened
 		expect(
-			(ListenerClass.startListener as jest.Mock).mock.calls.length +
-				(setListener as jest.Mock).mock.calls.length,
+			(ListenerClass.startListener as jest.Mock).mock.calls.length,
 		).toBeGreaterThan(0);
 	});
 
 	it("Listener button stops listening when already auto-updating", async () => {
-		const setListener = jest.fn();
-		render(
-			<LeftColumn {...baseProps({setListener, settings: baseSettings({autoUpdateListener: true})})} />,
-		);
-		const btn = document.querySelector(".listenerSwitch")!;
-		await fireEvent.click(btn);
+		(getInspectorSettings as jest.Mock).mockReturnValue(baseSettings({autoUpdateListener: true}));
+		const {container} = renderWithStore(<LeftColumn />, {preloadedState: {}});
+		await fireEvent.click(container.querySelector(".listenerSwitch")!);
 		expect(ListenerClass.stopListener).toHaveBeenCalled();
 	});
 });

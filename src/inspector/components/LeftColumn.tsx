@@ -1,7 +1,6 @@
 import React from "react";
-import "./LeftColumn.less";
-import {GetInfo, ITargetReferenceAM} from "../classes/GetInfo";
-import {DescriptorItemContainer} from "./DescriptorItemContainer";
+import "./LeftColumn.less";import {GetInfo, ITargetReferenceAM} from "../classes/GetInfo";
+import {DescriptorItem} from "./DescriptorItemContainer";
 import {IDescriptor, IRefListener, IRefNotifier, IRefReplies, ISettings, TAllTargetReferences, TSelectDescriptorOperation} from "../model/types";
 import {IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop, IconClipboard} from "../../shared/components/icons";
 import {ListenerClass} from "../classes/Listener";
@@ -14,8 +13,7 @@ import {str as crc} from "crc-32";
 import SP from "react-uxp-spectrum";
 
 import {Main} from "../../shared/classes/Main";
-import {MapDispatchToPropsFunction, connect} from "react-redux";
-import {IRootState} from "../../shared/store";
+import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {
 	addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction,
 	setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction,
@@ -30,13 +28,44 @@ import {
 	getCopyToClipboardEnabled,
 	getActiveRef,
 } from "../selectors/inspectorSelectors";
-import {Dispatch} from "redux";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 import {filterNonExistent} from "../classes/filterNonExistent";
-import {FiltersContainer} from "./Filters";
+import {Filters} from "./Filters";
 import {getGeneratedCode} from "../selectors/inspectorCodeSelectors";
 
-export const LeftColumn: React.FC<TLeftColumn> = (props) => {
+export const LeftColumn: React.FC = () => {
+	const dispatch = useAppDispatch();
+
+	const activeRef = useAppSelector(getActiveRef);
+	const copyToClipboardEnabled = useAppSelector(getCopyToClipboardEnabled);
+	const addAllowed = useAppSelector(getAddAllowed);
+	const allDescriptors = useAppSelector(getAllDescriptors);
+	const allInViewDescriptors = useAppSelector(getDescriptorsListView);
+	const lockedSelection = useAppSelector(getLockedSelection);
+	const pinnedSelection = useAppSelector(getPinnedSelection);
+	const renameEnabled = useAppSelector(getRanameEnabled);
+	const replayEnabled = useAppSelector(getReplayEnabled);
+	const generatedCode = useAppSelector(getGeneratedCode);
+	const selectedDescriptors = useAppSelector(getSelectedDescriptors);
+	const selectedDescriptorsUUIDs = useAppSelector(getSelectedDescriptorsUUID);
+	const settings = useAppSelector(getInspectorSettings);
+
+	const onAddDescriptor = (desc: IDescriptor) => dispatch(addDescriptorAction(desc, false));
+	const onClear = () => dispatch(clearAction());
+	const onPin = (pin: boolean, uuids: string[]) => dispatch(pinDescAction(pin, uuids));
+	const onRemove = (uuids: string[]) => dispatch(removeDescAction(uuids));
+	const onLock = (lock: boolean, uuids: string[]) => dispatch(lockDescAction(lock, uuids));
+	const setListener = (enabled: boolean) => dispatch(setListenerAction(enabled));
+	const setSpy = (enabled: boolean) => dispatch(setSpyAction(enabled));
+	const setAutoInspector = (enabled: boolean) => dispatch(setAutoInspectorAction(enabled));
+	const setSearchTerm = (str: string) => dispatch(setSearchTermAction(str));
+	const setRenameMode = (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid, on));
+	const onSelect = (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptorAction(operation, uuid));
+	const onSetDontShowMarketplaceInfo = (enabled: boolean) => dispatch(setDontShowMarketplaceInfoAction(enabled));
+	const toggleDescGrouping = () => dispatch(toggleDescriptorsGroupingAction());
+	const onClearView = (keep: boolean) => dispatch(clearViewAction(keep));
+	const onClearNonExistent = (items: IDescriptor[]) => dispatch(importItemsAction(items, "replace"));
+
 	const marketplaceDialogRef = React.useRef<any>(null);
 	const clearMenuRef = React.useRef<any>(null);
 	const lastDescRef = React.useRef<HTMLDivElement>(null);
@@ -57,8 +86,7 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 	});
 
 	const getDescriptor = async (): Promise<void> => {
-		const {activeRef} = props;
-		if (!props.addAllowed) {
+		if (!addAllowed) {
 			return;
 		}
 		const result = await GetInfo.getAM(activeRef);
@@ -66,7 +94,7 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 			NotificationManager.error("Please make sure that item you want to add exists in Photoshop", "Failed", 3500);
 			return;
 		}
-		props.onAddDescriptor(result);
+		onAddDescriptor(result);
 
 	};
 
@@ -97,17 +125,17 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 			selected: false,
 			title: GetInfo.generateTitle(originalReference, calculatedReference),
 			playAbleData: calculatedReference,
-			descriptorSettings: props.settings.initialDescriptorSettings,
+			descriptorSettings: settings.initialDescriptorSettings,
 		};
 
-		props.onAddDescriptor(result);
+		onAddDescriptor(result);
 	};
 
 	/**
 	 * Listener to be attached to all Photoshop notifications.
 	 */
 	const listener = async (event: string, descriptor: any, spy = false): Promise<void> => {
-		if (props.settings.neverRecordActionNames.includes(event)) {
+		if (settings.neverRecordActionNames.includes(event)) {
 			return;
 		}
 
@@ -141,10 +169,10 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 			renameMode: false,
 			playAbleData: descWithEvent,
 			title: (spy ? "[S] " : "") + GetInfo.generateTitle(originalReference, descWithEvent),
-			descriptorSettings: props.settings.initialDescriptorSettings,
+			descriptorSettings: settings.initialDescriptorSettings,
 		};
 
-		props.onAddDescriptor(result);
+		onAddDescriptor(result);
 	};
 
 	/**
@@ -158,7 +186,7 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 	 * Attaches the simple listener to the app.
 	 */
 	const attachListener = async () => {
-		const {settings: {dontShowMarketplaceInfo, autoUpdateListener}} = props;
+		const {dontShowMarketplaceInfo, autoUpdateListener} = settings;
 		if (!dontShowMarketplaceInfo && !autoUpdateListener && !Main.devMode && !Main.isFirstParty) {
 			const res = await marketplaceDialogRef.current.uxpShowModal({
 				title: "Advice",
@@ -174,37 +202,36 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 		} else {
 			ListenerClass.startListener(listener);
 		}
-		props.setListener(!autoUpdateListener);
+		setListener(!autoUpdateListener);
 	};
 
 	const attachSpy = async () => {
-		const {settings: {autoUpdateSpy}} = props;
+		const {autoUpdateSpy} = settings;
 		if (autoUpdateSpy) {
 			ListenerClass.stopSpy();
 		} else {
 			ListenerClass.startSpy(spy);
 		}
-		props.setSpy(!autoUpdateSpy);
+		setSpy(!autoUpdateSpy);
 	};
 
 	const attachAutoInspector = async () => {
-		const {settings: {autoUpdateInspector}} = props;
-		props.setAutoInspector(!autoUpdateInspector);
+		const {autoUpdateInspector} = settings;
+		setAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {
 			ListenerClass.stopInspector();
 		} else {
 			ListenerClass.startInspector(autoInspector);
 		}
-		props.setAutoInspector(!autoUpdateInspector);
+		setAutoInspector(!autoUpdateInspector);
 	};
 
 	const renderDescriptorsList = (): React.ReactNode => {
-		const {allInViewDescriptors} = props;
 		return (
 			allInViewDescriptors.map((d, index) => {
 				return (
 					<div className={"DescriptorItem"} key={index} ref={index === allInViewDescriptors.length - 1 ? lastDescRef as any : null}>
-						<DescriptorItemContainer descriptor={d} key={d.id} />
+						<DescriptorItem descriptor={d} key={d.id} />
 					</div>
 				);
 			})
@@ -212,11 +239,11 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 	};
 
 	const onSearch = (e: string) => {
-		props.setSearchTerm(e);
+		setSearchTerm(e);
 	};
 
 	const onPlaySeparated = async () => {
-		const toPlay = props.selectedDescriptors;
+		const toPlay = selectedDescriptors;
 		for await (const item of toPlay) {
 			const startTime = Date.now();
 			let descriptors: ActionDescriptor[] | null;
@@ -246,23 +273,20 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 				renameMode: false,
 				playAbleData: descriptors,
 				title: GetInfo.generateTitle(originalReference, item.playAbleData as ITargetReferenceAM),
-				descriptorSettings: props.settings.initialDescriptorSettings,
+				descriptorSettings: settings.initialDescriptorSettings,
 			};
 
-			props.onAddDescriptor(result);
+			onAddDescriptor(result);
 		}
 	};
 
 	const rename = () => {
-		const {setRenameMode, selectedDescriptorsUUIDs} = props;
 		if (selectedDescriptorsUUIDs.length) {
 			setRenameMode(selectedDescriptorsUUIDs[0], true);
 		}
 	};
 
 	const renderMarketplaceDialog = () => {
-		const {onSetDontShowMarketplaceInfo} = props;
-
 		return (<dialog className="MarketplaceAdvice" ref={marketplaceDialogRef}>
 			<form>
 				<sp-heading>This is marketplace version of Alchemist</sp-heading>
@@ -280,27 +304,23 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 	};
 
 	const copyToClipboard = () => {
-		(navigator.clipboard as any).setContent({"text/plain": props.generatedCode});
+		(navigator.clipboard as any).setContent({"text/plain": generatedCode});
 	};
 
 	const closeClearMenu = () => {
 		clearMenuRef.current.removeAttribute("open");
 	};
 
-	const {addAllowed, replayEnabled, onLock, onPin, onRemove, selectedDescriptorsUUIDs,
-		selectedDescriptors, lockedSelection, pinnedSelection, renameEnabled,
-		settings: {autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors, autoUpdateSpy},
-		onClear, onClearView, onClearNonExistent, allDescriptors, copyToClipboardEnabled,
-	} = props;
+	const {autoUpdateListener, autoUpdateInspector, searchTerm, groupDescriptors, autoUpdateSpy} = settings;
 	return (
 		<div className="Filters LeftColumn">
 			<div className="oneMore">
-				<FiltersContainer />
+				<Filters />
 				<div className="search">
 					<SP.Textfield placeholder="Search..." onInput={(e: any) => onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
-					<SP.Checkbox onChange={props.toggleDescGrouping} checked={groupDescriptors === "strict"}> <span className="groupLabel">Group</span></SP.Checkbox>
+					<SP.Checkbox onChange={toggleDescGrouping} checked={groupDescriptors === "strict"}> <span className="groupLabel">Group</span></SP.Checkbox>
 				</div>
-				<div className="descriptorsWrapper" ref={wrapperDescRef} onClick={() => props.onSelect("none")}>
+				<div className="descriptorsWrapper" ref={wrapperDescRef} onClick={() => onSelect("none")}>
 					{renderDescriptorsList()}
 				</div>
 
@@ -355,91 +375,3 @@ export const LeftColumn: React.FC<TLeftColumn> = (props) => {
 		</div>
 	);
 };
-
-
-type TLeftColumn = ILeftColumnProps & ILeftColumnDispatch
-
-export interface ILeftColumnProps {
-	activeRef: TAllTargetReferences;
-	addAllowed: boolean
-	allDescriptors: IDescriptor[]
-	allInViewDescriptors: IDescriptor[]
-	autoUpdate: boolean
-	hasAutoActiveDescriptor: boolean
-	lockedSelection: boolean
-	pinnedSelection: boolean
-	removableSelection: boolean
-	renameEnabled: boolean
-	replayEnabled: boolean
-	generatedCode: string
-	copyToClipboardEnabled: boolean
-	selectedDescriptors: IDescriptor[]
-	selectedDescriptorsUUIDs: string[]
-	settings: ISettings
-}
-
-const mapStateToProps = (state: IRootState): ILeftColumnProps => ({
-	activeRef: getActiveRef(state),
-	copyToClipboardEnabled: getCopyToClipboardEnabled(state),
-	addAllowed: getAddAllowed(state),
-	allDescriptors: getAllDescriptors(state),
-	allInViewDescriptors: getDescriptorsListView(state),
-	autoUpdate: getAutoUpdate(state),
-	hasAutoActiveDescriptor: getHasAutoActiveDescriptor(state),
-	lockedSelection: getLockedSelection(state),
-	pinnedSelection: getPinnedSelection(state),
-	removableSelection: getRemovableSelection(state),
-	renameEnabled: getRanameEnabled(state),
-	replayEnabled: getReplayEnabled(state),
-	generatedCode: getGeneratedCode(state),
-	selectedDescriptors: getSelectedDescriptors(state),
-	selectedDescriptorsUUIDs: getSelectedDescriptorsUUID(state),
-	settings: getInspectorSettings(state),
-});
-
-interface ILeftColumnDispatch {
-	onAddDescriptor: (descriptor: IDescriptor) => void
-	onSelect: (operation: TSelectDescriptorOperation, uuid?: string) => void
-
-	onClear: () => void
-	onPin: (pin: boolean, uuids: string[]) => void
-	onRemove: (uuids: string[]) => void
-	onLock: (lock: boolean, uuids: string[]) => void
-
-
-	setListener: (enabled: boolean) => void
-	setSpy: (enabled: boolean) => void
-	setAutoInspector: (enabled: boolean) => void
-	setSearchTerm: (str: string) => void
-	setRenameMode: (uuid: string, on: boolean) => void
-
-	onSetDontShowMarketplaceInfo: (enabled: boolean) => void
-	toggleDescGrouping: () => void
-
-	onClearView: (keep: boolean) => void
-	onClearNonExistent: (items: IDescriptor[]) => void
-}
-
-const mapDispatchToProps: MapDispatchToPropsFunction<ILeftColumnDispatch, Record<string, unknown>> = (dispatch: Dispatch): ILeftColumnDispatch => ({
-	onAddDescriptor: (desc) => dispatch(addDescriptorAction(desc, false)),
-
-	onClear: () => dispatch(clearAction()),
-	onPin: (pin, arg) => dispatch(pinDescAction(pin, arg)),
-	onRemove: (arg) => dispatch(removeDescAction(arg)),
-	onLock: (lock, arg) => dispatch(lockDescAction(lock, arg)),
-
-	setListener: (enabled) => dispatch(setListenerAction(enabled)),
-	setSpy: (enabled) => dispatch(setSpyAction(enabled)),
-	setAutoInspector: (enabled) => dispatch(setAutoInspectorAction(enabled)),
-	setSearchTerm: (str) => dispatch(setSearchTermAction(str)),
-	setRenameMode: (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid, on)),
-	onSelect: (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptorAction(operation, uuid)),
-
-	onSetDontShowMarketplaceInfo: (enabled: boolean) => dispatch(setDontShowMarketplaceInfoAction(enabled)),
-	toggleDescGrouping: () => dispatch(toggleDescriptorsGroupingAction()),
-
-	onClearView: (keep) => dispatch(clearViewAction(keep)),
-	onClearNonExistent: (items) => dispatch(importItemsAction(items, "replace")),
-});
-
-export const LeftColumnContainer = connect<ILeftColumnProps, ILeftColumnDispatch, Record<string, unknown>, IRootState>(mapStateToProps, mapDispatchToProps)(LeftColumn);
