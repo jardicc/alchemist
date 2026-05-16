@@ -1,5 +1,5 @@
 import _, {cloneDeep} from "lodash";
-import {createSelector} from "reselect";
+import {createSelector} from "@reduxjs/toolkit";
 import {getSelectedDescriptors, getAutoActiveDescriptor, getActiveDescriptors, all} from "./inspectorSelectors";
 
 export const getInspectorContentTab = createSelector([all], t => {

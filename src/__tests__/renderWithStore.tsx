@@ -1,6 +1,6 @@
 import React, {ReactElement} from "react";
 import {Provider} from "react-redux";
-import {createStore, Store, AnyAction} from "redux";
+import {configureStore, Store, UnknownAction} from "@reduxjs/toolkit";
 import {render, RenderOptions, RenderResult} from "@testing-library/react";
 
 /**
@@ -28,13 +28,17 @@ export interface IRenderWithStoreResult extends RenderResult {
 	store: Store;
 }
 
-const identityReducer = <S,>(state: S, _action: AnyAction): S => state;
+const identityReducer = <S,>(state: S, _action: UnknownAction): S => state;
 
 export function renderWithStore(
 	ui: ReactElement,
 	{preloadedState, store, ...renderOptions}: IRenderWithStoreOptions = {},
 ): IRenderWithStoreResult {
-	const finalStore: Store = store ?? createStore(identityReducer, preloadedState as never);
+	const finalStore: Store = store ?? configureStore({
+		reducer: identityReducer as any,
+		preloadedState: preloadedState as any,
+		middleware: (getDefault) => getDefault({serializableCheck: false, immutableCheck: false, thunk: false}),
+	});
 
 	const Wrapper = ({children}: {children: React.ReactNode}): JSX.Element => (
 		<Provider store={finalStore}>{children}</Provider>

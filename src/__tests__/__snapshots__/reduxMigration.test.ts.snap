@@ -1,0 +1,2124 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`full store – end-to-end sequence dispatching a sequence produces a stable state snapshot: inspector-state-after-sequence 1`] = `
+{
+  "atnConverter": {
+    "data": [
+      {
+        "__uuid__": "set-a",
+        "actionItems": [],
+        "actionSetName": "set-a",
+        "expanded": true,
+        "isOn": true,
+      },
+    ],
+    "dontSendDisabled": false,
+    "expandedItems": [
+      [
+        "set-a",
+      ],
+    ],
+    "lastSelected": null,
+    "selectedItems": [],
+  },
+  "descriptors": [
+    {
+      "calculatedReference": null,
+      "crc": 1006,
+      "descriptorSettings": {
+        "supportRawDataType": "auto",
+      },
+      "endTime": 0,
+      "groupCalculatedReference": null,
+      "id": "d1",
+      "locked": false,
+      "originalData": {},
+      "originalReference": {},
+      "pinned": false,
+      "renameMode": false,
+      "selected": true,
+      "startTime": 0,
+      "title": "d1",
+    },
+    {
+      "calculatedReference": null,
+      "crc": 1007,
+      "descriptorSettings": {
+        "supportRawDataType": "auto",
+      },
+      "endTime": 0,
+      "groupCalculatedReference": null,
+      "id": "d2",
+      "locked": true,
+      "originalData": {},
+      "originalReference": {},
+      "pinned": false,
+      "renameMode": false,
+      "selected": false,
+      "startTime": 0,
+      "title": "d2",
+    },
+  ],
+  "descriptorsGrouping": "eventName",
+  "dispatcher": {
+    "snippets": [
+      {
+        "content": "const batchPlay = require("photoshop").action.batchPlay;
+
+return await batchPlay([{"_obj": "invert"}],{});",
+      },
+    ],
+  },
+  "explicitlyVisibleTopCategories": [
+    "listener",
+    "dispatcher",
+    "replies",
+  ],
+  "filterBySelectedReferenceType": "off",
+  "inspector": {
+    "activeTab": "difference",
+    "code": {
+      "viewType": "generated",
+    },
+    "content": {
+      "autoExpandLevels": 0,
+      "expandedTree": [],
+      "search": "",
+      "treePath": [],
+      "viewType": "tree",
+    },
+    "difference": {
+      "autoExpandLevels": 0,
+      "expandedTree": [],
+      "treePath": [],
+      "viewType": "tree",
+    },
+    "dom": {
+      "autoExpandLevels": 0,
+      "expandedTree": [],
+      "treePath": [],
+    },
+    "info": {
+      "showOptionalDocumentReference": true,
+    },
+  },
+  "selectedReferenceType": "document",
+  "settings": {
+    "accordionExpandedIDs": [],
+    "activeDescriptors": [],
+    "autoUpdateInspector": false,
+    "autoUpdateListener": true,
+    "autoUpdateSpy": false,
+    "codeImports": "require",
+    "codeWrappers": "modal",
+    "dontShowMarketplaceInfo": false,
+    "fontSize": "size-big",
+    "groupDescriptors": "strict",
+    "hideDontRecord": true,
+    "hideForceNotify": true,
+    "hide_isCommand": true,
+    "indent": "space3",
+    "initialDescriptorSettings": {
+      "dialogOptions": "dontDisplay",
+      "modalBehavior": null,
+      "supportRawDataType": false,
+      "synchronousExecution": null,
+    },
+    "lastHistoryID": -1,
+    "lastSelectedItem": "d1",
+    "leftColumnWidthPx": 300,
+    "listenerFilter": {
+      "exclude": [
+        "select",
+        "set",
+      ],
+      "include": [],
+      "type": "none",
+    },
+    "makeRawDataEasyToInspect": false,
+    "maximumItems": 150,
+    "neverRecordActionNames": [
+      "idle",
+    ],
+    "notifierFilter": {
+      "exclude": [
+        "layersFiltered",
+        "toolModalStateChanged",
+        "invokeCommand",
+        "modalStateChanged",
+        "historyStateChanged",
+      ],
+      "include": [],
+      "type": "none",
+    },
+    "properties": [
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "data": [
+              {
+                "label": "vectorToolMode",
+                "value": "vectorToolMode",
+              },
+            ],
+            "group": "expermiental",
+            "groupLabel": "Experimental",
+          },
+          {
+            "data": [
+              {
+                "label": "$PnCK - paintCursorKind",
+                "value": "$PnCK",
+              },
+              {
+                "label": "active",
+                "value": "active",
+              },
+              {
+                "label": "autoShowHomeScreen",
+                "value": "autoShowHomeScreen",
+              },
+              {
+                "label": "available",
+                "value": "available",
+              },
+              {
+                "label": "backgroundColor",
+                "value": "backgroundColor",
+              },
+              {
+                "label": "brushes",
+                "value": "brushes",
+              },
+              {
+                "label": "brushSettingsLocks",
+                "value": "brushSettingsLocks",
+              },
+              {
+                "label": "buildNumber",
+                "value": "buildNumber",
+              },
+              {
+                "label": "cachePrefs",
+                "value": "cachePrefs",
+              },
+              {
+                "label": "colorPickerPrefs",
+                "value": "colorPickerPrefs",
+              },
+              {
+                "label": "colorSettings",
+                "value": "colorSettings",
+              },
+              {
+                "label": "controlColor",
+                "value": "controlColor",
+              },
+              {
+                "label": "currentToolOptions",
+                "value": "currentToolOptions",
+              },
+              {
+                "label": "defaultAppScript",
+                "value": "defaultAppScript",
+              },
+              {
+                "label": "displayPrefs",
+                "value": "displayPrefs",
+              },
+              {
+                "label": "documentArea",
+                "value": "documentArea",
+              },
+              {
+                "label": "exactPoints",
+                "value": "exactPoints",
+              },
+              {
+                "label": "experimentalFeatures",
+                "value": "experimentalFeatures",
+              },
+              {
+                "label": "exportAssetsPrefs",
+                "value": "exportAssetsPrefs",
+              },
+              {
+                "label": "eyeDropperSample",
+                "value": "eyeDropperSample",
+              },
+              {
+                "label": "fileSavePrefs",
+                "value": "fileSavePrefs",
+              },
+              {
+                "label": "fontLargeName",
+                "value": "fontLargeName",
+              },
+              {
+                "label": "fontLargeSize",
+                "value": "fontLargeSize",
+              },
+              {
+                "label": "fontList",
+                "value": "fontList",
+              },
+              {
+                "label": "fontSmallName",
+                "value": "fontSmallName",
+              },
+              {
+                "label": "fontSmallSize",
+                "value": "fontSmallSize",
+              },
+              {
+                "label": "foregroundColor",
+                "value": "foregroundColor",
+              },
+              {
+                "label": "generalPreferences",
+                "value": "generalPreferences",
+              },
+              {
+                "label": "globalAngle",
+                "value": "globalAngle",
+              },
+              {
+                "label": "gradientClassEvent",
+                "value": "gradientClassEvent",
+              },
+              {
+                "label": "gridMajor",
+                "value": "gridMajor",
+              },
+              {
+                "label": "gridMinor",
+                "value": "gridMinor",
+              },
+              {
+                "label": "guidesPrefs",
+                "value": "guidesPrefs",
+              },
+              {
+                "label": "hasMatchingOpenDoc",
+                "value": "hasMatchingOpenDoc",
+              },
+              {
+                "label": "highlightColorOption",
+                "value": "highlightColorOption",
+              },
+              {
+                "label": "historyLogPreferences",
+                "value": "historyLogPreferences",
+              },
+              {
+                "label": "historyPreferences",
+                "value": "historyPreferences",
+              },
+              {
+                "label": "homeScreenReady",
+                "value": "homeScreenReady",
+              },
+              {
+                "label": "homeScreenVisibility",
+                "value": "homeScreenVisibility",
+              },
+              {
+                "label": "hostName",
+                "value": "hostName",
+              },
+              {
+                "label": "hostVersion",
+                "value": "hostVersion",
+              },
+              {
+                "label": "interfaceBevelHighlight",
+                "value": "interfaceBevelHighlight",
+              },
+              {
+                "label": "interfaceBevelShadow",
+                "value": "interfaceBevelShadow",
+              },
+              {
+                "label": "interfaceBlack",
+                "value": "interfaceBlack",
+              },
+              {
+                "label": "interfaceBorder",
+                "value": "interfaceBorder",
+              },
+              {
+                "label": "interfaceButtonDarkShadow",
+                "value": "interfaceButtonDarkShadow",
+              },
+              {
+                "label": "interfaceButtonDownFill",
+                "value": "interfaceButtonDownFill",
+              },
+              {
+                "label": "interfaceButtonShadow",
+                "value": "interfaceButtonShadow",
+              },
+              {
+                "label": "interfaceButtonText",
+                "value": "interfaceButtonText",
+              },
+              {
+                "label": "interfaceButtonUpFill",
+                "value": "interfaceButtonUpFill",
+              },
+              {
+                "label": "interfaceCanvasColor",
+                "value": "interfaceCanvasColor",
+              },
+              {
+                "label": "interfaceIconFillActive",
+                "value": "interfaceIconFillActive",
+              },
+              {
+                "label": "interfaceIconFillDimmed",
+                "value": "interfaceIconFillDimmed",
+              },
+              {
+                "label": "interfaceIconFillSelected",
+                "value": "interfaceIconFillSelected",
+              },
+              {
+                "label": "interfaceIconFrameActive",
+                "value": "interfaceIconFrameActive",
+              },
+              {
+                "label": "interfaceIconFrameDimmed",
+                "value": "interfaceIconFrameDimmed",
+              },
+              {
+                "label": "interfaceIconFrameSelected",
+                "value": "interfaceIconFrameSelected",
+              },
+              {
+                "label": "interfaceOWLPaletteFill",
+                "value": "interfaceOWLPaletteFill",
+              },
+              {
+                "label": "interfacePaletteFill",
+                "value": "interfacePaletteFill",
+              },
+              {
+                "label": "interfacePrefs",
+                "value": "interfacePrefs",
+              },
+              {
+                "label": "interfaceRed",
+                "value": "interfaceRed",
+              },
+              {
+                "label": "interfaceStaticText",
+                "value": "interfaceStaticText",
+              },
+              {
+                "label": "interfaceToolTipBackground",
+                "value": "interfaceToolTipBackground",
+              },
+              {
+                "label": "interfaceToolTipText",
+                "value": "interfaceToolTipText",
+              },
+              {
+                "label": "interfaceTransparencyBackground",
+                "value": "interfaceTransparencyBackground",
+              },
+              {
+                "label": "interfaceTransparencyForeground",
+                "value": "interfaceTransparencyForeground",
+              },
+              {
+                "label": "interfaceWhite",
+                "value": "interfaceWhite",
+              },
+              {
+                "label": "interpolationMethod",
+                "value": "interpolationMethod",
+              },
+              {
+                "label": "keyboardFocus",
+                "value": "keyboardFocus",
+              },
+              {
+                "label": "kuiBrightnessLevel",
+                "value": "kuiBrightnessLevel",
+              },
+              {
+                "label": "layerThumbnailSize",
+                "value": "layerThumbnailSize",
+              },
+              {
+                "label": "layerVisibilityChangesAreUndoable",
+                "value": "layerVisibilityChangesAreUndoable",
+              },
+              {
+                "label": "limited",
+                "value": "limited",
+              },
+              {
+                "label": "localeInfo",
+                "value": "localeInfo",
+              },
+              {
+                "label": "modalDialogLevel",
+                "value": "modalDialogLevel",
+              },
+              {
+                "label": "modalToolLevel",
+                "value": "modalToolLevel",
+              },
+              {
+                "label": "mondoFilterLevel",
+                "value": "mondoFilterLevel",
+              },
+              {
+                "label": "MRUColorList",
+                "value": "MRUColorList",
+              },
+              {
+                "label": "multiUndoEnabled",
+                "value": "multiUndoEnabled",
+              },
+              {
+                "label": "numberOfActionSets",
+                "value": "numberOfActionSets",
+              },
+              {
+                "label": "numberOfCacheLevels",
+                "value": "numberOfCacheLevels",
+              },
+              {
+                "label": "numberOfCacheLevels64",
+                "value": "numberOfCacheLevels64",
+              },
+              {
+                "label": "numberOfDocuments",
+                "value": "numberOfDocuments",
+              },
+              {
+                "label": "osVersion",
+                "value": "osVersion",
+              },
+              {
+                "label": "panelList",
+                "value": "panelList",
+              },
+              {
+                "label": "panelUILockIsEnabled",
+                "value": "panelUILockIsEnabled",
+              },
+              {
+                "label": "pluginPicker",
+                "value": "pluginPicker",
+              },
+              {
+                "label": "pluginPrefs",
+                "value": "pluginPrefs",
+              },
+              {
+                "label": "PnCK",
+                "value": "PnCK",
+              },
+              {
+                "label": "preferencesFolder",
+                "value": "preferencesFolder",
+              },
+              {
+                "label": "presetManager",
+                "value": "presetManager",
+              },
+              {
+                "label": "recentFiles",
+                "value": "recentFiles",
+              },
+              {
+                "label": "recentFilesAsStrings",
+                "value": "recentFilesAsStrings",
+              },
+              {
+                "label": "regionCode",
+                "value": "regionCode",
+              },
+              {
+                "label": "rulerUnits",
+                "value": "rulerUnits",
+              },
+              {
+                "label": "scratchDiskPreferences",
+                "value": "scratchDiskPreferences",
+              },
+              {
+                "label": "showToolTips",
+                "value": "showToolTips",
+              },
+              {
+                "label": "size",
+                "value": "size",
+              },
+              {
+                "label": "tileSize",
+                "value": "tileSize",
+              },
+              {
+                "label": "tool",
+                "value": "tool",
+              },
+              {
+                "label": "toolsPreferences",
+                "value": "toolsPreferences",
+              },
+              {
+                "label": "toolSupportsBrushes",
+                "value": "toolSupportsBrushes",
+              },
+              {
+                "label": "toolSupportsBrushPresets",
+                "value": "toolSupportsBrushPresets",
+              },
+              {
+                "label": "transparencyGamutPreferences",
+                "value": "transparencyGamutPreferences",
+              },
+              {
+                "label": "transparencyPrefs",
+                "value": "transparencyPrefs",
+              },
+              {
+                "label": "typePreferences",
+                "value": "typePreferences",
+              },
+              {
+                "label": "unitsPrefs",
+                "value": "unitsPrefs",
+              },
+              {
+                "label": "useCacheForHistograms",
+                "value": "useCacheForHistograms",
+              },
+              {
+                "label": "used",
+                "value": "used",
+              },
+              {
+                "label": "vectorToolSettings",
+                "value": "vectorToolSettings",
+              },
+              {
+                "label": "VMStatus",
+                "value": "VMStatus",
+              },
+              {
+                "label": "watchSuspension",
+                "value": "watchSuspension",
+              },
+              {
+                "label": "welcomeScreen2",
+                "value": "welcomeScreen2",
+              },
+              {
+                "label": "workspaceList",
+                "value": "workspaceList",
+              },
+              {
+                "label": "workspacePreferences",
+                "value": "workspacePreferences",
+              },
+              {
+                "label": "z3DPrefs",
+                "value": "z3DPrefs",
+              },
+            ],
+            "group": "default",
+            "groupLabel": "Default",
+          },
+          {
+            "data": [
+              {
+                "label": "brush",
+                "value": "brush",
+              },
+              {
+                "label": "canvasBackgroundColors",
+                "value": "canvasBackgroundColors",
+              },
+              {
+                "label": "colorProfileList",
+                "value": "colorProfileList",
+              },
+              {
+                "label": "contentCredentialsAvailable",
+                "value": "contentCredentialsAvailable",
+              },
+              {
+                "label": "cursorCrosshair",
+                "value": "cursorCrosshair",
+              },
+              {
+                "label": "cursorShape",
+                "value": "cursorShape",
+              },
+              {
+                "label": "FileFormats",
+                "value": "FileFormats",
+              },
+              {
+                "label": "featureAccessLevel",
+                "value": "featureAccessLevel",
+              },
+              {
+                "label": "foregroundColorRGB",
+                "value": "foregroundColorRGB",
+              },
+              {
+                "label": "httpsCommandGet",
+                "value": "httpsCommandGet",
+              },
+              {
+                "label": "LoadedPluginsNames",
+                "value": "LoadedPluginsNames",
+              },
+              {
+                "label": "menuBarInfo",
+                "value": "menuBarInfo",
+              },
+              {
+                "label": "newDocPresetJSON",
+                "value": "newDocPresetJSON",
+              },
+              {
+                "label": "newDocPresetMRUlist",
+                "value": "newDocPresetMRUlist",
+              },
+              {
+                "label": "overscrollMode",
+                "value": "overscrollMode",
+              },
+              {
+                "label": "pixelScaleFactorList",
+                "value": "pixelScaleFactorList",
+              },
+              {
+                "label": "recentFileEntries",
+                "value": "recentFileEntries",
+              },
+              {
+                "label": "recentlyUsedCCLibrariesTemplateElements",
+                "value": "recentlyUsedCCLibrariesTemplateElements",
+              },
+              {
+                "label": "springLoadedTools",
+                "value": "springLoadedTools",
+              },
+              {
+                "label": "springLoadedToolsTimingSensitivity",
+                "value": "springLoadedToolsTimingSensitivity",
+              },
+            ],
+            "group": "hidden",
+            "groupLabel": "Hidden",
+          },
+          {
+            "data": [
+              {
+                "label": "customPreference",
+                "value": "customPreference",
+              },
+              {
+                "label": "executablePath",
+                "value": "executablePath",
+              },
+              {
+                "label": "generatorStatus",
+                "value": "generatorStatus",
+              },
+              {
+                "label": "path",
+                "value": "path",
+              },
+              {
+                "label": "quickTimeInstalled",
+                "value": "quickTimeInstalled",
+              },
+              {
+                "label": "serialString",
+                "value": "serialString",
+              },
+              {
+                "label": "systemInfo",
+                "value": "systemInfo",
+              },
+              {
+                "label": "designSpaceLibrariesInfo",
+                "value": "designSpaceLibrariesInfo",
+              },
+            ],
+            "group": "1st",
+            "groupLabel": "First party only",
+          },
+        ],
+        "type": "application",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "label": "ID",
+            "value": "ID",
+          },
+          {
+            "label": "auto",
+            "value": "auto",
+          },
+          {
+            "label": "count",
+            "value": "count",
+          },
+          {
+            "label": "currentHistoryState",
+            "value": "currentHistoryState",
+          },
+          {
+            "label": "historyBrushSource",
+            "value": "historyBrushSource",
+          },
+          {
+            "label": "itemIndex",
+            "value": "itemIndex",
+          },
+          {
+            "label": "name",
+            "value": "name",
+          },
+        ],
+        "type": "historyState",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "label": "ID",
+            "value": "ID",
+          },
+          {
+            "label": "auto",
+            "value": "auto",
+          },
+          {
+            "label": "count",
+            "value": "count",
+          },
+          {
+            "label": "currentHistoryState",
+            "value": "currentHistoryState",
+          },
+          {
+            "label": "historyBrushSource",
+            "value": "historyBrushSource",
+          },
+          {
+            "label": "itemIndex",
+            "value": "itemIndex",
+          },
+          {
+            "label": "name",
+            "value": "name",
+          },
+        ],
+        "type": "snapshotClass",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "data": [
+              {
+                "label": "freeTransformWholePath",
+                "value": "freeTransformWholePath",
+              },
+            ],
+            "group": "expermiental",
+            "groupLabel": "Experimental",
+          },
+          {
+            "data": [
+              {
+                "label": "background",
+                "value": "background",
+              },
+              {
+                "label": "bounds",
+                "value": "bounds",
+              },
+              {
+                "label": "boundsNoEffects",
+                "value": "boundsNoEffects",
+              },
+              {
+                "label": "boundsNoMask",
+                "value": "boundsNoMask",
+              },
+              {
+                "label": "count",
+                "value": "count",
+              },
+              {
+                "label": "fillOpacity",
+                "value": "fillOpacity",
+              },
+              {
+                "label": "globalAngle",
+                "value": "globalAngle",
+              },
+              {
+                "label": "group",
+                "value": "group",
+              },
+              {
+                "label": "hasUserMask",
+                "value": "hasUserMask",
+              },
+              {
+                "label": "hasVectorMask",
+                "value": "hasVectorMask",
+              },
+              {
+                "label": "itemIndex",
+                "value": "itemIndex",
+              },
+              {
+                "label": "layerFXVisible",
+                "value": "layerFXVisible",
+              },
+              {
+                "label": "layerID",
+                "value": "layerID",
+              },
+              {
+                "label": "layerKind",
+                "value": "layerKind",
+              },
+              {
+                "label": "layerLocking",
+                "value": "layerLocking",
+              },
+              {
+                "label": "layerSection",
+                "value": "layerSection",
+              },
+              {
+                "label": "mode",
+                "value": "mode",
+              },
+              {
+                "label": "name",
+                "value": "name",
+              },
+              {
+                "label": "opacity",
+                "value": "opacity",
+              },
+              {
+                "label": "targetChannels",
+                "value": "targetChannels",
+              },
+              {
+                "label": "visible",
+                "value": "visible",
+              },
+              {
+                "label": "visibleChannels",
+                "value": "visibleChannels",
+              },
+            ],
+            "group": "default",
+            "groupLabel": "Default",
+          },
+          {
+            "data": [
+              {
+                "label": "adjustment",
+                "value": "adjustment",
+              },
+              {
+                "label": "artboard",
+                "value": "artboard",
+              },
+              {
+                "label": "artboardEnabled",
+                "value": "artboardEnabled",
+              },
+              {
+                "label": "boundingBox",
+                "value": "boundingBox",
+              },
+              {
+                "label": "color",
+                "value": "color",
+              },
+              {
+                "label": "fillEnabled",
+                "value": "fillEnabled",
+              },
+              {
+                "label": "filterMaskDensity",
+                "value": "filterMaskDensity",
+              },
+              {
+                "label": "filterMaskFeather",
+                "value": "filterMaskFeather",
+              },
+              {
+                "label": "keyOriginType",
+                "value": "keyOriginType",
+              },
+              {
+                "label": "layer3D",
+                "value": "layer3D",
+              },
+              {
+                "label": "layerEffects",
+                "value": "layerEffects",
+              },
+              {
+                "label": "layerSectionExpanded",
+                "value": "layerSectionExpanded",
+              },
+              {
+                "label": "layerTransformation",
+                "value": "layerTransformation",
+              },
+              {
+                "label": "linkedLayerIDs",
+                "value": "linkedLayerIDs",
+              },
+              {
+                "label": "parentLayerID",
+                "value": "parentLayerID",
+              },
+              {
+                "label": "selection",
+                "value": "selection",
+              },
+              {
+                "label": "smartObject",
+                "value": "smartObject",
+              },
+              {
+                "label": "smartObjectMore",
+                "value": "smartObjectMore",
+              },
+              {
+                "label": "text",
+                "value": "text",
+              },
+              {
+                "label": "textKey",
+                "value": "textKey",
+              },
+              {
+                "label": "textWarningLevel",
+                "value": "textWarningLevel",
+              },
+              {
+                "label": "useAlignedRendering",
+                "value": "useAlignedRendering",
+              },
+              {
+                "label": "userMaskDensity",
+                "value": "userMaskDensity",
+              },
+              {
+                "label": "userMaskEnabled",
+                "value": "userMaskEnabled",
+              },
+              {
+                "label": "userMaskFeather",
+                "value": "userMaskFeather",
+              },
+              {
+                "label": "userMaskLinked",
+                "value": "userMaskLinked",
+              },
+              {
+                "label": "vectorMaskDensity",
+                "value": "vectorMaskDensity",
+              },
+              {
+                "label": "vectorMaskEmpty",
+                "value": "vectorMaskEmpty",
+              },
+              {
+                "label": "vectorMaskEnabled",
+                "value": "vectorMaskEnabled",
+              },
+              {
+                "label": "vectorMaskFeather",
+                "value": "vectorMaskFeather",
+              },
+            ],
+            "group": "optional",
+            "groupLabel": "Optional",
+          },
+          {
+            "data": [
+              {
+                "label": "AGMokeStyleInfo",
+                "value": "AGMokeStyleInfo",
+              },
+              {
+                "label": "AGMStrokeStyleInfo",
+                "value": "AGMStrokeStyleInfo",
+              },
+              {
+                "label": "animationProtection",
+                "value": "animationProtection",
+              },
+              {
+                "label": "channelRestrictions",
+                "value": "channelRestrictions",
+              },
+              {
+                "label": "generatorSettings",
+                "value": "generatorSettings",
+              },
+              {
+                "label": "hasFilterMask",
+                "value": "hasFilterMask",
+              },
+              {
+                "label": "json",
+                "value": "json",
+              },
+              {
+                "label": "layerPathComponentCount",
+                "value": "layerPathComponentCount",
+              },
+              {
+                "label": "layerSVGdata",
+                "value": "layerSVGdata",
+              },
+              {
+                "label": "layerVectorPointData",
+                "value": "layerVectorPointData",
+              },
+              {
+                "label": "metadata",
+                "value": "metadata",
+              },
+              {
+                "label": "pathBounds",
+                "value": "pathBounds",
+              },
+              {
+                "label": "preserveTransparency",
+                "value": "preserveTransparency",
+              },
+              {
+                "label": "proportionalScaling",
+                "value": "proportionalScaling",
+              },
+              {
+                "label": "videoLayer",
+                "value": "videoLayer",
+              },
+              {
+                "label": "XMPMetadataAsUTF8",
+                "value": "XMPMetadataAsUTF8",
+              },
+            ],
+            "group": "hidden",
+            "groupLabel": "Hidden",
+          },
+        ],
+        "type": "layer",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "label": "AGMStrokeStyleInfo",
+            "value": "AGMStrokeStyleInfo",
+          },
+          {
+            "label": "count",
+            "value": "count",
+          },
+          {
+            "label": "flatness",
+            "value": "flatness",
+          },
+          {
+            "label": "ID",
+            "value": "ID",
+          },
+          {
+            "label": "itemIndex",
+            "value": "itemIndex",
+          },
+          {
+            "label": "kind",
+            "value": "kind",
+          },
+          {
+            "label": "pathContents",
+            "value": "pathContents",
+          },
+          {
+            "label": "pathName",
+            "value": "pathName",
+          },
+          {
+            "label": "symmetryPath",
+            "value": "symmetryPath",
+          },
+          {
+            "label": "targetPath",
+            "value": "targetPath",
+          },
+        ],
+        "type": "path",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "label": "ID",
+            "value": "ID",
+          },
+          {
+            "label": "alphaChannelOptions",
+            "value": "alphaChannelOptions",
+          },
+          {
+            "label": "channelName",
+            "value": "channelName",
+          },
+          {
+            "label": "count",
+            "value": "count",
+          },
+          {
+            "label": "histogram",
+            "value": "histogram",
+          },
+          {
+            "label": "itemIndex",
+            "value": "itemIndex",
+          },
+          {
+            "label": "visible",
+            "value": "visible",
+          },
+        ],
+        "type": "channel",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "data": [
+              {
+                "label": "backgroundSaveInfo",
+                "value": "backgroundSaveInfo",
+              },
+              {
+                "label": "bigNudgeH",
+                "value": "bigNudgeH",
+              },
+              {
+                "label": "bigNudgeV",
+                "value": "bigNudgeV",
+              },
+              {
+                "label": "center",
+                "value": "center",
+              },
+              {
+                "label": "clippingPathInfo",
+                "value": "clippingPathInfo",
+              },
+              {
+                "label": "cloudDocument",
+                "value": "cloudDocument",
+              },
+              {
+                "label": "compositor",
+                "value": "compositor",
+              },
+              {
+                "label": "copyright",
+                "value": "copyright",
+              },
+              {
+                "label": "count",
+                "value": "count",
+              },
+              {
+                "label": "depth",
+                "value": "depth",
+              },
+              {
+                "label": "documentID",
+                "value": "documentID",
+              },
+              {
+                "label": "fileInfo",
+                "value": "fileInfo",
+              },
+              {
+                "label": "generatorSettings",
+                "value": "generatorSettings",
+              },
+              {
+                "label": "guidesVisibility",
+                "value": "guidesVisibility",
+              },
+              {
+                "label": "hasBackgroundLayer",
+                "value": "hasBackgroundLayer",
+              },
+              {
+                "label": "height",
+                "value": "height",
+              },
+              {
+                "label": "histogram",
+                "value": "histogram",
+              },
+              {
+                "label": "homeScreenReady",
+                "value": "homeScreenReady",
+              },
+              {
+                "label": "isCloudDoc",
+                "value": "isCloudDoc",
+              },
+              {
+                "label": "isDirty",
+                "value": "isDirty",
+              },
+              {
+                "label": "itemIndex",
+                "value": "itemIndex",
+              },
+              {
+                "label": "manage",
+                "value": "manage",
+              },
+              {
+                "label": "measurementScale",
+                "value": "measurementScale",
+              },
+              {
+                "label": "mode",
+                "value": "mode",
+              },
+              {
+                "label": "numberOfChannels",
+                "value": "numberOfChannels",
+              },
+              {
+                "label": "numberOfLayers",
+                "value": "numberOfLayers",
+              },
+              {
+                "label": "numberOfPaths",
+                "value": "numberOfPaths",
+              },
+              {
+                "label": "overscrollMode",
+                "value": "overscrollMode",
+              },
+              {
+                "label": "pixelScaleFactor",
+                "value": "pixelScaleFactor",
+              },
+              {
+                "label": "printColorHandling",
+                "value": "printColorHandling",
+              },
+              {
+                "label": "printCopies",
+                "value": "printCopies",
+              },
+              {
+                "label": "printCurrentPrinter",
+                "value": "printCurrentPrinter",
+              },
+              {
+                "label": "printerList",
+                "value": "printerList",
+              },
+              {
+                "label": "printOutput",
+                "value": "printOutput",
+              },
+              {
+                "label": "printOutputOptions",
+                "value": "printOutputOptions",
+              },
+              {
+                "label": "profile",
+                "value": "profile",
+              },
+              {
+                "label": "quickMask",
+                "value": "quickMask",
+              },
+              {
+                "label": "resolution",
+                "value": "resolution",
+              },
+              {
+                "label": "rulerOriginH",
+                "value": "rulerOriginH",
+              },
+              {
+                "label": "rulerOriginV",
+                "value": "rulerOriginV",
+              },
+              {
+                "label": "rulersVisibility",
+                "value": "rulersVisibility",
+              },
+              {
+                "label": "selectionEdgesVisible",
+                "value": "selectionEdgesVisible",
+              },
+              {
+                "label": "slices",
+                "value": "slices",
+              },
+              {
+                "label": "smartGuidesVisibility",
+                "value": "smartGuidesVisibility",
+              },
+              {
+                "label": "targetLayers",
+                "value": "targetLayers",
+              },
+              {
+                "label": "targetLayersIDs",
+                "value": "targetLayersIDs",
+              },
+              {
+                "label": "targetLayersIndexes",
+                "value": "targetLayersIndexes",
+              },
+              {
+                "label": "targetPathIndex",
+                "value": "targetPathIndex",
+              },
+              {
+                "label": "targetPathsVisibility",
+                "value": "targetPathsVisibility",
+              },
+              {
+                "label": "targetPathVisibility",
+                "value": "targetPathVisibility",
+              },
+              {
+                "label": "title",
+                "value": "title",
+              },
+              {
+                "label": "viewInfo",
+                "value": "viewInfo",
+              },
+              {
+                "label": "visible",
+                "value": "visible",
+              },
+              {
+                "label": "watchSuspension",
+                "value": "watchSuspension",
+              },
+              {
+                "label": "watermark",
+                "value": "watermark",
+              },
+              {
+                "label": "width",
+                "value": "width",
+              },
+              {
+                "label": "workPathIndex",
+                "value": "workPathIndex",
+              },
+              {
+                "label": "XMPMetadataAsUTF8",
+                "value": "XMPMetadataAsUTF8",
+              },
+              {
+                "label": "zoom",
+                "value": "zoom",
+              },
+            ],
+            "group": "default",
+            "groupLabel": "Default",
+          },
+          {
+            "data": [
+              {
+                "label": "points",
+                "value": "points",
+              },
+              {
+                "label": "EXIF",
+                "value": "EXIF",
+              },
+              {
+                "label": "fileReference",
+                "value": "fileReference",
+              },
+              {
+                "label": "format",
+                "value": "format",
+              },
+              {
+                "label": "colorSamplerList",
+                "value": "colorSamplerList",
+              },
+              {
+                "label": "compsList",
+                "value": "compsList",
+              },
+              {
+                "label": "countClass",
+                "value": "countClass",
+              },
+            ],
+            "group": "optional",
+            "groupLabel": "Optional",
+          },
+          {
+            "data": [
+              {
+                "label": "adjustmentLayerIds",
+                "value": "adjustmentLayerIds",
+              },
+              {
+                "label": "artboards",
+                "value": "artboards",
+              },
+              {
+                "label": "contentCredentialsDebugInfo",
+                "value": "contentCredentialsDebugInfo",
+              },
+              {
+                "label": "contentCredentialsEnabled",
+                "value": "contentCredentialsEnabled",
+              },
+              {
+                "label": "globalAngle",
+                "value": "globalAngle",
+              },
+              {
+                "label": "json",
+                "value": "json",
+              },
+              {
+                "label": "modifiedSinceOpen",
+                "value": "modifiedSinceOpen",
+              },
+              {
+                "label": "numberOfGuides",
+                "value": "numberOfGuides",
+              },
+              {
+                "label": "pageSetup",
+                "value": "pageSetup",
+              },
+              {
+                "label": "printSettings",
+                "value": "printSettings",
+              },
+              {
+                "label": "rulerPoints",
+                "value": "rulerPoints",
+              },
+              {
+                "label": "selection",
+                "value": "selection",
+              },
+              {
+                "label": "slicesVisibility",
+                "value": "slicesVisibility",
+              },
+              {
+                "label": "viewTransform",
+                "value": "viewTransform",
+              },
+              {
+                "label": "viewInfo2",
+                "value": "viewInfo2",
+              },
+            ],
+            "group": "hidden",
+            "groupLabel": "Hidden",
+          },
+        ],
+        "type": "document",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "label": "ID",
+            "value": "ID",
+          },
+          {
+            "label": "count",
+            "value": "count",
+          },
+          {
+            "label": "itemIndex",
+            "value": "itemIndex",
+          },
+          {
+            "label": "kind",
+            "value": "kind",
+          },
+          {
+            "label": "orientation",
+            "value": "orientation",
+          },
+          {
+            "label": "position",
+            "value": "position",
+          },
+          {
+            "label": "layerID",
+            "value": "layerID",
+          },
+        ],
+        "type": "guide",
+      },
+      {
+        "list": [
+          {
+            "label": "(not specified)",
+            "value": "notSpecified",
+          },
+          {
+            "label": "ID",
+            "value": "ID",
+          },
+          {
+            "label": "count",
+            "value": "count",
+          },
+          {
+            "label": "itemIndex",
+            "value": "itemIndex",
+          },
+          {
+            "label": "name",
+            "value": "name",
+          },
+          {
+            "label": "numberOfChildren",
+            "value": "numberOfChildren",
+          },
+          {
+            "label": "parentIndex",
+            "value": "parentIndex",
+          },
+          {
+            "label": "parentName",
+            "value": "parentName",
+          },
+        ],
+        "type": "actions",
+      },
+      {
+        "list": [
+          {
+            "label": "enabled",
+            "value": "enabled",
+          },
+          {
+            "label": "hasMotion",
+            "value": "hasMotion",
+          },
+          {
+            "label": "time",
+            "value": "time",
+          },
+          {
+            "label": "currentFrame",
+            "value": "currentFrame",
+          },
+          {
+            "label": "duration",
+            "value": "duration",
+          },
+          {
+            "label": "frameCount",
+            "value": "frameCount",
+          },
+          {
+            "label": "frameRate",
+            "value": "frameRate",
+          },
+          {
+            "label": "documentTimelineSettings",
+            "value": "documentTimelineSettings",
+          },
+          {
+            "label": "workInTime",
+            "value": "workInTime",
+          },
+          {
+            "label": "workOutTime",
+            "value": "workOutTime",
+          },
+        ],
+        "type": "timeline",
+      },
+      {
+        "list": [
+          {
+            "label": "animationFrameDelay",
+            "value": "animationFrameDelay",
+          },
+          {
+            "label": "animationFrameReplace",
+            "value": "animationFrameReplace",
+          },
+        ],
+        "type": "animationFrameClass",
+      },
+      {
+        "list": [
+          {
+            "label": "enabled",
+            "value": "enabled",
+          },
+          {
+            "label": "currentFrame",
+            "value": "currentFrame",
+          },
+          {
+            "label": "frameCount",
+            "value": "frameCount",
+          },
+          {
+            "label": "animationLoopCount",
+            "value": "animationLoopCount",
+          },
+        ],
+        "type": "animationClass",
+      },
+    ],
+    "rightColumnWidthPx": 220,
+    "searchTerm": null,
+    "selectReferenceBeforeGet": true,
+    "settingsVisible": false,
+    "singleQuotes": false,
+    "tokenify": true,
+  },
+  "sorcerer": {
+    "general": {},
+    "manifestInfo": {
+      "entrypoints": [
+        {
+          "$$$snippetUUID": null,
+          "$$$uuid": "<uuid>",
+          "id": "commandID",
+          "label": {
+            "default": "Menu command text",
+          },
+          "type": "command",
+        },
+        {
+          "$$$snippetUUIDs": [],
+          "$$$uuid": "<uuid>",
+          "icons": [
+            {
+              "height": 23,
+              "path": "CHANGE_THIS_relative_path_to_dark_panel_icon.png",
+              "scale": [
+                1,
+                2,
+              ],
+              "theme": [
+                "darkest",
+                "dark",
+                "medium",
+              ],
+              "width": 23,
+            },
+            {
+              "height": 23,
+              "path": "CHANGE_THIS_relative_path_to_light_panel_icon.png",
+              "scale": [
+                1,
+                2,
+              ],
+              "theme": [
+                "lightest",
+                "light",
+              ],
+              "width": 23,
+            },
+          ],
+          "id": "commandID",
+          "label": {
+            "default": "Panel name",
+          },
+          "maximumSize": {
+            "height": 3000,
+            "width": 3000,
+          },
+          "minimumSize": {
+            "height": 100,
+            "width": 100,
+          },
+          "preferredDockedSize": {
+            "height": 300,
+            "width": 200,
+          },
+          "preferredFloatingSize": {
+            "height": 300,
+            "width": 200,
+          },
+          "type": "panel",
+        },
+      ],
+      "host": [
+        {
+          "app": "PS",
+          "data": {
+            "apiVersion": 2,
+          },
+          "minVersion": "23.0.0",
+        },
+      ],
+      "icons": [
+        {
+          "height": 48,
+          "path": "CHANGE_THIS_relative_path_to_light_icon.png",
+          "scale": [
+            1,
+            2,
+          ],
+          "species": [
+            "pluginList",
+          ],
+          "theme": [
+            "medium",
+            "lightest",
+            "light",
+          ],
+          "width": 48,
+        },
+        {
+          "height": 48,
+          "path": "CHANGE_THIS_relative_path_to_dark_icon.png",
+          "scale": [
+            1,
+            2,
+          ],
+          "species": [
+            "pluginList",
+          ],
+          "theme": [
+            "darkest",
+            "dark",
+          ],
+          "width": 48,
+        },
+      ],
+      "id": "ChangeThisID",
+      "main": "index.html",
+      "manifestVersion": 5,
+      "name": "SnapshotPlugin",
+      "requiredPermissions": {
+        "launchProcess": "request",
+      },
+      "version": "1.0.0",
+    },
+    "selectedItem": {
+      "kind": "general",
+      "uuid": null,
+    },
+    "snippets": {
+      "list": [
+        {
+          "$$$uuid": "<sUuid>",
+          "author": "noName",
+          "code": "
+// you can replace whole code here or just adjust the template
+
+const {app, core, action} = require("photoshop");
+const batchPlay = action.batchPlay;
+
+await require("photoshop").core.executeAsModal(async (executionControl, descriptor) => {
+
+   // Suspend history state on the target document
+   // This will coalesce all changes into a single history state called
+   let suspensionID = await executionControl.hostControl.suspendHistory({
+      "documentID": app.activeDocument.id,
+      "name": "Custom history name"
+   });
+
+   // YOUR CODE GOES HERE
+   await batchPlay(
+      [{
+         _obj: "make",
+         _target: [{
+            _ref: "layer"
+         }],
+         _options: {
+            dialogOptions: "dontDisplay"
+         }
+      }], {
+         modalBehavior: "execute"
+      });
+      
+   await batchPlay([{
+         _obj: "make",
+         _target: [{
+            _ref: "layer"
+         }],
+         _options: {
+            dialogOptions: "dontDisplay"
+         }
+      }], {
+         modalBehavior: "execute"
+      });
+
+   // resume the history state
+   await executionControl.hostControl.resumeHistory(suspensionID);
+}, {
+   "commandName": "Make two layers"
+});
+",
+          "label": {
+            "default": "Make two layers",
+          },
+          "type": "snippet",
+          "version": "1.0.0",
+        },
+        {
+          "$$$uuid": "<sUuid>",
+          "author": "noName",
+          "code": "
+// you can replace whole code here or just adjust the template
+
+const {app, core, action} = require("photoshop");
+const batchPlay = action.batchPlay;
+
+await require("photoshop").core.executeAsModal(async (executionControl, descriptor) => {
+
+   // Suspend history state on the target document
+   // This will coalesce all changes into a single history state called
+   let suspensionID = await executionControl.hostControl.suspendHistory({
+      "documentID": app.activeDocument.id,
+      "name": "Custom history name"
+   });
+
+   // YOUR CODE GOES HERE
+   await batchPlay(
+      [{
+         _obj: "make",
+         _target: [{
+            _ref: "layer"
+         }],
+         _options: {
+            dialogOptions: "dontDisplay"
+         }
+      }], {
+         modalBehavior: "execute"
+      });
+      
+   await batchPlay([{
+         _obj: "make",
+         _target: [{
+            _ref: "layer"
+         }],
+         _options: {
+            dialogOptions: "dontDisplay"
+         }
+      }], {
+         modalBehavior: "execute"
+      });
+
+   // resume the history state
+   await executionControl.hostControl.resumeHistory(suspensionID);
+}, {
+   "commandName": "Make two layers"
+});
+",
+          "label": {
+            "default": "Make two layers",
+          },
+          "type": "snippet",
+          "version": "1.0.0",
+        },
+      ],
+    },
+  },
+  "targetReference": {
+    "actions": {
+      "actionID": "none",
+      "actionSetID": "none",
+      "commandIndex": "none",
+      "filterAction": "off",
+      "filterActionSet": "off",
+      "filterCommand": "off",
+      "filterProp": "off",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "actions",
+    },
+    "animationClass": {
+      "filterProp": "off",
+      "properties": [],
+      "type": "animationClass",
+    },
+    "animationFrameClass": {
+      "filterProp": "off",
+      "properties": [],
+      "type": "animationFrameClass",
+    },
+    "application": {
+      "filterProp": "off",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "application",
+    },
+    "channel": {
+      "channelID": "selected",
+      "documentID": "selected",
+      "filterChannel": "off",
+      "filterDoc": "off",
+      "filterLayer": "off",
+      "filterProp": "off",
+      "layerID": "selected",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "channel",
+    },
+    "dispatcher": {
+      "type": "dispatcher",
+    },
+    "document": {
+      "documentID": "selected",
+      "filterDoc": "off",
+      "filterProp": "off",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "document",
+    },
+    "generator": {
+      "type": "generator",
+    },
+    "guide": {
+      "documentID": "selected",
+      "filterDoc": "off",
+      "filterGuide": "off",
+      "filterProp": "off",
+      "guideID": "none",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "guide",
+    },
+    "historyState": {
+      "filterHistory": "off",
+      "filterProp": "off",
+      "historyID": "selected",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "historyState",
+    },
+    "layer": {
+      "documentID": "selected",
+      "filterDoc": "off",
+      "filterLayer": "off",
+      "filterProp": "off",
+      "layerID": "selected",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "layer",
+    },
+    "listener": {
+      "type": "listener",
+    },
+    "notifier": {
+      "type": "notifier",
+    },
+    "path": {
+      "documentID": "selected",
+      "filterDoc": "off",
+      "filterLayer": "off",
+      "filterPath": "off",
+      "filterProp": "off",
+      "layerID": "selected",
+      "pathID": "selected",
+      "properties": [
+        "notSpecified",
+      ],
+      "type": "path",
+    },
+    "replies": {
+      "type": "replies",
+    },
+    "snapshotClass": {
+      "filterProp": "off",
+      "filterSnapshot": "off",
+      "properties": [
+        "notSpecified",
+      ],
+      "snapshotID": "selected",
+      "type": "snapshotClass",
+    },
+    "timeline": {
+      "filterProp": "off",
+      "properties": [],
+      "type": "timeline",
+    },
+  },
+  "version": [
+    13,
+    0,
+    0,
+  ],
+}
+`;

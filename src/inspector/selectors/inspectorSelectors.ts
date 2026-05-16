@@ -1,5 +1,5 @@
 /* eslint-disable comma-dangle */
-import {createSelector} from "reselect";
+import {createSelector} from "@reduxjs/toolkit";
 import {IRootState} from "../../shared/store";
 import {IDescriptor, IInspectorState, IListenerNotifierFilter, TSubTypes, TTargetReference} from "../model/types";
 import {Helpers} from "../classes/Helpers";

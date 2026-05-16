@@ -1,4 +1,4 @@
-import {AnyAction, EmptyObject, Store} from "redux";
+import type {UnknownAction, Store} from "@reduxjs/toolkit";
 import type {Main} from "../shared/classes/Main";
 import {IRootState} from "../shared/store";
 
@@ -8,6 +8,6 @@ export { };
 declare global {
 	interface Window {
 		Main: Main;
-		_rootStore: Store<EmptyObject & IRootState, AnyAction>
+		_rootStore: Store<IRootState, UnknownAction>
 	}
 }

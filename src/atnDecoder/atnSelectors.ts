@@ -1,4 +1,4 @@
-import {createSelector} from "reselect";
+import {createSelector} from "@reduxjs/toolkit";
 import {IRootState} from "../shared/store";
 
 import stringifyObject from "stringify-object";

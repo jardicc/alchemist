@@ -1,4 +1,4 @@
-import {legacy_createStore as createStore, applyMiddleware, combineReducers, Middleware} from "redux";
+import {configureStore, Middleware} from "@reduxjs/toolkit";
 import {inspectorReducer} from "../inspector/reducers/reducer";
 import {IInspectorState} from "../inspector/model/types";
 import {Settings} from "../inspector/classes/Settings";
@@ -12,10 +12,6 @@ export interface IRootState {
 	inspector: IInspectorState;
 }
 
-const rootReducer = combineReducers<IRootState>({
-	inspector: inspectorReducer,
-});
-
 const loggerMiddleware: Middleware<unknown, IRootState> = _storeAPI => next => action => {
 	console.log(action);
 	return next(action);
@@ -27,7 +23,16 @@ const saveSettingsMiddleware: Middleware<unknown, IRootState> = storeAPI => next
 	return result;
 };
 
-export const rootStore = createStore(rootReducer, applyMiddleware(loggerMiddleware, saveSettingsMiddleware));
+export const rootStore = configureStore({
+	reducer: {
+		inspector: inspectorReducer,
+	},
+	middleware: (getDefault) => getDefault({
+		serializableCheck: false,
+		immutableCheck: false,
+		thunk: false,
+	}).concat(loggerMiddleware, saveSettingsMiddleware),
+});
 console.log(rootStore.getState());
 
 window._rootStore = rootStore;

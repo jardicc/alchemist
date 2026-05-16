@@ -1,4 +1,4 @@
-import {createSelector} from "reselect";
+import {createSelector} from "@reduxjs/toolkit";
 import {all} from "./inspectorSelectors";
 
 export const getDispatcherSnippet = createSelector([all], (all) => {

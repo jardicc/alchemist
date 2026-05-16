@@ -1,5 +1,5 @@
 import {cloneDeep} from "lodash";
-import {createSelector} from "reselect";
+import {createSelector} from "@reduxjs/toolkit";
 import {getIndentString} from "../inspector/selectors/inspectorCodeSelectors";
 import {getInspectorSettings} from "../inspector/selectors/inspectorSelectors";
 import {IRootState} from "../shared/store";

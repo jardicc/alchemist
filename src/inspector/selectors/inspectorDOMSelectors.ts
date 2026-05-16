@@ -1,4 +1,4 @@
-import {createSelector} from "reselect";
+import {createSelector} from "@reduxjs/toolkit";
 import {ReferenceToDOM} from "../classes/GetDOM";
 import {ITargetReferenceAM} from "../classes/GetInfo";
 import {all, getSelectedDescriptors, getSelectedTargetReference, getAutoActiveDescriptor} from "./inspectorSelectors";

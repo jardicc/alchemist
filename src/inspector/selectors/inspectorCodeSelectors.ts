@@ -1,6 +1,6 @@
 /* eslint-disable quotes */
 import {cloneDeep} from "lodash";
-import {createSelector} from "reselect";
+import {createSelector} from "@reduxjs/toolkit";
 import {RawDataConverter} from "../classes/RawDataConverter";
 import {IDescriptor, IDescriptorSettings} from "../model/types";
 import {getContentPath} from "./inspectorContentSelectors";
