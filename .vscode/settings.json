@@ -32,6 +32,7 @@
 		"html"
 	],
 	"jest.autoRun": "off",
+	"bun.test.enable": false,
 	"editor.formatOnSave": true,
 
 	"typescript.format.enable": true,
