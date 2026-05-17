@@ -71,41 +71,55 @@ export function JSONTree({
 	);
 
 	const expandedPathsRef = useRef(new Map<string, boolean>());
-	const [, setRenderTick] = useState(0);
+	const [renderTick, setRenderTick] = useState(0);
 	const handleToggle = useCallback(() => { setRenderTick((t) => t + 1); }, []);
 
-	const startTime = performance.now();
-	const {descriptors, renderItem} = flattenTree(
-		postprocessValue(value),
-		hideRoot ? [] : keyPath,
-		{
-			styling,
-			labelRenderer,
-			valueRenderer,
-			getItemString,
-			postprocessValue,
-			isCustomNode,
-			collectionLimit,
-			sortObjectKeys,
-			protoMode,
-			hideRoot,
-			expandedPaths: expandedPathsRef.current,
-			onToggle: handleToggle,
-			expandClicked,
-			shouldExpandNodeInitially,
-			shouldExpandNode,
-		},
+	const {descriptors, renderItem} = useMemo(
+		() => flattenTree(
+			postprocessValue(value),
+			hideRoot ? [] : keyPath,
+			{
+				styling,
+				labelRenderer,
+				valueRenderer,
+				getItemString,
+				postprocessValue,
+				isCustomNode,
+				collectionLimit,
+				sortObjectKeys,
+				protoMode,
+				hideRoot,
+				expandedPaths: expandedPathsRef.current,
+				onToggle: handleToggle,
+				expandClicked,
+				shouldExpandNodeInitially,
+				shouldExpandNode,
+			},
+		),
+		// renderTick is the version of the mutable expandedPaths Map: every toggle
+		// bumps it so we rebuild only then. All other parent re-renders reuse the
+		// previous descriptors/renderItem references (no tree walk, stable VirtualScroll props).
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[
+			value, hideRoot, keyPath, styling, labelRenderer, valueRenderer,
+			getItemString, postprocessValue, isCustomNode, collectionLimit,
+			sortObjectKeys, protoMode, expandClicked,
+			shouldExpandNodeInitially, shouldExpandNode, handleToggle, renderTick,
+		],
 	);
-	const endTime = performance.now();
-	//console.log(`JSONTree flattening time: ${endTime - startTime}ms, ${descriptors.length} descriptors`);
 
 	return (
-		<ul {...styling("tree")}>
+		<ul style={{
+			    fontFamily: 'Consolas, "Courier New", Monaco, "Lucida Console"',
+				padding: 0,
+				border: 0,
+		}}>
 			<VirtualScroll
 				//fixedHeight={400}
+				//renderPlaceholder={(index) => <div>{index}</div>}
 				flex={true}
 				itemHeight={16}
-				overscan={20}
+				overscan={40}
 				itemCount={descriptors.length}
 				renderItem={renderItem}
 			/>

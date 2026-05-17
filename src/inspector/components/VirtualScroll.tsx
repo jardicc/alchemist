@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState, useCallback} from "react";
+import React, {useRef, useEffect, useState, useMemo} from "react";
 
 interface BaseProps {
 	itemHeight: number;
@@ -8,18 +8,28 @@ interface BaseProps {
 	autoHeight?: {maxHeight:number};
 	/** If true, container will fill available space using flexbox. Requires parent with display: flex */
 	flex?: boolean;
+	/**
+	 * Scroll velocity in px/frame above which fast-scroll mode kicks in
+	 * (overscan is dropped to 0 and `renderPlaceholder` is used if provided).
+	 * Default 400.
+	 */
+	fastScrollThreshold?: number;
 }
 
 interface ItemsProps extends BaseProps {
 	items: React.ReactElement[];
 	itemCount?: never;
 	renderItem?: never;
+	/** Lightweight placeholder rendered during fast scrolling instead of the full item. */
+	renderPlaceholder?: (index: number) => React.ReactElement;
 }
 
 interface RenderProps extends BaseProps {
 	items?: never;
 	itemCount: number;
 	renderItem: (index: number) => React.ReactElement;
+	/** Lightweight placeholder rendered during fast scrolling instead of the full item. */
+	renderPlaceholder?: (index: number) => React.ReactElement;
 }
 
 export type IVirtualScrollProps = ItemsProps | RenderProps;
@@ -29,12 +39,14 @@ export function VirtualScroll({
 	items,
 	itemCount: itemCountProp,
 	renderItem,
+	renderPlaceholder,
 	itemHeight,
 	fixedHeight,
 	overscan = 3,
 	className = "",
 	autoHeight,
 	flex = false,
+	fastScrollThreshold = 400,
 }: IVirtualScrollProps) {
 	const count = items ? items.length : itemCountProp;
 	// validate props
@@ -52,6 +64,7 @@ export function VirtualScroll({
 
 	const [scrollTop, setScrollTop] = useState(0);
 	const [containerHeight, setContainerHeight] = useState(0);
+	const [isFastScrolling, setIsFastScrolling] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	const totalHeight = count * itemHeight;
@@ -76,34 +89,72 @@ export function VirtualScroll({
 		effectiveHeight = itemHeight;
 	}
 
-	const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
+	// During fast scrolling, drop overscan to minimize work per frame.
+	const effectiveOverscan = isFastScrolling ? 0 : overscan;
+
+	const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - effectiveOverscan);
 	const endIndex = Math.min(
 		count - 1,
-		Math.ceil((scrollTop + effectiveHeight) / itemHeight) + overscan,
+		Math.ceil((scrollTop + effectiveHeight) / itemHeight) + effectiveOverscan,
 	);
 
-	const visibleItems: React.ReactElement[] = [];
-	for (let i = startIndex; i <= endIndex; i++) {
-		visibleItems.push(items ? items[i] : renderItem(i));
-	}
-
-	const handleScroll = useCallback((e: Event) => {
-		const target = e.target as HTMLDivElement;
-		setScrollTop(target.scrollTop);
-	}, []);
+	const visibleItems = useMemo(() => {
+		const arr: React.ReactElement[] = [];
+		const usePlaceholder = isFastScrolling && renderPlaceholder;
+		for (let i = startIndex; i <= endIndex; i++) {
+			if (usePlaceholder) {
+				arr.push(renderPlaceholder(i));
+			} else {
+				arr.push(items ? items[i] : renderItem(i));
+			}
+		}
+		return arr;
+	}, [startIndex, endIndex, items, renderItem, renderPlaceholder, isFastScrolling]);
 
 	useEffect(() => {
 		const container = containerRef.current;
 		if (!container) return;
 
-		container.addEventListener("scroll", handleScroll);
+		let rafId: number | null = null;
+		let pendingScrollTop = container.scrollTop;
+		let lastScrollTop = container.scrollTop;
+		let lastScrollTime = 0;
+		let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+		const handleScroll = () => {
+			pendingScrollTop = container.scrollTop;
+			if (rafId !== null) return;
+			rafId = requestAnimationFrame((now) => {
+				rafId = null;
+				const delta = Math.abs(pendingScrollTop - lastScrollTop);
+				const dt = lastScrollTime ? now - lastScrollTime : 16;
+				// velocity in px per ~frame (16ms)
+				const velocity = delta * (16 / Math.max(dt, 1));
+				lastScrollTop = pendingScrollTop;
+				lastScrollTime = now;
+
+				if (velocity > fastScrollThreshold) {
+					setIsFastScrolling((prev) => prev ? prev : true);
+				}
+				// reset fast-scroll flag once scrolling settles
+				if (idleTimer) clearTimeout(idleTimer);
+				idleTimer = setTimeout(() => {
+					setIsFastScrolling((prev) => prev ? false : prev);
+				}, 120);
+
+				setScrollTop((prev) => (prev === pendingScrollTop ? prev : pendingScrollTop));
+			});
+		};
+
+		container.addEventListener("scroll", handleScroll, {passive: true});
 
 		// Setup ResizeObserver for flex mode
 		let resizeObserver: ResizeObserver | null = null;
 		if (flex) {
 			resizeObserver = new ResizeObserver((entries) => {
 				for (const entry of entries) {
-					setContainerHeight(entry.contentRect.height);
+					const h = entry.contentRect.height;
+					setContainerHeight((prev) => (prev === h ? prev : h));
 				}
 			});
 			resizeObserver.observe(container);
@@ -113,36 +164,55 @@ export function VirtualScroll({
 
 		return () => {
 			container.removeEventListener("scroll", handleScroll);
+			if (rafId !== null) cancelAnimationFrame(rafId);
+			if (idleTimer) clearTimeout(idleTimer);
 			if (resizeObserver) {
 				resizeObserver.disconnect();
 			}
 		};
-	}, [handleScroll, flex]);
+	}, [flex, fastScrollThreshold]);
+
+	const containerStyle = useMemo<React.CSSProperties>(() => ({
+		height: flex ? "100%" : `${effectiveHeight}px`,
+		overflow: "auto",
+		position: "relative",
+		// Promote to its own compositor layer for smoother scrolling
+		willChange: "transform",
+		...(flex && {flexGrow: 1, flexShrink: 1, flexBasis: 0, minHeight: 0}),
+	}), [flex, effectiveHeight]);
+
+	const spacerStyle = useMemo<React.CSSProperties>(() => ({
+		height: `${totalHeight}px`,
+		position: "relative",
+	}), [totalHeight]);
+
+	const offsetStyle = useMemo<React.CSSProperties>(() => ({
+		position: "absolute",
+		top: 0,
+		left: 0,
+		right: 0,
+		// translate3d → GPU-composited; avoids layout pass on every scroll frame
+		transform: `translate3d(0, ${startIndex * itemHeight}px, 0)`,
+		willChange: "transform",
+		// Disable pointer interactions during fast scroll to avoid hover/CSS work
+		pointerEvents: isFastScrolling ? "none" : "auto",
+	}), [startIndex, itemHeight, isFastScrolling]);
+
+	const itemStyle = useMemo<React.CSSProperties>(() => ({
+		height: `${itemHeight}px`,
+		overflow: "hidden",
+		// Isolate layout/paint so each item is independent
+		contain: "layout style paint",
+	}), [itemHeight]);
 
 	return (
-		<div
-			ref={containerRef}
-			className={className}
-			style={{
-				height: flex ? "100%" : `${effectiveHeight}px`,
-				overflow: "auto",
-				position: "relative",
-				...(flex && {flexGrow: 1, flexShrink: 1, flexBasis: 0, minHeight: 0}),
-			}}
-		>
-			<div style={{height: `${totalHeight}px`, position: "relative"}}>
-				<div
-					style={{
-						position: "absolute",
-						top: `${startIndex * itemHeight}px`,
-						left: 0,
-						right: 0,
-					}}
-				>
+		<div ref={containerRef} className={className} style={containerStyle}>
+			<div style={spacerStyle}>
+				<div style={offsetStyle}>
 					{visibleItems.map((element, idx) => (
 						<div
 							key={element.key ?? startIndex + idx}
-							style={{height: `${itemHeight}px`, overflow: "hidden"}}
+							style={itemStyle}
 						>
 							{element}
 						</div>

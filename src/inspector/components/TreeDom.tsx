@@ -2,7 +2,7 @@ import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setInspectorPathDomAction, setExpandedPathAction, setAutoExpandLevelAction} from "../actions/inspectorActions";
 import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} from "../selectors/inspectorDOMSelectors";
 
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import "./TreeDom.less";
 import {getItemString} from "./TreeDiff/getItemString";
 import {JSONTree} from "./react-json-tree-2";
@@ -19,21 +19,41 @@ export const TreeDom: React.FC = () => {
 	const expandedKeys = useAppSelector(getDomExpandedNodes);
 	const autoExpandLevels = useAppSelector(getDOMExpandLevel);
 	const protoMode: TProtoMode = "uxp";
-	const onInspectPath = (p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDomAction(p, mode));
-	const onSetExpandedPath = (p: KeyPath, expand: boolean, recursive: boolean, data: any) => dispatch(setExpandedPathAction("dom", p, expand, recursive, data));
-	const onSetAutoExpandLevel = (level: number) => dispatch(setAutoExpandLevelAction("DOM", level));
 
-	const labelRendererFn: TLabelRenderer = ([key, ...rest], nodeType, expanded, expandable) => {
-		return labelRenderer([key, ...rest], onInspectPath, nodeType, expanded, expandable);
-	};
+	const onInspectPath = useCallback(
+		(p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDomAction(p, mode)),
+		[dispatch],
+	);
+	const onSetExpandedPath = useCallback(
+		(p: KeyPath, expand: boolean, recursive: boolean, data: any) =>
+			dispatch(setExpandedPathAction("dom", p, expand, recursive, data)),
+		[dispatch],
+	);
+	const onSetAutoExpandLevel = useCallback(
+		(level: number) => dispatch(setAutoExpandLevelAction("DOM", level)),
+		[dispatch],
+	);
 
-	const getItemStringFn = (type: any, data: any): JSX.Element => {
-		return getItemString(type, data, true, false);
-	};
+	const labelRendererFn = useCallback<TLabelRenderer>(
+		([key, ...rest], nodeType, expanded, expandable) =>
+			labelRenderer([key, ...rest], onInspectPath, nodeType, expanded, expandable),
+		[onInspectPath],
+	);
 
-	const expandClicked: TExpandClicked = (keyPath, expanded, recursive) => {
-		onSetExpandedPath(keyPath, expanded, recursive, content);
-	};
+	const getItemStringFn = useCallback(
+		(type: any, data: any): JSX.Element => getItemString(type, data, true, false),
+		[],
+	);
+
+	const expandClicked = useCallback<TExpandClicked>(
+		(keyPath, expanded, recursive) => onSetExpandedPath(keyPath, expanded, recursive, content),
+		[onSetExpandedPath, content],
+	);
+
+	const shouldExpandNodeFn = useMemo(
+		() => shouldExpandNode(expandedKeys, autoExpandLevels),
+		[expandedKeys, autoExpandLevels],
+	);
 
 	if (!content) {
 		return <>{"Nothing to see there"}</>;
@@ -69,7 +89,7 @@ export const TreeDom: React.FC = () => {
 					<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
 					:
 					<JSONTree
-						shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels)}
+						shouldExpandNode={shouldExpandNodeFn}
 						expandClicked={expandClicked}
 						data={data}
 						keyPath={path}

@@ -45,6 +45,7 @@ interface NestedRow {
 	expandable: boolean;
 	level: number;
 	value: unknown;
+	itemString: string;
 }
 
 interface ValueRow {
@@ -90,10 +91,6 @@ const defaultValueGetter = (raw: any) => raw;
 
 // ── Helpers ──
 
-function getPathKey(keyPath: KeyPath): string {
-	return keyPath.join("/");
-}
-
 function getNodeTypeIndicator(nodeType: TNodeType): string | null {
 	switch (nodeType) {
 		case "Error": return "Error()";
@@ -114,28 +111,27 @@ function isNestedType(nodeType: TNodeType): boolean {
 	}
 }
 
-function isExpandable(nodeType: TNodeType, data: unknown): boolean {
-	switch (nodeType) {
-		case "Object": case "Error": case "WeakMap": case "WeakSet":
-			return Object.getOwnPropertyNames(data).length > 0;
-		case "Array":
-			return (data as unknown[]).length > 0;
-		case "Iterable": case "Map": case "Set":
-			return true;
-		default:
-			return false;
-	}
-}
-
-function createItemStringForType(nodeType: TNodeType, data: unknown, collectionLimit: number): string {
+// Computes both expandable flag and itemString in one pass, avoiding duplicate
+// Object.getOwnPropertyNames / iterator walks for the same value.
+function computeNestedMeta(
+	nodeType: TNodeType,
+	data: unknown,
+	collectionLimit: number,
+): {expandable: boolean; itemString: string} {
 	switch (nodeType) {
 		case "Object": case "Error": case "WeakMap": case "WeakSet": {
 			const len = Object.getOwnPropertyNames(data).length;
-			return `${len} ${len !== 1 ? "keys" : "key"}`;
+			return {
+				expandable: len > 0,
+				itemString: `${len} ${len !== 1 ? "keys" : "key"}`,
+			};
 		}
 		case "Array": {
 			const len = (data as unknown[]).length;
-			return `${len} ${len !== 1 ? "items" : "item"}`;
+			return {
+				expandable: len > 0,
+				itemString: `${len} ${len !== 1 ? "items" : "item"}`,
+			};
 		}
 		case "Iterable": case "Map": case "Set": {
 			let count = 0;
@@ -151,9 +147,12 @@ function createItemStringForType(nodeType: TNodeType, data: unknown, collectionL
 					count += 1;
 				}
 			}
-			return `${hasMore ? ">" : ""}${count} ${count !== 1 ? "entries" : "entry"}`;
+			return {
+				expandable: true,
+				itemString: `${hasMore ? ">" : ""}${count} ${count !== 1 ? "entries" : "entry"}`,
+			};
 		}
-		default: return "";
+		default: return {expandable: false, itemString: ""};
 	}
 }
 
@@ -174,7 +173,7 @@ function collectEntries(
 
 	for (let i = 0, len = entries.length; i < len; i++) {
 		const entry = entries[i];
-		if ("to" in entry && "from" in entry) {
+		if (typeof entry.from === "number") {
 			const rangeKey = `${parentPathKey}/ItemRange--${entry.from}-${entry.to}`;
 			const rangeExpanded = expandedPaths.get(rangeKey) ?? false;
 
@@ -196,21 +195,27 @@ function collectEntries(
 					to: entry.to,
 				});
 			}
-		} else if ("key" in entry) {
+		} else {
 			const {key, value: childValue} = entry;
-			const childIsCircular = circularCache.has(childValue);
+			const isObj = childValue !== null
+				&& (typeof childValue === "object" || typeof childValue === "function");
+			const childIsCircular = isObj && circularCache.has(childValue);
 			const childKeyPath: KeyPath = [key, ...keyPath];
-			circularCache.add(childValue);
+			const childPathKey = parentPathKey === ""
+				? String(key)
+				: `${key}/${parentPathKey}`;
+			if (isObj) circularCache.add(childValue);
 			collectNode(
 				out,
 				postprocessValue(childValue),
 				childKeyPath,
+				childPathKey,
 				options,
 				level + 1,
 				circularCache,
 				childIsCircular,
 			);
-			circularCache.delete(childValue);
+			if (isObj) circularCache.delete(childValue);
 		}
 	}
 }
@@ -219,6 +224,7 @@ function collectNode(
 	out: RowDescriptor[],
 	value: unknown,
 	keyPath: KeyPath,
+	pathKey: string,
 	options: FlattenTreeOptions,
 	level: number,
 	circularCache: Set<unknown>,
@@ -233,18 +239,22 @@ function collectNode(
 	const nodeType = isCustomNode(value) ? "Custom" : objType(value);
 
 	if (isNestedType(nodeType)) {
-		const expandable = !isCircular && isExpandable(nodeType, value);
-		const pathKey = getPathKey(keyPath);
+		const meta = isCircular
+			? {expandable: false, itemString: ""}
+			: computeNestedMeta(nodeType, value, collectionLimit);
 		const nodeTypeIndicator = getNodeTypeIndicator(nodeType)!;
 
 		let expanded: boolean;
 		if (isCircular) {
 			expanded = false;
-		} else if (expandedPaths.has(pathKey)) {
-			expanded = expandedPaths.get(pathKey)!;
 		} else {
-			expanded = shouldExpandNodeInitially(keyPath, value, level);
-			expandedPaths.set(pathKey, expanded);
+			const stored = expandedPaths.get(pathKey);
+			if (stored !== undefined) {
+				expanded = stored;
+			} else {
+				expanded = shouldExpandNodeInitially(keyPath, value, level);
+				expandedPaths.set(pathKey, expanded);
+			}
 		}
 		expanded = expanded || shouldExpandNode(keyPath, value, level);
 
@@ -256,9 +266,10 @@ function collectNode(
 				nodeType,
 				nodeTypeIndicator,
 				expanded,
-				expandable,
+				expandable: meta.expandable,
 				level,
 				value,
+				itemString: meta.itemString,
 			});
 		}
 
@@ -273,7 +284,6 @@ function collectNode(
 			);
 		}
 	} else {
-		const pathKey = getPathKey(keyPath);
 		out.push({
 			kind: RowKind.Value,
 			pathKey,
@@ -291,8 +301,8 @@ function renderNestedRow(
 	row: NestedRow,
 	options: FlattenTreeOptions,
 ): React.ReactElement {
-	const {styling, labelRenderer, getItemString, expandedPaths, onToggle, expandClicked, collectionLimit} = options;
-	const {pathKey, keyPath, nodeType, nodeTypeIndicator, expanded, expandable, level} = row;
+	const {styling, labelRenderer, getItemString, expandedPaths, onToggle, expandClicked} = options;
+	const {pathKey, keyPath, nodeType, nodeTypeIndicator, expanded, expandable, level, itemString} = row;
 	const stylingArgs: TStylingArgs = [keyPath, nodeType, expanded, expandable, level];
 
 	const handleClick = expandable ? () => {
@@ -301,7 +311,7 @@ function renderNestedRow(
 	} : undefined;
 
 	const handleClickWrapped = expandable ? (e: React.MouseEvent<HTMLDivElement>) => {
-		const path = [...keyPath].reverse();
+		const path = keyPath.slice().reverse();
 		expandClicked(path, !expanded, e.altKey);
 		expandedPaths.set(pathKey, !expanded);
 		onToggle();
@@ -314,7 +324,7 @@ function renderNestedRow(
 	);
 	const renderedItemString = getItemString(
 		nodeType, row.value, itemType,
-		createItemStringForType(nodeType, row.value, collectionLimit),
+		itemString,
 		keyPath,
 	);
 
@@ -400,7 +410,11 @@ export function flattenTree(
 ): FlattenResult {
 	const descriptors: RowDescriptor[] = [];
 	const circularCache = new Set<unknown>();
-	collectNode(descriptors, value, keyPath, options, level, circularCache, false);
+	// Root pathKey is built once from the input keyPath (same shape as before:
+	// children prepend their key separated by "/", matching the original
+	// `keyPath.join("/")` semantics since children use [key, ...keyPath]).
+	const rootPathKey = keyPath.join("/");
+	collectNode(descriptors, value, keyPath, rootPathKey, options, level, circularCache, false);
 
 	const renderItem = (index: number): React.ReactElement => {
 		const row = descriptors[index];

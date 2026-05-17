@@ -16,6 +16,11 @@ class MockResizeObserver {
 }
 (globalThis as any).ResizeObserver ??= MockResizeObserver;
 
+// jsdom's requestAnimationFrame is async (setTimeout-based); run it synchronously
+// so scroll-driven state updates are flushed within act().
+(globalThis as any).requestAnimationFrame = (cb: FrameRequestCallback) => { cb(0); return 0; };
+(globalThis as any).cancelAnimationFrame = () => {};
+
 const makeItems = (n: number) =>
 	Array.from({length: n}, (_, i) => (
 		<div key={i} data-testid={`vs-item-${i}`}>item-{i}</div>

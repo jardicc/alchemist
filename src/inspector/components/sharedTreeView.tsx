@@ -44,15 +44,23 @@ export const renderPath = (path: KeyPath, onInspectPath: (path: KeyPath, mode: "
 };
 
 export const shouldExpandNode = (expandedKeys: KeyPath[], autoExpandLevels = 0, allowInfinity = false): TShouldExpandNode => {
-	return (keyPath, data, level) => {
+	// Pre-compute a lookup set so per-node check is O(1) instead of O(N * pathLen).
+	// Also group by level so we skip the lookup entirely when no expanded path has that depth.
+	const lookup = new Set<string>();
+	const levelsWithEntries = new Set<number>();
+	for (const path of expandedKeys) {
+		lookup.add(path.join("-"));
+		levelsWithEntries.add(path.length);
+	}
 
-		const keyPathString = [...keyPath].reverse().join("-");
-		for (const path of expandedKeys) {
-			if (path.length === level) { // cheap check
-				if (path.join("-") === keyPathString) { // more expensive check
-					return true;
-				}
+	return (keyPath, data, level) => {
+		if (levelsWithEntries.has(level ?? -1)) {
+			// keyPath is stored reversed in expandedKeys; build the same key.
+			let key = "";
+			for (let i = keyPath.length - 1; i >= 0; i--) {
+				key += i === keyPath.length - 1 ? String(keyPath[i]) : "-" + String(keyPath[i]);
 			}
+			if (lookup.has(key)) return true;
 		}
 
 		if (level === undefined) {
