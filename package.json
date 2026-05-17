@@ -3,16 +3,16 @@
   "scripts": {
     "build": "node esbuild.config.js --build",
     "watch": "node esbuild.config.js --watch",
-    "test": "npx jest"
+    "test": "npx jest",
+    "lint": "npx eslint src --quiet",
+    "lint:fix": "npx eslint src --fix"
   },
   "_readme": "Use NVM tool for switching NodeJS version if needed. https://github.com/nvm-sh/nvm/blob/master/README.md And use Yarn only.",
   "type": "module",
   "engines": {
     "node": ">= 20.10.0",
     "npm": ">= 999.999.999",
-    "yarn": ">=1.22",
-    "lint": "npx eslint src --quiet",
-    "lint:fix": "npx eslint src --fix"
+    "yarn": ">=1.22"
   },
   "dependencies": {
     "@adobe/cc-ext-uxp-types": "^7.3.1",
@@ -39,6 +39,7 @@
     "eslint": "^10.4.0",
     "eslint-config-defaults": "^9.0.0",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "7.1.1",
     "events": "^3.3.0",
     "immutable": "5.1.5",
     "javascript-stringify": "^2.1.0",
@@ -51,7 +52,7 @@
     "lodash": "^4.18.1",
     "minimist": "^1.2.8",
     "react": "^19.1.0",
-    "react-base16-styling": "0.10.0",
+    "react-base16-styling": "0.9.1",
     "react-dom": "^19.1.0",
     "react-notifications": "^1.7.2",
     "react-redux": "9.3.0",
@@ -76,6 +77,7 @@
     "strip-ansi": "6.0.1"
   },
   "resolutions": {
-    "strip-ansi": "6.0.1"
+    "strip-ansi": "6.0.1",
+    "csstype": "3.2.3"
   }
 }
