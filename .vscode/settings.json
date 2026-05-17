@@ -1,5 +1,5 @@
 {
-	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"js/ts.tsdk.path": "node_modules\\typescript\\lib",
 	"cSpell.words": [
 		"tokenify"
 	],
@@ -35,13 +35,10 @@
 	"bun.test.enable": false,
 	"editor.formatOnSave": true,
 
-	"typescript.format.enable": true,
-	"typescript.format.insertSpaceAfterCommaDelimiter": true,
-	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+	"js/ts.format.enabled": true,
+	"js/ts.format.insertSpaceAfterCommaDelimiter": true,
+	"js/ts.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
 
-	"javascript.format.enable": true,
-	"javascript.format.insertSpaceAfterCommaDelimiter": true,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
 	"chat.tools.terminal.autoApprove": {
 		"npx jest": true
 	},
