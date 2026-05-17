@@ -5,7 +5,7 @@ import {getInspectorSettings} from "../selectors/inspectorSelectors";
 
 /* eslint-disable quotes */
 import React from "react";
-import "./DispatcherContainer.less";
+import "./Dispatcher.less";
 import {Helpers} from "../classes/Helpers";
 import {IDescriptor, IRefDispatcher, ISettings} from "../model/types";
 import {RawDataConverter} from "../classes/RawDataConverter";

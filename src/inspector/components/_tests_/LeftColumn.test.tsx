@@ -12,7 +12,7 @@ jest.mock("../Filters", () => {
 	return {Filters: () => React.createElement("div", {"data-testid": "filters-stub"})};
 });
 
-jest.mock("../DescriptorItemContainer", () => {
+jest.mock("../DescriptorItem", () => {
 	const React = require("react");
 	return {
 		DescriptorItem: (props: any) =>

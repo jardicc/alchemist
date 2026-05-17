@@ -2,7 +2,7 @@ import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction, setSearchContentKeywordAction} from "../actions/inspectorActions";
 import {getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel, getSearchContentKeyword} from "../selectors/inspectorContentSelectors";
 import React, {Component, Key} from "react";
-import "./TreeContentContainer.less";
+import "./TreeContent.less";
 import {getItemString} from "./TreeDiff/getItemString";
 import {JSONTree} from "./react-json-tree-2";
 import {TProtoMode, TGenericViewType} from "../model/types";

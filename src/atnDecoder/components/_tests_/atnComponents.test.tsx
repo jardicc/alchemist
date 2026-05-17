@@ -5,9 +5,9 @@ import React from "react";
 import {fireEvent} from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import {ActionCommand} from "../ActionCommandContainer";
-import {ActionItem} from "../ActionItemContainer";
-import {ActionSet} from "../ActionSetContainer";
+import {ActionCommand} from "../ActionCommand";
+import {ActionItem} from "../ActionItem";
+import {ActionSet} from "../ActionSet";
 import {renderWithStore} from "../../../__tests__/renderWithStore";
 import {configureStore} from "@reduxjs/toolkit";
 

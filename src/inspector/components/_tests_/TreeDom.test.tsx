@@ -23,7 +23,7 @@ jest.mock("../../selectors/inspectorDOMSelectors", () => ({
 	getDOMExpandLevel: () => 0,
 }));
 
-import {TreeDom} from "../TreeDomContainer";
+import {TreeDom} from "../TreeDom";
 import {getItemString} from "../TreeDiff/getItemString";
 import {renderWithStore} from "../../../__tests__/renderWithStore";
 

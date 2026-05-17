@@ -1,4 +1,4 @@
-import "./CommandContainer.less";
+import "./Command.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";

@@ -1,5 +1,5 @@
 import React from "react";
-import "./FooterContainer.less";
+import "./Footer.less";
 import {GetInfo} from "../classes/GetInfo";
 import {Main} from "../../shared/classes/Main";
 import {valid, coerce} from "semver";

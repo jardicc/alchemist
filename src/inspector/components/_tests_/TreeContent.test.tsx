@@ -26,7 +26,7 @@ jest.mock("../TreePath", () => ({
 		}),
 }));
 
-import {TreeContent} from "../TreeContentContainer";
+import {TreeContent} from "../TreeContent";
 
 const makeState = (contentOverride?: any, viewType = "tree", search = ""): any => ({
 	inspector: {

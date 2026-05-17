@@ -2,7 +2,7 @@
 import {createRoot} from "react-dom/client";
 import React, {StrictMode} from "react";
 import {Provider} from "react-redux";
-import {Inspector} from "./InspectorContainer";
+import {Inspector} from "./Inspector";
 import {rootStore} from "../../shared/store";
 import {ErrorBoundary} from "./ErrorBoundary";
 import {NotificationContainer} from "react-notifications";

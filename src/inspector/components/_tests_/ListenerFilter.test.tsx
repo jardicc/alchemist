@@ -5,7 +5,7 @@ import React from "react";
 import {screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import {ListenerFilter} from "../ListenerFilterContainer";
+import {ListenerFilter} from "../ListenerFilter";
 import {renderWithStore} from "../../../__tests__/renderWithStore";
 
 const makeState = (filter: {type: string; exclude: string[]; include: string[]}) => ({

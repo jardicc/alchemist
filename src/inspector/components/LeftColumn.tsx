@@ -1,6 +1,6 @@
 import React from "react";
 import "./LeftColumn.less";import {GetInfo, ITargetReferenceAM} from "../classes/GetInfo";
-import {DescriptorItem} from "./DescriptorItemContainer";
+import {DescriptorItem} from "./DescriptorItem";
 import {IDescriptor, IRefListener, IRefNotifier, IRefReplies, ISettings, TAllTargetReferences, TSelectDescriptorOperation} from "../model/types";
 import {IconLockLocked, IconPinDown, IconTrash, IconPencil, IconPlayIcon, IconLockUnlocked, IconPinLeft, IconPlus, IconMediaRecord, IconMediaStop, IconClipboard} from "../../shared/components/icons";
 import {ListenerClass} from "../classes/Listener";

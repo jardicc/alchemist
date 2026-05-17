@@ -1,11 +1,11 @@
-import "./ActionItemContainer.less";
+import "./ActionItem.less";
 
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getExpandedItemsAction, getSelectedItemsAction} from "../atnSelectors";
 import {setExpandActionAction, setSelectActionAction} from "../atnActions";
 import {IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem} from "../atnModel";
-import {ActionCommand} from "./ActionCommandContainer";
+import {ActionCommand} from "./ActionCommand";
 import {IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty} from "../../shared/components/icons";
 import PS from "photoshop";
 

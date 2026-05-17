@@ -3,7 +3,7 @@ import {setInspectorPathDomAction, setExpandedPathAction, setAutoExpandLevelActi
 import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} from "../selectors/inspectorDOMSelectors";
 
 import React from "react";
-import "./TreeDomContainer.less";
+import "./TreeDom.less";
 import {getItemString} from "./TreeDiff/getItemString";
 import {JSONTree} from "./react-json-tree-2";
 import {TProtoMode} from "../model/types";

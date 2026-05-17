@@ -18,7 +18,7 @@ jest.mock("../../../shared/components/icons", () => ({
 	IconPinDown: () => null,
 }));
 
-import {DescriptorItem} from "../DescriptorItemContainer";
+import {DescriptorItem} from "../DescriptorItem";
 
 const makeState = (descriptors: any[] = []): any => ({
 	inspector: {

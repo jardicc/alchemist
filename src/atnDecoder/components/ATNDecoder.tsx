@@ -2,16 +2,16 @@ import {useAppDispatch, useAppSelector, rootStore} from "../../shared/store";
 
 import React from "react";
 
-import "./ATNDecoderContainer.less";
+import "./ATNDecoder.less";
 
 import {decodeATN} from "../classes/ATNDecoder";
-import {Footer} from "../../inspector/components/FooterContainer";
+import {Footer} from "../../inspector/components/Footer";
 import {IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation} from "../../inspector/model/types";
 import {getAllDescriptors, getFontSizeSettings, getInspectorSettings} from "../../inspector/selectors/inspectorSelectors";
 import {getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands as getSelectedCommands} from "../atnSelectors";
 import {clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction} from "../atnActions";
 import {IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
-import {ActionSet} from "./ActionSetContainer";
+import {ActionSet} from "./ActionSet";
 import {addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setModeTabAction, toggleDescriptorsGroupingAction} from "../../inspector/actions/inspectorActions";
 import {alert, Helpers} from "../../inspector/classes/Helpers";
 import {str as crc} from "crc-32";

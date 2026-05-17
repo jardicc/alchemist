@@ -1,4 +1,4 @@
-import "./ActionCommandContainer.less";
+import "./ActionCommand.less";
 
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";

@@ -18,7 +18,7 @@ jest.mock("../FilterRow", () => {
 	return {FilterRow};
 });
 
-jest.mock("../ListenerFilterContainer", () => {
+jest.mock("../ListenerFilter", () => {
 	const React = require("react");
 	return {
 		ListenerFilter: () =>

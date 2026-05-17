@@ -1,4 +1,4 @@
-import "./PanelContainer.less";
+import "./Panel.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";

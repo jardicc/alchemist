@@ -21,7 +21,7 @@ jest.mock("../../../shared/classes/Main", () => ({
 	},
 }));
 
-import {Footer} from "../FooterContainer";
+import {Footer} from "../Footer";
 import {Main} from "../../../shared/classes/Main";
 
 const renderFooter = (props: Partial<any> = {}) =>

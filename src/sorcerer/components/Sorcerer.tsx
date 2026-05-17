@@ -2,18 +2,18 @@ import {useAppDispatch, useAppSelector} from "../../shared/store";
 
 import React from "react";
 
-import "./SorcererContainer.less";
+import "./Sorcerer.less";
 
 import SP from "react-uxp-spectrum";
-import {Footer} from "../../inspector/components/FooterContainer";
+import {Footer} from "../../inspector/components/Footer";
 import {getFontSizeSettings} from "../../inspector/selectors/inspectorSelectors";
-import {General} from "./GeneralContainer";
-import {Snippet} from "./SnippetContainer";
-import {Command} from "./CommandContainer";
+import {General} from "./General";
+import {Snippet} from "./Snippet";
+import {Command} from "./Command";
 import {IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState} from "../sorModel";
 import {getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove} from "../sorSelectors";
 import {makeAction, removeAction, setPresetAction, setSelectAction} from "../sorActions";
-import {Panel} from "./PanelContainer";
+import {Panel} from "./Panel";
 import {SorcererBuilder} from "../classes/Sorcerer";
 
 export const Sorcerer: React.FC = () => {

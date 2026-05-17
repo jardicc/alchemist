@@ -6,7 +6,7 @@ import {
 } from "../model/buildInDropDownValues";
 import {IPropertySettings, TAllTargetReferences, TChannelReferenceValid, TTargetReference} from "../model/types";
 import {TFilterState} from "./FilterButton";
-import {ListenerFilter} from "./ListenerFilterContainer";
+import {ListenerFilter} from "./ListenerFilter";
 
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {

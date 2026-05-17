@@ -4,7 +4,7 @@ import {selectDescriptorAction, renameDescriptorAction, setRenameModeAction} fro
 import {IDescriptor, TSelectDescriptorOperation} from "../model/types";
 import {getAutoSelectedUUIDs} from "../selectors/inspectorSelectors";
 import React from "react";
-import "./DescriptorItemContainer.less";
+import "./DescriptorItem.less";
 import {IconLockLocked, IconPinDown} from "../../shared/components/icons";
 import {default as SP} from "react-uxp-spectrum";
 import {getIcon} from "../helpers";

@@ -12,7 +12,7 @@ jest.mock("../../selectors/inspectorCodeSelectors", () => ({
 	getGeneratedCode: jest.fn(() => ""),
 }));
 
-import {GeneratedCode} from "../GeneratedCodeContainer";
+import {GeneratedCode} from "../GeneratedCode";
 
 describe("<GeneratedCode />", () => {
 	it("renders the generated code wrapper", () => {

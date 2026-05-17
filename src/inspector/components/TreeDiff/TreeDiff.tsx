@@ -5,7 +5,7 @@ import {getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, ge
 import React, {Component} from "react";
 import {stringify} from "javascript-stringify";
 import {getItemString} from "./getItemString";
-import "./TreeDiffContainer.less";
+import "./TreeDiff.less";
 import {JSONTree} from "../react-json-tree-2";
 import {diff} from "jsondiffpatch";
 import {labelRenderer, shouldExpandNode} from "../sharedTreeView";

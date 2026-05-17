@@ -6,10 +6,10 @@ import {screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import {renderWithStore} from "../../../__tests__/renderWithStore";
 
-import {Snippet} from "../SnippetContainer";
-import {Command} from "../CommandContainer";
-import {Panel} from "../PanelContainer";
-import {General} from "../GeneralContainer";
+import {Snippet} from "../Snippet";
+import {Command} from "../Command";
+import {Panel} from "../Panel";
+import {General} from "../General";
 
 const makeSnippet = (over: Partial<any> = {}) => ({
 	type: "snippet",
