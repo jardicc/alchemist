@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import "./TreePath.less";
 import {renderPath} from "./sharedTreeView";
 import SP from "react-uxp-spectrum";
@@ -10,18 +10,11 @@ export interface ITreePathProps {
 	allowInfinityLevels?: boolean
 	maxLevels?: number
 	hideLevels?: boolean
-}
-
-export interface ITreePathDispatch {
 	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
 	onSetAutoExpandLevel: (level: number) => void
 }
 
-interface ITreePathState { }
-
-export type TTreePath = ITreePathProps & ITreePathDispatch
-
-export const TreePath: React.FC<TTreePath> = (props) => {
+export const TreePath: React.FC<ITreePathProps> = (props) => {
 	const levelDelay = React.useRef<number | null>(null);
 
 	const renderPathFn = () => {

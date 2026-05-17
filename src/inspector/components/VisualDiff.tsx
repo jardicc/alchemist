@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import "./VisualDiff.less";
 import {formatters, diff} from "jsondiffpatch";
 
@@ -7,17 +7,7 @@ export interface IVisualDiffProps {
 	right: any
 }
 
-export interface IVisualDiffDispatch {
-
-}
-
-interface IVisualDiffState {
-
-}
-
-export type TVisualDiff = IVisualDiffProps & IVisualDiffDispatch
-
-export const VisualDiffTab: React.FC<TVisualDiff> = (props) => {
+export const VisualDiffTab: React.FC<IVisualDiffProps> = (props) => {
 	const elRef = React.useRef<HTMLDivElement | null>(null);
 
 	const {left, right} = props;

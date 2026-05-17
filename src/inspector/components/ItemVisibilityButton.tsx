@@ -7,11 +7,9 @@ import {TTargetReference} from "../model/types";
 import {IAccDropPostFixProps} from "./AccDrop";
 import {IconEye} from "../../shared/components/icons";
 
-interface IOwnProps {
-	value: TTargetReference
-}
+export const ItemVisibilityButtonWrap: React.FC<IAccDropPostFixProps> = (props) => {
+	const value = props.value as TTargetReference;
 
-const ItemVisibilityButton: React.FC<IOwnProps> = ({value}) => {
 	const dispatch = useAppDispatch();
 	const visibleItems = useAppSelector(getCategoryItemsVisibility);
 
@@ -28,12 +26,5 @@ const ItemVisibilityButton: React.FC<IOwnProps> = ({value}) => {
 		>
 			<IconEye />
 		</div>
-	);
-};
-
-// I don't know how to pass container as a prop and do typings correctly but I can do that with simple component }:-)
-export const ItemVisibilityButtonWrap: React.FC<IAccDropPostFixProps> = (props) => {
-	return (
-		<ItemVisibilityButton value={props.value as TTargetReference} />
 	);
 };

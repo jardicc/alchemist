@@ -15,7 +15,7 @@ export class ErrorBoundary extends React.Component<any, IState> {
 		};
 	}
 
-	private static getDerivedStateFromError(error: any) {
+	protected static getDerivedStateFromError(error: any) {
 		// Update state so the next render will show the fallback UI.
 		console.log(error);
 		return {

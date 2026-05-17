@@ -9,11 +9,11 @@ import {IconLockLocked, IconPinDown} from "../../shared/components/icons";
 import {default as SP} from "react-uxp-spectrum";
 import {getIcon} from "../helpers";
 
-interface IOwn {
+interface IDescriptorItemProps {
 	descriptor: IDescriptor
 }
 
-export const DescriptorItem: React.FC<IOwn> = ({descriptor: descriptorProp}) => {
+export const DescriptorItem: React.FC<IDescriptorItemProps> = ({descriptor: descriptorProp}) => {
 	const descriptor = cloneDeep(descriptorProp);
 	const dispatch = useAppDispatch();
 	const autoSelectedUUIDs = useAppSelector(getAutoSelectedUUIDs);

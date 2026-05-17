@@ -6,8 +6,7 @@ import {getInspectorSettings} from "../selectors/inspectorSelectors";
 /* eslint-disable quotes */
 import React from "react";
 import "./Dispatcher.less";
-import {Helpers} from "../classes/Helpers";
-import {IDescriptor, IRefDispatcher, ISettings} from "../model/types";
+import {IDescriptor, IRefDispatcher} from "../model/types";
 import {RawDataConverter} from "../classes/RawDataConverter";
 import {getInitialState} from "../inspInitialState";
 import {str as crc} from "crc-32";

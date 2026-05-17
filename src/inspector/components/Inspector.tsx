@@ -1,12 +1,12 @@
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {setModeTabAction, setColumnSizeAction, toggleSettingsAction} from "../actions/inspectorActions";
-import {getModeTabID, getActiveDescriptorOriginalReference, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible} from "../selectors/inspectorSelectors";
+import {getModeTabID, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible} from "../selectors/inspectorSelectors";
 
 import React from "react";
 import {TabList} from "./Tabs/TabList";
 import {TabPanel} from "./Tabs/TabListPanel";
 import "./Inspector.less";
-import {TActiveInspectorTab, TFontSizeSettings} from "../model/types";
+import {TActiveInspectorTab} from "../model/types";
 import {Footer} from "./Footer";
 import {TreeContent} from "./TreeContent";
 import {TreeDiff} from "./TreeDiff/TreeDiff";
@@ -14,7 +14,7 @@ import {TreeDom} from "./TreeDom";
 import {Dispatcher} from "./Dispatcher";
 import {GeneratedCode} from "./GeneratedCode";
 import {Settings} from "./Settings/Settings";
-import {IconCog, IconX} from "../../shared/components/icons";
+import {IconX} from "../../shared/components/icons";
 import {LeftColumn} from "./LeftColumn";
 import {SplitPane} from "../../shared/components/split-pane-fork/SplitPane";
 import {Pane} from "../../shared/components/split-pane-fork/Pane";

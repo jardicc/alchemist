@@ -1,9 +1,9 @@
 
 import React from "react";
-import {IconCaretRight, IconChevronBottom, IconChevronRight} from "../../shared/components/icons";
+import {IconChevronBottom, IconChevronRight} from "../../shared/components/icons";
 import "./Accordion.less";
 
-export interface IAccordionProps {
+export interface IFilterButtonProps {
 	id: string
 	className?: string
 	children: React.ReactElement | React.ReactElement[]
@@ -12,17 +12,7 @@ export interface IAccordionProps {
 	expanded: boolean | string[]
 }
 
-export interface IAccordionDispatch {
-
-}
-
-interface IAccordionState {
-
-}
-
-export type TAccordion = IAccordionProps & IAccordionDispatch
-
-export const Accordion: React.FC<TAccordion> = (props) => {
+export const Accordion: React.FC<IFilterButtonProps> = (props) => {
 	const isExpanded = typeof props.expanded === "boolean"
 		? props.expanded
 		: props.expanded.includes(props.id);

@@ -5,7 +5,7 @@ import {Main} from "../../shared/classes/Main";
 import {valid, coerce} from "semver";
 import {versions} from "uxp";
 
-export const Footer: React.FC<IOwnProps> = () => {
+export const Footer: React.FC<IFooterProps> = () => {
 	const psVersionSegments = GetInfo.getBuildString();
 	const uxpVersion = valid(coerce(versions?.uxp?.split?.("-")?.[1])) ?? "Parser error";
 	const psVersion = valid(coerce(psVersionSegments?.split?.(" ")?.[0])) ?? "Parser error";
@@ -38,6 +38,6 @@ export const Footer: React.FC<IOwnProps> = () => {
 	);
 };
 
-interface IOwnProps {
+interface IFooterProps {
 	parentPanel: "inspector" | "atnConverter"
 }
