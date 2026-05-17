@@ -9,7 +9,7 @@ function unFocus(document: Document, window: Window) {
 	} else {
 		try {
 			window?.getSelection()?.removeAllRanges();
-			// eslint-disable-next-line no-empty
+
 		} catch (e) { }
 	}
 }
@@ -103,7 +103,7 @@ export const SplitPane: React.FC<ISplitPaneProps> = (props) => {
 		const onChange = curProps.onChange;
 		const isPrimaryFirst = curProps.primary === "first";
 		// minSize cast retained to match original behavior
-		void (_minSize as number);
+		void (_minSize);
 
 		if (allowResize && activeRef.current) {
 			unFocus(document, window);
@@ -196,7 +196,7 @@ export const SplitPane: React.FC<ISplitPaneProps> = (props) => {
 		}
 	};
 
-	const onMouseDown = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+	const onMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
 		const eventWithTouches = Object.assign({}, event, {
 			touches: [{clientX: event.clientX, clientY: event.clientY}],
 		});

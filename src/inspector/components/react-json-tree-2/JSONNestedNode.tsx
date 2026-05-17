@@ -152,8 +152,6 @@ export default function JSONNestedNode(props: Props) {
 		handleClick();
 	};
 
-
-
 	expanded = expanded || hasToBeExpanded(props);
 
 	const renderedChildren =

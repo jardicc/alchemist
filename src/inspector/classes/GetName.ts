@@ -80,7 +80,6 @@ function getNameProp(refs: TReference[]): string {
 	return name;
 }
 
-
 /*
 pathName
 channelName

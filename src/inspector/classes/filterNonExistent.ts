@@ -4,7 +4,6 @@ import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
 export function filterNonExistent(descriptors: IDescriptor[]): IDescriptor[] {
 
-
 	const result = descriptors.filter(desc => {
 		let res = false;
 		switch (desc.originalReference.type) {

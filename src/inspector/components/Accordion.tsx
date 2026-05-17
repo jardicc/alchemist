@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
+
 import React from "react";
 import {IconCaretRight, IconChevronBottom, IconChevronRight} from "../../shared/components/icons";
 import "./Accordion.less";

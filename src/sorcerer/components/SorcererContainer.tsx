@@ -16,7 +16,6 @@ import {makeAction, removeAction, setPresetAction, setSelectAction} from "../sor
 import {Panel} from "./PanelContainer";
 import {SorcererBuilder} from "../classes/Sorcerer";
 
-
 export const Sorcerer: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const fontSizeSettings = useAppSelector(getFontSizeSettings);
@@ -93,7 +92,7 @@ export const Sorcerer: React.FC = () => {
 				<div className={"button " + (enableRemove ? "" : "disallowed")}
 					onClick={() => {
 						const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
-						remove(s.type as "snippet" | "panel" | "command", s.$$$uuid);
+						remove(s.type, s.$$$uuid);
 					}}>Remove selected</div>
 				<div className="spread"></div>
 				<div className={"button"} onClick={exportFn}>Export as preset</div>

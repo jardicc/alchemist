@@ -12,13 +12,11 @@ export interface ITreePathProps {
 	hideLevels?: boolean
 }
 
- 
 export interface ITreePathDispatch {
 	onInspectPath: (path: KeyPath, mode: "replace" | "add") => void;
 	onSetAutoExpandLevel: (level: number) => void
 }
 
- 
 interface ITreePathState { }
 
 export type TTreePath = ITreePathProps & ITreePathDispatch

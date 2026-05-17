@@ -23,7 +23,7 @@ export const DescriptorItem: React.FC<IOwn> = ({descriptor: descriptorProp}) => 
 
 	const [tempName, setTempName] = React.useState(descriptor.title);
 
-	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const select = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
 		let operation: TSelectDescriptorOperation = "replace";
 

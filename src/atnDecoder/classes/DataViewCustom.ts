@@ -12,7 +12,7 @@ export class DataViewCustom extends DataView {
 			buffer = new Uint8ClampedArray(buffer).buffer;
 		}
 
-		super(buffer as ArrayBufferLike, byteOffset, byteLength);
+		super(buffer, byteOffset, byteLength);
 		this.offset = 0;
 		this.littleEndian = littleEndian;
 	}

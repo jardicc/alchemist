@@ -2,7 +2,6 @@ import React from "react";
 import {IconPinDown} from "../../shared/components/icons";
 import {KeyPath, TShouldExpandNode} from "./react-json-tree-2/types";
 
-
 export const labelRenderer = ([key, ...rest]: KeyPath, onInspectPath: (path: KeyPath, mode: "replace" | "add") => void, nodeType?: string, expanded?: boolean, expandable?: boolean): JSX.Element => {
 
 	let noPin = false;
@@ -49,7 +48,7 @@ export const shouldExpandNode = (expandedKeys: KeyPath[], autoExpandLevels = 0, 
 
 		const keyPathString = [...keyPath].reverse().join("-");
 		for (const path of expandedKeys) {
-			if (path.length === level) { // cheap check				
+			if (path.length === level) { // cheap check
 				if (path.join("-") === keyPathString) { // more expensive check
 					return true;
 				}

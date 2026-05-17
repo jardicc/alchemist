@@ -12,7 +12,6 @@ import {IDBySelected} from "./GetIDBySelected";
 import {GetList} from "./GetList";
 import {ReferenceToDOM} from "./GetDOM";
 
-
 export interface ITargetReferenceAM {
 	_obj: string,
 	_target: TReference[]
@@ -283,8 +282,6 @@ export class GetInfo {
 		return this.buildReply(startTime, playResult, descToPlay, _originalRef);
 	}
 
-
-
 	public static generateTitle = (originalReference: TAllTargetReferences | null, calculatedReference: ITargetReferenceAM): string => {
 		if (!originalReference) {
 			return "Error - autoinspector n/a";
@@ -397,7 +394,6 @@ export class GetInfo {
 			},
 		]);
 
-		return result?.[0]?.["buildNumber"] ?? "n/a";
+		return result?.[0]?.buildNumber ?? "n/a";
 	}
 }
-

@@ -1,4 +1,4 @@
-/* eslint-disable comma-dangle */
+
 import {createSelector} from "@reduxjs/toolkit";
 import {IRootState} from "../../shared/store";
 import {IDescriptor, IInspectorState, IListenerNotifierFilter, TSubTypes, TTargetReference} from "../model/types";
@@ -15,7 +15,7 @@ export const getFilterBySelectedReferenceType = createSelector([all], s => s.fil
 export const getTargetReference = createSelector([all], s => s.targetReference);
 export const getAutoUpdate = createSelector([all], s => s.settings.autoUpdateInspector);
 export const getAllDescriptors = createSelector([all], s => s.descriptors);
-export const getSelectedDescriptors = createSelector([all], s => s.descriptors.filter((d) => d.selected === true));
+export const getSelectedDescriptors = createSelector([all], s => s.descriptors.filter((d) => d.selected));
 export const getSelectedDescriptorsUUID = createSelector([getSelectedDescriptors], s => s.map(d => d.id));
 export const getPropertySettings = createSelector([all], s => s.settings.properties);
 export const getLockedSelection = createSelector([getSelectedDescriptors], s => s.some(d => d.locked));
@@ -132,7 +132,6 @@ export const getDescriptorsListView = createSelector([
 
 	//let filtered: IDescriptor[] = reordered;
 
-
 	let filtered = reordered.filter((desc: IDescriptor) => {
 		// show all if none filter is active
 		if (rootFilter === "off") {
@@ -235,7 +234,6 @@ export const getDescriptorsListView = createSelector([
 
 		filtered.reverse();
 	}
-
 
 	return filtered;
 });

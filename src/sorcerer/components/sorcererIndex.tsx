@@ -16,11 +16,11 @@ export function renderSorcererUI(): void {
 
 	rootElement.render(
 		//<StrictMode>
-			<Provider store={rootStore}>
-				<ErrorBoundary>
-					<Sorcerer />
-				</ErrorBoundary>
-			</Provider>
+		<Provider store={rootStore}>
+			<ErrorBoundary>
+				<Sorcerer />
+			</ErrorBoundary>
+		</Provider>,
 		//</StrictMode>
 	);
 }

@@ -57,4 +57,4 @@ export const setCategoryItemVisibilityAction = inspectorSlice.actions.setCategor
 // Kept for type compatibility with components that historically typed
 // their dispatch parameter as `Dispatch<TActions>`.
 type _InspectorActions = typeof inspectorSlice.actions;
-export type TActions = ReturnType<_InspectorActions[keyof _InspectorActions]> | PayloadAction<any, string>;
+export type TActions = ReturnType<_InspectorActions[keyof _InspectorActions]> | PayloadAction<any>;

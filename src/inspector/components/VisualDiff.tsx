@@ -7,12 +7,10 @@ export interface IVisualDiffProps {
 	right: any
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IVisualDiffDispatch {
 
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IVisualDiffState {
 
 }

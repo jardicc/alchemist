@@ -9,7 +9,6 @@ import {IEntrypointCommand, IEntrypointPanel, ISorcererState} from "./sorModel";
 export const all = (state: IRootState): ISorcererState => state.inspector.sorcerer;
 export const getManifestGeneric = createSelector([all], s => s.manifestInfo);
 
-
 export const getAllSnippets = createSelector([all], s => {
 	return s.snippets.list;
 });
@@ -43,7 +42,6 @@ export const getActivePanel = createSelector([all, getAllEntryPoints], (s, entry
 	const res = entryPoints.find(item => item.$$$uuid === s.selectedItem.uuid && item.type === "panel") as IEntrypointPanel || null;
 	return res;
 });
-
 
 export const getAllCommands = createSelector([getAllEntryPoints], s => {
 	const res: IEntrypointCommand[] = s.filter(item => item.type === "command") as IEntrypointCommand[];
@@ -86,7 +84,7 @@ export const getManifestCode = createSelector([all, getIndentString], (all, inde
 	}
 
 	if (Array.isArray(clone.host)) {
-		clone.host = clone.host[0] as any;
+		clone.host = clone.host[0];
 	}
 
 	const str = JSON.stringify(clone, null, indent);
@@ -114,19 +112,19 @@ export const generateScriptFileCode = createSelector([getAllCommands, getAllPane
 	// assign on click event for all buttons in all panels
 	document.onload=()=>{
 		${snippets.map(s => {
-			return `
+		return `
 			// ${s.label.default}
 			[...document.body.querySelectorAll('[data-snippet="${s.$$$uuid}"]')].forEach(button => button.addEventListener("click",${s.$$$uuid}));`;
-		}).join("\n")}
+	}).join("\n")}
 	}
 
 	// your code snippets
 	${snippets.map(snippet =>
-			`/** ${snippet?.label.default ?? ""} */
+		`/** ${snippet?.label.default ?? ""} */
 	async function ${snippet?.$$$uuid ?? ""}(){
 		${snippet?.code ?? ""}
 	}\n\t`,
-		).join("")}
+	).join("")}
 	`;
 	return str;
 });
@@ -137,13 +135,13 @@ export const generateHtmlFileCode = createSelector([getAllPanels, getAllSnippets
 		const str = `
 		<uxp-panel panelid="${panel.id}">
 			${panel.$$$snippetUUIDs.map(snippetUUID => {
-			const found = snippets.find(s => s.$$$uuid === snippetUUID);
-			if (found) {
-				return `<sp-action-button data-snippet="${found.$$$uuid}">${found.label.default}</sp-action-button>`;
-			} else {
-				return "";
-			}
-		}).join("\n")}
+		const found = snippets.find(s => s.$$$uuid === snippetUUID);
+		if (found) {
+			return `<sp-action-button data-snippet="${found.$$$uuid}">${found.label.default}</sp-action-button>`;
+		} else {
+			return "";
+		}
+	}).join("\n")}
 		</uxp-panel>
 		`;
 

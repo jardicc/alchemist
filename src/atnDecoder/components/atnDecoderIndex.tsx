@@ -16,11 +16,11 @@ export function renderATNDecoderUI(): void {
 
 	rootElement.render(
 		//<StrictMode>
-			<Provider store={rootStore}>
-				<ErrorBoundary>
-					<ATNDecoder />
-				</ErrorBoundary>
-			</Provider>
+		<Provider store={rootStore}>
+			<ErrorBoundary>
+				<ATNDecoder />
+			</ErrorBoundary>
+		</Provider>,
 		//</StrictMode>
 	);
 }

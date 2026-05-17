@@ -146,7 +146,6 @@ export const getLastSelected = createSelector([
 	return null;
 });
 
-
 export const getTextData = createSelector([
 	all,
 	getLastSelected,

@@ -33,9 +33,9 @@ export const sorSlice = createSlice({
 		make: {
 			reducer(state, action: PayloadAction<{type: "panel" | "command" | "snippet"}>) {
 				switch (action.payload.type) {
-					case "command": state.sorcerer.manifestInfo.entrypoints.push(makeSorCommand() as any); break;
-					case "panel": state.sorcerer.manifestInfo.entrypoints.push(makeSorPanel() as any); break;
-					case "snippet": state.sorcerer.snippets.list.push(makeSorSnippet() as any); break;
+					case "command": state.sorcerer.manifestInfo.entrypoints.push(makeSorCommand()); break;
+					case "panel": state.sorcerer.manifestInfo.entrypoints.push(makeSorPanel()); break;
+					case "snippet": state.sorcerer.snippets.list.push(makeSorSnippet()); break;
 				}
 			},
 			prepare(type: "panel" | "command" | "snippet") {

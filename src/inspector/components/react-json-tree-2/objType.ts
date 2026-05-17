@@ -3,7 +3,6 @@
 
 import {TNodeType} from "./types";
 
- 
 export function objType(obj: any): TNodeType {
 	let type: TNodeType;
 	try {

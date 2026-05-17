@@ -36,7 +36,7 @@ export function VirtualScroll({
 	autoHeight,
 	flex = false,
 }: IVirtualScrollProps) {
-	const count = items ? items.length : itemCountProp!;
+	const count = items ? items.length : itemCountProp;
 	// validate props
 	if (itemHeight <= 0) {
 		throw new Error("itemHeight must be greater than 0");
@@ -73,18 +73,18 @@ export function VirtualScroll({
 		effectiveHeight = Math.min(effectiveHeight, maxHeight);
 	}
 	if (effectiveHeight < itemHeight && autoHeight) {
-		effectiveHeight = itemHeight
+		effectiveHeight = itemHeight;
 	}
 
 	const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
 	const endIndex = Math.min(
 		count - 1,
-		Math.ceil((scrollTop + effectiveHeight) / itemHeight) + overscan
+		Math.ceil((scrollTop + effectiveHeight) / itemHeight) + overscan,
 	);
 
 	const visibleItems: React.ReactElement[] = [];
 	for (let i = startIndex; i <= endIndex; i++) {
-		visibleItems.push(items ? items[i] : renderItem!(i));
+		visibleItems.push(items ? items[i] : renderItem(i));
 	}
 
 	const handleScroll = useCallback((e: Event) => {
@@ -97,7 +97,7 @@ export function VirtualScroll({
 		if (!container) return;
 
 		container.addEventListener("scroll", handleScroll);
-		
+
 		// Setup ResizeObserver for flex mode
 		let resizeObserver: ResizeObserver | null = null;
 		if (flex) {

@@ -102,7 +102,6 @@ export function parse(d: DataView): IActionSet {
 			item.commands = [];
 		}
 
-
 		for (let j = 0; j < commandsCount; j++) {
 			let command: Partial<ICommand> = {
 				expanded: data.getBoolean(),
@@ -132,7 +131,6 @@ export function parse(d: DataView): IActionSet {
 		res.actionItems!.push(item as IActionItem);
 
 	}
-
 
 	return res as IActionSet;
 }
@@ -315,8 +313,6 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 					//console.log(unit);
 					const unitCount = data.getUint32();
 
-
-
 					for (let j = 0; j < unitCount; j++) {
 						const value = data.getFloat64();
 						valuesList.push(value);
@@ -329,7 +325,7 @@ export function dataTypeHub(data: DataViewCustom, desc: any, propertyName: strin
 				list[key] = {
 					_unit: unit,
 					list: valuesList,
-				} as IObjectArrayListInner;
+				};
 			}
 
 			return;

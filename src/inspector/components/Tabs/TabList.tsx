@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
+
 import React from "react";
 import "./TabList.less";
 

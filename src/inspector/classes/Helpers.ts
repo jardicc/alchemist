@@ -16,12 +16,12 @@ export class Helpers {
 			if (width === 0) { return 400;}
 			return width;
 		}
-	
+
 		public static pxToPanelWidthPercentage(panelID: string, px: number): number {
 			const w = this.getPanelWidth(panelID);
 			return (px / w) * 100;
 		}
-	
+
 		public static percToPanelWidthPx(panelID: string, perc: number): number{
 			const px = perc / 100 * this.getPanelWidth(panelID);
 			return px;

@@ -52,7 +52,6 @@ export class ReferenceToDOM extends Reference {
 		return guideDom;
 	}
 
-
 	private getAppDom(): Photoshop {
 		return app;
 	}

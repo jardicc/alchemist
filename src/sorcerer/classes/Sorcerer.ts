@@ -64,7 +64,6 @@ export class SorcererBuilder {
 			console.log(e);
 		}
 
-
 		//
 
 		const manifestFile = await targetFolder.createFile("manifest.json", {overwrite: true});

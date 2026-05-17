@@ -8,9 +8,6 @@ import {ErrorBoundary} from "./ErrorBoundary";
 import {NotificationContainer} from "react-notifications";
 import "../styleOverrides/notifications.less";
 
-
-
-
 export function renderInspectorUI(): void {
 	const element = document.querySelector("[panelid=inspector]");
 	if (!element) {
@@ -22,12 +19,12 @@ export function renderInspectorUI(): void {
 
 	rootElement.render(
 		//<StrictMode>
-			<Provider store={rootStore}>
-				<ErrorBoundary>
-					<NotificationContainer />
-					<Inspector />
-				</ErrorBoundary>
-			</Provider>
+		<Provider store={rootStore}>
+			<ErrorBoundary>
+				<NotificationContainer />
+				<Inspector />
+			</ErrorBoundary>
+		</Provider>,
 		//</StrictMode>
 	);
 }

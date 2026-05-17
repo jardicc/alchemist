@@ -15,9 +15,9 @@ async function actionCommands() {
                		dialogOptions: "silent",
             	},
 				}], {},
-			);         
+			);
 		} catch (e) {}
-      
+
 		stack.push(item);
 	}
 

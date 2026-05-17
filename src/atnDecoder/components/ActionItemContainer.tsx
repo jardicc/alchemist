@@ -20,11 +20,11 @@ export const ActionItem: React.FC<IOwn> = ({actionItem, parent: parentSet}) => {
 	const expandedItems = useAppSelector(getExpandedItemsAction);
 	const combinedUUID: [string, string] = [parentSet.__uuid__, actionItem.__uuid__];
 
-	const isSelected: boolean = !!selectedItems.find(item =>
+	const isSelected = !!selectedItems.find(item =>
 		item[0] === combinedUUID[0] &&
 		item[1] === combinedUUID[1]);
 
-	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const select = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
 
 		let operation: TSelectActionOperation = "replace";
@@ -45,7 +45,7 @@ export const ActionItem: React.FC<IOwn> = ({actionItem, parent: parentSet}) => {
 
 	const isExpanded = expandedItems.flat().includes(actionItem.__uuid__);
 
-	const onExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const onExpand = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
 		dispatch(setExpandActionAction([parentSet.__uuid__, actionItem.__uuid__], !isExpanded));
 	};

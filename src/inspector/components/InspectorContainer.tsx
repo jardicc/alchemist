@@ -19,7 +19,6 @@ import {LeftColumn} from "./LeftColumn";
 import {SplitPane} from "../../shared/components/split-pane-fork/SplitPane";
 import {Pane} from "../../shared/components/split-pane-fork/Pane";
 
-
 export const Inspector: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const modeTab = useAppSelector(getModeTabID);

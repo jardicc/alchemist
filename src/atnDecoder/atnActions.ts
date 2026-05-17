@@ -9,4 +9,4 @@ export const setSelectActionAction = atnSlice.actions.selectAction;
 export const setExpandActionAction = atnSlice.actions.expandAction;
 
 type _AtnActions = typeof atnSlice.actions;
-export type TAtnActions = ReturnType<_AtnActions[keyof _AtnActions]> | PayloadAction<any, string>;
+export type TAtnActions = ReturnType<_AtnActions[keyof _AtnActions]> | PayloadAction<any>;

@@ -2,7 +2,6 @@
 
 import {IATNConverterState} from "./atnModel";
 
-
 export function getAtnInitialState(): IATNConverterState {
 	return {
 		data: [],

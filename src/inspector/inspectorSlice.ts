@@ -40,7 +40,7 @@ export const inspectorSlice = createSlice({
 			state.targetReference[type] = {
 				...state.targetReference[type] as any,
 				...action.payload,
-			} as any;
+			};
 		},
 		addDescriptor: {
 			reducer(state, action: PayloadAction<{arg: IDescriptor; replace: boolean}>) {
@@ -57,7 +57,7 @@ export const inspectorSlice = createSlice({
 				if (action.payload.replace) {
 					state.descriptors = [action.payload.arg];
 				} else {
-					state.descriptors.push(action.payload.arg as any);
+					state.descriptors.push(action.payload.arg);
 				}
 			},
 			prepare(arg: IDescriptor, replace: boolean) {
@@ -78,7 +78,7 @@ export const inspectorSlice = createSlice({
 					} else if (operation === "subtract") {
 						found.selected = false;
 					} else if (operation === "addContinuous" || operation === "subtractContinuous") {
-						const view = getDescriptorsListViewLazy()({inspector: state as IInspectorState});
+						const view = getDescriptorsListViewLazy()({inspector: state});
 						const lastSelectedItemIndex = view.map(item => item.id).indexOf(state.settings.lastSelectedItem ?? "n/a");
 						const thisItemIndex = view.map(item => item.id).indexOf(uuid!);
 						if (lastSelectedItemIndex !== -1 && thisItemIndex !== -1) {
@@ -129,7 +129,7 @@ export const inspectorSlice = createSlice({
 		},
 		clearView: {
 			reducer(state, action: PayloadAction<{keep: boolean}>) {
-				const view = getDescriptorsListViewLazy()({inspector: state as IInspectorState});
+				const view = getDescriptorsListViewLazy()({inspector: state});
 				const ids = view.filter(item => !item.locked).map(item => item.id);
 				state.descriptors = state.descriptors.filter(item => {
 					if (action.payload.keep) {
@@ -195,9 +195,9 @@ export const inspectorSlice = createSlice({
 			reducer(state, action: PayloadAction<{items: IDescriptor[]; kind: TImportItems}>) {
 				if (action.payload.kind === "append") {
 					action.payload.items.forEach(desc => desc.id = crypto.randomUUID());
-					state.descriptors = [...state.descriptors, ...action.payload.items] as any;
+					state.descriptors = [...state.descriptors, ...action.payload.items];
 				} else if (action.payload.kind === "replace") {
-					state.descriptors = action.payload.items as any;
+					state.descriptors = action.payload.items;
 				}
 			},
 			prepare(items: IDescriptor[], kind: TImportItems) {
@@ -421,7 +421,7 @@ export const inspectorSlice = createSlice({
 				}
 
 				if (type === "dom") {
-					data = getTreeDomInstanceLazy()({inspector: state as IInspectorState});
+					data = getTreeDomInstanceLazy()({inspector: state});
 				}
 
 				if (draftPart) {

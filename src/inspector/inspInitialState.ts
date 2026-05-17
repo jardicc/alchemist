@@ -3,8 +3,6 @@ import {getAtnInitialState} from "../atnDecoder/atnInitialState";
 import {IInspectorState} from "./model/types";
 import {getSorInitialState} from "../sorcerer/sorInitialState";
 
-
-
 export function getInitialState(): IInspectorState {
 	return {
 		version: [13, 0, 0],
@@ -80,7 +78,6 @@ export function getInitialState(): IInspectorState {
 
 				documentID: "selected",
 				filterDoc: "off",
-
 
 			},
 			layer: {
@@ -229,8 +226,8 @@ export function getInitialState(): IInspectorState {
 							group: "expermiental",
 							groupLabel: "Experimental",
 							data: [
-								{label:"vectorToolMode",value:"vectorToolMode"},
-							]
+								{label: "vectorToolMode", value: "vectorToolMode"},
+							],
 						},
 						{
 							group: "default",
@@ -429,8 +426,8 @@ export function getInitialState(): IInspectorState {
 							group: "expermiental",
 							groupLabel: "Experimental",
 							data: [
-								{label:"freeTransformWholePath",value:"freeTransformWholePath"},
-							]
+								{label: "freeTransformWholePath", value: "freeTransformWholePath"},
+							],
 						},
 						{
 							group: "default",
@@ -634,7 +631,7 @@ export function getInitialState(): IInspectorState {
 						{
 							group: "hidden",
 							groupLabel: "Hidden",
-							data: [							
+							data: [
 								{label: "adjustmentLayerIds", value: "adjustmentLayerIds"},
 								{label: "artboards", value: "artboards"},
 								{label: "contentCredentialsDebugInfo", value: "contentCredentialsDebugInfo"},

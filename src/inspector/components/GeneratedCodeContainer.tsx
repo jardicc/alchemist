@@ -5,7 +5,6 @@ import React from "react";
 import "./GeneratedCodeContainer.less";
 import SP from "react-uxp-spectrum";
 
-
 export const GeneratedCode: React.FC = () => {
 	const code = useAppSelector(getGeneratedCode);
 	return (

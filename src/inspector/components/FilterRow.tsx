@@ -6,7 +6,6 @@ import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getActiveRef} from "../selectors/inspectorSelectors";
 import {setFilterStateAction} from "../actions/inspectorActions";
 
-
 export const FilterRow: React.FC<IOwn> = (props) => {
 	const activeRef = useAppSelector(getActiveRef);
 	const dispatch = useAppDispatch();
@@ -25,12 +24,12 @@ export const FilterRow: React.FC<IOwn> = (props) => {
 	React.useEffect(() => {
 		if (!onUpdateList) {return;}
 		const flatValues = (initialItems ?? []).flatMap(item =>
-			"group" in item ? item.data.map((d: IPropertyItem) => d.value) : [(item as IPropertyItem).value],
+			"group" in item ? item.data.map((d: IPropertyItem) => d.value) : [(item).value],
 		);
 		const currentValues = Array.isArray(content) ? content : [content];
 		const hasUnresolved = currentValues.some(v => !flatValues.includes(v));
 		if (hasUnresolved) {
-			onUpdateList().then(newList => setList(newList ?? []));
+			onUpdateList().then(newList => { setList(newList ?? []); });
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -47,7 +46,7 @@ export const FilterRow: React.FC<IOwn> = (props) => {
 			{...props}
 			id={subtype}
 			selected={newContent}
-			onSelect={(id, value, toggleProperty) => onSelect(value, !!toggleProperty)}
+			onSelect={(id, value, toggleProperty) => { onSelect(value, !!toggleProperty); }}
 			onHeaderClick={async () => {
 				if (!onUpdateList) {
 					// setList(initialItems ?? []);

@@ -9,7 +9,6 @@ import {
 
 import {DocumentExtra} from "./DocumentExtra";
 
-
 export class GetList {
 	public static async getDocuments(): Promise<IFilterProperty<TDocumentReference>[]> {
 		console.log("get docs");
@@ -160,7 +159,6 @@ export class GetList {
 			desc,
 		]);
 
-
 		const childCount = result[0].numberOfChildren;
 		const desc2: ActionDescriptor[] = [];
 		for (let i = 1; i <= childCount; i++) {
@@ -215,6 +213,5 @@ export class GetList {
 		]);
 		return result[0].count;
 	}
-
 
 }

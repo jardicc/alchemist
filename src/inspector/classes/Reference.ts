@@ -6,8 +6,6 @@ export type TReferenceNonProp = INameReference<TClasses> | IDReference<TClasses>
 export type TClasses = "application" | "document" | "layer" | "path" | "channel" | "actionSet" | "action" | "command" |
 	"timeline" | "animationFrameClass" | "animationFrame" | "animationClass" | "historyState" | "snapshotClass" | "guide" | "animation";
 
-
-
 export interface IDReference<T extends TClasses> {
 	_ref: T,
 	_id: number
@@ -411,9 +409,7 @@ export class Reference {
 	}
 
 	private removeAllClasses(myClass: TClasses) {
-		this.ref = this.ref.filter(r => (("_ref" in r) && r._ref === myClass) === false);
+		this.ref = this.ref.filter(r => !(("_ref" in r) && r._ref === myClass));
 	}
-
-
 
 }

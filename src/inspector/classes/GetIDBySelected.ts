@@ -3,7 +3,6 @@ import {action, app} from "photoshop";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 import {TChannelReferenceValid, DocumentMode} from "../model/types";
 
-
 export class IDBySelected {
 
 	// "action" can be used to get target actions and commands but not the sets. We skip it here.
@@ -90,7 +89,6 @@ export class IDBySelected {
 		}
 		return null;
 	}
-
 
 	private static getActiveDocumentColorMode(docID?: number): DocumentMode {
 		if (typeof docID === "number") {

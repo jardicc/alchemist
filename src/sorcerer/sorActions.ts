@@ -21,4 +21,4 @@ export const assignSnippetToPanelAction = sorSlice.actions.assignSnippetToPanel;
 export const setHostApp = sorSlice.actions.setHostApp;
 
 type _SorActions = typeof sorSlice.actions;
-export type TSorActions = ReturnType<_SorActions[keyof _SorActions]> | PayloadAction<any, string>;
+export type TSorActions = ReturnType<_SorActions[keyof _SorActions]> | PayloadAction<any>;

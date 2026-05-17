@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 import {Main} from "../../shared/classes/Main";
 import {events} from "./StringIDs";
@@ -72,10 +72,10 @@ export class ListenerClass {
 			};
 			action.addNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66"}],ListenerClass.listenerAMHackCb);
 		}
-	
+
 		public static removeAMConverterHack() {
 			action.removeNotificationListener([{ event: "17d1f0b1-653d-11e0-ae3e-0800200c9a66"}], ListenerClass.listenerAMHackCb);
 		}
-	
+
 	*/
 }

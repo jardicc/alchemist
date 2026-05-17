@@ -19,12 +19,12 @@ export const ActionCommand: React.FC<IOwn> = ({actionCommand, parentSet, parentA
 	const selectedItems = useAppSelector(getSelectedItemsCommand);
 	const combinedUUID: [string, string, string] = [parentSet.__uuid__, parentAction.__uuid__, actionCommand.__uuid__];
 
-	const isSelected: boolean = !!selectedItems.find(item =>
+	const isSelected = !!selectedItems.find(item =>
 		item[0] === combinedUUID[0] &&
 		item[1] === combinedUUID[1] &&
 		item[2] === combinedUUID[2]);
 
-	const select = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const select = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
 
 		let operation: TSelectActionOperation = "replace";

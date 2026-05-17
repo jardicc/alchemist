@@ -29,7 +29,7 @@ function stringifyAndShrink(val: any, isWideLayout = false) {
 //const expandFirstLevel = (keyName:TPath, data:any, level:number):boolean => (level <= 1);
 
 function prepareDelta(value: any) {
-	if (value && value._t === "a") {
+	if (value?._t === "a") {
 		const res: any = {};
 		for (const key in value) {
 			if (key !== "_t") {

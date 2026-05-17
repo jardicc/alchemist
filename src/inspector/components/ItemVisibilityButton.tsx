@@ -7,7 +7,6 @@ import {TTargetReference} from "../model/types";
 import {IAccDropPostFixProps} from "./AccDrop";
 import {IconEye} from "../../shared/components/icons";
 
-
 interface IOwnProps {
 	value: TTargetReference
 }

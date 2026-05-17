@@ -181,7 +181,7 @@ export const getGeneratedCode = createSelector([
 		let strPinned = "";
 
 		if (treePath.length) {
-			 
+
 			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
 
@@ -189,7 +189,6 @@ export const getGeneratedCode = createSelector([
 
 		const strOptions = idt(stringifyObject(commandOptions, stringifyOptions));
 		const strDesc: string = stringifyObject(data, stringifyOptions);
-
 
 		const strExecModalImport = addModules ? qts(`const {executeAsModal} = require("photoshop").core;\n`) : "";
 		const strBatchPlayImport = addModules ? qts(`const {batchPlay} = require("photoshop").action;\n`) : "";
@@ -209,7 +208,6 @@ export const getGeneratedCode = createSelector([
 		if (shouldShowTokenify) {
 			banner += tokenifyInfo;
 		}
-
 
 		if (wrappers === "batchPlay") {
 			return (
@@ -358,7 +356,7 @@ export const getGeneratedCode2 = createSelector([
 		let strPinned = "";
 
 		if (treePath.length) {
-			 
+
 			strPinned = qts(`\n\nconst pinned = result${makeNicePropertyPath(treePath)};`);
 		}
 

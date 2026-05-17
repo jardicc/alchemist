@@ -5,7 +5,6 @@ import React from "react";
 import {IListenerNotifierFilter} from "../model/types";
 import SP from "react-uxp-spectrum";
 
-
 export const ListenerFilter: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const settings = useAppSelector(getListenerNotifierFilterSettings);

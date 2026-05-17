@@ -230,7 +230,7 @@ export const LeftColumn: React.FC = () => {
 		return (
 			allInViewDescriptors.map((d, index) => {
 				return (
-					<div className={"DescriptorItem"} key={index} ref={index === allInViewDescriptors.length - 1 ? lastDescRef as any : null}>
+					<div className={"DescriptorItem"} key={index} ref={index === allInViewDescriptors.length - 1 ? lastDescRef : null}>
 						<DescriptorItem descriptor={d} key={d.id} />
 					</div>
 				);
@@ -317,7 +317,7 @@ export const LeftColumn: React.FC = () => {
 			<div className="oneMore">
 				<Filters />
 				<div className="search">
-					<SP.Textfield placeholder="Search..." onInput={(e: any) => onSearch(e.currentTarget.value)} value={searchTerm || ""} quiet />
+					<SP.Textfield placeholder="Search..." onInput={(e: any) => { onSearch(e.currentTarget.value); }} value={searchTerm || ""} quiet />
 					<SP.Checkbox onChange={toggleDescGrouping} checked={groupDescriptors === "strict"}> <span className="groupLabel">Group</span></SP.Checkbox>
 				</div>
 				<div className="descriptorsWrapper" ref={wrapperDescRef} onClick={() => onSelect("none")}>

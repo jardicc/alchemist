@@ -12,7 +12,6 @@ export type TFontSizeSettings = "size-tiny" | "size-small" | "size-default" | "s
 /** These will build up reference */
 export type TSubTypes = "actionID" | "actionSetID" | "channelID" | "documentID" | "guideID" | "historyID" | "layerID" | "pathID" | "snapshotID" | "commandIndex" | "properties"
 
-
 export type TTargetReference = "listener" | "generator" |
 	"dispatcher" | "notifier" | "replies" | TPropertyClass;
 export type TPropertyClass = "application" | "historyState" | "snapshotClass" | "layer" | "path" | "channel" | "document" | "guide" |
@@ -20,7 +19,6 @@ export type TPropertyClass = "application" | "historyState" | "snapshotClass" | 
 export type TPropertyGroup = "hidden" | "optional" | "default" | "1st";
 export type ITreeDataTabs = "content" | "difference" | "reference" | "dom"
 export type TActiveInspectorTab = ITreeDataTabs;
-
 
 export type TGenericViewType = "tree" | "raw";
 export type TCodeViewType = "generated" | "options";
@@ -76,8 +74,6 @@ export type TSelectDescriptorOperation = "replace" | "add" | "subtract" | "addCo
 
 export type TProtoMode = "none" | "uxp" | "advanced" | "all";
 export type TDescriptorsGrouping = "none" | "eventName"
-
-
 
 export interface IInspectorState {
 	version: [number, number, number]
@@ -233,7 +229,6 @@ export interface IRefHistoryState {
 	historyID: number | "selected"
 	filterHistory: TFilterState
 
-
 	properties: string[]
 	filterProp: TFilterState
 }
@@ -264,9 +259,7 @@ export interface IDispatcher {
 	]
 }
 
-
 //////
-
 
 export interface IFilterProperty<T> {
 	label: string

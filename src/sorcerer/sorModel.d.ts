@@ -119,7 +119,6 @@ export interface IIcon {
 	species?: string[];
 }
 
-
 //		# Manifest V5 Permissions
 //		Manifest V5 Supports the following permissions in the root-level `requiredPermissions` field. This field is a map of keys and their associated values; it is not an array.
 //

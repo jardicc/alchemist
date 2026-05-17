@@ -16,7 +16,7 @@ export type GetItemString = (
 export type ValueRenderer = (
   displayValue: any,
   rawValue?: any,
-  nodeType?: TNodeType  ,
+  nodeType?: TNodeType,
   ...keyPath: KeyPath
 ) => React.ReactNode;
 

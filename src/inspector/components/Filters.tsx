@@ -19,7 +19,6 @@ import {setProperty, setSelectedReferenceTypeAction, setTargetReferenceAction} f
 import {cloneDeep} from "lodash";
 import {GetList} from "../classes/GetList";
 
-
 export const Filters: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const activeRef = useAppSelector(getActiveRef);
@@ -82,7 +81,6 @@ export const Filters: React.FC = () => {
 		if (activeRef.type === "path" && activeRef.pathID !== "vectorMask") {
 			return null;
 		}
-
 
 		return (
 			<FilterRow

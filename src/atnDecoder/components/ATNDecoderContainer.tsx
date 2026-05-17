@@ -19,7 +19,6 @@ import PS from "photoshop";
 import SP from "react-uxp-spectrum";
 import {ActionDescriptor} from "photoshop/dom/CoreModules";
 
-
 export const ATNDecoder: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const fontSizeSettings = useAppSelector(getFontSizeSettings);
@@ -69,7 +68,7 @@ export const ATNDecoder: React.FC = () => {
 	};
 
 	const pass = (replace = false) => {
-		// eslint-disable-next-line prefer-const
+
 		let cmds = selectedCommands;
 
 		onSelectAlchemistDescriptors("none");
@@ -129,8 +128,8 @@ export const ATNDecoder: React.FC = () => {
 			</div>
 			<div className="buttonBar">
 				{renderAddButton()}
-				<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => pass()}>Add to Alchemist</div>
-				<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => pass(true)}>Replace in Alchemist</div>
+				<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => { pass(); }}>Add to Alchemist</div>
+				<div className={"button " + (!selectedCommands.length ? "disallowed" : "")} onClick={() => { pass(true); }}>Replace in Alchemist</div>
 				<SP.Checkbox onChange={() => onSetDontSendDisabled(!dontSendDisabled)} checked={dontSendDisabled}>{"Don't send disabled"}</SP.Checkbox>
 				<div className="spread"></div>
 				<div className={"button " + (!data.length ? "disallowed" : "")} onClick={onClearAll}>Clear all</div>

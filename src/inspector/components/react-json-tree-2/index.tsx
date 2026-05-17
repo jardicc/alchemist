@@ -72,7 +72,7 @@ export function JSONTree({
 
 	const expandedPathsRef = useRef(new Map<string, boolean>());
 	const [, setRenderTick] = useState(0);
-	const handleToggle = useCallback(() => setRenderTick((t) => t + 1), []);
+	const handleToggle = useCallback(() => { setRenderTick((t) => t + 1); }, []);
 
 	const startTime = performance.now();
 	const {descriptors, renderItem} = flattenTree(

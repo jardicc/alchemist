@@ -1,5 +1,5 @@
 import React from "react";
-import {isKeyed, isIndexed, } from "immutable";
+import {isKeyed, isIndexed } from "immutable";
 
 const IS_IMMUTABLE_KEY = "@@__IS_IMMUTABLE__@@";
 

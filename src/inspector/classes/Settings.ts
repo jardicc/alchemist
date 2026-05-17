@@ -8,7 +8,6 @@ import {readFileSync} from "fs";
 type TFileSystemProvider = InstanceType<typeof storage.FileSystemProvider>;
 const localFileSystem: TFileSystemProvider = (storage as any).localFileSystem;
 
-
 export class Settings {
 	private static readonly settingsFilename = "settings.json";
 	private static saveTimeout: number;
@@ -105,7 +104,6 @@ export class Settings {
 
 			Settings.setSpectrumComponentSize(result.settings.fontSize);
 
-
 			// recordings should be off by default when plugin is loaded
 			result.settings.autoUpdateListener = false;
 			result.settings.autoUpdateInspector = false;
@@ -144,7 +142,7 @@ export class Settings {
 			allowMultiple: true,
 			//initialLocation: await Settings.settingsFolder()
 		});
-		if (!files || !files.length) {
+		if (!files?.length) {
 			return null;
 		}
 		const data: string = await files[0].read();

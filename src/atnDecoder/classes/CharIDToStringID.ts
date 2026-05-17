@@ -1,10 +1,5 @@
-interface ICharIDToStringID {
-	[key: string]: string
-}
-interface IStringIDToCharID {
-	[key: string]: string
-}
-
+type ICharIDToStringID = Record<string, string>;
+type IStringIDToCharID = Record<string, string>;
 
 export const charIDToStringID: ICharIDToStringID = {
 	"ldbl": "128BitFloatingPoint",
@@ -1980,7 +1975,6 @@ export const charIDToStringID: ICharIDToStringID = {
 	"Flas": "Flash",
 
 };
-
 
 export const stringIDtoCharID: IStringIDToCharID = {
 	"128BitFloatingPoint": "ldbl",

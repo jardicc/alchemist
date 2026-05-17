@@ -13,7 +13,6 @@ import {TreePath} from "./TreePath";
 import SP from "react-uxp-spectrum";
 import {KeyPath, TLabelRenderer} from "./react-json-tree-2/types";
 
-
 export const TreeContent: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const content = useAppSelector(getTreeContent);
@@ -68,16 +67,16 @@ export const TreeContent: React.FC = () => {
 						{(content === undefined || content === null) ?
 							<div className="message">Content is missing. Please make sure that your selected descriptor and your pinned property exists</div>
 							:
-								<JSONTree
-									expandClicked={expandClicked}
-									labelRenderer={labelRendererFn}
-									shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
-									data={content}
-									getItemString={getItemStringFn} // shows object content shortcut
-									hideRoot={true}
-									sortObjectKeys={true}
-									protoMode={protoMode}
-								/>
+							<JSONTree
+								expandClicked={expandClicked}
+								labelRenderer={labelRendererFn}
+								shouldExpandNode={shouldExpandNode(expandedKeys, autoExpandLevels, true)}
+								data={content}
+								getItemString={getItemStringFn} // shows object content shortcut
+								hideRoot={true}
+								sortObjectKeys={true}
+								protoMode={protoMode}
+							/>
 						}
 					</div>
 				</div>
@@ -101,4 +100,3 @@ export const TreeContent: React.FC = () => {
 		</TabList>
 	);
 };
-

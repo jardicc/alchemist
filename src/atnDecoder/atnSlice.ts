@@ -31,7 +31,7 @@ export const atnSlice = createSlice({
 					if (indexOf === -1) {
 						state.atnConverter.expandedItems.push(uuid);
 						if (recursive && uuid.length === 1) {
-							const found = getSetByUUID(state as IInspectorState, uuid[0]);
+							const found = getSetByUUID(state, uuid[0]);
 							if (found) {
 								const rest: TExpandedItem[] = found.actionItems.map(item => [item.__uuidParentSet__, item.__uuid__]);
 								state.atnConverter.expandedItems.push(...rest);
@@ -42,7 +42,7 @@ export const atnSlice = createSlice({
 					if (indexOf !== -1) {
 						state.atnConverter.expandedItems.splice(indexOf, 1);
 						if (recursive && uuid.length === 1) {
-							const found = getSetByUUID(state as IInspectorState, uuid[0]);
+							const found = getSetByUUID(state, uuid[0]);
 							if (found) {
 								const rest: string[] = found.actionItems.map(item => [item.__uuidParentSet__, item.__uuid__].join("|"));
 								rest.forEach(itm => {
@@ -85,13 +85,13 @@ export const atnSlice = createSlice({
 					});
 
 					actions.forEach(a => {
-						data.forEach(ss => ss.actionItems.forEach(si => {
+						data.forEach(ss => { ss.actionItems.forEach(si => {
 							if (si.__uuid__ === a[1]) {
 								si.commands.forEach(sc => {
 									commands.push([ss.__uuid__, si.__uuid__, sc.__uuid__]);
 								});
 							}
-						}));
+						}); });
 					});
 
 					const all = [...sets, ...actions, ...commands];
@@ -101,7 +101,7 @@ export const atnSlice = createSlice({
 				if (operation === "none") {
 					state.atnConverter.selectedItems = [];
 				} else if (operation === "replace" && uuid?.length) {
-					state.atnConverter.selectedItems = addChilds([uuid]) as any;
+					state.atnConverter.selectedItems = addChilds([uuid]);
 				} else if (operation === "subtract" && uuid?.length) {
 					const all = addChilds([uuid]).map(item => item.join("|"));
 					all.forEach(itemFromAll => {
@@ -111,7 +111,7 @@ export const atnSlice = createSlice({
 						}
 					});
 				} else if (operation === "add" && uuid?.length) {
-					state.atnConverter.selectedItems = [...state.atnConverter.selectedItems, ...addChilds([uuid])] as any;
+					state.atnConverter.selectedItems = [...state.atnConverter.selectedItems, ...addChilds([uuid])];
 				}
 
 				state.atnConverter.lastSelected = uuid || getInitialState().atnConverter.lastSelected;

@@ -1,18 +1,14 @@
 import React, {ComponentType, ReactElement} from "react";
-import {IconChevronBottom, IconChevronRight, IconChevronTop} from "../../shared/components/icons";
 import {IPropertyGroup, IPropertyItem} from "../model/types";
 import SP from "react-uxp-spectrum";
 import "./AccDrop.less";
 import {getIcon} from "../helpers";
-import {sleep} from "../../shared/helpers";
 
 export interface IAccDropPostFixProps {
 	value: string
 }
 
-export interface IAccDropIcons {
-	[key: string]: JSX.Element
-}
+export type IAccDropIcons = Record<string, JSX.Element>;
 
 export interface IAccDropProps {
 	id: string
@@ -32,18 +28,7 @@ export interface IAccDropProps {
 	icons?: boolean // exists only for main type
 }
 
-export interface IAccDropDispatch {
-
-}
-
-interface IAccDropState {
-	searchValue: string
-	open: boolean
-}
-
-export type TAccDrop = IAccDropProps & IAccDropDispatch
-
-export const AccDrop: React.FC<TAccDrop> = (props) => {
+export const AccDrop: React.FC<IAccDropProps> = (props) => {
 	const searchRef = React.useRef<HTMLDivElement>(null);
 	const popoverRef = React.useRef<HTMLDivElement>(null);
 
@@ -69,7 +54,6 @@ export const AccDrop: React.FC<TAccDrop> = (props) => {
 
 		setOpen(!opened);
 	};
-
 
 	const getLabel = () => {
 
@@ -130,7 +114,6 @@ export const AccDrop: React.FC<TAccDrop> = (props) => {
 					onChange={(e) => {
 						console.log(e);
 
-
 					}}
 					onInput={(e) => {
 						console.log(e);
@@ -152,7 +135,7 @@ export const AccDrop: React.FC<TAccDrop> = (props) => {
 					className="item"
 					key={"i_" + item.value + id}
 					onClick={async (e) => {
-						e.stopPropagation();						
+						e.stopPropagation();
 						if (e.ctrlKey || e.metaKey) {
 							onSelect(id, item.value, true);
 						} else {
@@ -229,7 +212,6 @@ export const AccDrop: React.FC<TAccDrop> = (props) => {
 
 				{headerPostFix}
 			</div>
-
 
 		</div>
 

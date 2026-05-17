@@ -8,6 +8,6 @@ export { };
 declare global {
 	interface Window {
 		Main: Main;
-		_rootStore: Store<IRootState, UnknownAction>
+		_rootStore: Store<IRootState>
 	}
 }

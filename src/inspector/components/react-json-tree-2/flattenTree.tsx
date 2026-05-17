@@ -396,7 +396,7 @@ export function flattenTree(
 	value: unknown,
 	keyPath: KeyPath,
 	options: FlattenTreeOptions,
-	level: number = 0,
+	level = 0,
 ): FlattenResult {
 	const descriptors: RowDescriptor[] = [];
 	const circularCache = new Set<unknown>();

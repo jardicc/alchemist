@@ -9,7 +9,6 @@ export const guessOriginalReference = (refAM: TReference[]): TAllTargetReference
 
 	// TODO - fix this. Add mechanism to convert any reference to ID reference
 
-
 	if (!r.targetClass) {
 		return null;
 	}
