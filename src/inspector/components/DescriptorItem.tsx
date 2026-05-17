@@ -1,6 +1,6 @@
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import cloneDeep from "lodash/cloneDeep";
-import {selectDescriptorAction, renameDescriptorAction, setRenameModeAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import {IDescriptor, TSelectDescriptorOperation} from "../model/types";
 import {getAutoSelectedUUIDs} from "../selectors/inspectorSelectors";
 import React from "react";
@@ -13,13 +13,15 @@ interface IDescriptorItemProps {
 	descriptor: IDescriptor
 }
 
+const {selectDescriptor, renameDescriptor, setRenameMode} = inspectorSlice.actions;
+
 export const DescriptorItem: React.FC<IDescriptorItemProps> = ({descriptor: descriptorProp}) => {
 	const descriptor = cloneDeep(descriptorProp);
 	const dispatch = useAppDispatch();
 	const autoSelectedUUIDs = useAppSelector(getAutoSelectedUUIDs);
-	const onSelect = (uuid: string, operation: TSelectDescriptorOperation, crcVal?: number) => dispatch(selectDescriptorAction(operation, uuid, crcVal));
-	const onChangeName = (uuid: string, name: string) => dispatch(renameDescriptorAction(uuid, name));
-	const setRenameMode = (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid, on));
+	const onSelect = (uuid: string, operation: TSelectDescriptorOperation, crcVal?: number) => dispatch(selectDescriptor(operation, uuid, crcVal));
+	const onChangeName = (uuid: string, name: string) => dispatch(renameDescriptor(uuid, name));
+	const onSetRenameMode = (uuid: string, on: boolean) => dispatch(setRenameMode(uuid, on));
 
 	const [tempName, setTempName] = React.useState(descriptor.title);
 
@@ -56,10 +58,10 @@ export const DescriptorItem: React.FC<IDescriptorItemProps> = ({descriptor: desc
 
 	const rename = () => {
 		onChangeName(descriptor.id, tempName);
-		setRenameMode(descriptor.id, false);
+		onSetRenameMode(descriptor.id, false);
 	};
 	const cancel = () => {
-		setRenameMode(descriptor.id, false);
+		onSetRenameMode(descriptor.id, false);
 	};
 
 	const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

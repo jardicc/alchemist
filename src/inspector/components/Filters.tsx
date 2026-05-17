@@ -14,9 +14,10 @@ import {
 } from "../selectors/inspectorSelectors";
 import {ItemVisibilityButtonWrap} from "./ItemVisibilityButton";
 import {FilterRow} from "./FilterRow";
-import {setProperty, setSelectedReferenceTypeAction, setTargetReferenceAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import {GetList} from "../classes/GetList";
 
+const {setProperty, setSelectedReferenceType, setTargetReference} = inspectorSlice.actions;
 
 export const Filters: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -24,8 +25,8 @@ export const Filters: React.FC = () => {
 	const filterBySelectedReferenceType = useAppSelector(getFilterBySelectedReferenceType);
 	const activeRefProperties = useAppSelector(getPropertiesListForActiveRef);
 
-	const onSetSelectedReferenceType = (type: TTargetReference) => dispatch(setSelectedReferenceTypeAction(type));
-	const onSetTargetReference = (arg: Partial<TAllTargetReferences>) => dispatch(setTargetReferenceAction(arg));
+	const onSetSelectedReferenceType = (type: TTargetReference) => dispatch(setSelectedReferenceType(type));
+	const onSetTargetReference = (arg: Partial<TAllTargetReferences>) => dispatch(setTargetReference(arg));
 	const onSetProperty = (value: string | number, toggle: boolean) => dispatch(setProperty(value, toggle));
 
 	const showDocument = activeRef.type === "channel" || activeRef.type === "document" || activeRef.type === "guide" || activeRef.type === "layer" || activeRef.type === "path";

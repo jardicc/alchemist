@@ -1,7 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IInspectorState} from "../inspector/model/types";
-import {getInitialState} from "../inspector/inspInitialState";
-import {Settings} from "../inspector/classes/Settings";
 import {makeSorCommand, makeSorPanel, makeSorSnippet} from "./sorInitialState";
 import {
 	IEntrypointCommand, IEntrypointPanel, IHost, IManifestInfo, ISnippet, ISorcererState,
@@ -147,5 +145,3 @@ export const sorSlice = createSlice({
 		},
 	},
 });
-
-export const sorSliceReducer = sorSlice.reducer;

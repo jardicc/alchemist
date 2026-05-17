@@ -3,11 +3,13 @@ import "./ActionItem.less";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getExpandedItemsAction, getSelectedItemsAction} from "../atnSelectors";
-import {setExpandActionAction, setSelectActionAction} from "../atnActions";
-import {IActionItemUUID, IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem} from "../atnModel";
+import {IActionItemUUID, IActionSetUUID, TSelectActionOperation} from "../atnModel";
 import {ActionCommand} from "./ActionCommand";
-import {IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty} from "../../shared/components/icons";
+import {IconCheck, IconChevronBottom, IconChevronRight, IconEmpty} from "../../shared/components/icons";
 import PS from "photoshop";
+import {atnSlice} from "../atnSlice";
+
+const { expandAction, selectAction} = atnSlice.actions;
 
 interface IOwn {
 	actionItem: IActionItemUUID
@@ -40,14 +42,14 @@ export const ActionItem: React.FC<IOwn> = ({actionItem, parent: parentSet}) => {
 				operation = "add";
 			}
 		}
-		dispatch(setSelectActionAction(operation, combinedUUID));
+		dispatch(selectAction(operation, combinedUUID));
 	};
 
 	const isExpanded = expandedItems.flat().includes(actionItem.__uuid__);
 
 	const onExpand = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
-		dispatch(setExpandActionAction([parentSet.__uuid__, actionItem.__uuid__], !isExpanded));
+		dispatch(expandAction([parentSet.__uuid__, actionItem.__uuid__], !isExpanded));
 	};
 
 	return (

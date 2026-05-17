@@ -4,12 +4,14 @@ import {FilterButton, TFilterState} from "./FilterButton";
 import {TSubTypes, IPropertyItem, IPropertyGroup, TTargetReference, TAllTargetReferences} from "../model/types";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getActiveRef} from "../selectors/inspectorSelectors";
-import {setFilterStateAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
+
+const {setFilterState} = inspectorSlice.actions;
 
 export const FilterRow: React.FC<IFilterRowProps> = (props) => {
 	const activeRef = useAppSelector(getActiveRef);
 	const dispatch = useAppDispatch();
-	const onSetFilter = (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => dispatch(setFilterStateAction(type, subType, state));
+	const onSetFilter = (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => dispatch(setFilterState(type, subType, state));
 
 	const {value: content, subtype, filterBy, onSelect, onUpdateList, initialItems, items} = props;
 	const [list, setListState] = React.useState<(IPropertyItem | IPropertyGroup)[]>(initialItems ?? []);

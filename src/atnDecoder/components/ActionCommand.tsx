@@ -2,19 +2,21 @@ import "./ActionCommand.less";
 
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {setSelectActionAction} from "../atnActions";
 import {getSelectedItemsCommand} from "../atnSelectors";
-import {IActionCommandUUID, IActionItemUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
+import {IActionCommandUUID, IActionItemUUID, IActionSetUUID, TSelectActionOperation} from "../atnModel";
 import {IconCheck, IconEmpty} from "../../shared/components/icons";
 import PS from "photoshop";
+import {atnSlice} from "../atnSlice";
 
-interface IOwn {
+const { selectAction } = atnSlice.actions;
+
+interface IActionCommandProps {
 	actionCommand: IActionCommandUUID
 	parentSet: IActionSetUUID
 	parentAction: IActionItemUUID
 }
 
-export const ActionCommand: React.FC<IOwn> = ({actionCommand, parentSet, parentAction}) => {
+export const ActionCommand: React.FC<IActionCommandProps> = ({actionCommand, parentSet, parentAction}) => {
 	const dispatch = useAppDispatch();
 	const selectedItems = useAppSelector(getSelectedItemsCommand);
 	const combinedUUID: [string, string, string] = [parentSet.__uuid__, parentAction.__uuid__, actionCommand.__uuid__];
@@ -40,7 +42,7 @@ export const ActionCommand: React.FC<IOwn> = ({actionCommand, parentSet, parentA
 				operation = "add";
 			}
 		}
-		dispatch(setSelectActionAction(operation, combinedUUID));
+		dispatch(selectAction(operation, combinedUUID));
 	};
 
 	return (

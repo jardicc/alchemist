@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @jest-environment jsdom
  *
  * Coverage-driving tests for selectors that aren't exercised by
@@ -29,34 +29,41 @@ import {getInitialState} from "../inspector/inspInitialState";
 import {inspectorReducer} from "../inspector/reducers/reducer";
 import {IInspectorState, IDescriptor} from "../inspector/model/types";
 import {IRootState} from "../shared/store";
+import {IActionSetUUID} from "../atnDecoder/atnModel";
+import {inspectorSlice} from "../inspector/inspectorSlice";
+import {atnSlice} from "../atnDecoder/atnSlice";
+import {sorSlice} from "../sorcerer/sorSlice";
 
-import {
-	addDescriptorAction,
-	lockDescAction,
-	pinDescAction,
-	selectDescriptorAction,
-	setColumnSizeAction,
-	setFilterStateAction,
-	setListenerNotifierFilterAction,
-	setModeTabAction,
-	setNeverRecordActionNamesAction,
-	setSelectedReferenceTypeAction,
-	setSettingsAction,
-	toggleDescriptorsGroupingAction,
-	setSearchTermAction,
-} from "../inspector/actions/inspectorActions";
+const {
+	addDescriptor,
+	lockDesc,
+	pinDesc,
+	selectDescriptor,
+	setColumnSize,
+	setFilterState,
+	setListenerNotifierFilter,
+	setModeTab,
+	setNeverRecordActionNames,
+	setSelectedReferenceType,
+	setSettings,
+	toggleDescriptorsGrouping,
+	setSearchTerm,
+} = inspectorSlice.actions;
 
-import {setDataAction, setSelectActionAction, setExpandActionAction} from "../atnDecoder/atnActions";
-import {
-	makeAction as makeSorAction,
-	setSelectAction as setSorSelectAction,
-} from "../sorcerer/sorActions";
+const {
+	setData,
+	selectAction,
+	expandAction,
+} = atnSlice.actions;
+
+const {
+	make,
+	select,
+} = sorSlice.actions;
 
 import * as Insp from "../inspector/selectors/inspectorSelectors";
 import * as Atn from "../atnDecoder/atnSelectors";
 import * as Sor from "../sorcerer/sorSelectors";
-
-import {IActionSetUUID} from "../atnDecoder/atnModel";
 
 let _crc = 9000;
 function desc(id: string, overrides: Partial<IDescriptor> = {}): IDescriptor {
@@ -109,7 +116,7 @@ function reduceAll(actions: Array<Parameters<typeof inspectorReducer>[1]>): IIns
 describe("inspectorSelectors â€“ simple slices", () => {
 	test("getFilterBySelectedReferenceType / getTargetReference / getAutoUpdate", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
+			setFilterState("layer", "main", "off"),
 		]));
 		// SET_FILTER_STATE("main", "off") -> reducer toggles flag to "on"
 		expect(Insp.getFilterBySelectedReferenceType(root)).toBe("on");
@@ -125,22 +132,22 @@ describe("inspectorSelectors â€“ simple slices", () => {
 
 	test("getLeftColumnWidth / getRightColumnWidth reflect SET_COLUMN_SIZE", () => {
 		const root = asRoot(reduceAll([
-			setColumnSizeAction(450, "left"),
-			setColumnSizeAction(123, "right"),
+			setColumnSize(450, "left"),
+			setColumnSize(123, "right"),
 		]));
 		expect(Insp.getLeftColumnWidth(root)).toBe(450);
 		expect(Insp.getRightColumnWidth(root)).toBe(123);
 	});
 
-	test("getNeverRecordActionNames reflects setNeverRecordActionNamesAction", () => {
+	test("getNeverRecordActionNames reflects setNeverRecordActionNames", () => {
 		const root = asRoot(reduceAll([
-			setNeverRecordActionNamesAction("a\nb\nc"),
+			setNeverRecordActionNames("a\nb\nc"),
 		]));
 		expect(Insp.getNeverRecordActionNames(root)).toEqual(["a", "b", "c"]);
 	});
 
 	test("getPropertiesListForActiveRef returns settings for the active ref type", () => {
-		const root = asRoot(reduceAll([setSelectedReferenceTypeAction("layer")]));
+		const root = asRoot(reduceAll([setSelectedReferenceType("layer")]));
 		const settings = Insp.getPropertiesListForActiveRef(root);
 		expect(settings?.type).toBe("layer");
 	});
@@ -152,21 +159,21 @@ describe("inspectorSelectors â€“ simple slices", () => {
 
 describe("getListenerNotifierFilterSettings", () => {
 	test("returns listenerFilter for listener", () => {
-		const root = asRoot(reduceAll([setSelectedReferenceTypeAction("listener")]));
+		const root = asRoot(reduceAll([setSelectedReferenceType("listener")]));
 		expect(Insp.getListenerNotifierFilterSettings(root)).toBe(
 			root.inspector.settings.listenerFilter,
 		);
 	});
 
 	test("returns notifierFilter for notifier", () => {
-		const root = asRoot(reduceAll([setSelectedReferenceTypeAction("notifier")]));
+		const root = asRoot(reduceAll([setSelectedReferenceType("notifier")]));
 		expect(Insp.getListenerNotifierFilterSettings(root)).toBe(
 			root.inspector.settings.notifierFilter,
 		);
 	});
 
 	test("throws for any other reference type", () => {
-		const root = asRoot(reduceAll([setSelectedReferenceTypeAction("layer")]));
+		const root = asRoot(reduceAll([setSelectedReferenceType("layer")]));
 		expect(() => Insp.getListenerNotifierFilterSettings(root)).toThrow();
 	});
 });
@@ -184,10 +191,10 @@ describe("getDescriptorsListView", () => {
 
 	test("rootFilter 'off' returns all descriptors (pinned moved to bottom)", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("a", {pinned: false}), false),
-			addDescriptorAction(desc("b", {pinned: true}), false),
-			addDescriptorAction(desc("c", {pinned: false}), false),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("a", {pinned: false}), false),
+			addDescriptor(desc("b", {pinned: true}), false),
+			addDescriptor(desc("c", {pinned: false}), false),
 		]));
 		const view = Insp.getDescriptorsListView(root);
 		expect(view.map(d => d.id)).toEqual(["a", "c", "b"]);
@@ -195,11 +202,11 @@ describe("getDescriptorsListView", () => {
 
 	test("searchTerm filters by title (case-insensitive)", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("Alpha"), false),
-			addDescriptorAction(desc("Beta"), false),
-			addDescriptorAction(desc("Bravo"), false),
-			setSearchTermAction("b"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("Alpha"), false),
+			addDescriptor(desc("Beta"), false),
+			addDescriptor(desc("Bravo"), false),
+			setSearchTerm("b"),
 		]));
 		const ids = Insp.getDescriptorsListView(root).map(d => d.id);
 		expect(ids.sort()).toEqual(["Beta", "Bravo"]);
@@ -210,10 +217,10 @@ describe("getDescriptorsListView", () => {
 		const dup1 = desc("d1");
 		const dup2: IDescriptor = {...desc("d2"), crc: dup1.crc};
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			toggleDescriptorsGroupingAction("strict"),
-			addDescriptorAction(dup1, false),
-			addDescriptorAction(dup2, false),
+			setFilterState("layer", "main", "off"),
+			toggleDescriptorsGrouping("strict"),
+			addDescriptor(dup1, false),
+			addDescriptor(dup2, false),
 		]));
 		const view = Insp.getDescriptorsListView(root);
 		expect(view).toHaveLength(1);
@@ -222,12 +229,12 @@ describe("getDescriptorsListView", () => {
 
 	test("listener exclude filter drops matching recordedData._obj", () => {
 		const root = asRoot(reduceAll([
-			setSelectedReferenceTypeAction("listener"),
-			setFilterStateAction("listener", "main", "on"),
-			setListenerNotifierFilterAction({type: "exclude", exclude: ["make"], include: []}),
-			toggleDescriptorsGroupingAction("none"),
-			addDescriptorAction(desc("keep", {recordedData: {_obj: "open"} as any, originalReference: {type: "listener"} as any}), false),
-			addDescriptorAction(desc("drop", {recordedData: {_obj: "make"} as any, originalReference: {type: "listener"} as any}), false),
+			setSelectedReferenceType("listener"),
+			setFilterState("listener", "main", "on"),
+			setListenerNotifierFilter({type: "exclude", exclude: ["make"], include: []}),
+			toggleDescriptorsGrouping("none"),
+			addDescriptor(desc("keep", {recordedData: {_obj: "open"} as any, originalReference: {type: "listener"} as any}), false),
+			addDescriptor(desc("drop", {recordedData: {_obj: "make"} as any, originalReference: {type: "listener"} as any}), false),
 		]));
 		const ids = Insp.getDescriptorsListView(root).map(d => d.id);
 		expect(ids).toEqual(["keep"]);
@@ -235,12 +242,12 @@ describe("getDescriptorsListView", () => {
 
 	test("listener include filter keeps only matching recordedData._obj", () => {
 		const root = asRoot(reduceAll([
-			setSelectedReferenceTypeAction("listener"),
-			setFilterStateAction("listener", "main", "on"),
-			setListenerNotifierFilterAction({type: "include", exclude: [], include: ["make"]}),
-			toggleDescriptorsGroupingAction("none"),
-			addDescriptorAction(desc("keep", {recordedData: {_obj: "make"} as any, originalReference: {type: "listener"} as any}), false),
-			addDescriptorAction(desc("drop", {recordedData: {_obj: "open"} as any, originalReference: {type: "listener"} as any}), false),
+			setSelectedReferenceType("listener"),
+			setFilterState("listener", "main", "on"),
+			setListenerNotifierFilter({type: "include", exclude: [], include: ["make"]}),
+			toggleDescriptorsGrouping("none"),
+			addDescriptor(desc("keep", {recordedData: {_obj: "make"} as any, originalReference: {type: "listener"} as any}), false),
+			addDescriptor(desc("drop", {recordedData: {_obj: "open"} as any, originalReference: {type: "listener"} as any}), false),
 		]));
 		const ids = Insp.getDescriptorsListView(root).map(d => d.id);
 		expect(ids).toEqual(["keep"]);
@@ -258,20 +265,20 @@ describe("auto-active descriptors and derived flags", () => {
 
 	test("getActiveDescriptors returns descriptors with selected=true", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			addDescriptorAction(desc("d2"), false),
-			selectDescriptorAction("replace", "d2"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			addDescriptor(desc("d2"), false),
+			selectDescriptor("replace", "d2"),
 		]));
 		expect(Insp.getActiveDescriptors(root).map(d => d.id)).toEqual(["d2"]);
 	});
 
 	test("getAutoActiveDescriptor picks the last item when nothing is selected", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			addDescriptorAction(desc("d2"), false),
-			addDescriptorAction(desc("d3"), false),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			addDescriptor(desc("d2"), false),
+			addDescriptor(desc("d3"), false),
 		]));
 		expect(Insp.getAutoActiveDescriptor(root)?.id).toBe("d3");
 		expect(Insp.getHasAutoActiveDescriptor(root)).toBe(true);
@@ -279,9 +286,9 @@ describe("auto-active descriptors and derived flags", () => {
 
 	test("getAutoActiveDescriptor returns null when there is an explicit selection", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			selectDescriptorAction("replace", "d1"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			selectDescriptor("replace", "d1"),
 		]));
 		expect(Insp.getAutoActiveDescriptor(root)).toBeNull();
 		expect(Insp.getHasAutoActiveDescriptor(root)).toBe(false);
@@ -289,29 +296,29 @@ describe("auto-active descriptors and derived flags", () => {
 
 	test("getSecondaryAutoActiveDescriptor picks the second-to-last item", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("a"), false),
-			addDescriptorAction(desc("b"), false),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("a"), false),
+			addDescriptor(desc("b"), false),
 		]));
 		expect(Insp.getSecondaryAutoActiveDescriptor(root)?.id).toBe("a");
 	});
 
 	test("getAutoSelectedUUIDs in difference mode returns both primary and secondary", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			setModeTabAction("difference"),
-			addDescriptorAction(desc("a"), false),
-			addDescriptorAction(desc("b"), false),
+			setFilterState("layer", "main", "off"),
+			setModeTab("difference"),
+			addDescriptor(desc("a"), false),
+			addDescriptor(desc("b"), false),
 		]));
 		expect(Insp.getAutoSelectedUUIDs(root).sort()).toEqual(["a", "b"]);
 	});
 
 	test("getAutoSelectedUUIDs outside difference mode returns only primary", () => {
 		const root = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			setModeTabAction("content"),
-			addDescriptorAction(desc("a"), false),
-			addDescriptorAction(desc("b"), false),
+			setFilterState("layer", "main", "off"),
+			setModeTab("content"),
+			addDescriptor(desc("a"), false),
+			addDescriptor(desc("b"), false),
 		]));
 		expect(Insp.getAutoSelectedUUIDs(root)).toEqual(["b"]);
 	});
@@ -323,26 +330,26 @@ describe("auto-active descriptors and derived flags", () => {
 
 		// auto-active -> json of the last item
 		const auto = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
 		]));
 		expect(Insp.getActiveDescriptorOriginalReference(auto)).toContain('"type"');
 
 		// one selected -> json
 		const one = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			selectDescriptorAction("replace", "d1"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			selectDescriptor("replace", "d1"),
 		]));
 		expect(Insp.getActiveDescriptorOriginalReference(one)).toContain('"type"');
 
 		// more than one selected -> hint
 		const many = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			addDescriptorAction(desc("d2"), false),
-			selectDescriptorAction("replace", "d1"),
-			selectDescriptorAction("add", "d2"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			addDescriptor(desc("d2"), false),
+			selectDescriptor("replace", "d1"),
+			selectDescriptor("add", "d2"),
 		]));
 		expect(Insp.getActiveDescriptorOriginalReference(many)).toBe("Select 1 descriptor");
 	});
@@ -355,18 +362,18 @@ describe("auto-active descriptors and derived flags", () => {
 
 		// selected non-replies descriptor -> true
 		const ok = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			selectDescriptorAction("replace", "d1"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			selectDescriptor("replace", "d1"),
 		]));
 		expect(Insp.getReplayEnabled(ok)).toBe(true);
 		expect(Insp.getCopyToClipboardEnabled(ok)).toBe(true);
 
 		// selected "replies" descriptor -> false
 		const replies = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1", {originalReference: {type: "replies"} as any}), false),
-			selectDescriptorAction("replace", "d1"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1", {originalReference: {type: "replies"} as any}), false),
+			selectDescriptor("replace", "d1"),
 		]));
 		expect(Insp.getReplayEnabled(replies)).toBe(false);
 	});
@@ -377,40 +384,40 @@ describe("auto-active descriptors and derived flags", () => {
 
 		// 1 selected -> true
 		const one = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			selectDescriptorAction("replace", "d1"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			selectDescriptor("replace", "d1"),
 		]));
 		expect(Insp.getRanameEnabled(one)).toBe(true);
 
 		// 2 selected -> false
 		const two = asRoot(reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
-			addDescriptorAction(desc("d2"), false),
-			selectDescriptorAction("replace", "d1"),
-			selectDescriptorAction("add", "d2"),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
+			addDescriptor(desc("d2"), false),
+			selectDescriptor("replace", "d1"),
+			selectDescriptor("add", "d2"),
 		]));
 		expect(Insp.getRanameEnabled(two)).toBe(false);
 	});
 
 	test("getAddAllowed: true for normal layer ref, false for listener/dispatcher/notifier/replies, true for generator", () => {
-		const layer = asRoot(reduceAll([setSelectedReferenceTypeAction("layer")]));
+		const layer = asRoot(reduceAll([setSelectedReferenceType("layer")]));
 		expect(Insp.getAddAllowed(layer)).toBe(true);
 
-		const listener = asRoot(reduceAll([setSelectedReferenceTypeAction("listener")]));
+		const listener = asRoot(reduceAll([setSelectedReferenceType("listener")]));
 		expect(Insp.getAddAllowed(listener)).toBe(false);
 
-		const dispatcher = asRoot(reduceAll([setSelectedReferenceTypeAction("dispatcher")]));
+		const dispatcher = asRoot(reduceAll([setSelectedReferenceType("dispatcher")]));
 		expect(Insp.getAddAllowed(dispatcher)).toBe(false);
 
-		const notifier = asRoot(reduceAll([setSelectedReferenceTypeAction("notifier")]));
-		expect(Insp.getAddAllowed(notifier)).toBe(false);
+		const inspector = asRoot(reduceAll([setSelectedReferenceType("notifier")]));
+		expect(Insp.getAddAllowed(inspector)).toBe(false);
 
-		const replies = asRoot(reduceAll([setSelectedReferenceTypeAction("replies")]));
+		const replies = asRoot(reduceAll([setSelectedReferenceType("replies")]));
 		expect(Insp.getAddAllowed(replies)).toBe(false);
 
-		const generator = asRoot(reduceAll([setSelectedReferenceTypeAction("generator")]));
+		const generator = asRoot(reduceAll([setSelectedReferenceType("generator")]));
 		expect(Insp.getAddAllowed(generator)).toBe(true);
 	});
 });
@@ -422,8 +429,8 @@ describe("auto-active descriptors and derived flags", () => {
 describe("memoization sanity (additional selectors)", () => {
 	test("getDescriptorsListView returns the same reference for the same state", () => {
 		const state = reduceAll([
-			setFilterStateAction("layer", "main", "off"),
-			addDescriptorAction(desc("d1"), false),
+			setFilterState("layer", "main", "off"),
+			addDescriptor(desc("d1"), false),
 		]);
 		const root = asRoot(state);
 		jest.spyOn(console, "log").mockImplementation(() => undefined);
@@ -431,7 +438,7 @@ describe("memoization sanity (additional selectors)", () => {
 	});
 
 	test("getAddAllowed memoizes on same state reference", () => {
-		const root = asRoot(reduceAll([setSelectedReferenceTypeAction("layer")]));
+		const root = asRoot(reduceAll([setSelectedReferenceType("layer")]));
 		expect(Insp.getAddAllowed(root)).toBe(Insp.getAddAllowed(root));
 	});
 });
@@ -442,7 +449,7 @@ describe("memoization sanity (additional selectors)", () => {
 
 describe("atn selectors â€“ additional branches", () => {
 	test("getSetByUUID returns null for unknown uuid", () => {
-		const root = asRoot(reduceAll([setDataAction([atnSet("alpha")])]));
+		const root = asRoot(reduceAll([setData([atnSet("alpha")])]));
 		expect(Atn.getSetByUUID(root.inspector, "alpha")?.__uuid__).toBe("alpha");
 		expect(Atn.getSetByUUID(root.inspector, "nope")).toBeNull();
 	});
@@ -453,15 +460,15 @@ describe("atn selectors â€“ additional branches", () => {
 	});
 
 	test("getTextData reports 'select some item' when data exists but nothing is selected", () => {
-		const root = asRoot(reduceAll([setDataAction([atnSet("alpha")])]));
+		const root = asRoot(reduceAll([setData([atnSet("alpha")])]));
 		expect(Atn.getTextData(root)).toMatch(/select some item/i);
 	});
 
 	test("getLastSelected returns the selected set", () => {
 		const root = asRoot(reduceAll([
-			setDataAction([atnSet("alpha"), atnSet("beta")]),
-			setExpandActionAction(["alpha"], true, false),
-			setSelectActionAction("replace", ["alpha"]),
+			setData([atnSet("alpha"), atnSet("beta")]),
+			expandAction(["alpha"], true, false),
+			selectAction("replace", ["alpha"]),
 		]));
 		const last = Atn.getLastSelected(root);
 		expect(last?.__uuid__).toBe("alpha");
@@ -478,10 +485,10 @@ describe("sor selectors â€“ additional branches", () => {
 		const cmdUuid = (s0.sorcerer.manifestInfo.entrypoints.find(e => e.type === "command") as any).$$$uuid;
 		const panelUuid = (s0.sorcerer.manifestInfo.entrypoints.find(e => e.type === "panel") as any).$$$uuid;
 
-		const cmd = asRoot(inspectorReducer(s0, setSorSelectAction("command", cmdUuid)));
+		const cmd = asRoot(inspectorReducer(s0, select("command", cmdUuid)));
 		expect((Sor.getActiveCommand(cmd) as any)?.$$$uuid).toBe(cmdUuid);
 
-		const panel = asRoot(inspectorReducer(s0, setSorSelectAction("panel", panelUuid)));
+		const panel = asRoot(inspectorReducer(s0, select("panel", panelUuid)));
 		expect((Sor.getActivePanel(panel) as any)?.$$$uuid).toBe(panelUuid);
 	});
 
@@ -499,9 +506,9 @@ describe("sor selectors â€“ additional branches", () => {
 
 	test("generateScriptFileCode / generateHtmlFileCode return strings", () => {
 		const root = asRoot(reduceAll([
-			makeSorAction("snippet"),
-			makeSorAction("command"),
-			makeSorAction("panel"),
+			make("snippet"),
+			make("command"),
+			make("panel"),
 		]));
 		expect(typeof Sor.generateScriptFileCode(root)).toBe("string");
 		expect(typeof Sor.generateHtmlFileCode(root)).toBe("string");
@@ -515,8 +522,8 @@ describe("sor selectors â€“ additional branches", () => {
 describe("selection-derived flags â€“ additional combinations", () => {
 	test("locked but not selected -> getLockedSelection is false", () => {
 		const root = asRoot(reduceAll([
-			addDescriptorAction(desc("d1"), false),
-			lockDescAction(true, ["d1"]),
+			addDescriptor(desc("d1"), false),
+			lockDesc(true, ["d1"]),
 		]));
 		expect(Insp.getLockedSelection(root)).toBe(false);
 		expect(Insp.getRemovableSelection(root)).toBe(true);
@@ -524,15 +531,15 @@ describe("selection-derived flags â€“ additional combinations", () => {
 
 	test("pinned but not selected -> getPinnedSelection is false", () => {
 		const root = asRoot(reduceAll([
-			addDescriptorAction(desc("d1"), false),
-			pinDescAction(true, ["d1"]),
+			addDescriptor(desc("d1"), false),
+			pinDesc(true, ["d1"]),
 		]));
 		expect(Insp.getPinnedSelection(root)).toBe(false);
 	});
 
-	test("setSettingsAction merges partial settings (getInspectorSettings shows it)", () => {
+	test("setSettings merges partial settings (getInspectorSettings shows it)", () => {
 		const root = asRoot(reduceAll([
-			setSettingsAction({maximumItems: 42} as any),
+			setSettings({maximumItems: 42} as any),
 		]));
 		expect(Insp.getInspectorSettings(root).maximumItems).toBe(42);
 	});

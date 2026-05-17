@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {setInspectorPathDomAction, setExpandedPathAction, setAutoExpandLevelAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import {getTreeDomInstance, getDomPath, getDomExpandedNodes, getDOMExpandLevel} from "../selectors/inspectorDOMSelectors";
 
 import React, {useCallback, useMemo} from "react";
@@ -12,6 +12,8 @@ import {cloneDeep} from "lodash";
 import {TreePath} from "./TreePath";
 import {KeyPath, TExpandClicked, TLabelRenderer} from "./react-json-tree-2/types";
 
+const {setInspectorPathDom, setExpandedPath, setAutoExpandLevel} = inspectorSlice.actions;
+
 export const TreeDom: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const content = useAppSelector(getTreeDomInstance);
@@ -21,16 +23,16 @@ export const TreeDom: React.FC = () => {
 	const protoMode: TProtoMode = "uxp";
 
 	const onInspectPath = useCallback(
-		(p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDomAction(p, mode)),
+		(p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDom(p, mode)),
 		[dispatch],
 	);
 	const onSetExpandedPath = useCallback(
 		(p: KeyPath, expand: boolean, recursive: boolean, data: any) =>
-			dispatch(setExpandedPathAction("dom", p, expand, recursive, data)),
+				dispatch(setExpandedPath("dom", p, expand, recursive, data)),
 		[dispatch],
 	);
 	const onSetAutoExpandLevel = useCallback(
-		(level: number) => dispatch(setAutoExpandLevelAction("DOM", level)),
+		(level: number) => dispatch(setAutoExpandLevel("DOM", level)),
 		[dispatch],
 	);
 

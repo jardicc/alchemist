@@ -657,5 +657,3 @@ export const inspectorSlice = createSlice({
 		},
 	},
 });
-
-export const inspectorSliceReducer = inspectorSlice.reducer;

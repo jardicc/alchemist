@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @jest-environment jsdom
  */
 import React from "react";
@@ -62,7 +62,7 @@ jest.mock("../FilterButton", () => {
 
 import {FilterRow} from "../FilterRow";
 import {renderWithStore} from "../../../__tests__/renderWithStore";
-import {setFilterStateAction} from "../../actions/inspectorActions";
+import {setFilterState as setFilterState} from "../../inspectorSlice";
 
 const layerState = {
 	inspector: {
@@ -115,7 +115,7 @@ describe("<FilterRow />", () => {
 		expect(onSelect).toHaveBeenCalledWith("the-value", false);
 	});
 
-	it("calls setFilterStateAction dispatch on FilterButton click using activeRef.type and subtype", () => {
+	it("calls setFilterState dispatch on FilterButton click using activeRef.type and subtype", () => {
 		const store = configureStore({
 			reducer: (s: any = layerState) => s,
 			preloadedState: layerState,

@@ -6,18 +6,20 @@ import "./ATNDecoder.less";
 
 import {decodeATN} from "../classes/ATNDecoder";
 import {Footer} from "../../inspector/components/Footer";
-import {IDescriptor, ISettings, TFontSizeSettings, TSelectDescriptorOperation} from "../../inspector/model/types";
+import {IDescriptor, TSelectDescriptorOperation} from "../../inspector/model/types";
 import {getAllDescriptors, getFontSizeSettings, getInspectorSettings} from "../../inspector/selectors/inspectorSelectors";
 import {getActionByUUID, getData, getDontSendDisabled, getTextData, selectedCommands as getSelectedCommands} from "../atnSelectors";
-import {clearAllAction, passSelectedAction, setDataAction, setDontSendDisabledAction, setSelectActionAction} from "../atnActions";
-import {IActionCommandUUID, IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
+import {IActionSetUUID, TSelectActionOperation, TSelectedItem} from "../atnModel";
 import {ActionSet} from "./ActionSet";
-import {addDescriptorAction, selectDescriptorAction, setInspectorViewAction, setModeTabAction, toggleDescriptorsGroupingAction} from "../../inspector/actions/inspectorActions";
-import {alert, Helpers} from "../../inspector/classes/Helpers";
+import {inspectorSlice} from "../../inspector/inspectorSlice";
+import {alert} from "../../inspector/classes/Helpers";
 import {str as crc} from "crc-32";
 import PS from "photoshop";
 import SP from "react-uxp-spectrum";
-import {ActionDescriptor} from "photoshop/dom/CoreModules";
+import {atnSlice} from "../atnSlice";
+
+const {addDescriptor, selectDescriptor, setInspectorView, setModeTab, toggleDescriptorsGrouping} = inspectorSlice.actions;
+const {clearAll, setData, setDontSendDisabled, selectAction} = atnSlice.actions;
 
 export const ATNDecoder: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -29,22 +31,22 @@ export const ATNDecoder: React.FC = () => {
 	const allAlchemistDescriptors = useAppSelector(getAllDescriptors);
 	const settingsAlchemist = useAppSelector(getInspectorSettings);
 
-	const setData = (d: IActionSetUUID[]) => dispatch(setDataAction(d));
-	const onClearAll = () => dispatch(clearAllAction());
+	const onSetData = (d: IActionSetUUID[]) => dispatch(setData(d));
+	const onClearAll = () => dispatch(clearAll());
 	const onPassSelected = (desc: IDescriptor, replace: boolean) => {
-		dispatch(setModeTabAction("reference"));
-		dispatch(setInspectorViewAction("code", "generated"));
-		dispatch(toggleDescriptorsGroupingAction("none"));
-		dispatch(addDescriptorAction(desc, replace));
+		dispatch(setModeTab("reference"));
+		dispatch(setInspectorView("code", "generated"));
+		dispatch(toggleDescriptorsGrouping("none"));
+		dispatch(addDescriptor(desc, replace));
 	};
-	const onSelectAlchemistDescriptors = (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptorAction(operation, uuid));
-	const setSelectedItem = (uuid: TSelectedItem, operation: TSelectActionOperation) => dispatch(setSelectActionAction(operation, uuid));
-	const onSetDontSendDisabled = (value: boolean) => dispatch(setDontSendDisabledAction(value));
+	const onSelectAlchemistDescriptors = (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptor(operation, uuid));
+	const onSetSelectedItem = (uuid: TSelectedItem, operation: TSelectActionOperation) => dispatch(selectAction(operation, uuid));
+	const onSetDontSendDisabled = (value: boolean) => dispatch(setDontSendDisabled(value));
 	const renderAddButton = () => (
 		<div className="button" onClick={async (e) => {
 			e.stopPropagation();
 			const res = await decodeATN();
-			setData(res);
+			onSetData(res);
 		}}>
 			Read .ATN file
 		</div>
@@ -118,7 +120,7 @@ export const ATNDecoder: React.FC = () => {
 	return (
 		<div className={`ATNDecoderContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 			<div className="info spread flex">
-				<div className="tree" onClick={(e) => {e.stopPropagation(); setSelectedItem([""], "none");}}>{renderSet()}</div>
+				<div className="tree" onClick={(e) => {e.stopPropagation(); onSetSelectedItem([""], "none");}}>{renderSet()}</div>
 				<div className="atnCode">
 					<SP.Textarea
 						className="infoBlock"

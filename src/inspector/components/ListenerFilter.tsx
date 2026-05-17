@@ -1,14 +1,16 @@
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getListenerNotifierFilterSettings} from "../selectors/inspectorSelectors";
-import {setListenerNotifierFilterAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import React from "react";
 import {IListenerNotifierFilter} from "../model/types";
 import SP from "react-uxp-spectrum";
 
+const {setListenerNotifierFilter} = inspectorSlice.actions;
+
 export const ListenerFilter: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const settings = useAppSelector(getListenerNotifierFilterSettings);
-	const onSetNotifierListenerFilter = (arg: Partial<IListenerNotifierFilter>) => dispatch(setListenerNotifierFilterAction(arg));
+	const onSetNotifierListenerFilter = (arg: Partial<IListenerNotifierFilter>) => dispatch(setListenerNotifierFilter(arg));
 
 	const setExclude = (e: React.ChangeEvent<HTMLInputElement>) => {
 		onSetNotifierListenerFilter({

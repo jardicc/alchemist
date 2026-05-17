@@ -1,19 +1,22 @@
 import "./ActionSet.less";
 
-import React, {MouseEventHandler} from "react";
+import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {setExpandActionAction, setSelectActionAction} from "../atnActions";
 import {getExpandedItemsSet, getSelectedItemsSet} from "../atnSelectors";
-import {IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem} from "../atnModel";
+import {IActionSetUUID, TSelectActionOperation} from "../atnModel";
 import {ActionItem} from "./ActionItem";
-import {IconArrowBottom, IconArrowRight, IconCheck, IconChevronBottom, IconChevronRight, IconCircleCheck, IconEmpty, IconFolder} from "../../shared/components/icons";
+import {IconCheck, IconChevronBottom, IconChevronRight, IconEmpty, IconFolder} from "../../shared/components/icons";
 import PS from "photoshop";
+import {atnSlice} from "../atnSlice";
 
-interface IOwn {
+interface IActionSetProps {
 	actionSet: IActionSetUUID
 }
 
-export const ActionSet: React.FC<IOwn> = ({actionSet}) => {
+const { expandAction, selectAction} = atnSlice.actions
+
+
+export const ActionSet: React.FC<IActionSetProps> = ({actionSet}) => {
 	const dispatch = useAppDispatch();
 	const selectedItems = useAppSelector(getSelectedItemsSet);
 	const expandedItems = useAppSelector(getExpandedItemsSet);
@@ -38,7 +41,7 @@ export const ActionSet: React.FC<IOwn> = ({actionSet}) => {
 				operation = "add";
 			}
 		}
-		dispatch(setSelectActionAction(operation, combinedUUID));
+		dispatch(selectAction(operation, combinedUUID));
 	};
 
 	const isExpanded = expandedItems.flat().includes(actionSet.__uuid__);
@@ -46,7 +49,7 @@ export const ActionSet: React.FC<IOwn> = ({actionSet}) => {
 	const onExpand = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
 		const recursive = (e.ctrlKey || e.metaKey);
-		dispatch(setExpandActionAction([actionSet.__uuid__], !isExpanded, recursive));
+		dispatch(expandAction([actionSet.__uuid__], !isExpanded, recursive));
 	};
 
 	return (

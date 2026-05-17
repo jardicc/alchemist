@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {setModeTabAction, setColumnSizeAction, toggleSettingsAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import {getModeTabID, getFontSizeSettings, getLeftColumnWidth, getRightColumnWidth, getSettingsVisible} from "../selectors/inspectorSelectors";
 
 import React from "react";
@@ -19,6 +19,8 @@ import {LeftColumn} from "./LeftColumn";
 import {SplitPane} from "../../shared/components/split-pane-fork/SplitPane";
 import {Pane} from "../../shared/components/split-pane-fork/Pane";
 
+const {setModeTab, setColumnSize, toggleSettings} = inspectorSlice.actions;
+
 export const Inspector: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const modeTab = useAppSelector(getModeTabID);
@@ -26,9 +28,9 @@ export const Inspector: React.FC = () => {
 	const rightColumnWidthPx = useAppSelector(getRightColumnWidth);
 	const fontSizeSettings = useAppSelector(getFontSizeSettings);
 	const visible = useAppSelector(getSettingsVisible);
-	const setModeTab = (key: TActiveInspectorTab) => dispatch(setModeTabAction(key));
-	const setColumnSize = (px: number, location: "left" | "right") => dispatch(setColumnSizeAction(px, location));
-	const setToggleSettings = () => dispatch(toggleSettingsAction());
+	const onSetModeTab = (key: string) => dispatch(setModeTab(key as TActiveInspectorTab));
+	const onSetColumnSize = (px: number, location: "left" | "right") => dispatch(setColumnSize(px, location));
+	const setToggleSettings = () => dispatch(toggleSettings());
 	const [showMessage, setShowMessage] = React.useState(false);
 	const [message, setMessage] = React.useState("");
 	const [link, setLink] = React.useState("");
@@ -60,7 +62,7 @@ export const Inspector: React.FC = () => {
 	return (
 		<div className={`Inspector ${fontSizeSettings}`} key={fontSizeSettings}>
 			<div className="descriptorsColumns">
-				<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => { setColumnSize(px, "left"); }} minSize={210}>
+				<SplitPane primary="first" allowResize={true} pane1ClassName="" pane2ClassName="" paneClassName="" className="split" split="vertical" defaultSize={leftColumnWidthPx} onDragFinished={(px) => { onSetColumnSize(px, "left"); }} minSize={210}>
 					<Pane className="leftPane">
 						<LeftColumn />
 					</Pane>
@@ -71,7 +73,7 @@ export const Inspector: React.FC = () => {
 								className="split"
 								split="vertical"
 								size={visible ? rightColumnWidthPx : 0}
-								onDragFinished={(px) => { setColumnSize(px, "right"); }}
+								onDragFinished={(px) => { onSetColumnSize(px, "right"); }}
 								maxSize={visible ? undefined : 0}
 								minSize={visible ? 200 : 0}
 								primary={"second"}
@@ -84,7 +86,7 @@ export const Inspector: React.FC = () => {
 									<TabList
 										className="tabsDescriptor"
 										activeKey={modeTab}
-										onChange={setModeTab}
+										onChange={onSetModeTab}
 										postFix={visible ? undefined : btnSettings}
 									>
 										<TabPanel id="content" title="Content" noPadding={true}>

@@ -1,13 +1,15 @@
 import {useAppDispatch, useAppSelector} from "../../../shared/store";
 import {getActiveDescriptors, getAutoSelectedUUIDs, getInspectorSettings, getSettingsVisible} from "../../selectors/inspectorSelectors";
-import {setDescriptorOptionsAction, setFontSizeAction, setMaximumItems, setNeverRecordActionNamesAction, setRecordRawAction, setSettingsAction, toggleAccordion, toggleSettingsAction} from "../../actions/inspectorActions";
+import {inspectorSlice} from "../../inspectorSlice";
 import SP from "react-uxp-spectrum";
-import React, {Component} from "react";
-import {IDescriptor, IDescriptorSettings, ISettings, TFontSizeSettings} from "../../model/types";
+import React from "react";
+import {IDescriptorSettings, ISettings, TFontSizeSettings} from "../../model/types";
 import "./Settings.less";
 import {Settings as SettingsClass} from "../../../inspector/classes/Settings";
 import {getDescriptorOptions} from "../../selectors/inspectorCodeSelectors";
 import {Accordion} from "../Accordion";
+
+const {setDescriptorOptions, setFontSize, setMaximumItems, setNeverRecordActionNames, setRecordRaw, setSettings, toggleAccordion, toggleSettings} = inspectorSlice.actions;
 
 export const Settings: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -17,13 +19,13 @@ export const Settings: React.FC = () => {
 	const descriptorSettings = useAppSelector(getDescriptorOptions);
 	const selected = useAppSelector(getActiveDescriptors);
 	const settingsVisible = useAppSelector(getSettingsVisible);
-	const onSetRecordRaw = (value: boolean) => dispatch(setRecordRawAction(value));
+	const onSetRecordRaw = (value: boolean) => dispatch(setRecordRaw(value));
 	const onSetMaximumItems = (value: string) => dispatch(setMaximumItems(value));
-	const onSetFontSize = (value: TFontSizeSettings) => dispatch(setFontSizeAction(value));
-	const onNeverRecordActionNamesChanged = (value: string) => dispatch(setNeverRecordActionNamesAction(value));
-	const onSetGlobalOptions = (options: Partial<ISettings>) => dispatch(setSettingsAction(options));
-	const onSetDescriptorOptions = (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => dispatch(setDescriptorOptionsAction(uuids, options));
-	const setToggleSettings = () => dispatch(toggleSettingsAction());
+	const onSetFontSize = (value: TFontSizeSettings) => dispatch(setFontSize(value));
+	const onNeverRecordActionNamesChanged = (value: string) => dispatch(setNeverRecordActionNames(value));
+	const onSetGlobalOptions = (options: Partial<ISettings>) => dispatch(setSettings(options));
+	const onSetDescriptorOptions = (uuids: string[] | "default", options: Partial<IDescriptorSettings>) => dispatch(setDescriptorOptions(uuids, options));
+	const setToggleSettings = () => dispatch(toggleSettings());
 	const onToggleAccordion = (id: string, expanded: boolean) => dispatch(toggleAccordion(id, expanded));
 	const common = (options: Partial<IDescriptorSettings>) => {
 		if (autoSelectedUUIDs?.length) {

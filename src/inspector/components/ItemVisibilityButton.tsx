@@ -1,11 +1,13 @@
 import "./ItemVisibilityButton.less";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getCategoryItemsVisibility} from "../selectors/inspectorSelectors";
-import {setCategoryItemVisibilityAction} from "../actions/inspectorActions";
-import React, {MouseEventHandler} from "react";
+import {inspectorSlice} from "../inspectorSlice";
+import React from "react";
 import {TTargetReference} from "../model/types";
 import {IAccDropPostFixProps} from "./AccDrop";
 import {IconEye} from "../../shared/components/icons";
+
+const {setCategoryItemVisibility} = inspectorSlice.actions;
 
 export const ItemVisibilityButtonWrap: React.FC<IAccDropPostFixProps> = (props) => {
 	const value = props.value as TTargetReference;
@@ -16,7 +18,7 @@ export const ItemVisibilityButtonWrap: React.FC<IAccDropPostFixProps> = (props) 
 	const visible = visibleItems.includes(value);
 
 	const toggle = () => {
-		dispatch(setCategoryItemVisibilityAction(value, visible ? "remove" : "add"));
+		dispatch(setCategoryItemVisibility(value, visible ? "remove" : "add"));
 	};
 
 	return (

@@ -14,12 +14,7 @@ import SP from "react-uxp-spectrum";
 
 import {Main} from "../../shared/classes/Main";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {
-	addDescriptorAction, clearAction, pinDescAction, removeDescAction, lockDescAction,
-	setListenerAction, setAutoInspectorAction, setSearchTermAction, setRenameModeAction,
-	selectDescriptorAction, setDontShowMarketplaceInfoAction, toggleDescriptorsGroupingAction,
-	clearViewAction, importItemsAction, setSpyAction,
-} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import {
 	getAddAllowed, getSelectedDescriptorsUUID,
 	getLockedSelection, getPinnedSelection, getDescriptorsListView,
@@ -32,6 +27,11 @@ import {ActionDescriptor} from "photoshop/dom/CoreModules";
 import {filterNonExistent} from "../classes/filterNonExistent";
 import {Filters} from "./Filters";
 import {getGeneratedCode} from "../selectors/inspectorCodeSelectors";
+
+const {	addDescriptor, clear, pinDesc, removeDesc, lockDesc,
+	setListener, setAutoInspector, setSearchTerm, setRenameMode,
+	selectDescriptor, setDontShowMarketplaceInfo, toggleDescriptorsGrouping,
+	clearView, importItems, setSpy} = inspectorSlice.actions;
 
 export const LeftColumn: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -50,21 +50,21 @@ export const LeftColumn: React.FC = () => {
 	const selectedDescriptorsUUIDs = useAppSelector(getSelectedDescriptorsUUID);
 	const settings = useAppSelector(getInspectorSettings);
 
-	const onAddDescriptor = (desc: IDescriptor) => dispatch(addDescriptorAction(desc, false));
-	const onClear = () => dispatch(clearAction());
-	const onPin = (pin: boolean, uuids: string[]) => dispatch(pinDescAction(pin, uuids));
-	const onRemove = (uuids: string[]) => dispatch(removeDescAction(uuids));
-	const onLock = (lock: boolean, uuids: string[]) => dispatch(lockDescAction(lock, uuids));
-	const setListener = (enabled: boolean) => dispatch(setListenerAction(enabled));
-	const setSpy = (enabled: boolean) => dispatch(setSpyAction(enabled));
-	const setAutoInspector = (enabled: boolean) => dispatch(setAutoInspectorAction(enabled));
-	const setSearchTerm = (str: string) => dispatch(setSearchTermAction(str));
-	const setRenameMode = (uuid: string, on: boolean) => dispatch(setRenameModeAction(uuid, on));
-	const onSelect = (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptorAction(operation, uuid));
-	const onSetDontShowMarketplaceInfo = (enabled: boolean) => dispatch(setDontShowMarketplaceInfoAction(enabled));
-	const toggleDescGrouping = () => dispatch(toggleDescriptorsGroupingAction());
-	const onClearView = (keep: boolean) => dispatch(clearViewAction(keep));
-	const onClearNonExistent = (items: IDescriptor[]) => dispatch(importItemsAction(items, "replace"));
+	const onAddDescriptor = (desc: IDescriptor) => dispatch(addDescriptor(desc, false));
+	const onClear = () => dispatch(clear());
+	const onPin = (pin: boolean, uuids: string[]) => dispatch(pinDesc(pin, uuids));
+	const onRemove = (uuids: string[]) => dispatch(removeDesc(uuids));
+	const onLock = (lock: boolean, uuids: string[]) => dispatch(lockDesc(lock, uuids));
+	const onSetListener = (enabled: boolean) => dispatch(setListener(enabled));
+	const onSetSpy = (enabled: boolean) => dispatch(setSpy(enabled));
+	const onSetAutoInspector = (enabled: boolean) => dispatch(setAutoInspector(enabled));
+	const onSetSearchTerm = (str: string) => dispatch(setSearchTerm(str));
+	const onSetRenameMode = (uuid: string, on: boolean) => dispatch(setRenameMode(uuid, on));
+	const onSelect = (operation: TSelectDescriptorOperation, uuid?: string) => dispatch(selectDescriptor(operation, uuid));
+	const onSetDontShowMarketplaceInfo = (enabled: boolean) => dispatch(setDontShowMarketplaceInfo(enabled));
+	const toggleDescGrouping = () => dispatch(toggleDescriptorsGrouping());
+	const onClearView = (keep: boolean) => dispatch(clearView(keep));
+	const onClearNonExistent = (items: IDescriptor[]) => dispatch(importItems(items, "replace"));
 
 	const marketplaceDialogRef = React.useRef<any>(null);
 	const clearMenuRef = React.useRef<any>(null);
@@ -202,7 +202,7 @@ export const LeftColumn: React.FC = () => {
 		} else {
 			ListenerClass.startListener(listener);
 		}
-		setListener(!autoUpdateListener);
+		onSetListener(!autoUpdateListener);
 	};
 
 	const attachSpy = async () => {
@@ -212,18 +212,18 @@ export const LeftColumn: React.FC = () => {
 		} else {
 			ListenerClass.startSpy(spy);
 		}
-		setSpy(!autoUpdateSpy);
+		onSetSpy(!autoUpdateSpy);
 	};
 
 	const attachAutoInspector = async () => {
 		const {autoUpdateInspector} = settings;
-		setAutoInspector(!autoUpdateInspector);
+		onSetAutoInspector(!autoUpdateInspector);
 		if (autoUpdateInspector) {
 			ListenerClass.stopInspector();
 		} else {
 			ListenerClass.startInspector(autoInspector);
 		}
-		setAutoInspector(!autoUpdateInspector);
+		onSetAutoInspector(!autoUpdateInspector);
 	};
 
 	const renderDescriptorsList = (): React.ReactNode => {
@@ -239,7 +239,7 @@ export const LeftColumn: React.FC = () => {
 	};
 
 	const onSearch = (e: string) => {
-		setSearchTerm(e);
+		onSetSearchTerm(e);
 	};
 
 	const onPlaySeparated = async () => {
@@ -282,7 +282,7 @@ export const LeftColumn: React.FC = () => {
 
 	const rename = () => {
 		if (selectedDescriptorsUUIDs.length) {
-			setRenameMode(selectedDescriptorsUUIDs[0], true);
+			onSetRenameMode(selectedDescriptorsUUIDs[0], true);
 		}
 	};
 

@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {setDispatcherValueAction, addDescriptorAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import {getDispatcherSnippet} from "../selectors/dispatcherSelectors";
 import {getInspectorSettings} from "../selectors/inspectorSelectors";
 
@@ -15,15 +15,17 @@ import SP from "react-uxp-spectrum";
 import uxp from "uxp";
 import os from "os";
 
+const {setDispatcherValue, addDescriptor} = inspectorSlice.actions;
+
 export const Dispatcher: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const snippet = useAppSelector(getDispatcherSnippet);
 	const settings = useAppSelector(getInspectorSettings);
-	const setDispatcherValue = (value: string) => dispatch(setDispatcherValueAction(value));
-	const onAddDescriptor = (desc: IDescriptor) => dispatch(addDescriptorAction(desc, false));
+	const onSetDispatcherValue = (value: string) => dispatch(setDispatcherValue(value));
+	const onAddDescriptor = (desc: IDescriptor) => dispatch(addDescriptor(desc, false));
 
 	const change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setDispatcherValue(e.currentTarget.value);
+		onSetDispatcherValue(e.currentTarget.value);
 	};
 
 	const send = async () => {

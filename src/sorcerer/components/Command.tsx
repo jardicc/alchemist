@@ -2,16 +2,16 @@ import "./Command.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {TSelectedItem, TSelectActionOperation} from "../../atnDecoder/atnModel";
-import {setCommandAction, setSelectAction, TSetCommandActionPayload} from "../sorActions";
-import {IEntrypointCommand, ISnippet} from "../sorModel";
 import {getActiveCommand, getAllSnippets} from "../sorSelectors";
+import {TSetCommandActionPayload, sorSlice} from "../sorSlice";
+
+const {setCommand} = sorSlice.actions;
 
 export const Command: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const activeCommand = useAppSelector(getActiveCommand);
 	const snippets = useAppSelector(getAllSnippets);
-	const onSet = (uuid: string, value: TSetCommandActionPayload) => dispatch(setCommandAction(value, uuid));
+	const onSet = (uuid: string, value: TSetCommandActionPayload) => dispatch(setCommand(value, uuid));
 
 	if (!activeCommand) {return null;}
 

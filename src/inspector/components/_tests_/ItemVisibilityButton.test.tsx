@@ -12,8 +12,9 @@ jest.mock("../../selectors/inspectorSelectors", () => ({
 	getCategoryItemsVisibility: () => ["document"],
 }));
 // Stub the action creator so dispatching produces a plain object.
-jest.mock("../../actions/inspectorActions", () => ({
-	setCategoryItemVisibilityAction: (item: any, op: any) => ({type: "SET_VIS", item, op}),
+jest.mock("../../inspectorSlice", () => ({
+	...jest.requireActual("../../inspectorSlice"),
+	setCategoryItemVisibility: (item: any, op: any) => ({type: "SET_VIS", item, op}),
 }));
 
 import {renderWithStore} from "../../../__tests__/renderWithStore";

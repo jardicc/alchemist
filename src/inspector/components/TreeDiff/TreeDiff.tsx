@@ -1,20 +1,22 @@
 import {useAppDispatch, useAppSelector} from "../../../shared/store";
-import {setInspectorPathDiffAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction} from "../../actions/inspectorActions";
+import {inspectorSlice} from "../../inspectorSlice";
 import {getLeftTreeDiff, getRightTreeDiff, getDiffPath, getDiffExpandedNodes, getLeftRawDiff, getRightRawDiff, getDiffActiveView, getDiffExpandLevel} from "../../selectors/inspectorDiffSelectors";
 
-import React, {Component} from "react";
+import React from "react";
 import {stringify} from "javascript-stringify";
 import {getItemString} from "./getItemString";
 import "./TreeDiff.less";
 import {JSONTree} from "../react-json-tree-2";
 import {diff} from "jsondiffpatch";
 import {labelRenderer, shouldExpandNode} from "../sharedTreeView";
-import {IDescriptor, TGenericViewType} from "../../model/types";
+import {TGenericViewType} from "../../model/types";
 import {TabList} from "../Tabs/TabList";
 import {TabPanel} from "../Tabs/TabListPanel";
 import {VisualDiffTab} from "../VisualDiff";
 import {TreePath} from "../TreePath";
 import {KeyPath, TExpandClicked, TLabelRenderer} from "../react-json-tree-2/types";
+
+const {setInspectorPathDiff, setExpandedPath, setInspectorView, setAutoExpandLevel} = inspectorSlice.actions;
 
 function stringifyAndShrink(val: any, isWideLayout = false) {
 	if (val === null) {return "null";}
@@ -60,10 +62,10 @@ export const TreeDiff: React.FC = () => {
 	const autoExpandLevels = useAppSelector(getDiffExpandLevel);
 	const invertTheme = false;
 	const isWideLayout = true;
-	const onInspectPath = (p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDiffAction(p, mode));
-	const onSetExpandedPath = (p: KeyPath, expand: boolean, recursive: boolean, data: any) => dispatch(setExpandedPathAction("difference", p, expand, recursive, data));
-	const onSetView = (vt: TGenericViewType) => dispatch(setInspectorViewAction("diff", vt));
-	const onSetAutoExpandLevel = (level: number) => dispatch(setAutoExpandLevelAction("diff", level));
+	const onInspectPath = (p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathDiff(p, mode));
+	const onSetExpandedPath = (p: KeyPath, expand: boolean, recursive: boolean, data: any) => dispatch(setExpandedPath("difference", p, expand, recursive, data));
+	const onSetView = (vt: string) => dispatch(setInspectorView("diff", vt as string as TGenericViewType));
+	const onSetAutoExpandLevel = (level: number) => dispatch(setAutoExpandLevel("diff", level));
 
 	const [data, setData] = React.useState<any>(() => diff(left, right));
 	const prevLeft = React.useRef(left);

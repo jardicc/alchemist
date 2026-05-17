@@ -1,7 +1,7 @@
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {setInspectorPathContentAction, setExpandedPathAction, setInspectorViewAction, setAutoExpandLevelAction, setSearchContentKeywordAction} from "../actions/inspectorActions";
-import {getTreeContent, getContentPath, getContentExpandedNodes, getActiveDescriptorContent, getContentActiveView, getContentExpandLevel, getSearchContentKeyword} from "../selectors/inspectorContentSelectors";
-import React, {Component, Key, useCallback, useDeferredValue, useMemo} from "react";
+import {inspectorSlice} from "../inspectorSlice";
+import {getTreeContent, getContentPath, getContentExpandedNodes, getContentActiveView, getContentExpandLevel, getSearchContentKeyword} from "../selectors/inspectorContentSelectors";
+import React, {useCallback, useDeferredValue, useMemo} from "react";
 import "./TreeContent.less";
 import {getItemString} from "./TreeDiff/getItemString";
 import {JSONTree} from "./react-json-tree-2";
@@ -12,6 +12,8 @@ import {TabPanel} from "./Tabs/TabListPanel";
 import {TreePath} from "./TreePath";
 import SP from "react-uxp-spectrum";
 import {KeyPath, TLabelRenderer} from "./react-json-tree-2/types";
+
+const {setInspectorPathContent, setExpandedPath, setInspectorView, setAutoExpandLevel, setSearchContentKeyword} = inspectorSlice.actions;
 
 export const TreeContent: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -28,24 +30,24 @@ export const TreeContent: React.FC = () => {
 	const deferredContent = useDeferredValue(content);
 
 	const onInspectPath = useCallback(
-		(p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathContentAction(p, mode)),
+		(p: KeyPath, mode: "replace" | "add") => dispatch(setInspectorPathContent(p, mode)),
 		[dispatch],
 	);
 	const onSetExpandedPath = useCallback(
 		(p: KeyPath, expand: boolean, recursive: boolean, data: any) =>
-			dispatch(setExpandedPathAction("content", p, expand, recursive, data)),
+			dispatch(setExpandedPath("content", p, expand, recursive, data)),
 		[dispatch],
 	);
 	const onSetView = useCallback(
-		(vt: TGenericViewType) => dispatch(setInspectorViewAction("content", vt)),
+		(vt: string) => dispatch(setInspectorView("content", vt as string as TGenericViewType)),
 		[dispatch],
 	);
 	const onSetAutoExpandLevel = useCallback(
-		(level: number) => dispatch(setAutoExpandLevelAction("content", level)),
+		(level: number) => dispatch(setAutoExpandLevel("content", level)),
 		[dispatch],
 	);
 	const onSetSearch = useCallback(
-		(keyword: string) => dispatch(setSearchContentKeywordAction(keyword)),
+		(keyword: string) => dispatch(setSearchContentKeyword(keyword)),
 		[dispatch],
 	);
 

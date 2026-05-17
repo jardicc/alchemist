@@ -2,16 +2,15 @@ import "./Snippet.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import PS from "photoshop";
-import {TSelectedItem, TSelectActionOperation} from "../../atnDecoder/atnModel";
-import {setSelectAction, setSnippetAction, TSetSnippetActionPayload} from "../sorActions";
-import {ISnippet} from "../sorModel";
 import {getActiveSnippet} from "../sorSelectors";
+import {TSetSnippetActionPayload, sorSlice} from "../sorSlice";
+
+const {setSnippet} = sorSlice.actions;
 
 export const Snippet: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const activeSnippet = useAppSelector(getActiveSnippet);
-	const onSet = (uuid: string, value: TSetSnippetActionPayload) => dispatch(setSnippetAction(value, uuid));
+	const onSet = (uuid: string, value: TSetSnippetActionPayload) => dispatch(setSnippet(value, uuid));
 
 	if (activeSnippet === null) {return null;}
 

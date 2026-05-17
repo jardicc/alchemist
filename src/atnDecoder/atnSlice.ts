@@ -2,7 +2,6 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {uniqBy} from "lodash";
 import {IInspectorState} from "../inspector/model/types";
 import {getInitialState} from "../inspector/inspInitialState";
-import {Settings} from "../inspector/classes/Settings";
 import {IActionSetUUID, TExpandedItem, TSelectActionOperation, TSelectedItem} from "./atnModel";
 import {getSetByUUID} from "./atnSelectors";
 
@@ -126,5 +125,3 @@ export const atnSlice = createSlice({
 		},
 	},
 });
-
-export const atnSliceReducer = atnSlice.reducer;

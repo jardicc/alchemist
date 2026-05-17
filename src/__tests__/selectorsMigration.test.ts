@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @jest-environment jsdom
  *
  * Migration-safety tests for selectors (Redux -> Redux Toolkit).
@@ -45,37 +45,39 @@ import {getInitialState} from "../inspector/inspInitialState";
 import {inspectorReducer} from "../inspector/reducers/reducer";
 import {IInspectorState, IDescriptor} from "../inspector/model/types";
 import {IRootState} from "../shared/store";
+import {IActionSetUUID} from "../atnDecoder/atnModel";
+import {inspectorSlice} from "../inspector/inspectorSlice";
+import {atnSlice} from "../atnDecoder/atnSlice";
+import {sorSlice} from "../sorcerer/sorSlice";
 
-import {
-	setModeTabAction,
-	addDescriptorAction,
-	selectDescriptorAction,
-	lockDescAction,
-	pinDescAction,
-	toggleSettingsAction,
-	setFontSizeAction,
-	setSelectedReferenceTypeAction,
-	setDispatcherValueAction,
-} from "../inspector/actions/inspectorActions";
+const {
+	setModeTab,
+	addDescriptor,
+	selectDescriptor,
+	lockDesc,
+	pinDesc,
+	toggleSettings,
+	setFontSize,
+	setSelectedReferenceType,
+	setDispatcherValue,
+} = inspectorSlice.actions;
 
-import {
-	setDataAction,
-	setExpandActionAction,
-	setSelectActionAction,
-	setDontSendDisabledAction,
-} from "../atnDecoder/atnActions";
+const {
+	setData,
+	expandAction,
+	selectAction,
+	setDontSendDisabled,
+} = atnSlice.actions;
 
-import {
-	makeAction as makeSorAction,
-	setSelectAction as setSorSelectAction,
-} from "../sorcerer/sorActions";
+const {
+	make,
+	select,
+} = sorSlice.actions;
 
 import * as Insp from "../inspector/selectors/inspectorSelectors";
 import {getDispatcherSnippet} from "../inspector/selectors/dispatcherSelectors";
 import * as Atn from "../atnDecoder/atnSelectors";
 import * as Sor from "../sorcerer/sorSelectors";
-
-import {IActionSetUUID} from "../atnDecoder/atnModel";
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -135,22 +137,22 @@ function seedInspectorState(actions: Array<Parameters<typeof inspectorReducer>[1
 
 describe("inspector selectors", () => {
 	test("getModeTabID reflects active tab", () => {
-		const root = asRoot(seedInspectorState([setModeTabAction("difference")]));
+		const root = asRoot(seedInspectorState([setModeTab("difference")]));
 		expect(Insp.getModeTabID(root)).toBe("difference");
 	});
 
 	test("getSelectedTargetReference returns the configured type", () => {
-		const root = asRoot(seedInspectorState([setSelectedReferenceTypeAction("document")]));
+		const root = asRoot(seedInspectorState([setSelectedReferenceType("document")]));
 		expect(Insp.getSelectedTargetReference(root)).toBe("document");
 	});
 
 	test("getAllDescriptors / getSelectedDescriptors / getSelectedDescriptorsUUID", () => {
 		const root = asRoot(seedInspectorState([
-			addDescriptorAction(makeDescriptor("d1"), false),
-			addDescriptorAction(makeDescriptor("d2"), false),
-			addDescriptorAction(makeDescriptor("d3"), false),
-			selectDescriptorAction("replace", "d2"),
-			selectDescriptorAction("add", "d3"),
+			addDescriptor(makeDescriptor("d1"), false),
+			addDescriptor(makeDescriptor("d2"), false),
+			addDescriptor(makeDescriptor("d3"), false),
+			selectDescriptor("replace", "d2"),
+			selectDescriptor("add", "d3"),
 		]));
 
 		expect(Insp.getAllDescriptors(root).map(d => d.id)).toEqual(["d1", "d2", "d3"]);
@@ -161,7 +163,7 @@ describe("inspector selectors", () => {
 	test("getLockedSelection / getPinnedSelection / getRemovableSelection", () => {
 		// No selection -> nothing is locked or pinned, so removable.
 		let root = asRoot(seedInspectorState([
-			addDescriptorAction(makeDescriptor("d1"), false),
+			addDescriptor(makeDescriptor("d1"), false),
 		]));
 		expect(Insp.getLockedSelection(root)).toBe(false);
 		expect(Insp.getPinnedSelection(root)).toBe(false);
@@ -169,30 +171,30 @@ describe("inspector selectors", () => {
 
 		// Lock + select -> selection is "locked" => not removable.
 		root = asRoot(seedInspectorState([
-			addDescriptorAction(makeDescriptor("d1"), false),
-			lockDescAction(true, ["d1"]),
-			selectDescriptorAction("replace", "d1"),
+			addDescriptor(makeDescriptor("d1"), false),
+			lockDesc(true, ["d1"]),
+			selectDescriptor("replace", "d1"),
 		]));
 		expect(Insp.getLockedSelection(root)).toBe(true);
 		expect(Insp.getRemovableSelection(root)).toBe(false);
 
 		// Pin + select -> pinned.
 		root = asRoot(seedInspectorState([
-			addDescriptorAction(makeDescriptor("d2"), false),
-			pinDescAction(true, ["d2"]),
-			selectDescriptorAction("replace", "d2"),
+			addDescriptor(makeDescriptor("d2"), false),
+			pinDesc(true, ["d2"]),
+			selectDescriptor("replace", "d2"),
 		]));
 		expect(Insp.getPinnedSelection(root)).toBe(true);
 	});
 
 	test("getActiveRef returns the slice of targetReference for the active type", () => {
-		const root = asRoot(seedInspectorState([setSelectedReferenceTypeAction("layer")]));
+		const root = asRoot(seedInspectorState([setSelectedReferenceType("layer")]));
 		const ref = Insp.getActiveRef(root);
 		expect(ref.type).toBe("layer");
 	});
 
 	test("getCategoryItemsVisibility always includes the active reference type", () => {
-		const root = asRoot(seedInspectorState([setSelectedReferenceTypeAction("layer")]));
+		const root = asRoot(seedInspectorState([setSelectedReferenceType("layer")]));
 		const visible = Insp.getCategoryItemsVisibility(root);
 		expect(visible).toContain("layer");
 		// Top default categories are kept too.
@@ -201,8 +203,8 @@ describe("inspector selectors", () => {
 
 	test("getInspectorSettings / getFontSizeSettings / getSettingsVisible", () => {
 		const root = asRoot(seedInspectorState([
-			setFontSizeAction("size-big"),
-			toggleSettingsAction(),
+			setFontSize("size-big"),
+			toggleSettings(),
 		]));
 		expect(Insp.getInspectorSettings(root)).toBe(root.inspector.settings);
 		expect(Insp.getFontSizeSettings(root)).toBe("size-big");
@@ -216,7 +218,7 @@ describe("inspector selectors", () => {
 
 describe("dispatcher selector", () => {
 	test("getDispatcherSnippet returns the first snippet's content", () => {
-		const root = asRoot(seedInspectorState([setDispatcherValueAction("// hi")]));
+		const root = asRoot(seedInspectorState([setDispatcherValue("// hi")]));
 		expect(getDispatcherSnippet(root)).toBe("// hi");
 	});
 });
@@ -229,8 +231,8 @@ describe("atn selectors", () => {
 	test("getData / getDontSendDisabled / getSetByUUID", () => {
 		const sets = [makeAtnSet("a"), makeAtnSet("b")];
 		const root = asRoot(seedInspectorState([
-			setDataAction(sets),
-			setDontSendDisabledAction(true),
+			setData(sets),
+			setDontSendDisabled(true),
 		]));
 
 		expect(Atn.getData(root).map(s => s.__uuid__)).toEqual(["a", "b"]);
@@ -243,9 +245,9 @@ describe("atn selectors", () => {
 
 	test("expanded/selected helpers split by path length", () => {
 		const root = asRoot(seedInspectorState([
-			setDataAction([makeAtnSet("a")]),
-			setExpandActionAction(["a"], true, false),
-			setSelectActionAction("replace", ["a"]),
+			setData([makeAtnSet("a")]),
+			expandAction(["a"], true, false),
+			selectAction("replace", ["a"]),
 		]));
 
 		expect(Atn.getExpandedItemsSet(root).length).toBeGreaterThan(0);
@@ -257,8 +259,8 @@ describe("atn selectors", () => {
 
 	test("selectedSets / selected projects selection back to data rows", () => {
 		const root = asRoot(seedInspectorState([
-			setDataAction([makeAtnSet("a"), makeAtnSet("b")]),
-			setSelectActionAction("replace", ["a"]),
+			setData([makeAtnSet("a"), makeAtnSet("b")]),
+			selectAction("replace", ["a"]),
 		]));
 
 		const sets = Atn.selectedSets(root);
@@ -285,9 +287,9 @@ describe("sorcerer selectors", () => {
 
 	test("getAllSnippets / getAllEntryPoints / getAllCommands / getAllPanels filter by kind", () => {
 		const root = asRoot(seedInspectorState([
-			makeSorAction("snippet"),
-			makeSorAction("command"),
-			makeSorAction("panel"),
+			make("snippet"),
+			make("command"),
+			make("panel"),
 		]));
 
 		// Initial state already contains 1 snippet, 1 command and 1 panel; we
@@ -304,7 +306,7 @@ describe("sorcerer selectors", () => {
 		const initial = asRoot(getInitialState());
 		expect(Sor.isGenericModuleVisible(initial)).toBe(true);
 
-		const afterSelect = asRoot(seedInspectorState([setSorSelectAction("snippet", "x")]));
+		const afterSelect = asRoot(seedInspectorState([select("snippet", "x")]));
 		expect(Sor.isGenericModuleVisible(afterSelect)).toBe(false);
 	});
 
@@ -312,14 +314,14 @@ describe("sorcerer selectors", () => {
 		const initial = asRoot(getInitialState());
 		expect(Sor.shouldEnableRemove(initial)).toBe(false);
 
-		const afterSelect = asRoot(seedInspectorState([setSorSelectAction("snippet", "x")]));
+		const afterSelect = asRoot(seedInspectorState([select("snippet", "x")]));
 		expect(Sor.shouldEnableRemove(afterSelect)).toBe(true);
 	});
 
 	test("getActiveSnippet returns the snippet matching the selected uuid", () => {
 		const s0 = getInitialState();
 		const firstSnippetUuid = (s0.sorcerer.snippets.list[0] as any).$$$uuid as string;
-		const root = asRoot(inspectorReducer(s0, setSorSelectAction("snippet", firstSnippetUuid)));
+		const root = asRoot(inspectorReducer(s0, select("snippet", firstSnippetUuid)));
 
 		const active = Sor.getActiveSnippet(root);
 		expect(active).not.toBeNull();
@@ -334,8 +336,8 @@ describe("sorcerer selectors", () => {
 describe("memoization contract (reselect / RTK createSelector)", () => {
 	test("same state reference -> selector returns identical reference", () => {
 		const root = asRoot(seedInspectorState([
-			addDescriptorAction(makeDescriptor("d1"), false),
-			selectDescriptorAction("replace", "d1"),
+			addDescriptor(makeDescriptor("d1"), false),
+			selectDescriptor("replace", "d1"),
 		]));
 
 		const first = Insp.getSelectedDescriptors(root);
@@ -346,8 +348,8 @@ describe("memoization contract (reselect / RTK createSelector)", () => {
 
 	test("derived selectors stay cached when upstream input is unchanged", () => {
 		const root = asRoot(seedInspectorState([
-			addDescriptorAction(makeDescriptor("d1"), false),
-			selectDescriptorAction("replace", "d1"),
+			addDescriptor(makeDescriptor("d1"), false),
+			selectDescriptor("replace", "d1"),
 		]));
 
 		const uuids1 = Insp.getSelectedDescriptorsUUID(root);
@@ -357,7 +359,7 @@ describe("memoization contract (reselect / RTK createSelector)", () => {
 
 	test("cache is invalidated when the underlying slice changes", () => {
 		const stateA = seedInspectorState([
-			addDescriptorAction(makeDescriptor("d1"), false),
+			addDescriptor(makeDescriptor("d1"), false),
 		]);
 		const rootA = asRoot(stateA);
 		const beforeChange = Insp.getAllDescriptors(rootA);
@@ -365,7 +367,7 @@ describe("memoization contract (reselect / RTK createSelector)", () => {
 		// Dispatch a change to descriptors and verify the selector returns
 		// a *different* array reference (immer makes a new top-level state
 		// object, the reselect input changes, recompute happens).
-		const stateB = inspectorReducer(stateA, addDescriptorAction(makeDescriptor("d2"), false));
+		const stateB = inspectorReducer(stateA, addDescriptor(makeDescriptor("d2"), false));
 		const rootB = asRoot(stateB);
 		const afterChange = Insp.getAllDescriptors(rootB);
 
@@ -380,10 +382,10 @@ describe("memoization contract (reselect / RTK createSelector)", () => {
 		// returns the whole `state.inspector` object – which DOES change.
 		// Therefore reselect will recompute, but the returned VALUE is still
 		// equal. This test documents that contract explicitly.
-		const stateA = seedInspectorState([setDispatcherValueAction("// pinned")]);
+		const stateA = seedInspectorState([setDispatcherValue("// pinned")]);
 		const before = getDispatcherSnippet(asRoot(stateA));
 
-		const stateB = inspectorReducer(stateA, toggleSettingsAction());
+		const stateB = inspectorReducer(stateA, toggleSettings());
 		const after = getDispatcherSnippet(asRoot(stateB));
 
 		// Value-equal (strings are primitives, so `toBe` works).

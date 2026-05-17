@@ -12,9 +12,11 @@ import {Snippet} from "./Snippet";
 import {Command} from "./Command";
 import {IEntrypointCommand, IEntrypointPanel, ISnippet, ISorcererState} from "../sorModel";
 import {getActiveItem, getAllCommands, getAllPanels, getAllSnippets, getManifestCode, shouldEnableRemove} from "../sorSelectors";
-import {makeAction, removeAction, setPresetAction, setSelectAction} from "../sorActions";
 import {Panel} from "./Panel";
 import {SorcererBuilder} from "../classes/Sorcerer";
+import {sorSlice} from "../sorSlice";
+
+const {make, remove, setPreset, select} = sorSlice.actions;
 
 export const Sorcerer: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -25,10 +27,10 @@ export const Sorcerer: React.FC = () => {
 	const selectedItem = useAppSelector(getActiveItem);
 	const manifestCode = useAppSelector(getManifestCode);
 	const enableRemove = useAppSelector(shouldEnableRemove);
-	const selectItem = (type: "panel" | "command" | "snippet" | "general", uuid: null | string) => dispatch(setSelectAction(type, uuid));
-	const make = (type: "panel" | "command" | "snippet") => dispatch(makeAction(type));
-	const remove = (type: "panel" | "command" | "snippet", uuid: string) => dispatch(removeAction(type, uuid));
-	const setPreset = (data: ISorcererState) => dispatch(setPresetAction(data));
+	const doSelectItem = (type: "panel" | "command" | "snippet" | "general", uuid: null | string) => dispatch(select(type, uuid));
+	const doMake = (type: "panel" | "command" | "snippet") => dispatch(make(type));
+	const doRemove = (type: "panel" | "command" | "snippet", uuid: string) => dispatch(remove(type, uuid));
+	const doSetPreset = (data: ISorcererState) => dispatch(setPreset(data));
 	const menuItemActiveClass = (item: IEntrypointCommand | IEntrypointPanel | ISnippet) => {
 		if (!selectedItem) {
 			return "";
@@ -42,7 +44,7 @@ export const Sorcerer: React.FC = () => {
 
 	const renderItems = (items: IEntrypointPanel[] | IEntrypointCommand[] | ISnippet[]) => {
 		const res = items.map((p, index) => (
-			<div key={index} className={"menuItem " + menuItemActiveClass(p)} onClick={() => selectItem(p.type, p.$$$uuid)}>
+			<div key={index} className={"menuItem " + menuItemActiveClass(p)} onClick={() => doSelectItem(p.type, p.$$$uuid)}>
 				{p.label.default || "(none)"}
 			</div>
 		));
@@ -58,22 +60,22 @@ export const Sorcerer: React.FC = () => {
 		if (!data) {
 			return;
 		}
-		setPreset(data);
+		doSetPreset(data);
 	};
 
 	return (
 		<div className={`SorcererContainer ${fontSizeSettings}`} key={fontSizeSettings}>
 			<div className="info spread flex">
 				<div className="tree">
-					<div className={"menuItem general " + (selectedItem?.type === "general" ? "active" : "")} onClick={() => selectItem("general", null)}>General</div>
+					<div className={"menuItem general " + (selectedItem?.type === "general" ? "active" : "")} onClick={() => doSelectItem("general", null)}>General</div>
 
-					<div className="menuItemHeader"><span> Snippets</span><div className="button" title="Add new" onClick={() => make("snippet")}>+</div></div>
+					<div className="menuItemHeader"><span> Snippets</span><div className="button" title="Add new" onClick={() => doMake("snippet")}>+</div></div>
 					{renderItems(snippets)}
 
-					<div className="menuItemHeader"><span> Commands</span><div className="button" title="Add new" onClick={() => make("command")}>+</div></div>
+					<div className="menuItemHeader"><span> Commands</span><div className="button" title="Add new" onClick={() => doMake("command")}>+</div></div>
 					{renderItems(commands)}
 
-					<div className="menuItemHeader"><span> Panels</span><div className="button" title="Add new" onClick={() => make("panel")}>+</div></div>
+					<div className="menuItemHeader"><span> Panels</span><div className="button" title="Add new" onClick={() => doMake("panel")}>+</div></div>
 					{renderItems(panels)}
 
 				</div>
@@ -92,7 +94,7 @@ export const Sorcerer: React.FC = () => {
 				<div className={"button " + (enableRemove ? "" : "disallowed")}
 					onClick={() => {
 						const s = selectedItem as ISnippet | IEntrypointPanel | IEntrypointCommand;
-						remove(s.type, s.$$$uuid);
+						doRemove(s.type, s.$$$uuid);
 					}}>Remove selected</div>
 				<div className="spread"></div>
 				<div className={"button"} onClick={exportFn}>Export as preset</div>

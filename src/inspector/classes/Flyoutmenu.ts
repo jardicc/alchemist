@@ -1,5 +1,5 @@
 import {rootStore} from "../../shared/store";
-import {importItemsAction, importStateAction} from "../actions/inspectorActions";
+import {inspectorSlice} from "../inspectorSlice";
 import {TExportItems, TImportItems} from "../model/types";
 import {getAllDescriptors, getSelectedDescriptors} from "../selectors/inspectorSelectors";
 import {Settings} from "./Settings";
@@ -8,6 +8,7 @@ import {Main} from "../../shared/classes/Main";
 import {entrypoints} from "uxp";
 
 const {dispatch} = rootStore;
+const {importItems, importState } = inspectorSlice.actions;
 
 export class FlyoutMenu {
 	constructor() {
@@ -73,13 +74,13 @@ export class FlyoutMenu {
 	private static importState = async () => {
 		const data = await Settings.importStateWithDialog();
 		if (!data) {return;}
-		dispatch(importStateAction(data));
+		dispatch(importState(data));
 	};
 
 	private static importItems = async (kind: TImportItems) => {
 		const data = await Settings.importStateWithDialog();
 		if (!data) {return;}
-		dispatch(importItemsAction(data, kind));
+		dispatch(importItems(data, kind));
 	};
 
 	public static setup(): void {

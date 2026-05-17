@@ -2,17 +2,16 @@ import "./General.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import PS from "photoshop";
-import {TSelectedItem, TSelectActionOperation} from "../../atnDecoder/atnModel";
-import {setHostApp, setMainAction, setSelectAction, TSetMainActionPayload, TSetPanelHostActionPayload} from "../sorActions";
 import {getManifestGeneric, isGenericModuleVisible} from "../sorSelectors";
-import {IManifestInfo} from "../sorModel";
+import {TSetMainActionPayload, TSetPanelHostActionPayload, sorSlice} from "../sorSlice";
+
+const {setHostApp, setMain} = sorSlice.actions;
 
 export const General: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const manifestGeneric = useAppSelector(getManifestGeneric);
 	const isGenericVisible = useAppSelector(isGenericModuleVisible);
-	const onSetMain = (value: TSetMainActionPayload) => dispatch(setMainAction(value));
+	const onSetMain = (value: TSetMainActionPayload) => dispatch(setMain(value));
 	const onSetHost = (app: "PS" | "XD", arg: TSetPanelHostActionPayload) => dispatch(setHostApp(app, arg));
 
 	const renderHostInfo = () => {

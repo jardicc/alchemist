@@ -1,72 +1,65 @@
 
 import React from "react";
+import clsx from "clsx";
 import "./TabList.less";
 
-export interface ITabListProps {
+interface ITabListProps {
 	activeKey: string
 	className: string
 	children: React.ReactElement[]
 	postFix?: React.ReactElement
-	onChange: (id: any) => void
+	onChange: <T extends string>(id: T) => void
 }
 
-export interface ITabListDispatch {
-
+interface ITabRowProps {
+	activeKey: string
+	children: React.ReactElement[]
+	postFix?: React.ReactElement
+	onChange: <T extends string>(id: T) => void
 }
 
-interface ITabListState {
-
+interface ITabContentProps {
+	activeKey: string
+	children: React.ReactElement[]
 }
 
-export type TTabList = ITabListProps & ITabListDispatch
 
-export const TabList: React.FC<TTabList> = (props) => {
-	const renderTabs = (): JSX.Element | null => {
-		const {activeKey} = props;
-		if (Array.isArray(props.children)) {
-			return (
-				<div className="tabRow">
-					{props.children.map(item => (
-						<div
-							className={"tabHeader" + ((item.props.id === activeKey) ? " active" : "")}
-							key={item.props.id}
-							onClick={() => {
-								console.log(item.props.id);
-								props.onChange(item.props.id);
-							}}
-							style={item.props.marginRight && {marginRight: "auto"}}
-						>{item.props.title}</div>
-					))}
-					{props.postFix}
-				</div>
-			);
+const TabRow: React.FC<ITabRowProps> = ({activeKey, children, postFix, onChange}) => (
+	<div className="tabRow">
+		{children.map(item => (
+			<div
+				className={clsx("tabHeader", {"active": item.props.id === activeKey})}
+				key={item.props.id}
+				onClick={() => {
+					onChange(item.props.id);
+				}}
+				style={item.props.marginRight && {marginRight: "auto"}}
+			>{item.props.title}</div>
+		))}
+		{postFix}
+	</div>
+);
+
+const TabContent: React.FC<ITabContentProps> = ({activeKey, children}) => {
+	if (Array.isArray(children)) {
+		const found = children.find(item => item.props.id === activeKey);
+		if (!found) {
+			return <div className="tabContent">No content</div>;
 		}
-		return null;
-	};
-
-	const renderTabContent = (): React.ReactNode => {
-		const {activeKey, children} = props;
-
-		let clsName = "tabContent ";
-
-		if (Array.isArray(children)) {
-			const found = children.find(item => item.props.id === activeKey);
-			if (!found) {
-				return <div className={clsName}>No content</div>;
-			}
-			else if (typeof found === "object" && "props" in found) {
-				clsName += (found.props.showScrollbars ? "showScrollbars " : "");
-				clsName += found.props.noPadding ? "noPadding " : "";
-				return <div className={clsName + found.props.id}>{found}</div>;
-			}
+		if (typeof found === "object" && "props" in found) {
+			const {id, showScrollbars, noPadding} = found.props;
+			return <div className={clsx("tabContent", {"showScrollbars": showScrollbars, "noPadding": noPadding}, id)}>{found}</div>;
 		}
-		return <div className={clsName}>not array</div>;
-	};
-
-	return (
-		<div className={"TabList " + (props.className || "")}>
-			{renderTabs()}
-			{renderTabContent()}
-		</div>
-	);
+	}
+	return <div className="tabContent">not array</div>;
 };
+
+export const TabList: React.FC<ITabListProps> = ({activeKey, className, children, postFix, onChange}) => (
+	<div className={clsx("TabList", className)}>
+		{Array.isArray(children) && (
+			<TabRow activeKey={activeKey} onChange={onChange} postFix={postFix}>{children}</TabRow>
+		)}
+		<TabContent activeKey={activeKey}>{children}</TabContent>
+	</div>
+);
+

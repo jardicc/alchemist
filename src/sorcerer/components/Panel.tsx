@@ -2,15 +2,17 @@ import "./Panel.less";
 import SP from "react-uxp-spectrum";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../../shared/store";
-import {IEntrypointPanel, ISnippet} from "../sorModel";
 import {getActivePanel, getAllSnippets} from "../sorSelectors";
-import {assignSnippetToPanelAction, setPanelAction, TSetPanelActionPayload} from "../sorActions";
+import {TSetPanelActionPayload, sorSlice} from "../sorSlice";
+
+const {assignSnippetToPanel, setPanel} = sorSlice.actions;
+
 export const Panel: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const activePanel = useAppSelector(getActivePanel);
 	const snippets = useAppSelector(getAllSnippets);
-	const onSet = (uuid: string, value: TSetPanelActionPayload) => dispatch(setPanelAction(value, uuid));
-	const onAssignSnippet = (uuid: string, operation: "on" | "off", snippetUuid: string) => dispatch(assignSnippetToPanelAction(operation, uuid, snippetUuid));
+	const onSet = (uuid: string, value: TSetPanelActionPayload) => dispatch(setPanel(value, uuid));
+	const onAssignSnippet = (uuid: string, operation: "on" | "off", snippetUuid: string) => dispatch(assignSnippetToPanel(operation, uuid, snippetUuid));
 
 	if (!activePanel) {return null;}
 	//debugger;

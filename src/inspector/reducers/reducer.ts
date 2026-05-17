@@ -1,21 +1,14 @@
 import type {UnknownAction} from "@reduxjs/toolkit";
 import {IInspectorState} from "../model/types";
-import {inspectorSliceReducer} from "../inspectorSlice";
-import {atnSliceReducer} from "../../atnDecoder/atnSlice";
-import {sorSliceReducer} from "../../sorcerer/sorSlice";
+import {inspectorSlice} from "../inspectorSlice";
+import {atnSlice} from "../../atnDecoder/atnSlice";
+import {sorSlice} from "../../sorcerer/sorSlice";
 import {getInitialState} from "../inspInitialState";
 import {Settings} from "../classes/Settings";
-import {TActions} from "../actions/inspectorActions";
-import {TAtnActions} from "../../atnDecoder/atnActions";
-import {TSorActions} from "../../sorcerer/sorActions";
-
-export type TAllActions = TActions | TAtnActions | TSorActions;
 
 let _initialInspectorState: IInspectorState | null = null;
 const getLazyInitialState = (): IInspectorState => {
-	if (_initialInspectorState === null) {
-		_initialInspectorState = Settings.importState() || getInitialState();
-	}
+	_initialInspectorState ??= Settings.importState() ?? getInitialState();
 	return _initialInspectorState;
 };
 
@@ -33,11 +26,9 @@ const getLazyInitialState = (): IInspectorState => {
  * slice modules does not eagerly evaluate photoshop-dependent helpers.
  */
 export const inspectorReducer = (state: IInspectorState | undefined, action: UnknownAction): IInspectorState => {
-	if (state === undefined) {
-		state = getLazyInitialState();
-	}
-	let next = inspectorSliceReducer(state, action);
-	next = atnSliceReducer(next, action);
-	next = sorSliceReducer(next, action);
+	state ??= getLazyInitialState();
+	let next = inspectorSlice.reducer(state, action);
+	next = atnSlice.reducer(next, action);
+	next = sorSlice.reducer(next, action);
 	return next;
 };

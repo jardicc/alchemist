@@ -10,17 +10,6 @@ export interface ITabPanelProps {
 	children: JSX.Element | JSX.Element[]
 }
 
-export interface ITabPanelDispatch {
-
-}
-
-export interface ITabPanelState {
-
-}
-
-export type TTabPanel = ITabPanelProps & ITabPanelDispatch
-export type TTabPanelComponent = React.FC<TTabPanel>
-
-export const TabPanel: React.FC<TTabPanel> = (props) => {
+export const TabPanel: React.FC<ITabPanelProps> = (props) => {
 	return <>{props.children}</>;
 };
