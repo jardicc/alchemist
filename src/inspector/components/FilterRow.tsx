@@ -6,7 +6,7 @@ import {useAppDispatch, useAppSelector} from "../../shared/store";
 import {getActiveRef} from "../selectors/inspectorSelectors";
 import {setFilterStateAction} from "../actions/inspectorActions";
 
-export const FilterRow: React.FC<IOwn> = (props) => {
+export const FilterRow: React.FC<IFilterRowProps> = (props) => {
 	const activeRef = useAppSelector(getActiveRef);
 	const dispatch = useAppDispatch();
 	const onSetFilter = (type: TTargetReference, subType: TSubTypes | "main", state: TFilterState) => dispatch(setFilterStateAction(type, subType, state));
@@ -69,11 +69,8 @@ export const FilterRow: React.FC<IOwn> = (props) => {
 		/>
 	);
 };
-interface IFilterRowState {
-	list: (IPropertyItem | IPropertyGroup)[]
-}
 
-interface IOwn {
+interface IFilterRowProps {
 	subtype: TSubTypes | "main"
 	header: string | React.ReactElement
 	initialItems?: (IPropertyItem | IPropertyGroup)[]
@@ -88,7 +85,3 @@ interface IOwn {
 	onSelect: (value: string | number, toggle: boolean) => void
 	onUpdateList?: () => Promise<(IPropertyItem | IPropertyGroup)[]>
 }
-
-export type TFilterRow = IOwn & {activeRef: TAllTargetReferences};
-export interface IFilterRowProps extends IOwn {activeRef: TAllTargetReferences;}
-export type TFilterRowProps = IFilterRowProps & IOwn;

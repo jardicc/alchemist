@@ -12,17 +12,7 @@ export interface IFilterButtonProps {
 	onClick: (id: TSubTypes | "main" | "properties", state: TFilterState, e: React.MouseEvent<HTMLDivElement>) => void
 }
 
-export interface IFilterButtonDispatch {
-
-}
-
-interface IFilterButtonState {
-
-}
-
-export type TFilterButton = IFilterButtonProps & IFilterButtonDispatch
-
-export const FilterButton: React.FC<TFilterButton> = (props) => {
+export const FilterButton: React.FC<IFilterButtonProps> = (props) => {
 	const {state, onClick, subtype} = props;
 
 	return (
